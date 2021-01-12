@@ -41,17 +41,15 @@ namespace MGE
 
 			using (var timmer = Timmer.Create("Initialize"))
 			{
-				Window.ClientSizeChanged += (obj, args) => OnResize(obj, args);
+				Window.ClientSizeChanged += (obj, args) => OnResize();
 				MGE.Window.fullAspectRatio = new Vector2(16.0, 9.0);
 				MGE.Window.windowedSize = MGE.Window.maxScreenSize / 2;
 				MGE.Window.windowedPosition = MGE.Window.maxScreenSize / 4;
 				MGE.Window.Apply();
 
-				OnResize(null, null);
+				OnResize();
 
 				camera = new Camera();
-
-				App.exePath = @"C:/Users/CiberTurtle/Coding Projects/MGE";
 
 				graphics.SynchronizeWithVerticalRetrace = false;
 				graphics.ApplyChanges();
@@ -122,18 +120,25 @@ namespace MGE
 
 			render.Dispose();
 
-			if (Pointer.mode == PointerMode.Sprite)
-			{
-				sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, null, null, null);
-				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center + new Vector2(0, 4), Pointer.sprite.rect.size), new Color(0, 0, 0, 0.1f));
-				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center, Pointer.sprite.rect.size), Pointer.sprite.color);
-				sb.End();
-			}
+			ScreenManager.current.activeScreen.DrawUI();
+
+			DrawPointer();
 
 			base.Draw(gameTime);
 		}
 
-		void OnResize(object obj, EventArgs args)
+		void DrawPointer()
+		{
+			if (Pointer.mode == PointerMode.Sprite)
+			{
+				sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp);
+				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center + new Vector2(0, 4), Pointer.sprite.rect.size), new Color(0, 0, 0, 0.1f));
+				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center, Pointer.sprite.rect.size), Pointer.sprite.color);
+				sb.End();
+			}
+		}
+
+		void OnResize()
 		{
 			MGE.Window.FixWindow();
 

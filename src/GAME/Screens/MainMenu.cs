@@ -36,7 +36,13 @@ namespace GAME.Screens
 
 		protected override void OnDrawUI()
 		{
-
+			sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp);
+			Graphics.DrawBox(new Rect(0, 0, 64, 64), new Color(1, 0, 0, 0.5f));
+			Graphics.DrawBox(new Rect(32, 0, 64, 64), new Color(0, 1, 0, 0.5f));
+			Graphics.DrawBox(new Rect(64, 0, 64, 64), new Color(0, 0, 1, 0.5f));
+			Graphics.DrawBox(new Rect(0, 0, 64 * 2, 16), new Color(1, 1, 1, 0.5f));
+			Graphics.DrawBox(new Rect(0, 16 * 3, 64 * 2, 16), new Color(0, 0, 0, 0.5f));
+			sb.End();
 		}
 	}
 }

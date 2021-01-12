@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
-	public struct App
+	public class App
 	{
-		public static string exePath;
+		public static string exePath = @"D:/Coding Projects/MGE";
 	}
 }
