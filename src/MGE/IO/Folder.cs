@@ -1,7 +1,8 @@
 using System;
 using System.IO;
+using MGE.FileIO;
 
-namespace MGE
+namespace MGE.FileIO
 {
 	public class Folder : IDisposable
 	{
@@ -19,13 +20,13 @@ namespace MGE
 			get => _path;
 			set
 			{
-				_path = Util.CleanPath(value);
+				_path = IO.CleanPath(value);
 			}
 		}
 
 		public Folder(string path)
 		{
-			Util.CleanPath(path);
+			IO.CleanPath(path);
 
 			if (path.EndsWith('/'))
 				this._path = path.Remove(path.Length - 1, 1);
@@ -128,7 +129,7 @@ namespace MGE
 
 		public string GetRelitivePath(string path)
 		{
-			return Util.CleanPath(path).Replace(Util.CleanPath(_path) + '/', "");
+			return IO.CleanPath(path).Replace(IO.CleanPath(_path) + '/', "");
 		}
 		#endregion
 

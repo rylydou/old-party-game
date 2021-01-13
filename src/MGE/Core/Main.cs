@@ -6,6 +6,7 @@ using MonoGame;
 using MonoGame.Framework;
 using MonoGame.Framework.Utilities;
 using MGE.Graphics;
+using MGE.FileIO;
 
 namespace MGE
 {
@@ -41,10 +42,12 @@ namespace MGE
 
 			using (var timmer = Timmer.Create("Initialize"))
 			{
+				App.exePath = IO.CleanPath(Environment.CurrentDirectory);
+
 				Window.ClientSizeChanged += (obj, args) => OnResize();
 				MGE.Window.fullAspectRatio = new Vector2(16.0, 9.0);
-				MGE.Window.windowedSize = MGE.Window.maxScreenSize / 2;
-				MGE.Window.windowedPosition = MGE.Window.maxScreenSize / 4;
+				MGE.Window.windowedSize = MGE.Window.monitorSize / 2;
+				MGE.Window.windowedPosition = MGE.Window.monitorSize / 4;
 				MGE.Window.Apply();
 
 				OnResize();
@@ -114,11 +117,11 @@ namespace MGE
 		{
 			GraphicsDevice.Clear(Color.nullColor);
 
-			var render = new Render(new Vector2Int(MGE.Window.renderSize.x, MGE.Window.renderSize.y), true);
+			// var render = new Render(new Vector2Int(MGE.Window.renderSize.x, MGE.Window.renderSize.y), true);
 
 			ScreenManager.current.activeScreen.Draw();
 
-			render.Dispose();
+			// render.Dispose();
 
 			ScreenManager.current.activeScreen.DrawUI();
 
@@ -131,20 +134,25 @@ namespace MGE
 		{
 			if (Pointer.mode == PointerMode.Sprite)
 			{
-				sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp);
+				sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp);
 				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center + new Vector2(0, 4), Pointer.sprite.rect.size), new Color(0, 0, 0, 0.1f));
 				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center, Pointer.sprite.rect.size), Pointer.sprite.color);
 				sb.End();
 			}
 		}
 
-		void OnResize()
+		public void OnResize()
 		{
 			MGE.Window.FixWindow();
 
-			MGE.Window.fullRenderSize = new Vector2Int(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+			UpdateWindowSizes();
 
 			MGE.Window.onResize.Invoke();
+		}
+
+		public void UpdateWindowSizes()
+		{
+			MGE.Window.renderSize = new Vector2Int(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 		}
 	}
 }

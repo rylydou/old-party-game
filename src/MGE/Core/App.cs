@@ -5,6 +5,6 @@ namespace MGE
 {
 	public class App
 	{
-		public static string exePath = @"D:/Coding Projects/MGE";
+		public static string exePath;
 	}
 }

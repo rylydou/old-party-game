@@ -15,27 +15,28 @@ namespace MGE
 	{
 		public static WindowMode windowMode;
 
-		public static Vector2 fullAspectRatio;
-		public static float aspectRatio { get => (float)(fullAspectRatio.y / fullAspectRatio.x); }
 		public static Vector2Int windowedSize;
 		public static Vector2Int windowedPosition;
-		public static Action onResize = () => { };
-
-		public static Vector2Int fullRenderSize;
-		public static Vector2Int renderSize = new Vector2Int(1920 / 2, 1080 / 2);
-		public static Viewport veiwport { get => graphicsDevice.Viewport; }
-
-		static Vector2Int _maxScreenSize;
-		public static Vector2Int maxScreenSize
+		static Vector2Int _monitorSize;
+		public static Vector2Int monitorSize
 		{
 			get
 			{
-				if (_maxScreenSize == Vector2Int.zero)
-					_maxScreenSize = new Vector2Int(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+				if (_monitorSize == Vector2Int.zero)
+					_monitorSize = new Vector2Int(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
 
-				return _maxScreenSize;
+				return _monitorSize;
 			}
 		}
+		public static Viewport veiwport { get => graphicsDevice.Viewport; }
+
+		public static Vector2 fullAspectRatio;
+		public static float aspectRatio { get => (float)(fullAspectRatio.y / fullAspectRatio.x); }
+
+		public static Vector2Int renderSize;
+		public static Vector2Int gameSize = new Vector2Int(1920 / 2, 1080 / 2);
+
+		public static Action onResize = () => { };
 
 		public static void Apply()
 		{
@@ -52,20 +53,22 @@ namespace MGE
 				case WindowMode.BorderlessWindowed:
 					// windowedPosition = window.Position;
 					window.Position = Vector2Int.zero;
-					graphics.PreferredBackBufferWidth = maxScreenSize.x;
-					graphics.PreferredBackBufferHeight = maxScreenSize.y;
+					graphics.PreferredBackBufferWidth = monitorSize.x;
+					graphics.PreferredBackBufferHeight = monitorSize.y;
 					graphics.IsFullScreen = false;
 					window.IsBorderless = true;
 					graphics.ApplyChanges();
 					break;
 				case WindowMode.Fullscreen:
-					graphics.PreferredBackBufferWidth = maxScreenSize.x;
-					graphics.PreferredBackBufferHeight = maxScreenSize.y;
+					graphics.PreferredBackBufferWidth = monitorSize.x;
+					graphics.PreferredBackBufferHeight = monitorSize.y;
 					graphics.IsFullScreen = true;
 					window.IsBorderless = false;
 					graphics.ApplyChanges();
 					break;
 			}
+
+			Main.current.OnResize();
 		}
 
 		public static void FixWindow()

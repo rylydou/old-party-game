@@ -36,7 +36,7 @@ namespace MGE.Graphics
 			Done();
 
 			sb.Begin(samplerState: SamplerState.PointClamp);
-			sb.Draw(render, new Rect(0, 0, Window.fullRenderSize.x, Window.fullRenderSize.y), Color.white);
+			sb.Draw(render, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
 			sb.End();
 
 			render.Dispose();

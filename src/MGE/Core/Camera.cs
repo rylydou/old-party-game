@@ -40,7 +40,10 @@ namespace MGE.Graphics
 					Matrix.CreateTranslation(new Vector3(-(float)_pos.x - Window.veiwport.Width / 2, -(float)_pos.y - Window.veiwport.Height / 2, 0.0f)) *
 					Matrix.CreateRotationZ(rotation) *
 					Matrix.CreateScale(new Vector3(zoom, zoom, 1.0f)) *
-					Matrix.CreateTranslation(new Vector3(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2, 0));
+					Matrix.CreateTranslation(new Vector3(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2, 0)) *
+					Matrix.CreateScale((float)Window.renderSize.x / Window.gameSize.x, (float)Window.renderSize.y / Window.gameSize.y, 1f);
+
+				_isDirty = false;
 			}
 
 			return _transform;

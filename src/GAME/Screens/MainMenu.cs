@@ -9,6 +9,7 @@ namespace GAME.Screens
 	{
 		Texture2D texBG;
 		Texture2D texIcon;
+		Texture2D texTile;
 
 		Vector2 playerVel;
 		Vector2 playerPosition;
@@ -17,6 +18,7 @@ namespace GAME.Screens
 		{
 			texBG = Assets.GetAsset<Texture2D>("Sprites/Background.png");
 			texIcon = Assets.GetAsset<Texture2D>("Sprites/Icon.png");
+			texTile = Assets.GetAsset<Texture2D>("Sprites/Tile.png");
 		}
 
 		protected override void OnUpdate()
@@ -29,19 +31,19 @@ namespace GAME.Screens
 		protected override void OnDraw()
 		{
 			sb.Begin(samplerState: SamplerState.PointClamp, transformMatrix: camera.Transformation());
-			sb.Draw(texBG, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
+			sb.Draw(texBG, new Rect(0, 0, Window.gameSize.x, Window.gameSize.y), Color.white);
 			sb.Draw(texIcon, playerPosition, Color.white);
 			sb.End();
 		}
 
 		protected override void OnDrawUI()
 		{
-			sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointClamp);
-			Graphics.DrawBox(new Rect(0, 0, 64, 64), new Color(1, 0, 0, 0.5f));
-			Graphics.DrawBox(new Rect(32, 0, 64, 64), new Color(0, 1, 0, 0.5f));
-			Graphics.DrawBox(new Rect(64, 0, 64, 64), new Color(0, 0, 1, 0.5f));
-			Graphics.DrawBox(new Rect(0, 0, 64 * 2, 16), new Color(1, 1, 1, 0.5f));
-			Graphics.DrawBox(new Rect(0, 16 * 3, 64 * 2, 16), new Color(0, 0, 0, 0.5f));
+			sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp);
+			Graphics.DrawBox(new Rect(0, 0, 64, 64), new Color(1, 0, 0, 1));
+			Graphics.DrawBox(new Rect(32, 0, 64, 64), new Color(0, 1, 0, 1));
+			Graphics.DrawBox(new Rect(64, 0, 64, 64), new Color(0, 0, 1, 1));
+			Graphics.DrawBox(new Rect(0, 0, 64 * 2, 16), new Color(1, 1, 1, 0.25f));
+			Graphics.DrawBox(new Rect(0, 16 * 3, 64 * 2, 16), new Color(0, 0, 0, 0.25f));
 			sb.End();
 		}
 	}

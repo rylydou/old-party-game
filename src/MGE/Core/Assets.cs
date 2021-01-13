@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using MGE.FileIO;
 
 namespace MGE
 {
@@ -21,10 +22,10 @@ namespace MGE
 
 			var index = new Dictionary<string, string>();
 
-			ScanAssetsInRP(new Folder(Util.ParsePath("//", true)), ref index);
+			ScanAssetsInRP(new Folder(IO.ParsePath("//", true)), ref index);
 
 			foreach (var rp in activeRP)
-				ScanAssetsInRP(new Folder(Util.ParsePath($"/Resource Packs/{rp}/Assets", true)), ref index);
+				ScanAssetsInRP(new Folder(IO.ParsePath($"/Resource Packs/{rp}/Assets", true)), ref index);
 
 			LoadAssetsFromIndex(in index);
 		}
@@ -72,25 +73,42 @@ namespace MGE
 		{
 			object asset = null;
 
-			switch (new FileInfo(path).Extension)
+			switch (IO.GetFullExt(path))
 			{
+				// > Image
 				case ".png":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = Texture2D.FromStream(Main.current.GraphicsDevice, fs);
+						asset = Texture2D.FromStream(graphicsDevice, fs);
 					}
 					break;
+				// > Audio
 				case ".wav":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
 						asset = SoundEffect.FromStream(fs);
 					}
 					break;
-				// case ".xnb":
-				// 	asset = new Effect(graphicsDevice, File.ReadAllBytes(file.Value));
-				// 	break;
+				// > Font
+				case ".font.png":
+					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
+					{
+						Texture2D fontTex = Texture2D.FromStream(graphicsDevice, fs);
+
+						var charsRects = new List<Rectangle>();
+						var chars = new List<char>();
+						for (int i = 0; i < fontTex.Width / 10; i += 10)
+						{
+							charsRects.Add(new Rect(0, i, 10, 16));
+						}
+						// asset = new SpriteFont(asset, charsRects, charsRects, );
+					}
+					break;
+				// > Ignore
+				case ".info": break;
+				case ".gitkeep": break;
 				default:
-					Logger.LogError($"Cannot read file {path}");
+					Logger.LogWarning($"Cannot read file {path}");
 					break;
 			}
 
@@ -139,12 +157,20 @@ namespace MGE
 		#region Asset Getting
 		public static T GetAsset<T>(string path) where T : class
 		{
-			return preloadedAssets[path] as T;
+			if (preloadedAssets.ContainsKey(path))
+				return preloadedAssets[path] as T;
+
+			Logger.LogError($"Can't Find Texture \"{path}\"!");
+			return null;
 		}
 
 		public static T LoadAsset<T>(string path) where T : class
 		{
-			return LoadAsset(unloadedAssets[path]) as T;
+			if (unloadedAssets.ContainsKey(path))
+				return LoadAsset(unloadedAssets[path]) as T;
+
+			Logger.LogError($"Can't Find Texture \"{path}\"!");
+			return null;
 		}
 		#endregion
 	}
