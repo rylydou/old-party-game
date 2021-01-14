@@ -117,11 +117,7 @@ namespace MGE
 		{
 			GraphicsDevice.Clear(Color.nullColor);
 
-			// var render = new Render(new Vector2Int(MGE.Window.renderSize.x, MGE.Window.renderSize.y), true);
-
 			ScreenManager.current.activeScreen.Draw();
-
-			// render.Dispose();
 
 			ScreenManager.current.activeScreen.DrawUI();
 

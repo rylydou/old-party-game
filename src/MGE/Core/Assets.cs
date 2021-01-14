@@ -49,22 +49,30 @@ namespace MGE
 		{
 			foreach (var file in index)
 			{
-				object asset = LoadAsset(file.Value);
-
-				if (preloadedAssets == null)
-					Logger.LogError($"Asset {file.Key} is null!");
-				else
+				var ext = new FileInfo(file.Value).Extension;
+				switch (ext)
 				{
-					if (preloadedAssets.ContainsKey(file.Key))
-					{
-						Logger.Log($"Replacing: {file.Key}");
-						preloadedAssets[file.Key] = asset;
-					}
-					else
-					{
-						Logger.Log($"Adding: {file.Key}");
-						preloadedAssets.Add(file.Key, asset);
-					}
+					case ".info": break;
+					case ".gitkeep": break;
+					default:
+						object asset = LoadAsset(file.Value);
+
+						if (asset == null)
+							Logger.LogError($"Asset {file.Key} is null!");
+						else
+						{
+							if (preloadedAssets.ContainsKey(file.Key))
+							{
+								Logger.Log($"Replacing: {file.Key}");
+								preloadedAssets[file.Key] = asset;
+							}
+							else
+							{
+								Logger.Log($"Adding: {file.Key}");
+								preloadedAssets.Add(file.Key, asset);
+							}
+						}
+						break;
 				}
 			}
 		}
@@ -97,6 +105,7 @@ namespace MGE
 						var info = IO.GetInfoFileLines(path);
 
 						var charsRects = new List<Rectangle>();
+						var croppings = new List<Rectangle>();
 						var kernings = new List<Vector3>();
 						var chars = new List<char>();
 
@@ -106,17 +115,16 @@ namespace MGE
 						for (int i = 0; i < info.Length; i++)
 						{
 							charsRects.Add(new Rect(0, i * 10, 10, 16));
+							croppings.Add(new Rect(0, 0, 10, 16));
 							kernings.Add(new Vector3());
 						}
 
 						Logger.Log($"Info: {info.Length}, Rects: {charsRects.Count}, Kernings: {kernings.Count}, Chars: {chars.Count}");
 
-						asset = new SpriteFont(fontTex, charsRects, charsRects, chars, 0, 0, kernings, ' ');
+						asset = new SpriteFont(fontTex, charsRects, croppings, chars, 0, 0, kernings, ' ');
 					}
 					break;
 				// > Ignore
-				case ".info": break;
-				case ".gitkeep": break;
 				default:
 					Logger.LogWarning($"Cannot read file {path}");
 					break;
