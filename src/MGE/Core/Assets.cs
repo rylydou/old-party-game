@@ -93,15 +93,25 @@ namespace MGE
 				case ".font.png":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						Texture2D fontTex = Texture2D.FromStream(graphicsDevice, fs);
+						var fontTex = Texture2D.FromStream(graphicsDevice, fs);
+						var info = IO.GetInfoFileLines(path);
 
 						var charsRects = new List<Rectangle>();
+						var kernings = new List<Vector3>();
 						var chars = new List<char>();
-						for (int i = 0; i < fontTex.Width / 10; i += 10)
+
+						// chars.Add('\0');
+						chars = info.Select((x) => x[0]).ToList();
+
+						for (int i = 0; i < info.Length; i++)
 						{
-							charsRects.Add(new Rect(0, i, 10, 16));
+							charsRects.Add(new Rect(0, i * 10, 10, 16));
+							kernings.Add(new Vector3());
 						}
-						// asset = new SpriteFont(asset, charsRects, charsRects, );
+
+						Logger.Log($"Info: {info.Length}, Rects: {charsRects.Count}, Kernings: {kernings.Count}, Chars: {chars.Count}");
+
+						asset = new SpriteFont(fontTex, charsRects, charsRects, chars, 0, 0, kernings, ' ');
 					}
 					break;
 				// > Ignore

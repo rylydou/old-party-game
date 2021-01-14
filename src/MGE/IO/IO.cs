@@ -7,6 +7,16 @@ namespace MGE.FileIO
 {
 	public struct IO
 	{
+		public static string GetInfoFileText(string file)
+		{
+			return File.ReadAllText(file + ".info");
+		}
+
+		public static string[] GetInfoFileLines(string file)
+		{
+			return File.ReadAllLines(file + ".info");
+		}
+
 		#region Saving & Loading
 		static JsonSerializerOptions _jsonOptions;
 		static JsonSerializerOptions jsonOptions

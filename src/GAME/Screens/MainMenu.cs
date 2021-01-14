@@ -10,6 +10,7 @@ namespace GAME.Screens
 		Texture2D texBG;
 		Texture2D texIcon;
 		Texture2D texTile;
+		SpriteFont font;
 
 		Vector2 playerVel;
 		Vector2 playerPosition;
@@ -19,6 +20,7 @@ namespace GAME.Screens
 			texBG = Assets.GetAsset<Texture2D>("Sprites/Background.png");
 			texIcon = Assets.GetAsset<Texture2D>("Sprites/Icon.png");
 			texTile = Assets.GetAsset<Texture2D>("Sprites/Tile.png");
+			font = Assets.GetAsset<SpriteFont>("Fonts/Basic.font.png");
 		}
 
 		protected override void OnUpdate()
@@ -44,6 +46,7 @@ namespace GAME.Screens
 			Graphics.DrawBox(new Rect(64, 0, 64, 64), new Color(0, 0, 1, 1));
 			Graphics.DrawBox(new Rect(0, 0, 64 * 2, 16), new Color(1, 1, 1, 0.25f));
 			Graphics.DrawBox(new Rect(0, 16 * 3, 64 * 2, 16), new Color(0, 0, 0, 0.25f));
+			sb.DrawString(font, "Hello World!", new Vector2(16), Color.white);
 			sb.End();
 		}
 	}
