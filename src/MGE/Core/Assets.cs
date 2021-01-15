@@ -104,27 +104,25 @@ namespace MGE
 						var fontTex = Texture2D.FromStream(graphicsDevice, fs);
 						var info = IO.GetInfoFileLines(path);
 
-						var charsRects = new List<Rectangle>();
+						var bounds = new List<Rectangle>();
 						var croppings = new List<Rectangle>();
-						var kernings = new List<Vector3>();
 						var chars = new List<char>();
+						var kernings = new List<Vector3>();
 
-						// chars.Add('\0');
 						chars = info.Select((x) => x[0]).ToList();
 
 						for (int i = 0; i < info.Length; i++)
 						{
-							charsRects.Add(new Rect(0, i * 10, 10, 16));
-							croppings.Add(new Rect(0, 0, 10, 16));
-							kernings.Add(new Vector3());
+							bounds.Add(new Rectangle(0, i * 10, 10, 16));
+							croppings.Add(new Rectangle(0, 0, 0, 0));
+							kernings.Add(new Vector3(0, 16, 0));
 						}
 
-						Logger.Log($"Info: {info.Length}, Rects: {charsRects.Count}, Kernings: {kernings.Count}, Chars: {chars.Count}");
+						Logger.Log($"Info: {info.Length}, Rects: {bounds.Count}, Kernings: {kernings.Count}, Chars: {chars.Count}");
 
-						asset = new SpriteFont(fontTex, charsRects, croppings, chars, 0, 0, kernings, ' ');
+						asset = new SpriteFont(fontTex, bounds, croppings, chars, 16, 0, kernings, null);
 					}
 					break;
-				// > Ignore
 				default:
 					Logger.LogWarning($"Cannot read file {path}");
 					break;
@@ -145,6 +143,7 @@ namespace MGE
 				else
 					filesIndex.Add(folder.GetRelitivePath(file), file);
 			}
+
 			foreach (string directory in Directory.GetDirectories(path))
 			{
 				if (directory.Contains("No Preload"))
@@ -165,6 +164,7 @@ namespace MGE
 				else
 					unloadedAssets.Add(folder.GetRelitivePath(file), file);
 			}
+
 			foreach (string directory in Directory.GetDirectories(path))
 			{
 				ScanDirAddToUnloaded(directory, ref folder);

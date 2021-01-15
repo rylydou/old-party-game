@@ -5,6 +5,9 @@ namespace MGE.Graphics
 {
 	public class Camera : EssentialVars
 	{
+		static Camera _main;
+		public static Camera main { get => _main; }
+
 		protected bool _isDirty = false;
 
 		protected Vector2 _pos;
@@ -25,6 +28,9 @@ namespace MGE.Graphics
 			_zoom = 1.0f;
 
 			Window.onResize += () => { _isDirty = true; };
+
+			if (_main == null)
+				_main = this;
 		}
 
 		public void Move(Vector2 amount)
@@ -47,6 +53,12 @@ namespace MGE.Graphics
 			}
 
 			return _transform;
+		}
+
+		public Vector2 MouseToScreenPos(Vector2 position)
+		{
+			// TODO: Don't be bad
+			return position * (Vector2)(Window.renderSize / Window.gameSize);
 		}
 	}
 }

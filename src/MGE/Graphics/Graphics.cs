@@ -13,7 +13,7 @@ namespace MGE.Graphics
 		#endregion
 
 		#region Primitive Drawing
-		static readonly Dictionary<string, List<Vector2>> circleCache = new Dictionary<string, List<Vector2>>();
+		static readonly Dictionary<int, List<Vector2>> circleCache = new Dictionary<int, List<Vector2>>();
 
 		static Texture2D _pixel;
 		public static Texture2D pixel
@@ -55,17 +55,16 @@ namespace MGE.Graphics
 			return points;
 		}
 
-		static List<Vector2> CreateCircle(double radius, int sides)
+		static List<Vector2> CreateCircle(double radius, int sides = 0)
 		{
-			string circleKey = radius + ", " + sides;
-			if (circleCache.ContainsKey(circleKey))
-				return circleCache[circleKey];
-
 			if (sides == 0)
 			{
 				sides = Math.RoundToInt(Math.Clamp(radius / 16f * 4f, 16, 64));
-				Logger.Log(sides);
 			}
+
+			int circleKey = ((byte)radius ^ (byte)sides).GetHashCode();
+			if (circleCache.ContainsKey(circleKey))
+				return circleCache[circleKey];
 
 			List<Vector2> vectors = new List<Vector2>();
 
@@ -89,7 +88,7 @@ namespace MGE.Graphics
 			DrawPoints(center, arc, color, thickness);
 		}
 
-		public static void DrawCircle(Vector2 position, float radius, int sides, Color color, float thickness = 1.0f)
+		public static void DrawCircle(Vector2 position, float radius, Color color, float thickness = 1.0f, int sides = 0)
 		{
 			DrawPoints(position, CreateCircle(radius, sides), color, thickness);
 		}

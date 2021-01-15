@@ -298,6 +298,8 @@ namespace MGE
 		public static implicit operator Vector2(Microsoft.Xna.Framework.Vector2 vector) => new Vector2(vector.X, vector.Y);
 		public static implicit operator Vector2(Microsoft.Xna.Framework.Point point) => new Vector2(point.X, point.Y);
 		public static implicit operator Microsoft.Xna.Framework.Point(Vector2 point) => new Microsoft.Xna.Framework.Point((int)point.x, (int)point.y);
+		public static implicit operator Vector2Int(Vector2 point) => new Microsoft.Xna.Framework.Point((int)point.x, (int)point.y);
+		public static implicit operator Vector2(Vector2Int point) => new Microsoft.Xna.Framework.Point(point.x, point.y);
 		#endregion
 
 		#region Inherited
