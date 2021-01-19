@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -6,7 +7,9 @@ using MonoGame;
 using MonoGame.Framework;
 using MonoGame.Framework.Utilities;
 using MGE.Graphics;
+using MGE.InputSystem;
 using MGE.FileIO;
+using MGE.ECS;
 
 namespace MGE
 {
@@ -19,13 +22,13 @@ namespace MGE
 		public SpriteBatch sb;
 		public Camera camera;
 
-		public Vector2 mousePos;
+		float statsUpdateCooldown;
 
 		public Main()
 		{
 			Logger.Log("Constructing...");
 
-			using (var timmer = Timmer.Create("Constructing"))
+			using (Timmer.Create("Constructing"))
 			{
 				_current = this;
 
@@ -33,6 +36,9 @@ namespace MGE
 
 				Pointer.mode = PointerMode.System;
 				Pointer.mouseCursor = MouseCursor.Wait;
+
+				Window.ClientSizeChanged += (sender, args) => OnResize();
+				Window.TextInput += (sender, args) => Input.TextInput(args);
 			}
 		}
 
@@ -40,50 +46,65 @@ namespace MGE
 		{
 			Logger.Log("Initializing...");
 
-			using (var timmer = Timmer.Create("Initialize"))
+			using (Timmer.Create("Initialize"))
 			{
 				App.exePath = IO.CleanPath(Environment.CurrentDirectory);
 
-				Window.ClientSizeChanged += (obj, args) => OnResize();
-				MGE.Window.fullAspectRatio = new Vector2(16.0, 9.0);
-				MGE.Window.windowedSize = MGE.Window.monitorSize / 2;
-				MGE.Window.windowedPosition = MGE.Window.monitorSize / 4;
+				MGE.Window.fullAspectRatio = MGEConfig.aspectRatio;
+				MGE.Window.windowedSize = MGEConfig.defaultWindowSize;
+				MGE.Window.windowedPosition = (MGE.Window.monitorSize - MGEConfig.defaultWindowSize) / 2;
 				MGE.Window.Apply();
 
 				OnResize();
 
 				camera = new Camera();
 
-				graphics.SynchronizeWithVerticalRetrace = false;
+				graphics.SynchronizeWithVerticalRetrace = true;
 				graphics.ApplyChanges();
 
 				IsFixedTimeStep = false;
 
-				Window.Title = "MGE Game";
-				Window.AllowUserResizing = true;
+				Window.Title = MGEConfig.gameName;
+				Window.AllowUserResizing = MGEConfig.allowWindowResizing;
 
-				// Pointer.sprite = new DrawCall(Assets.GetAsset<Texture2D>("Sprites/Pointer.png"), Color.red, new Rect(Vector2.zero, new Vector2(16)), Vector2.zero);
+				Input.GamepadInit();
+
+				// IO.Save("/Data/settings.json", new TestStruct(true));
 			}
 
 			base.Initialize();
 
-			Pointer.mode = PointerMode.Sprite;
-			Pointer.sprite = new DrawCall(Assets.GetAsset<Texture2D>("Sprites/Pointer.png"), Color.red, new Rect(Vector2.zero, new Vector2(16)), Vector2.zero);
+			Pointer.mode = PointerMode.Texture;
+			Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer.psd");
+			Pointer.hotspot = new Vector2(0);
+			Pointer.size = new Vector2(16);
+			Pointer.color = Color.red;
+			Pointer.shadowColor = new Color(0.0f, 0.1f);
+			Pointer.shadowOffset = new Vector2(2);
 		}
 
 		protected override void LoadContent()
 		{
 			Logger.Log("Loading Content...");
 
-			using (var timmer = Timmer.Create("Load Content"))
+			using (Timmer.Create("Load Content"))
 			{
 				sb = new SpriteBatch(GraphicsDevice);
 
 				// > Reload Assets
 				Assets.ReloadAssets();
 
-				ScreenManager._current = new ScreenManager();
-				ScreenManager.current.QueueScreen(new GAME.Screens.MenuScreen());
+				new SceneManager(
+					new Scene(new List<Layer>()
+						{
+							new Layer(new List<Entity>()
+								{
+									new Entity(new List<Component>(){new GAME.Components.Background()})
+								}
+							)
+						}
+					)
+				);
 			}
 		}
 
@@ -92,23 +113,33 @@ namespace MGE
 		protected override void Update(GameTime gameTime)
 		{
 			// > Engine <
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-				Exit();
+			Input.Update();
 
-			if (Keyboard.GetState().IsKeyDown(Keys.Q)) MGE.Window.windowMode = WindowMode.Windowed;
-			if (Keyboard.GetState().IsKeyDown(Keys.W)) MGE.Window.windowMode = WindowMode.BorderlessWindowed;
-			if (Keyboard.GetState().IsKeyDown(Keys.E)) MGE.Window.windowMode = WindowMode.Fullscreen;
-			if (Keyboard.GetState().IsKeyDown(Keys.Space)) MGE.Window.Apply();
+			if (Input.CheckButtonPress(Inputs.F11))
+			{
+				switch (MGE.Window.windowMode)
+				{
+					case WindowMode.Windowed: MGE.Window.windowMode = WindowMode.BorderlessWindowed; break;
+					case WindowMode.BorderlessWindowed: MGE.Window.windowMode = WindowMode.Fullscreen; break;
+					case WindowMode.Fullscreen: MGE.Window.windowMode = WindowMode.Windowed; break;
+				}
+				// TODO: Don't be dumb
+				MGE.Window.Apply();
+				MGE.Window.Apply();
+			}
 
 			Time.time = gameTime.TotalGameTime.TotalSeconds;
 			Time.deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
 
-			// double fps = 1.0 / Time.deltaTime;
-			// if (fps > 1) Logger.Log($"{Math.Round(fps)} fps");
-			// else Logger.Log($"{Math.Round(fps * 100.0) / 100.0} fps");
+			if (statsUpdateCooldown < 0.0f)
+			{
+				statsUpdateCooldown = MGEConfig.timeBtwStatsUpdate;
+				Stats.Update();
+			}
+			statsUpdateCooldown -= (float)Time.deltaTime;
 
 			// > Game <
-			ScreenManager.current.activeScreen.Update();
+			SceneManager.current.Update();
 
 			base.Update(gameTime);
 		}
@@ -117,9 +148,11 @@ namespace MGE
 		{
 			GraphicsDevice.Clear(Color.nullColor);
 
-			ScreenManager.current.activeScreen.Draw();
+			SceneManager.current.Draw();
 
-			ScreenManager.current.activeScreen.DrawUI();
+			SceneManager.current.DrawUI();
+
+			Terminal.Draw();
 
 			DrawPointer();
 
@@ -128,11 +161,11 @@ namespace MGE
 
 		void DrawPointer()
 		{
-			if (Pointer.mode == PointerMode.Sprite)
+			if (Pointer.mode == PointerMode.Texture)
 			{
 				sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp);
-				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center + new Vector2(0, 4), Pointer.sprite.rect.size), new Color(0, 0, 0, 0.1f));
-				sb.Draw(Pointer.sprite.sprite, new Rect((Vector2)Mouse.GetState().Position - Pointer.sprite.rect.size * Pointer.sprite.center, Pointer.sprite.rect.size), Pointer.sprite.color);
+				sb.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size), Pointer.shadowColor);
+				sb.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size), Pointer.color);
 				sb.End();
 			}
 		}

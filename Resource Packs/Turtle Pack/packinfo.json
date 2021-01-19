@@ -1,0 +1,18 @@
+{
+	"game": "MGE Game",
+	"name": "Turtle Pack",
+	"version": "1.0.0.0",
+	"author": "Ciber_Turtle",
+	"description": "A test pack for a MGE game",
+	"warning": "VERY EPIC!!!",
+	"origin": "https://github.com/CiberTurtle/MGE",
+	"compatible": [
+		"0.0.1.x",
+		"0.0.4.2",
+		"-",
+		"0.0.4.4",
+		"0.0.5.0-winx86",
+		"+",
+		"all"
+	]
+}

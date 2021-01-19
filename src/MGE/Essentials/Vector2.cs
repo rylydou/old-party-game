@@ -303,15 +303,17 @@ namespace MGE
 		#endregion
 
 		#region Inherited
-		public override string ToString()
+		public override string ToString() => $"({Math.Round(x, 2)}, {Math.Round(x, 2)})";
+
+		public string ToString(bool round = true)
 		{
-			return ToString($"({x}, {y})");
+			if (round)
+				return ToString();
+			else
+				return $"({x}, {x})";
 		}
 
-		public string ToString(string format)
-		{
-			return string.Format(format, x, y);
-		}
+		public string ToString(string format) => string.Format(format, x, y);
 
 		public override int GetHashCode()
 		{

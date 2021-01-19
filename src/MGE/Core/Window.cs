@@ -34,7 +34,7 @@ namespace MGE
 		public static float aspectRatio { get => (float)(fullAspectRatio.y / fullAspectRatio.x); }
 
 		public static Vector2Int renderSize;
-		public static Vector2Int gameSize = new Vector2Int(1920 / 2, 1080 / 2);
+		public static Vector2Int gameSize = MGEConfig.gameSize;
 
 		public static Action onResize = () => { };
 

@@ -5,23 +5,39 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": ".NET Core Launch (console)",
+			"name": ".NET Core Launch",
+			"presentation": {
+				"hidden": false,
+				"group": "Build",
+				"order": 1
+			},
 			"type": "coreclr",
 			"request": "launch",
 			"preLaunchTask": "build",
 			// If you have changed target frameworks, make sure to update the program path.
 			"program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/MGE.dll",
-			"args": [],
+			"args": ["--debug", "--enable-terminal", "--enable-logging"],
+			"logging": {
+				"browserStdOut": false,
+				"elapsedTiming": false,
+				"engineLogging": false,
+				"exceptions": true,
+				"moduleLoad": false,
+				"processExit": true,
+				"programOutput": true,
+				"threadExit": true
+			},
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
 			"console": "internalConsole",
-			"stopAtEntry": false
-		},
-		{
-			"name": ".NET Core Attach",
-			"type": "coreclr",
-			"request": "attach",
-			"processId": "${command:pickProcess}"
+			"stopAtEntry": false,
+			"justMyCode": true
 		}
+		// {
+		// 	"name": ".NET Core Attach",
+		// 	"type": "coreclr",
+		// 	"request": "attach",
+		// 	"processId": "${command:pickProcess}"
+		// }
 	]
 }

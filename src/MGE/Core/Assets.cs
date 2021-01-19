@@ -13,8 +13,9 @@ namespace MGE
 	{
 		public static string[] activeRP = new string[] { };
 
-		static Dictionary<string, object> preloadedAssets = new Dictionary<string, object>();
-		static Dictionary<string, string> unloadedAssets = new Dictionary<string, string>();
+		public static Dictionary<string, object> preloadedAssets = new Dictionary<string, object>();
+		// TODO: Don't index in ignored files
+		public static Dictionary<string, string> unloadedAssets = new Dictionary<string, string>();
 
 		public static void ReloadAssets()
 		{
@@ -52,8 +53,6 @@ namespace MGE
 				var ext = new FileInfo(file.Value).Extension;
 				switch (ext)
 				{
-					case ".info": break;
-					case ".gitkeep": break;
 					default:
 						object asset = LoadAsset(file.Value);
 
@@ -73,6 +72,13 @@ namespace MGE
 							}
 						}
 						break;
+					// > Ignores
+					case ".md": break;
+					case ".gitkeep": break;
+					case ".info": break;
+					// > > Temp
+					case ".xnb": break;
+					case ".fx": break;
 				}
 			}
 		}
@@ -88,6 +94,13 @@ namespace MGE
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
 						asset = Texture2D.FromStream(graphicsDevice, fs);
+						Logger.LogWarning($"Upgrade {path} to a psd");
+					}
+					break;
+				case ".psd":
+					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
+					{
+						asset = Texture2D.FromStream(graphicsDevice, fs);
 					}
 					break;
 				// > Audio
@@ -98,7 +111,7 @@ namespace MGE
 					}
 					break;
 				// > Font
-				case ".font.png":
+				case ".font.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
 						var fontTex = Texture2D.FromStream(graphicsDevice, fs);
@@ -111,14 +124,12 @@ namespace MGE
 
 						chars = info.Select((x) => x[0]).ToList();
 
-						for (int i = 0; i < info.Length; i++)
+						for (int i = 0; i < chars.Count; i++)
 						{
-							bounds.Add(new Rectangle(0, i * 10, 10, 16));
+							bounds.Add(new Rectangle(i * 10, 0, 10, 16));
 							croppings.Add(new Rectangle(0, 0, 0, 0));
-							kernings.Add(new Vector3(0, 16, 0));
+							kernings.Add(new Vector3(0, 12, 0));
 						}
-
-						Logger.Log($"Info: {info.Length}, Rects: {bounds.Count}, Kernings: {kernings.Count}, Chars: {chars.Count}");
 
 						asset = new SpriteFont(fontTex, bounds, croppings, chars, 16, 0, kernings, null);
 					}
@@ -175,10 +186,12 @@ namespace MGE
 		#region Asset Getting
 		public static T GetAsset<T>(string path) where T : class
 		{
+			if (!path.Contains('.')) path += MGEConfig.typeToExtention[typeof(T)];
+
 			if (preloadedAssets.ContainsKey(path))
 				return preloadedAssets[path] as T;
 
-			Logger.LogError($"Can't Find Texture \"{path}\"!");
+			Logger.LogError($"Can't find asset \"{path}\"!");
 			return null;
 		}
 
@@ -187,7 +200,7 @@ namespace MGE
 			if (unloadedAssets.ContainsKey(path))
 				return LoadAsset(unloadedAssets[path]) as T;
 
-			Logger.LogError($"Can't Find Texture \"{path}\"!");
+			Logger.LogError($"Can't find asset \"{path}\"!");
 			return null;
 		}
 		#endregion

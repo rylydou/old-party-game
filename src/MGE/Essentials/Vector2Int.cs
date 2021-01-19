@@ -136,7 +136,7 @@ namespace MGE
 		#endregion
 
 		#region Inherited
-		public override string ToString() => ToString($"({x}, {y})");
+		public override string ToString() => $"({x}, {y})";
 
 		public string ToString(string format) => string.Format(format, x, y);
 

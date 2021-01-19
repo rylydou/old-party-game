@@ -36,6 +36,11 @@ namespace MGE
 		public static double Ceil(double value) => Mathd.Ceiling(value);
 		public static double Floor(double value) => Mathd.Floor(value);
 		public static double Round(double value) => Mathd.Round(value);
+		public static double Round(double value, int places)
+		{
+			var amount = (int)Math.Pow(10, places);
+			return Round(value * amount) / amount;
+		}
 		public static int CeilToInt(double value) => (int)Mathd.Ceiling(value);
 		public static int FloorToInt(double value) => (int)Mathd.Floor(value);
 		public static int RoundToInt(double value) => (int)Mathd.Round(value);
@@ -265,6 +270,9 @@ namespace MGE
 		{
 			return Abs(b - a) < Max(0.000001 * Max(Abs(a), Abs(b)), epsilon * 8);
 		}
+
+		public static int QuickDouble(int value) => value << 1;
+		public static int QuickHalf(int value) => value >> 1;
 		#endregion
 	}
 }

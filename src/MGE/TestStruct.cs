@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using MGE.FileIO;
 
 namespace MGE
 {
-	public struct TestStruct
+	[System.Serializable]
+	public struct TestStruct : ISerializable
 	{
 		public char someChar { get; set; }
 		public string someString { get; set; }
@@ -38,10 +40,17 @@ namespace MGE
 					{"item 1", 0.45},
 					{"item 2", 1.15},
 					{"item 3", 0.99}
+				})},
+				{"player 2", new TestSubstruct('B', "Bob", false, 55.3f, 756.52, 4714.41678m, new double[]{0.5, 1.5, 2.4}, new List<double>() {0.4, 0.72, 1.85}, new Dictionary<string, double>()
+				{
+					{"item 1", 0.69},
+					{"item 2", 4.20},
+					{"item 3", 13.37}
 				})}
 			};
 		}
 
+		[System.Serializable]
 		public struct TestSubstruct
 		{
 			public char someChar { get; set; }
@@ -66,6 +75,22 @@ namespace MGE
 				this.someDoubleList = someDoubleList;
 				this.someDoubleDictionary = someDoubleDictionary;
 			}
+		}
+
+		public void OnBeforeSerilize()
+		{
+		}
+
+		public void OnAfterSerilize()
+		{
+		}
+
+		public void OnBeforeDeserilize()
+		{
+		}
+
+		public void OnAfterDeserilize()
+		{
 		}
 	}
 }

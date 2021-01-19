@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 using MGE.Graphics;
 
 namespace MGE
@@ -8,7 +9,7 @@ namespace MGE
 	{
 		System,
 		Hidden,
-		Sprite
+		Texture
 	}
 
 	public class Pointer : EssentialVars
@@ -26,6 +27,12 @@ namespace MGE
 				Mouse.SetCursor(_mouseCursor);
 			}
 		}
-		public static DrawCall sprite;
+
+		public static Texture2D texture;
+		public static Color color;
+		public static Vector2 hotspot;
+		public static Vector2 size;
+		public static Color shadowColor;
+		public static Vector2 shadowOffset;
 	}
 }
