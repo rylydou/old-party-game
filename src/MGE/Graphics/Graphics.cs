@@ -5,10 +5,31 @@ namespace MGE.Graphics
 {
 	public class Graphics : EssentialVars
 	{
+		public static ulong drawCalls;
+
 		#region Normal Drawing
+		public static void Draw(Texture2D texture, Vector2 position, Color color)
+		{
+			sb.Draw(texture, position, color);
+			drawCalls++;
+		}
+
 		public static void Draw(Texture2D texture, Rect rect, Color color)
 		{
 			sb.Draw(texture, rect, color);
+			drawCalls++;
+		}
+
+		public static void Draw(Texture2D texture, Vector2 position, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+		{
+			sb.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+			drawCalls++;
+		}
+
+		public static void Draw(Texture2D texture, Rect destinationRectangle, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+		{
+			sb.Draw(texture, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
+			drawCalls++;
 		}
 		#endregion
 
@@ -95,7 +116,7 @@ namespace MGE.Graphics
 
 		public static void DrawBox(Rect rect, Color color, float angle = 0.0f)
 		{
-			sb.Draw(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
+			Graphics.Draw(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
 		}
 
 		public static void DrawRectangle(Rect rect, Color color, float thickness = 1.0f)
@@ -135,7 +156,7 @@ namespace MGE.Graphics
 
 		public static void DrawPoint(Vector2 position, Color color)
 		{
-			sb.Draw(pixel, position, color);
+			Graphics.Draw(pixel, position, color);
 		}
 		#endregion
 	}

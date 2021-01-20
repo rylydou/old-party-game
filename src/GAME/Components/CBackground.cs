@@ -5,7 +5,7 @@ using MGE.ECS;
 
 namespace GAME.Components
 {
-	public class Background : Component
+	public class CBackground : Component
 	{
 		Texture2D background;
 
@@ -18,7 +18,7 @@ namespace GAME.Components
 		{
 			using (new DrawBatch())
 			{
-				sb.Draw(background, new Rect(Vector2.zero, Window.gameSize), Color.white);
+				Graphics.Draw(background, new Rect(Vector2.zero, Window.gameSize), Color.white);
 			}
 		}
 	}

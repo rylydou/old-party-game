@@ -21,6 +21,7 @@ namespace MGE
 				sb.DrawString(font, $"Window Mode: {Window.windowMode}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Scale Up: {camera.scaleUpFactor}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Scale Down: {camera.scaleDownFactor}", layout.AddElement(), MGEConfig.statsColor);
+				sb.DrawString(font, $"Draw Calls: {Graphics.Graphics.drawCalls}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, "--- Asset ---", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Preloaded: {Assets.preloadedAssets.Count}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Unloaded: {Assets.unloadedAssets.Count}", layout.AddElement(), MGEConfig.statsColor);

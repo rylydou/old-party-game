@@ -50,35 +50,25 @@ namespace MGE
 		{
 			foreach (var file in index)
 			{
-				var ext = new FileInfo(file.Value).Extension;
-				switch (ext)
+				if (MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file.Value)))
 				{
-					default:
-						object asset = LoadAsset(file.Value);
+					object asset = LoadAsset(file.Value);
 
-						if (asset == null)
-							Logger.LogError($"Asset {file.Key} is null!");
+					if (asset == null)
+						Logger.LogError($"Asset {file.Key} is null!");
+					else
+					{
+						if (preloadedAssets.ContainsKey(file.Key))
+						{
+							Logger.Log($"Replacing: {file.Key}");
+							preloadedAssets[file.Key] = asset;
+						}
 						else
 						{
-							if (preloadedAssets.ContainsKey(file.Key))
-							{
-								Logger.Log($"Replacing: {file.Key}");
-								preloadedAssets[file.Key] = asset;
-							}
-							else
-							{
-								Logger.Log($"Adding: {file.Key}");
-								preloadedAssets.Add(file.Key, asset);
-							}
+							Logger.Log($"Adding: {file.Key}");
+							preloadedAssets.Add(file.Key, asset);
 						}
-						break;
-					// > Ignores
-					case ".md": break;
-					case ".gitkeep": break;
-					case ".info": break;
-					// > > Temp
-					case ".xnb": break;
-					case ".fx": break;
+					}
 				}
 			}
 		}
@@ -147,12 +137,14 @@ namespace MGE
 		{
 			foreach (string file in Directory.GetFiles(path))
 			{
+				if (!MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
+
 				string relitivePath = folder.GetRelitivePath(file);
 
 				if (filesIndex.ContainsKey(relitivePath))
 					filesIndex[relitivePath] = file;
 				else
-					filesIndex.Add(folder.GetRelitivePath(file), file);
+					filesIndex.Add(relitivePath, file);
 			}
 
 			foreach (string directory in Directory.GetDirectories(path))
@@ -168,12 +160,14 @@ namespace MGE
 		{
 			foreach (string file in Directory.GetFiles(path))
 			{
+				if (!MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
+
 				string relitivePath = folder.GetRelitivePath(file);
 
 				if (unloadedAssets.ContainsKey(relitivePath))
 					unloadedAssets[relitivePath] = file;
 				else
-					unloadedAssets.Add(folder.GetRelitivePath(file), file);
+					unloadedAssets.Add(relitivePath, file);
 			}
 
 			foreach (string directory in Directory.GetDirectories(path))

@@ -8,23 +8,23 @@ namespace MGE.InputSystem
 	public class Input : EssentialVars
 	{
 		#region Mouse
-		public static Vector2 mousePosition { get; set; } = Vector2.zero;
+		public static Vector2 mousePosition = Vector2.zero;
 
 		static List<Inputs> _mouseButtons = new List<Inputs>();
 		static List<Inputs> _oldMouseButtons = new List<Inputs>();
 
-		public static int scroll { get; set; }
+		public static int scroll;
 		static int _mouseWheelAdditionPrev;
 		#endregion
 
 		#region Keyboard
-		public static string keyboardString { get; set; }
+		public static string keyboardString;
 
-		public static Keys keyboardKey { get; set; } = Keys.None;
+		public static Keys keyboardKey = Keys.None;
 
-		public static Keys keyboardLastKey { get; set; } = Keys.None;
+		public static Keys keyboardLastKey = Keys.None;
 
-		public static char keyboardLastChar { get; set; } = ' ';
+		public static char keyboardLastChar = ' ';
 
 		static StringBuilder _keyboardBuffer = new StringBuilder();
 		static Keys _keyboardLastKeyBuffer = Keys.None;

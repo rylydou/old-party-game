@@ -12,6 +12,10 @@ namespace MGE.ECS
 
 		protected Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
 
+		public Vector2 position;
+		public float roation;
+		public Vector2 scale;
+
 		int priority = 0;
 
 		Layer _layer;

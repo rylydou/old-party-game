@@ -99,7 +99,8 @@ namespace MGE
 						{
 							new Layer(new List<Entity>()
 								{
-									new Entity(new List<Component>(){new GAME.Components.Background()})
+									new Entity(new List<Component>(){new GAME.Components.CBackground()}),
+									new Entity(new List<Component>(){new GAME.Components.CPlayer()})
 								}
 							)
 						}
@@ -112,7 +113,6 @@ namespace MGE
 
 		protected override void Update(GameTime gameTime)
 		{
-			// > Engine <
 			Input.Update();
 
 			if (Input.CheckButtonPress(Inputs.F11))
@@ -123,6 +123,7 @@ namespace MGE
 					case WindowMode.BorderlessWindowed: MGE.Window.windowMode = WindowMode.Fullscreen; break;
 					case WindowMode.Fullscreen: MGE.Window.windowMode = WindowMode.Windowed; break;
 				}
+
 				// TODO: Don't be dumb
 				MGE.Window.Apply();
 				MGE.Window.Apply();
@@ -138,7 +139,6 @@ namespace MGE
 			}
 			statsUpdateCooldown -= (float)Time.deltaTime;
 
-			// > Game <
 			SceneManager.current.Update();
 
 			base.Update(gameTime);
@@ -146,15 +146,17 @@ namespace MGE
 
 		protected override void Draw(GameTime gameTime)
 		{
+			Graphics.Graphics.drawCalls = 0;
+
 			GraphicsDevice.Clear(Color.nullColor);
 
 			SceneManager.current.Draw();
 
 			SceneManager.current.DrawUI();
 
-			Terminal.Draw();
-
 			DrawPointer();
+
+			Terminal.Draw();
 
 			base.Draw(gameTime);
 		}
@@ -163,10 +165,11 @@ namespace MGE
 		{
 			if (Pointer.mode == PointerMode.Texture)
 			{
-				sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp);
-				sb.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size), Pointer.shadowColor);
-				sb.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size), Pointer.color);
-				sb.End();
+				using (new DrawBatch(transform: null))
+				{
+					Graphics.Graphics.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size), Pointer.shadowColor);
+					Graphics.Graphics.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size), Pointer.color);
+				}
 			}
 		}
 

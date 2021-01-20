@@ -9,12 +9,12 @@ namespace MGE.FileIO
 	{
 		public static string GetInfoFileText(string file)
 		{
-			return File.ReadAllText(file + ".info");
+			return File.ReadAllText(file + MGEConfig.infoFileExt);
 		}
 
 		public static string[] GetInfoFileLines(string file)
 		{
-			return File.ReadAllLines(file + ".info");
+			return File.ReadAllLines(file + MGEConfig.infoFileExt);
 		}
 
 		#region Saving & Loading

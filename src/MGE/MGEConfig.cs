@@ -16,7 +16,7 @@ namespace MGE
 		public static readonly bool allowWindowResizing = true;
 		public static readonly Vector2 aspectRatio = new Vector2(16.0, 9.0);
 		public static readonly Vector2Int defaultWindowSize = new Vector2Int(1280, 720);
-		public static readonly Vector2Int gameSize = new Vector2Int(320, 180);
+		public static readonly Vector2Int gameSize = new Vector2Int(1920 / 6, 1080 / 6);
 
 		// > Asset Management
 		public static readonly Dictionary<Type, string> typeToExtention = new Dictionary<Type, string>()
@@ -25,26 +25,7 @@ namespace MGE
 			{typeof(SoundEffect), ".wav"},
 			{typeof(SpriteFont), ".font.psd"},
 		};
-		public static readonly string[] knowenFiles = new string[]
-		{
-			".psd",
-			".font.psd",
-			".mp3",
-			".wav",
-			".info",
-		};
-		public static readonly string[] ignoredFiles = new string[]
-		{
-			".info",
-			".gitkeep",
-			".md",
-			".ini",
-			".url",
-			"README",
-			// Temp
-			".xnb",
-			".fx",
-		};
+		public static readonly string infoFileExt = ".info";
 
 		// > Debuging
 		public static readonly Color statsColor = new Color("#EEE5");
