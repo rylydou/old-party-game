@@ -14,7 +14,6 @@ namespace MGE
 		public static string[] activeRP = new string[] { };
 
 		public static Dictionary<string, object> preloadedAssets = new Dictionary<string, object>();
-		// TODO: Don't index in ignored files
 		public static Dictionary<string, string> unloadedAssets = new Dictionary<string, string>();
 
 		public static void ReloadAssets()

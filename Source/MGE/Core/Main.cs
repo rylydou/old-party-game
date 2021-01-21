@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,6 +33,11 @@ namespace MGE
 			{
 				_current = this;
 
+				GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+				InactiveSleepTime = TimeSpan.Zero;
+				IsFixedTimeStep = false;
+				graphics.SynchronizeWithVerticalRetrace = true;
+
 				graphics = new GraphicsDeviceManager(this);
 
 				Pointer.mode = PointerMode.System;
@@ -58,11 +64,6 @@ namespace MGE
 				OnResize();
 
 				camera = new Camera();
-
-				graphics.SynchronizeWithVerticalRetrace = true;
-				graphics.ApplyChanges();
-
-				IsFixedTimeStep = false;
 
 				Window.Title = MGEConfig.gameName;
 				Window.AllowUserResizing = MGEConfig.allowWindowResizing;
@@ -154,9 +155,9 @@ namespace MGE
 
 			SceneManager.current.DrawUI();
 
-			DrawPointer();
-
 			Terminal.Draw();
+
+			DrawPointer();
 
 			base.Draw(gameTime);
 		}
