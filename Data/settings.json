@@ -1,1 +1,35 @@
-{"someChar":"A","someString":"The best save file ever!!! \u0022Warning: Very epic!!!\u0022 ","someBool":true,"someFloat":7.4,"someDouble":11.25,"someInt":255,"someDoubleArray":[0.9,1.25,4.33,65.42],"someDoubleList":[0.9,1.25,4.33,65.42],"someDoubleDictionary":{"health":69.1,"mana":1337.5,"exp":888.12},"someTestSubstructDictionary":{"player 1":{"someChar":"B","someString":"Bob","someBool":false,"someFloat":55.3,"someDouble":756.52,"someDecimal":4714.41678,"someDoubleArray":[0.5,1.5,2.4],"someDoubleList":[0.4,0.72,1.85],"someDoubleDictionary":{"item 1":0.45,"item 2":1.15,"item 3":0.99}},"player 2":{"someChar":"B","someString":"Bob","someBool":false,"someFloat":55.3,"someDouble":756.52,"someDecimal":4714.41678,"someDoubleArray":[0.5,1.5,2.4],"someDoubleList":[0.4,0.72,1.85],"someDoubleDictionary":{"item 1":0.69,"item 2":4.2,"item 3":13.37}}}}
+{
+	"someChar": "A",
+	"someString": "The best save file ever!!! \u0022Warning: Very epic!!!\u0022 ",
+	"someBool": true,
+	"someFloat": 7.4,
+	"someDouble": 11.25,
+	"someInt": 255,
+	"someDoubleArray": [0.9, 1.25, 4.33, 65.42],
+	"someDoubleList": [0.9, 1.25, 4.33, 65.42],
+	"someDoubleDictionary": { "health": 69.1, "mana": 1337.5, "exp": 888.12 },
+	"someTestSubstructDictionary": {
+		"player 1": {
+			"someChar": "B",
+			"someString": "Bob",
+			"someBool": false,
+			"someFloat": 55.3,
+			"someDouble": 756.52,
+			"someDecimal": 4714.41678,
+			"someDoubleArray": [0.5, 1.5, 2.4],
+			"someDoubleList": [0.4, 0.72, 1.85],
+			"someDoubleDictionary": { "item 1": 0.45, "item 2": 1.15, "item 3": 0.99 }
+		},
+		"player 2": {
+			"someChar": "B",
+			"someString": "Bob",
+			"someBool": false,
+			"someFloat": 55.3,
+			"someDouble": 756.52,
+			"someDecimal": 4714.41678,
+			"someDoubleArray": [0.5, 1.5, 2.4],
+			"someDoubleList": [0.4, 0.72, 1.85],
+			"someDoubleDictionary": { "item 1": 0.69, "item 2": 4.2, "item 3": 13.37 }
+		}
+	}
+}

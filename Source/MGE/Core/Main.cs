@@ -33,10 +33,11 @@ namespace MGE
 			{
 				_current = this;
 
+				Logger.throwOnError = Args.HasFlag("--throw-on-error");
+
 				GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 				InactiveSleepTime = TimeSpan.Zero;
 				IsFixedTimeStep = false;
-				graphics.SynchronizeWithVerticalRetrace = true;
 
 				graphics = new GraphicsDeviceManager(this);
 
@@ -55,6 +56,9 @@ namespace MGE
 			using (Timmer.Create("Initialize"))
 			{
 				App.exePath = IO.CleanPath(Environment.CurrentDirectory);
+
+				graphics.SynchronizeWithVerticalRetrace = true;
+				graphics.ApplyChanges();
 
 				MGE.Window.fullAspectRatio = MGEConfig.aspectRatio;
 				MGE.Window.windowedSize = MGEConfig.defaultWindowSize;
@@ -76,7 +80,7 @@ namespace MGE
 			base.Initialize();
 
 			Pointer.mode = PointerMode.Texture;
-			Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer.psd");
+			Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer");
 			Pointer.hotspot = new Vector2(0);
 			Pointer.size = new Vector2(16);
 			Pointer.color = Color.red;

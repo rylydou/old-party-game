@@ -15,9 +15,13 @@ namespace MGE
 
 		public Action onSceneChanged = () => { };
 
-		public SceneManager(Scene scene = null)
+		public SceneManager(Scene scene)
 		{
-			if (_current != null) throw new Exception("Don't create more that one Scene Manager");
+			if (_current != null)
+				throw new Exception("Don't create more that one Scene Manager");
+
+			if (scene == null)
+				throw new Exception("New Scene can not be null!");
 
 			_current = this;
 			_activeScene = scene;
@@ -25,6 +29,12 @@ namespace MGE
 
 		public bool QueueScene(Scene scene)
 		{
+			if (scene == null)
+				throw new Exception("New Scene can not be null!");
+
+			if (_activeScene == scene)
+				throw new Exception("Can not queue the same Scene!");
+
 			if (_queuedScene == null)
 			{
 				if (activeScene != null)
@@ -57,7 +67,9 @@ namespace MGE
 		{
 			_activeScene.onDoneCleaningUp -= () => DequeueScene();
 
-			if (_queuedScene == null) Logger.LogError("Queued scene is null, how did this happen?");
+			if (_queuedScene == null)
+				throw new Exception("Queued Scene is null, how did this happen");
+
 			_activeScene = _queuedScene;
 			// _activeScene.Init();
 			_queuedScene = null;

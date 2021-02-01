@@ -16,7 +16,15 @@
 			"preLaunchTask": "build",
 			// If you have changed target frameworks, make sure to update the program path.
 			"program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/MGE.dll",
-			"args": ["--debug", "--enable-terminal", "--enable-logging"],
+			"args": [
+				"--i-know-what-im-doing",
+				"--enable-stats-overlay",
+				"--enable-console",
+				"--enable-logging",
+				"--throw-on-error",
+				"--window-size: 1280 720",
+				"--enable-v-sync"
+			],
 			"logging": {
 				"browserStdOut": false,
 				"elapsedTiming": false,
