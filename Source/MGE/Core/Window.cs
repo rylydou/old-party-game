@@ -68,7 +68,7 @@ namespace MGE
 					break;
 			}
 
-			Main.current.OnResize();
+			Engine.current.OnResize();
 		}
 
 		public static void FixWindow()

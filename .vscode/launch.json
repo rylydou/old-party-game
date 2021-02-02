@@ -22,7 +22,7 @@
 				"--enable-console",
 				"--enable-logging",
 				"--throw-on-error",
-				"--window-size: 1280 720",
+				// "--window-size: 1280 720",
 				"--enable-v-sync"
 			],
 			"logging": {

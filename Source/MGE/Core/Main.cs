@@ -14,10 +14,13 @@ using MGE.ECS;
 
 namespace MGE
 {
-	public partial class Main : Game
+	public partial class Engine
 	{
-		static Main _current;
-		public static Main current { get => _current; }
+		static Engine _current;
+		public static Engine current { get => _current; }
+
+		static Game _game;
+		public static Game game { get => _game; }
 
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch sb;
@@ -25,31 +28,37 @@ namespace MGE
 
 		float statsUpdateCooldown;
 
-		public Main()
+		public Engine(Game game)
 		{
+			if (game == null)
+				throw new Exception("Game cannot be null!");
+
 			Logger.Log("Constructing...");
 
 			using (Timmer.Create("Constructing"))
 			{
 				_current = this;
+				_game = game;
 
 				Logger.throwOnError = Args.HasFlag("--throw-on-error");
 
 				GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
-				InactiveSleepTime = TimeSpan.Zero;
-				IsFixedTimeStep = false;
 
-				graphics = new GraphicsDeviceManager(this);
+				game.InactiveSleepTime = TimeSpan.Zero;
+				game.IsFixedTimeStep = false;
+				game.Window.Title = MGEConfig.gameName;
+				game.Window.AllowUserResizing = MGEConfig.allowWindowResizing;
+				game.Window.ClientSizeChanged += (sender, args) => OnResize();
+				game.Window.TextInput += (sender, args) => Input.TextInput(args);
+
+				graphics = new GraphicsDeviceManager(game);
 
 				Pointer.mode = PointerMode.System;
 				Pointer.mouseCursor = MouseCursor.Wait;
-
-				Window.ClientSizeChanged += (sender, args) => OnResize();
-				Window.TextInput += (sender, args) => Input.TextInput(args);
 			}
 		}
 
-		protected override void Initialize()
+		public void Initialize()
 		{
 			Logger.Log("Initializing...");
 
@@ -57,7 +66,7 @@ namespace MGE
 			{
 				App.exePath = IO.CleanPath(Environment.CurrentDirectory);
 
-				graphics.SynchronizeWithVerticalRetrace = true;
+				graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
 				graphics.ApplyChanges();
 
 				MGE.Window.fullAspectRatio = MGEConfig.aspectRatio;
@@ -69,35 +78,30 @@ namespace MGE
 
 				camera = new Camera();
 
-				Window.Title = MGEConfig.gameName;
-				Window.AllowUserResizing = MGEConfig.allowWindowResizing;
-
 				Input.GamepadInit();
+
+				Pointer.mode = PointerMode.Texture;
+				Pointer.hotspot = new Vector2(0);
+				Pointer.size = new Vector2(16);
+				Pointer.color = Color.red;
+				Pointer.shadowColor = new Color(0.0f, 0.1f);
+				Pointer.shadowOffset = new Vector2(2);
 
 				// IO.Save("/Data/settings.json", new TestStruct(true));
 			}
-
-			base.Initialize();
-
-			Pointer.mode = PointerMode.Texture;
-			Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer");
-			Pointer.hotspot = new Vector2(0);
-			Pointer.size = new Vector2(16);
-			Pointer.color = Color.red;
-			Pointer.shadowColor = new Color(0.0f, 0.1f);
-			Pointer.shadowOffset = new Vector2(2);
 		}
 
-		protected override void LoadContent()
+		public void LoadContent()
 		{
 			Logger.Log("Loading Content...");
 
 			using (Timmer.Create("Load Content"))
 			{
-				sb = new SpriteBatch(GraphicsDevice);
+				sb = new SpriteBatch(game.GraphicsDevice);
 
-				// > Reload Assets
 				Assets.ReloadAssets();
+
+				Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer");
 
 				new SceneManager(
 					new Scene(new List<Layer>()
@@ -114,9 +118,9 @@ namespace MGE
 			}
 		}
 
-		protected override void UnloadContent() => Assets.UnloadAssets();
+		public void UnloadContent() => Assets.UnloadAssets();
 
-		protected override void Update(GameTime gameTime)
+		public void Update(GameTime gameTime)
 		{
 			Input.Update();
 
@@ -145,15 +149,13 @@ namespace MGE
 			statsUpdateCooldown -= (float)Time.deltaTime;
 
 			SceneManager.current.Update();
-
-			base.Update(gameTime);
 		}
 
-		protected override void Draw(GameTime gameTime)
+		public void Draw(GameTime gameTime)
 		{
 			Graphics.Graphics.drawCalls = 0;
 
-			GraphicsDevice.Clear(Color.nullColor);
+			game.GraphicsDevice.Clear(Color.nullColor);
 
 			SceneManager.current.Draw();
 
@@ -162,8 +164,6 @@ namespace MGE
 			Terminal.Draw();
 
 			DrawPointer();
-
-			base.Draw(gameTime);
 		}
 
 		void DrawPointer()

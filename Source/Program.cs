@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
+using MGE;
 
-namespace MGE
+namespace GAME
 {
 	public static class Program
 	{
@@ -14,7 +16,9 @@ namespace MGE
 			else
 				Logger.Log("No Args");
 
-			using (var game = new Main()) game.Run();
+			Args.args = args.ToList();
+
+			using (var game = new Game()) game.Run();
 		}
 	}
 }

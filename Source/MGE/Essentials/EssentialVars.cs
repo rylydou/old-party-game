@@ -6,12 +6,12 @@ namespace MGE
 {
 	public abstract class EssentialVars
 	{
-		protected static GameWindow window { get => Main.current.Window; }
+		protected static GameWindow window { get => Engine.game.Window; }
 
-		protected static GraphicsDeviceManager graphics { get => Main.current.graphics; }
-		protected static GraphicsDevice graphicsDevice { get => Main.current.GraphicsDevice; }
-		protected static SpriteBatch sb { get => Main.current.sb; }
-		protected static Camera camera { get => Main.current.camera; }
+		protected static GraphicsDeviceManager graphics { get => Engine.current.graphics; }
+		protected static GraphicsDevice graphicsDevice { get => Engine.game.GraphicsDevice; }
+		protected static SpriteBatch sb { get => Engine.current.sb; }
+		protected static Camera camera { get => Engine.current.camera; }
 		protected static SpriteFont font { get => MGEConfig.defualtFont; }
 	}
 }
