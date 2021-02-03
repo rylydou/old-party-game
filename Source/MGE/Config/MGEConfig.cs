@@ -9,7 +9,9 @@ namespace MGE
 	{
 		// > General
 		public static readonly string gameName = "MGE Game";
-		static readonly string defualtFontPath = "Fonts/Basic";
+		static readonly string defualtFontPath = @"Fonts/Basic";
+		// C:/Users/{current-user}AppData/Local/Company/Game/
+		public static string saveDataPath = @"%LocalAppData%/MGE/MGEGame/";
 
 		// > Graphics
 		// >> Windowing

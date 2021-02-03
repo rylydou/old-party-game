@@ -9,7 +9,7 @@ namespace GAME.Components
 {
 	public class CPlayer : Component
 	{
-		public float speed = 64;
+		public double speed = 64;
 
 		Vector2 velocity;
 		Texture2D body;
@@ -25,8 +25,8 @@ namespace GAME.Components
 
 			var input = new Vector2();
 
-			input.y = Convert.ToUInt16(Input.CheckButton(Inputs.S)) - Convert.ToUInt16(Input.CheckButton(Inputs.W));
-			input.x = Convert.ToUInt16(Input.CheckButton(Inputs.D)) - Convert.ToUInt16(Input.CheckButton(Inputs.A));
+			input.y = System.Convert.ToUInt16(Input.CheckButton(Inputs.S)) - System.Convert.ToUInt16(Input.CheckButton(Inputs.W));
+			input.x = System.Convert.ToUInt16(Input.CheckButton(Inputs.D)) - System.Convert.ToUInt16(Input.CheckButton(Inputs.A));
 
 			velocity = input.normalized * speed * Time.deltaTime;
 		}
