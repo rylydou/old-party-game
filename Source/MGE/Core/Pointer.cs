@@ -34,5 +34,24 @@ namespace MGE
 		public static Vector2 size;
 		public static Color shadowColor;
 		public static Vector2 shadowOffset;
+
+		public static void Draw()
+		{
+			if (Pointer.mode == PointerMode.Texture)
+			{
+				using (new DrawBatch(transform: null))
+				{
+					Graphics.Graphics.Draw(
+						Pointer.texture,
+						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size),
+						Pointer.shadowColor);
+
+					Graphics.Graphics.Draw(
+						Pointer.texture,
+						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size),
+						Pointer.color);
+				}
+			}
+		}
 	}
 }

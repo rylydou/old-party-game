@@ -4,9 +4,21 @@ using System;
 
 namespace MGE
 {
-	public class Args
+	public static class Args
 	{
-		public static List<string> args = new List<string>();
+		static List<string> _args;
+		public static List<string> args
+		{
+			get
+			{
+				if (_args == null)
+				{
+					_args = Environment.GetCommandLineArgs().ToList();
+					if (_args == null) _args = new List<string>();
+				}
+				return _args;
+			}
+		}
 
 		public static bool HasFlag(string flag)
 		{
@@ -18,7 +30,7 @@ namespace MGE
 			return args.Find((x) => GetFlagName(x) == flagName);
 		}
 
-		public static string[] GetFlagData(string flag)
+		public static string[] GetFlagPerams(string flag)
 		{
 			if (HasFlag(flag)) return null;
 

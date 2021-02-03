@@ -40,9 +40,11 @@ namespace MGE
 				_current = this;
 				_game = game;
 
+				graphics = new GraphicsDeviceManager(game);
+
 				Logger.throwOnError = Args.HasFlag("--throw-on-error");
 
-				GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+				GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 
 				game.InactiveSleepTime = TimeSpan.Zero;
 				game.IsFixedTimeStep = false;
@@ -50,8 +52,8 @@ namespace MGE
 				game.Window.AllowUserResizing = MGEConfig.allowWindowResizing;
 				game.Window.ClientSizeChanged += (sender, args) => OnResize();
 				game.Window.TextInput += (sender, args) => Input.TextInput(args);
-
-				graphics = new GraphicsDeviceManager(game);
+				game.Activated += (sender, args) => Window.isFocused = true;
+				game.Deactivated += (sender, args) => Window.isFocused = false;
 
 				Pointer.mode = PointerMode.System;
 				Pointer.mouseCursor = MouseCursor.Wait;
@@ -64,12 +66,10 @@ namespace MGE
 
 			using (Timmer.Create("Initialize"))
 			{
-				App.exePath = IO.CleanPath(Environment.CurrentDirectory);
-
 				graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
 				graphics.ApplyChanges();
 
-				MGE.Window.fullAspectRatio = MGEConfig.aspectRatio;
+				MGE.Window.aspectRatioFrac = MGEConfig.aspectRatio;
 				MGE.Window.windowedSize = MGEConfig.defaultWindowSize;
 				MGE.Window.windowedPosition = (MGE.Window.monitorSize - MGEConfig.defaultWindowSize) / 2;
 				MGE.Window.Apply();
@@ -163,19 +163,7 @@ namespace MGE
 
 			Terminal.Draw();
 
-			DrawPointer();
-		}
-
-		void DrawPointer()
-		{
-			if (Pointer.mode == PointerMode.Texture)
-			{
-				using (new DrawBatch(transform: null))
-				{
-					Graphics.Graphics.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size), Pointer.shadowColor);
-					Graphics.Graphics.Draw(Pointer.texture, new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size), Pointer.color);
-				}
-			}
+			Pointer.Draw();
 		}
 
 		public void OnResize()

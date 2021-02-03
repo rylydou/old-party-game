@@ -32,9 +32,7 @@ namespace MGE
 				sb.DrawString(font, $"Mouse Pos: {(Vector2Int)Mouse.GetState().Position}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Keyboard String: {Util.RemoveBadChars(Input.keyboardString)}", layout.AddElement(), MGEConfig.statsColor);
 				if (Input.GamepadConnected(0))
-				{
 					sb.DrawString(font, $"Gamepad: {Input.GamepadGetLeftStick(0)}", layout.AddElement(), MGEConfig.statsColor);
-				}
 				else
 					sb.DrawString(font, $"No Gamepad Connected!", layout.AddElement(), MGEConfig.statsColor);
 			}

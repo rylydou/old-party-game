@@ -15,6 +15,18 @@ namespace MGE
 	{
 		public static WindowMode windowMode;
 
+		static bool _isFocused;
+		public static bool isFocused
+		{
+			get => isFocused;
+			internal set
+			{
+				isFocused = value;
+				focusChanged.Invoke(isFocused);
+			}
+		}
+		public static Action<bool> focusChanged = (x) => { };
+
 		public static Vector2Int windowedSize;
 		public static Vector2Int windowedPosition;
 		static Vector2Int _monitorSize;
@@ -30,8 +42,8 @@ namespace MGE
 		}
 		public static Viewport veiwport { get => graphicsDevice.Viewport; }
 
-		public static Vector2 fullAspectRatio;
-		public static float aspectRatio { get => (float)(fullAspectRatio.y / fullAspectRatio.x); }
+		public static Vector2 aspectRatioFrac;
+		public static float aspectRatio { get => (float)(aspectRatioFrac.y / aspectRatioFrac.x); }
 
 		public static Vector2Int renderSize;
 		public static Vector2Int gameSize = MGEConfig.gameSize;

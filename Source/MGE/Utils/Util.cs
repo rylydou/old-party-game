@@ -28,5 +28,22 @@ namespace MGE
 
 			return text;
 		}
+
+		public static ulong GetHashCode(object obj)
+		{
+			if (obj is string s)
+				return GetHashCode(s.ToCharArray());
+			return (ulong)obj.ToString().GetHashCode() ^ (ulong)obj.GetHashCode();
+		}
+
+		public static ulong GetHashCode(ICollection<object> objs)
+		{
+			ulong hashCode = (ulong)objs.GetHashCode();
+
+			foreach (var obj in objs)
+				hashCode ^= (ulong)obj.ToString().GetHashCode() ^ (ulong)obj.GetHashCode();
+
+			return hashCode;
+		}
 	}
 }
