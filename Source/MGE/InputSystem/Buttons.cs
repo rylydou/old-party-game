@@ -172,22 +172,22 @@ namespace MGE.InputSystem
 		#endregion
 
 		#region Gamepad
-		GamepadLeft = 2000,
-		GamepadRight = 2001,
-		GamepadUp = 2002,
-		GamepadDown = 2003,
-		GamepadA = 2004,
-		GamepadB = 2005,
-		GamepadX = 2006,
-		GamepadY = 2007,
-		GamepadLT = 2008, // Left trigger.
-		GamepadRT = 2009, // Right trigger.
-		GamepadLB = 2010, // Left button.
-		GamepadRB = 2011, // Right button.
-		GamepadLS = 2012, // Left stick.
-		GamepadRS = 2013, // Right stick.
-		GamepadStart = 2014,
-		GamepadSelect = 2015,
+		GamepadLeft = 2000,     // D-pad Left
+		GamepadRight = 2001,    // D-pad Right
+		GamepadUp = 2002,       // D-pad Up
+		GamepadDown = 2003,     // D-pad Down
+		GamepadA = 2004,        // A
+		GamepadB = 2005,        // B
+		GamepadX = 2006,        // X
+		GamepadY = 2007,        // Y
+		GamepadLT = 2008,       // ZL
+		GamepadRT = 2009,       // ZR
+		GamepadLB = 2010,       // L
+		GamepadRB = 2011,       // R
+		GamepadLS = 2012,       // Left Stick
+		GamepadRS = 2013,       // Right Stick
+		GamepadStart = 2014,    // +
+		GamepadSelect = 2015,   // -
 		#endregion
 	}
 }

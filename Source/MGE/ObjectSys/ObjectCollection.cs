@@ -5,8 +5,15 @@ namespace MGE
 {
 	public class ObjectCollection
 	{
-		public Guid guid;
+		public Dictionary<Guid, Object> objects = new Dictionary<Guid, Object>();
 
-		public List<Object> objects;
+		public void AddNew(in Object obj)
+		{
+			var guid = Guid.NewGuid();
+
+			obj.guid = guid;
+
+			objects.Add(guid, obj);
+		}
 	}
 }
