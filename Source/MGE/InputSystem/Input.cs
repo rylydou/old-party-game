@@ -8,17 +8,21 @@ namespace MGE.InputSystem
 	public class Input : EssentialVars
 	{
 		#region Mouse
-		public static Vector2 mousePosition = Vector2.zero;
+		public static Vector2 absoluteMousePosition = Vector2.zero;
+		public static Vector2 cameraMousePosition = Vector2.zero;
+		public static Vector2 windowMousePosition = Vector2.zero;
+
+		public static bool isMouseInWindow = false;
 
 		static List<Inputs> _mouseButtons = new List<Inputs>();
 		static List<Inputs> _oldMouseButtons = new List<Inputs>();
 
-		public static int scroll;
-		static int _mouseWheelAdditionPrev;
+		public static int scroll = 0;
+		static int _mouseWheelAdditionPrev = 0;
 		#endregion
 
 		#region Keyboard
-		public static string keyboardString;
+		public static string keyboardString = string.Empty;
 
 		public static Keys keyboardKey = Keys.None;
 
@@ -45,7 +49,7 @@ namespace MGE.InputSystem
 			get => _maxGamepadCount;
 			set
 			{
-				_maxGamepadCount = Math.Min(GamePad.MaximumGamePadCount, value);
+				_maxGamepadCount = Math.Clamp(value, 0, GamePad.MaximumGamePadCount);
 				GamepadInit();
 			}
 		}
@@ -61,7 +65,7 @@ namespace MGE.InputSystem
 		const int _mouseMaxCode = 2000;
 		const int _gamepadMaxCode = 3000;
 
-		static bool _mouseCleared, _keyboardCleared, _gamepadCleared;
+		static bool _mouseCleared, _keyboardCleared, _gamepadCleared = false;
 
 		public static void Update()
 		{
@@ -72,7 +76,13 @@ namespace MGE.InputSystem
 			#region Mouse
 			MouseState mouseState = Mouse.GetState();
 
-			mousePosition = camera.WindowToCameraPos(mouseState.Position);
+			absoluteMousePosition = (Vector2Int)mouseState.Position + Window.windowedPosition;
+			windowMousePosition = mouseState.Position;
+			cameraMousePosition = camera.WindowToCameraPos(mouseState.Position);
+
+			isMouseInWindow =
+			windowMousePosition.x >= 0 && windowMousePosition.x < Window.windowedSize.x &&
+			windowMousePosition.y >= 0 && windowMousePosition.y < Window.windowedSize.y;
 
 			_oldMouseButtons = _mouseButtons;
 			_mouseButtons = new List<Inputs>();
@@ -165,10 +175,10 @@ namespace MGE.InputSystem
 					_gamepadButtons[i].Add(Inputs.Select);
 			}
 
-			#endregion Gamepad.
+			#endregion
 		}
 
-		#region Button checks
+		#region Button Checks
 		public static bool CheckButton(Inputs button, int index = 0)
 		{
 			var buttonCode = (int)button;
@@ -218,7 +228,6 @@ namespace MGE.InputSystem
 			_keyboardBuffer.Append(args.Character);
 			_keyboardLastKeyBuffer = args.Key;
 		}
-
 		#endregion
 
 		#region Gamepad
@@ -282,7 +291,19 @@ namespace MGE.InputSystem
 			return 0;
 		}
 
-		public static void GamepadSetVibration(int index, float leftMotor, float rightMotor) => GamePad.SetVibration(index, leftMotor, rightMotor);
+		public static void GamepadSetVibration(int index, Vector3 position, float strength)
+		{
+			position.Normalize();
+			var multiplier = 1.0f - position.Length();
+
+			GamePad.SetVibration(
+				index,
+				strength * (float)Math.Clamp01(multiplier - 0.25f),
+				strength * (float)Math.Clamp01(multiplier + 0.25f));
+		}
+
+		public static void GamepadSetVibrationRaw(int index, float leftMotor, float rightMotor) =>
+		GamePad.SetVibration(index, leftMotor, rightMotor);
 
 		public static void ClearGamepadInput() => _gamepadCleared = true;
 		#endregion

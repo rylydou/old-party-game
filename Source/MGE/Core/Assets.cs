@@ -133,44 +133,26 @@ namespace MGE
 		#region Dir Scaning
 		static void ScanDir(string path, ref Dictionary<string, string> filesIndex, ref Folder folder)
 		{
-			foreach (string file in Directory.GetFiles(path))
+			foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
 			{
 				if (!MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
 
 				string relitivePath = folder.GetRelitivePath(file);
 
-				if (filesIndex.ContainsKey(relitivePath))
-					filesIndex[relitivePath] = file;
+				if (relitivePath.Contains('@'))
+				{
+					if (unloadedAssets.ContainsKey(relitivePath))
+						unloadedAssets[relitivePath] = file;
+					else
+						unloadedAssets.Add(relitivePath, file);
+				}
 				else
-					filesIndex.Add(relitivePath, file);
-			}
-
-			foreach (string directory in Directory.GetDirectories(path))
-			{
-				if (directory.Contains("No Preload"))
-					ScanDirAddToUnloaded(directory, ref folder);
-
-				ScanDir(directory, ref filesIndex, ref folder);
-			}
-		}
-
-		static void ScanDirAddToUnloaded(string path, ref Folder folder)
-		{
-			foreach (string file in Directory.GetFiles(path))
-			{
-				if (!MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
-
-				string relitivePath = folder.GetRelitivePath(file);
-
-				if (unloadedAssets.ContainsKey(relitivePath))
-					unloadedAssets[relitivePath] = file;
-				else
-					unloadedAssets.Add(relitivePath, file);
-			}
-
-			foreach (string directory in Directory.GetDirectories(path))
-			{
-				ScanDirAddToUnloaded(directory, ref folder);
+				{
+					if (filesIndex.ContainsKey(relitivePath))
+						filesIndex[relitivePath] = file;
+					else
+						filesIndex.Add(relitivePath, file);
+				}
 			}
 		}
 		#endregion

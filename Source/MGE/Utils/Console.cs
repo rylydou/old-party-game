@@ -29,7 +29,9 @@ namespace MGE
 				sb.DrawString(font, $"Entities: {SceneManager.current.activeScene.entityCount}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Components: {SceneManager.current.activeScene.componentCount}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, "--- Input ---", layout.AddElement(), MGEConfig.statsColor);
-				sb.DrawString(font, $"Mouse Pos: {(Vector2Int)Mouse.GetState().Position}", layout.AddElement(), MGEConfig.statsColor);
+				sb.DrawString(font, $"Abs Mouse Pos: {Input.absoluteMousePosition}", layout.AddElement(), MGEConfig.statsColor);
+				sb.DrawString(font, $"Win Mouse Pos: {Input.windowMousePosition}" + (Input.isMouseInWindow? "":"!"), layout.AddElement(), MGEConfig.statsColor);
+				sb.DrawString(font, $"Cam Mouse Pos: {Input.cameraMousePosition}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Keyboard String: {Util.RemoveBadChars(Input.keyboardString)}", layout.AddElement(), MGEConfig.statsColor);
 				if (Input.GamepadConnected(0))
 					sb.DrawString(font, $"Gamepad: {Input.GamepadGetLeftStick(0)}", layout.AddElement(), MGEConfig.statsColor);

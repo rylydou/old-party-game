@@ -18,11 +18,11 @@ namespace MGE
 		static bool _isFocused;
 		public static bool isFocused
 		{
-			get => isFocused;
+			get => _isFocused;
 			internal set
 			{
-				isFocused = value;
-				focusChanged.Invoke(isFocused);
+				_isFocused = value;
+				focusChanged.Invoke(_isFocused);
 			}
 		}
 		public static Action<bool> focusChanged = (x) => { };
@@ -87,13 +87,14 @@ namespace MGE
 		{
 			if (windowMode != WindowMode.Windowed) return;
 
-			int horizontalSize = Math.Clamp(graphics.PreferredBackBufferWidth, 64 * 4, int.MaxValue);
+			int horizontalSize = Math.Clamp(graphics.PreferredBackBufferWidth, MGEConfig.minWindowHorizontalSize, int.MaxValue);
 			Vector2Int size = new Vector2Int(horizontalSize, (int)(horizontalSize * aspectRatio));
 
 			graphics.PreferredBackBufferWidth = size.x;
 			graphics.PreferredBackBufferHeight = size.y;
 
-			// windowedSize = size;
+			windowedSize = size;
+			windowedPosition = Engine.game.Window.Position;
 
 			graphics.ApplyChanges();
 		}

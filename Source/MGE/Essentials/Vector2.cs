@@ -103,6 +103,16 @@ namespace MGE
 			return Math.Sqrt(diff_x * diff_x + diff_y * diff_y);
 		}
 
+		public static Vector2 Clamp(Vector2 vector, double length)
+		{
+			return new Vector2(Math.Clamp(vector.x, -length, length), Math.Clamp(vector.y, -length, length));
+		}
+
+		public static Vector2 Clamp(Vector2 vector, Vector2 size)
+		{
+			return new Vector2(Math.Clamp(vector.x, -size.x, size.x), Math.Clamp(vector.y, -size.y, size.y));
+		}
+
 		public static Vector2 ClampMagnitude(Vector2 vector, double maxLength)
 		{
 			double sqrMagnitude = vector.sqrMagnitude;
