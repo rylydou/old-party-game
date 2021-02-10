@@ -75,7 +75,7 @@ namespace MGE
 					case 1: return g;
 					case 2: return b;
 					case 3: return a;
-					default: throw new IndexOutOfRangeException("Invalid Color index!");
+					default: throw new IndexOutOfRangeException($"Invalid Color index of {index}!");
 				}
 			}
 
@@ -87,15 +87,15 @@ namespace MGE
 					case 1: g = value; break;
 					case 2: b = value; break;
 					case 3: a = value; break;
-					default: throw new IndexOutOfRangeException("Invalid Color index!");
+					default: throw new IndexOutOfRangeException($"Invalid Color index of {index}!");
 				}
 			}
 		}
 		#endregion
 
 		#region Feilds
-		public float grayscale { get { return 0.299f * r + 0.587f * g + 0.114f * b; } }
-		public float maxColorComponent { get => (float)Math.Max(Math.Max(r, g), b); }
+		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
+		public float max { get => (float)Math.Max(Math.Max(r, g), b); }
 		#endregion
 
 		#region Constructors
@@ -135,12 +135,9 @@ namespace MGE
 			}
 
 			this = Color.nullColor;
-			Logger.LogError($"Color \"{hex}\" can not be parsed");
+			Logger.LogError($"Color '{hex}' can not be parsed");
 		}
 
-		/// <summary>
-		/// Alpha defaults to 1.0f
-		/// </summary>
 		public Color(float value)
 		{
 			this.r = value;
@@ -157,9 +154,6 @@ namespace MGE
 			this.a = alpha;
 		}
 
-		/// <summary>
-		/// Alpha defaults to 1.0f
-		/// </summary>
 		public Color(float r, float g, float b)
 		{
 			this.r = r;
@@ -197,7 +191,7 @@ namespace MGE
 					return string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", (int)r * 255, (int)g * 255, (int)b * 255, (int)a * 255);
 			}
 
-			Logger.LogError($"Color \"{this.ToString()}\" can not be convered to hex string a length of {length}!");
+			Logger.LogError($"Color '{this.ToString()}' can not be convered to hex string a length of {length}!");
 			return string.Empty;
 		}
 
@@ -224,16 +218,16 @@ namespace MGE
 		#endregion
 
 		#region Implicit
-		public static Color operator +(Color left, Color right) { return new Color(left.r + right.r, left.g + right.g, left.b + right.b, left.b + right.b); }
-		public static Color operator -(Color left, Color right) { return new Color(left.r - right.r, left.g - right.g, left.b - right.b, left.b - right.b); }
-		public static Color operator *(Color left, Color right) { return new Color(left.r * right.r, left.g * right.g, left.b * right.b, left.b * right.b); }
-		public static Color operator /(Color left, Color right) { return new Color(left.r / right.r, left.g / right.g, left.b / right.b, left.b / right.b); }
+		public static Color operator +(Color left, Color right) => new Color(left.r + right.r, left.g + right.g, left.b + right.b, left.b + right.b);
+		public static Color operator -(Color left, Color right) => new Color(left.r - right.r, left.g - right.g, left.b - right.b, left.b - right.b);
+		public static Color operator *(Color left, Color right) => new Color(left.r * right.r, left.g * right.g, left.b * right.b, left.b * right.b);
+		public static Color operator /(Color left, Color right) => new Color(left.r / right.r, left.g / right.g, left.b / right.b, left.b / right.b);
 
-		public static Color operator -(Color color) { return new Color(-color.r, -color.g, -color.b, -color.b); }
+		public static Color operator -(Color color) => new Color(-color.r, -color.g, -color.b, -color.b);
 
-		public static Color operator *(Color left, float right) { return new Color(left.r * right, left.g * right, left.b * right, left.b * right); }
-		public static Color operator *(float left, Color right) { return new Color(right.r * left, right.g * left, right.b * left, right.b * left); }
-		public static Color operator /(Color left, float right) { return new Color(left.r / right, left.g / right, left.b / right, left.b / right); }
+		public static Color operator *(Color left, float right) => new Color(left.r * right, left.g * right, left.b * right, left.b * right);
+		public static Color operator *(float left, Color right) => new Color(right.r * left, right.g * left, right.b * left, right.b * left);
+		public static Color operator /(Color left, float right) => new Color(left.r / right, left.g / right, left.b / right, left.b / right);
 
 		public static bool operator ==(Color left, Color right)
 		{

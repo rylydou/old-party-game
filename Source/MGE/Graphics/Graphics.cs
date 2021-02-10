@@ -58,7 +58,7 @@ namespace MGE.Graphics
 			points.RemoveAt(points.Count - 1);
 
 			double curAngle = 0.0;
-			double anglePerSide = Math.doublePI / sides;
+			double anglePerSide = Math.pi2 / sides;
 
 			while ((curAngle + (anglePerSide / 2.0)) < startingAngle)
 			{

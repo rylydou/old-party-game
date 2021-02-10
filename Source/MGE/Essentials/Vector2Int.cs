@@ -28,14 +28,11 @@ namespace MGE
 		#endregion
 
 		#region Methods
-		public static Vector2Int Scale(Vector2Int left, Vector2Int right) { return new Vector2Int(left.x * right.x, left.y * right.y); }
+		public static Vector2Int Scale(Vector2Int left, Vector2Int right) => new Vector2Int(left.x * right.x, left.y * right.y);
 
-		public static Vector2Int Perpendicular(Vector2Int inDirection)
-		{
-			return new Vector2Int(-inDirection.y, inDirection.x);
-		}
+		public static Vector2Int Perpendicular(Vector2Int inDirection) => new Vector2Int(-inDirection.y, inDirection.x);
 
-		public static int Dot(Vector2Int left, Vector2Int right) { return left.x * right.x + left.y * right.y; }
+		public static int Dot(Vector2Int left, Vector2Int right) => left.x * right.x + left.y * right.y;
 
 		public static int Distance(Vector2Int from, Vector2Int to)
 		{
@@ -44,9 +41,9 @@ namespace MGE
 			return (int)Math.Sqrt(diff_x * diff_x + diff_y * diff_y);
 		}
 
-		public static Vector2Int Min(Vector2Int a, Vector2Int b) { return new Vector2Int(Math.Min(a.x, b.x), Math.Min(a.y, b.y)); }
+		public static Vector2Int Min(Vector2Int a, Vector2Int b) => new Vector2Int(Math.Min(a.x, b.x), Math.Min(a.y, b.y));
 
-		public static Vector2Int Max(Vector2Int a, Vector2Int b) { return new Vector2Int(Math.Max(a.x, b.x), Math.Max(a.y, b.y)); }
+		public static Vector2Int Max(Vector2Int a, Vector2Int b) => new Vector2Int(Math.Max(a.x, b.x), Math.Max(a.y, b.y));
 
 		#endregion
 
@@ -56,7 +53,6 @@ namespace MGE
 
 		#region Variables
 		public int x;
-
 		public int y;
 
 		public int this[int index]
@@ -67,7 +63,7 @@ namespace MGE
 				{
 					case 0: return x;
 					case 1: return y;
-					default: throw new IndexOutOfRangeException("Invalid Vector2Int index!");
+					default: throw new IndexOutOfRangeException($"Invalid Vector2Int index of {index}!");
 				}
 			}
 
@@ -77,15 +73,15 @@ namespace MGE
 				{
 					case 0: x = value; break;
 					case 1: y = value; break;
-					default: throw new IndexOutOfRangeException("Invalid Vector2Int index!");
+					default: throw new IndexOutOfRangeException($"Invalid Vector2Int index of {index}!");
 				}
 			}
 		}
 		#endregion
 
 		#region Properties
-		public double magnitude { get { return Math.Sqrt(x * x + y * y); } }
-		public int sqrMagnitude { get { return x * x + y * y; } }
+		public double magnitude { get => Math.Sqrt(x * x + y * y); }
+		public int sqrMagnitude { get => x * x + y * y; }
 		#endregion
 
 		#region Constructors
@@ -103,26 +99,30 @@ namespace MGE
 		#endregion
 
 		#region Methods
-		public void Set(int x, int y)
+		public void Clamp(int length)
 		{
-			this.x = x;
-			this.y = y;
+			x = Math.Clamp(x, 0, length);
+			y = Math.Clamp(y, 0, length);
 		}
 
-		public void Scale(Vector2Int scale) { x *= scale.x; y *= scale.y; }
+		public void Clamp(int lengthX, int lengthY)
+		{
+			x = Math.Clamp(x, 0, lengthX);
+			y = Math.Clamp(y, 0, lengthY);
+		}
 		#endregion
 
 		#region Implicit
-		public static Vector2Int operator +(Vector2Int left, Vector2Int right) { return new Vector2Int(left.x + right.x, left.y + right.y); }
-		public static Vector2Int operator -(Vector2Int left, Vector2Int right) { return new Vector2Int(left.x - right.x, left.y - right.y); }
-		public static Vector2Int operator *(Vector2Int left, Vector2Int right) { return new Vector2Int(left.x * right.x, left.y * right.y); }
-		public static Vector2Int operator /(Vector2Int left, Vector2Int right) { return new Vector2Int(left.x / right.x, left.y / right.y); }
+		public static Vector2Int operator +(Vector2Int left, Vector2Int right) => new Vector2Int(left.x + right.x, left.y + right.y);
+		public static Vector2Int operator -(Vector2Int left, Vector2Int right) => new Vector2Int(left.x - right.x, left.y - right.y);
+		public static Vector2Int operator *(Vector2Int left, Vector2Int right) => new Vector2Int(left.x * right.x, left.y * right.y);
+		public static Vector2Int operator /(Vector2Int left, Vector2Int right) => new Vector2Int(left.x / right.x, left.y / right.y);
 
-		public static Vector2Int operator -(Vector2Int vector) { return new Vector2Int(-vector.x, -vector.y); }
+		public static Vector2Int operator -(Vector2Int vector) => new Vector2Int(-vector.x, -vector.y);
 
-		public static Vector2Int operator *(Vector2Int left, int right) { return new Vector2Int(left.x * right, left.y * right); }
-		public static Vector2Int operator *(int left, Vector2Int right) { return new Vector2Int(right.x * left, right.y * left); }
-		public static Vector2Int operator /(Vector2Int left, int right) { return new Vector2Int(left.x / right, left.y / right); }
+		public static Vector2Int operator *(Vector2Int left, int right) => new Vector2Int(left.x * right, left.y * right);
+		public static Vector2Int operator *(int left, Vector2Int right) => new Vector2Int(right.x * left, right.y * left);
+		public static Vector2Int operator /(Vector2Int left, int right) => new Vector2Int(left.x / right, left.y / right);
 
 		public static bool operator ==(Vector2Int left, Vector2Int right) => left.x == right.x && left.y == right.y;
 		public static bool operator !=(Vector2Int lhs, Vector2Int rhs) => !(lhs == rhs);
@@ -140,7 +140,7 @@ namespace MGE
 
 		public string ToString(string format) => string.Format(format, x, y);
 
-		public override int GetHashCode() => x.GetHashCode() ^ (y.GetHashCode() << 2);
+		public override int GetHashCode() => (x.GetHashCode() >> 2) ^ (y.GetHashCode() << 2);
 
 		public bool Equals(Vector2Int other) => x == other.x && y == other.y;
 

@@ -4,8 +4,27 @@ using System.Linq;
 
 namespace MGE
 {
-	public struct Util
+	public static class Util
 	{
+		public const int badCharsAmount = 32;
+
+		static char[] _badChars;
+		public static char[] badChars
+		{
+			get
+			{
+				if (_badChars == null)
+				{
+					_badChars = new char[badCharsAmount];
+
+					for (int i = 0; i < badCharsAmount; i++)
+						badChars[i] = (char)i;
+				}
+
+				return _badChars;
+			}
+		}
+
 		public static string CleanRound(double fps)
 		{
 			if (fps > 1.0)
@@ -16,32 +35,25 @@ namespace MGE
 
 		public static string RemoveBadChars(string text)
 		{
-			text = text.Replace("\0", "");
-			text = text.Replace("", "");
-			text = text.Replace("\a", "");
-			text = text.Replace("\b", "");
-			text = text.Replace("\f", "");
-			text = text.Replace("\n", "");
-			text = text.Replace("\r", "");
-			text = text.Replace("\t", "");
-			text = text.Replace("\v", "");
+			foreach (var c in badChars)
+				text = text.Replace(c.ToString(), "");
 
 			return text;
 		}
 
-		public static ulong GetHashCode(object obj)
+		public static int GetHashCode(object obj)
 		{
 			if (obj is string s)
 				return GetHashCode(s.ToCharArray());
-			return (ulong)obj.ToString().GetHashCode() ^ (ulong)obj.GetHashCode();
+			return obj.ToString().GetHashCode() ^ obj.GetHashCode();
 		}
 
-		public static ulong GetHashCode(ICollection<object> objs)
+		public static int GetHashCode(ICollection<object> objs)
 		{
-			ulong hashCode = (ulong)objs.GetHashCode();
+			var hashCode = objs.GetHashCode();
 
 			foreach (var obj in objs)
-				hashCode ^= (ulong)obj.ToString().GetHashCode() ^ (ulong)obj.GetHashCode();
+				hashCode ^= obj.ToString().GetHashCode() ^ obj.GetHashCode();
 
 			return hashCode;
 		}

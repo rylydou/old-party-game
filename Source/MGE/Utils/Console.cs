@@ -1,7 +1,10 @@
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MGE.UI;
+using MGE.UI.Elements;
 using MGE.UI.Layouts;
 using MGE.InputSystem;
 
@@ -11,6 +14,13 @@ namespace MGE
 	{
 		public static void Draw()
 		{
+			GUI.AddElement(new GUIStackLayout(new List<GUIElement>()
+			{
+				new GUIImage(null) { color = Color.red },
+				new GUIImage(null) { color = Color.green },
+				new GUIImage(null) { color = Color.blue },
+			}, 64));
+
 			using (var layout = new StackLayout(new Vector2Int(8), 20, false))
 			{
 				sb.DrawString(font, $"{Util.CleanRound(Stats.fps)} / {Util.CleanRound(Stats.averageFps)} / {Util.CleanRound(Stats.minFps)}", layout.AddElement(), MGEConfig.FpsToColor((int)Stats.fps));
@@ -30,7 +40,7 @@ namespace MGE
 				sb.DrawString(font, $"Components: {SceneManager.current.activeScene.componentCount}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, "--- Input ---", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Abs Mouse Pos: {Input.absoluteMousePosition}", layout.AddElement(), MGEConfig.statsColor);
-				sb.DrawString(font, $"Win Mouse Pos: {Input.windowMousePosition}" + (Input.isMouseInWindow? "":"!"), layout.AddElement(), MGEConfig.statsColor);
+				sb.DrawString(font, $"Win Mouse Pos: {Input.windowMousePosition}" + (Input.isMouseInWindow ? "" : "!"), layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Cam Mouse Pos: {Input.cameraMousePosition}", layout.AddElement(), MGEConfig.statsColor);
 				sb.DrawString(font, $"Keyboard String: {Util.RemoveBadChars(Input.keyboardString)}", layout.AddElement(), MGEConfig.statsColor);
 				if (Input.GamepadConnected(0))

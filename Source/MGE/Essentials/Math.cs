@@ -5,11 +5,17 @@ using Mathd = System.Math;
 
 namespace MGE
 {
-	public struct Math
+	public static class Math
 	{
 		#region Constants
+		public const double e = 2.71828175;
+		public const double log10E = 0.4342945;
+		public const double Log2E = 1.442695;
 		public const double pi = Mathd.PI;
-		public const double doublePI = Mathd.PI * 2;
+		public const double pi2 = Mathd.PI * 2;
+		public const double tau = Mathd.PI * 2;
+		public const double piOver2 = Mathd.PI / 2;
+		public const double piOver4 = Mathd.PI / 4;
 		public const double infinity = Double.PositiveInfinity;
 		public const double negativeInfinity = Double.NegativeInfinity;
 		public const double deg2Rad = pi * 2.0 / 360.0;
@@ -143,30 +149,35 @@ namespace MGE
 		#endregion
 
 		#region Lerps
-		public static double Lerp(double a, double b, double t)
+		public static double Lerp(double current, double target, double time) =>
+		current + (target - current) * Clamp01(time);
+
+		public static double LerpUnclamped(double current, double target, double time) =>
+		current + (target - current) * time;
+
+		public static double LerpPrecise(double current, double target, double time)
 		{
-			return a + (b - a) * Clamp01(t);
+			time = Clamp01(time);
+			return ((1 - time) * current) + (target * time);
 		}
 
-		public static double LerpUnclamped(double a, double b, double t)
-		{
-			return a + (b - a) * t;
-		}
+		public static double LerpPreciseUnclamped(double current, double target, double time) =>
+		((1 - time) * current) + (target * time);
 
-		public static double InverseLerp(double a, double b, double value)
+		public static double InverseLerp(double current, double target, double time)
 		{
-			if (a != b)
-				return Clamp01((value - a) / (b - a));
+			if (current != target)
+				return Clamp01((time - current) / (target - current));
 			else
 				return 0.0;
 		}
 
-		public static double LerpAngle(double a, double b, double t)
+		public static double LerpAngle(double current, double target, double time)
 		{
-			double delta = Repeat((b - a), 360.0);
+			double delta = Repeat((target - current), 360.0);
 			if (delta > 180.0)
 				delta -= 360.0;
-			return a + delta * Clamp01(t);
+			return current + delta * Clamp01(time);
 		}
 
 		static public double MoveTowards(double current, double target, double maxDelta)
@@ -185,77 +196,18 @@ namespace MGE
 			return MoveTowards(current, target, maxDelta);
 		}
 
-		public static double SmoothStep(double from, double to, double t)
+		public static double SmoothStep(double from, double to, double time)
 		{
-			t = Math.Clamp01(t);
-			t = -2.0 * t * t * t + 3.0 * t * t;
-			return to * t + from * (1 - t);
-		}
-
-		public static double SmoothDamp(double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed)
-		{
-			double deltaTime = Time.deltaTime;
-			return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
-		}
-
-		public static double SmoothDamp(double current, double target, ref double currentVelocity, double smoothTime)
-		{
-			double deltaTime = Time.deltaTime;
-			double maxSpeed = Math.infinity;
-			return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
-		}
-
-		public static double SmoothDamp(double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed, double deltaTime)
-		{
-			smoothTime = Max(0.0001, smoothTime);
-			double omega = 2 / smoothTime;
-
-			double x = omega * deltaTime;
-			double exp = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
-			double change = current - target;
-			double originalTo = target;
-
-			double maxChange = maxSpeed * smoothTime;
-			change = Math.Clamp(change, -maxChange, maxChange);
-			target = current - change;
-
-			double temp = (currentVelocity + omega * change) * deltaTime;
-			currentVelocity = (currentVelocity - omega * temp) * exp;
-			double output = target + (change + temp) * exp;
-
-			if (originalTo - current > 0.0 == output > originalTo)
-			{
-				output = originalTo;
-				currentVelocity = (output - originalTo) / deltaTime;
-			}
-
-			return output;
-		}
-
-		public static double SmoothDampAngle(double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed)
-		{
-			double deltaTime = Time.deltaTime;
-			return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
-		}
-
-		public static double SmoothDampAngle(double current, double target, ref double currentVelocity, double smoothTime)
-		{
-			double deltaTime = Time.deltaTime;
-			double maxSpeed = Math.infinity;
-			return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
-		}
-
-		public static double SmoothDampAngle(double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed, double deltaTime)
-		{
-			target = current + DeltaAngle(current, target);
-			return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
+			time = Math.Clamp01(time);
+			time = -2.0 * time * time * time + 3.0 * time * time;
+			return to * time + from * (1 - time);
 		}
 		#endregion
 
 		#region Utils
-		public static double Repeat(double t, double length)
+		public static double Repeat(double target, double length)
 		{
-			return Clamp(t - Floor(t / length) * length, 0.0, length);
+			return Clamp(target - Floor(target / length) * length, 0.0, length);
 		}
 
 		public static double DeltaAngle(double current, double target)
@@ -266,13 +218,10 @@ namespace MGE
 			return delta;
 		}
 
-		public static bool Approximately(double a, double b)
-		{
-			return Abs(b - a) < Max(0.000001 * Max(Abs(a), Abs(b)), epsilon * 8);
-		}
+		public static bool Approximately(double a, double b) => Abs(b - a) < Max(0.000001 * Max(Abs(a), Abs(b)), epsilon * 8);
 
-		public static int QuickDouble(int value) => value << 1;
-		public static int QuickHalf(int value) => value >> 1;
+		public static int BitwiseDouble(int value) => value << 1;
+		public static int BitwiseHalf(int value) => value >> 1;
 		#endregion
 	}
 }

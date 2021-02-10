@@ -8,6 +8,7 @@ using MonoGame;
 using MonoGame.Framework;
 using MonoGame.Framework.Utilities;
 using MGE.Graphics;
+using MGE.UI;
 using MGE.InputSystem;
 using MGE.FileIO;
 using MGE.ECS;
@@ -160,6 +161,8 @@ namespace MGE
 			SceneManager.current.Draw();
 
 			SceneManager.current.DrawUI();
+
+			GUI.Draw();
 
 			Terminal.Draw();
 
