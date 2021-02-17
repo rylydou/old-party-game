@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections;
 using Mathd = System.Math;
 
 namespace MGE
@@ -119,11 +117,11 @@ namespace MGE
 		#endregion
 
 		#region Clamps
-		public static double Clamp(double value, double min, double max)
+		public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
 		{
-			if (value < min)
+			if (value.CompareTo(min) < 0)
 				value = min;
-			else if (value > max)
+			else if (value.CompareTo(max) > 0)
 				value = max;
 			return value;
 		}
@@ -137,12 +135,59 @@ namespace MGE
 			return value;
 		}
 
+		public static float Clamp(float value, float min, float max)
+		{
+			if (value < min)
+				value = min;
+			else if (value > max)
+				value = max;
+			return value;
+		}
+
+		public static double Clamp(double value, double min, double max)
+		{
+			if (value < min)
+				value = min;
+			else if (value > max)
+				value = max;
+			return value;
+		}
+
+		public static decimal Clamp(decimal value, decimal min, decimal max)
+		{
+			if (value < min)
+				value = min;
+			else if (value > max)
+				value = max;
+			return value;
+		}
+
+		public static float Clamp01(float value)
+		{
+			if (value < 0.0f)
+				return 0.0f;
+			else if (value > 1.0f)
+				return 1.0f;
+			else
+				return value;
+		}
+
 		public static double Clamp01(double value)
 		{
 			if (value < 0.0)
 				return 0.0;
 			else if (value > 1.0)
 				return 1.0;
+			else
+				return value;
+		}
+
+		public static decimal Clamp01(decimal value)
+		{
+			if (value < 0.0m)
+				return 0.0m;
+			else if (value > 1.0m)
+				return 1.0m;
 			else
 				return value;
 		}

@@ -35,7 +35,7 @@ namespace GAME.Components
 		{
 			using (new DrawBatch())
 			{
-				Graphics.Draw(body, new Rect(entity.position, new Vector2(16)), Color.white);
+				GFX.Draw(body, new Rect(entity.position, new Vector2(16)), Color.white);
 			}
 		}
 	}

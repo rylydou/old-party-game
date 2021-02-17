@@ -17,6 +17,7 @@
 			// If you have changed target frameworks, make sure to update the program path.
 			"program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/MGE.dll",
 			"args": [
+				"--hide-exception",
 				"--i-know-what-im-doing",
 				"--enable-stats-overlay",
 				"--enable-console",

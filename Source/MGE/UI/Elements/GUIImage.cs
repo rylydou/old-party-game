@@ -1,5 +1,5 @@
-using Microsoft.Xna.Framework.Graphics;
 using MGE.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.UI.Elements
 {
@@ -7,17 +7,19 @@ namespace MGE.UI.Elements
 	{
 		public Texture2D texture;
 
-		public GUIImage(Texture2D texture = null)
+		public GUIImage()
 		{
-			if (texture == null)
-				texture = Graphics.Graphics.pixel;
+			this.texture = GFX.pixel;
+		}
 
+		public GUIImage(Texture2D texture)
+		{
 			this.texture = texture;
 		}
 
 		public override void Draw()
 		{
-			Graphics.Graphics.Draw(texture, rect, color);
+			GFX.Draw(texture, rect, color);
 		}
 	}
 }

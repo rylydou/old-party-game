@@ -4,26 +4,32 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Graphics
 {
-	public class DrawBatch : EssentialVars, IDisposable
+	public class DrawBatch : IDisposable
 	{
 		public DrawBatch()
 		{
-			sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, camera.Transformation());
+			GFX.sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Camera.main.Transformation());
 		}
 
 		public DrawBatch(SamplerState samplerState = null, Effect effect = null, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null)
 		{
-			sb.Begin(sortMode, blendState, samplerState, null, null, effect, camera.Transformation());
+			if (samplerState == null) samplerState = SamplerState.PointClamp;
+			if (blendState == null) blendState = BlendState.NonPremultiplied;
+
+			GFX.sb.Begin(sortMode, blendState, samplerState, null, null, effect, Camera.main.Transformation());
 		}
 
 		public DrawBatch(SamplerState samplerState = null, Effect effect = null, SpriteSortMode sortMode = SpriteSortMode.Deferred, BlendState blendState = null, Matrix? transform = null)
 		{
-			sb.Begin(sortMode, blendState, samplerState, null, null, effect, transform);
+			if (samplerState == null) samplerState = SamplerState.PointClamp;
+			if (blendState == null) blendState = BlendState.NonPremultiplied;
+
+			GFX.sb.Begin(sortMode, blendState, samplerState, null, null, effect, transform);
 		}
 
 		public void Dispose()
 		{
-			sb.End();
+			GFX.sb.End();
 		}
 	}
 }

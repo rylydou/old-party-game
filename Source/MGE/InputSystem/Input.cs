@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MGE.Graphics;
 
 namespace MGE.InputSystem
 {
-	public class Input : EssentialVars
+	public class Input
 	{
 		#region Mouse
 		public static Vector2 absoluteMousePosition = Vector2.zero;
@@ -76,9 +77,9 @@ namespace MGE.InputSystem
 			#region Mouse
 			MouseState mouseState = Mouse.GetState();
 
-			absoluteMousePosition = (Vector2Int)mouseState.Position + Window.windowedPosition;
+			absoluteMousePosition = (Vector2Int)mouseState.Position + Window.windowedPosition + new Vector2Int(8, 31);
 			windowMousePosition = mouseState.Position;
-			cameraMousePosition = camera.WindowToCameraPos(mouseState.Position);
+			cameraMousePosition = Camera.main.WindowToCameraPos(mouseState.Position);
 
 			isMouseInWindow =
 			windowMousePosition.x >= 0 && windowMousePosition.x < Window.windowedSize.x &&

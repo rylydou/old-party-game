@@ -1,10 +1,10 @@
 using System;
+using MGE.Graphics;
 using Microsoft.Xna.Framework.Graphics;
-using MGE;
 
 namespace MGE.UI.Layouts
 {
-	public class StackLayout : EssentialVars, IDisposable
+	public class StackLayout : IDisposable
 	{
 		readonly Vector2Int _position;
 		readonly int _sizePerElement;
@@ -20,7 +20,7 @@ namespace MGE.UI.Layouts
 			_sizePerElement = sizePerElement;
 			_isHorizontal = isHorizontal;
 
-			sb.Begin(blendState: BlendState.NonPremultiplied, samplerState: SamplerState.LinearClamp);
+			GFX.sb.Begin(blendState: BlendState.NonPremultiplied, samplerState: SamplerState.LinearClamp);
 		}
 
 		public Vector2Int AddElement(int elementSize = -1)
@@ -46,7 +46,7 @@ namespace MGE.UI.Layouts
 
 		public void Dispose()
 		{
-			sb.End();
+			GFX.sb.End();
 		}
 	}
 }

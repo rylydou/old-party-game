@@ -1,33 +1,32 @@
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System;
 
 namespace MGE.Graphics
 {
-	public class Render : EssentialVars, IDisposable
+	public class Render : IDisposable
 	{
 		public RenderTarget2D render;
 		public bool drawOnDispose;
 
-		public Render(Vector2Int size, bool drawOnDispose = false)
+		public Render(Vector2Int size, bool drawOnDispose = true)
 		{
-			this.render = new RenderTarget2D(graphicsDevice, size.x, size.y);
+			this.render = new RenderTarget2D(Engine.game.GraphicsDevice, size.x, size.y);
 			this.drawOnDispose = drawOnDispose;
 
-			graphicsDevice.SetRenderTarget(render);
+			Engine.game.GraphicsDevice.SetRenderTarget(render);
 		}
 
-		public Render(Rect size, bool drawOnDispose = false)
+		public Render(Rect size, bool drawOnDispose = true)
 		{
-			this.render = new RenderTarget2D(graphicsDevice, (int)size.width, (int)size.height);
+			this.render = new RenderTarget2D(Engine.game.GraphicsDevice, (int)size.width, (int)size.height);
 			this.drawOnDispose = drawOnDispose;
 
-			graphicsDevice.SetRenderTarget(render);
+			Engine.game.GraphicsDevice.SetRenderTarget(render);
 		}
 
 		public ref RenderTarget2D Done()
 		{
-			graphicsDevice.SetRenderTarget(null);
+			Engine.game.GraphicsDevice.SetRenderTarget(null);
 			return ref render;
 		}
 
@@ -35,9 +34,9 @@ namespace MGE.Graphics
 		{
 			Done();
 
-			sb.Begin(samplerState: SamplerState.PointClamp);
-			sb.Draw(render, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
-			sb.End();
+			GFX.sb.Begin(samplerState: SamplerState.PointClamp);
+			GFX.sb.Draw(render, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
+			GFX.sb.End();
 
 			render.Dispose();
 		}

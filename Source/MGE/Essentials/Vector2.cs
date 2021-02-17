@@ -238,9 +238,9 @@ namespace MGE
 		public string ToString(int amountOfRounding = -1)
 		{
 			if (amountOfRounding < 0)
-				return $"({x}, {x})";
+				return $"({x}, {y})";
 			else
-				return $"({Math.Round(x, amountOfRounding)}, {Math.Round(x, amountOfRounding)})";
+				return $"({Math.Round(x, amountOfRounding)}, {Math.Round(y, amountOfRounding)})";
 		}
 
 		public string ToString(string format) => string.Format(format, x, y);

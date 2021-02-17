@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
-	public class Scene : EssentialVars
+	public class Scene
 	{
 		public string name;
 

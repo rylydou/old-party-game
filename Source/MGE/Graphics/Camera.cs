@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Graphics
 {
-	public class Camera : EssentialVars
+	public class Camera
 	{
 		static Camera _main;
 		public static Camera main { get => _main; }
@@ -49,7 +49,7 @@ namespace MGE.Graphics
 					Matrix.CreateTranslation(new Vector3(-(float)_position.x - Window.veiwport.Width / 2, -(float)_position.y - Window.veiwport.Height / 2, 0.0f)) *
 					Matrix.CreateRotationZ(rotation) *
 					Matrix.CreateScale(new Vector3(zoom, zoom, 1.0f)) *
-					Matrix.CreateTranslation(new Vector3(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2, 0)) *
+					Matrix.CreateTranslation(new Vector3(GFX.graphicsDevice.Viewport.Width / 2, GFX.graphicsDevice.Viewport.Height / 2, 0)) *
 					Matrix.CreateScale((float)scaleUpFactor.x, (float)scaleUpFactor.y, 1f);
 
 				_isDirty = false;

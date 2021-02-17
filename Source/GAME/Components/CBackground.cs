@@ -18,7 +18,7 @@ namespace GAME.Components
 		{
 			using (new DrawBatch())
 			{
-				Graphics.Draw(background, new Rect(Vector2.zero, Window.gameSize), Color.white);
+				GFX.Draw(background, new Rect(Vector2.zero, Window.gameSize), Color.white);
 			}
 		}
 	}

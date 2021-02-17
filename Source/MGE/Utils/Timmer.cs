@@ -72,14 +72,8 @@ namespace MGE
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Doesn't stop timmer
-		/// </summary>
 		public long time { get { _timmer.Stop(); return _timmer.ElapsedMilliseconds; } }
 
-		/// <summary>
-		/// Stops timmer
-		/// </summary>
 		public long elapsedTime { get { _timmer.Stop(); return _timmer.ElapsedMilliseconds; } }
 		#endregion
 
@@ -97,13 +91,8 @@ namespace MGE
 		public void Stop() => _timmer.Stop();
 		public void Restart() => _timmer.Restart();
 
-		/// <summary>
-		/// Stops timmer
-		/// </summary>
 		public void LogTime()
 		{
-			// Just in case... I may be dumb but idc
-			Stop();
 			Logger.Log($"⏰ {name} Timmer: {elapsedTime}ms");
 		}
 		#endregion

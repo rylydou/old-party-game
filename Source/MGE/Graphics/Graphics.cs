@@ -1,35 +1,55 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Graphics
 {
-	public class Graphics : EssentialVars
+	public class GFX
 	{
-		public static ulong drawCalls;
+		public static GraphicsDevice graphicsDevice { get => Engine.game.GraphicsDevice; }
+		public static GraphicsDeviceManager graphics { get => Engine.current.graphics; }
+		public static SpriteBatch sb { get => Engine.current.sb; }
+
+		public static ulong drawCalls { get; internal set; }
 
 		#region Normal Drawing
 		public static void Draw(Texture2D texture, Vector2 position, Color color)
 		{
-			sb.Draw(texture, position, color);
+			sb.Draw(texture != null ? texture : pixel, position, color);
 			drawCalls++;
 		}
 
 		public static void Draw(Texture2D texture, Rect rect, Color color)
 		{
-			sb.Draw(texture, rect, color);
+			sb.Draw(texture != null ? texture : pixel, rect, color);
 			drawCalls++;
 		}
 
 		public static void Draw(Texture2D texture, Vector2 position, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
 		{
-			sb.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
 			drawCalls++;
 		}
 
 		public static void Draw(Texture2D texture, Rect destinationRectangle, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
 		{
-			sb.Draw(texture, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
+			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
 			drawCalls++;
+		}
+
+		public static void Text(string text, Vector2 position)
+		{
+			Text(text, position, Color.white, MGEConfig.defualtFont);
+		}
+
+		public static void Text(string text, Vector2 position, Color color)
+		{
+			Text(text, position, color, MGEConfig.defualtFont);
+		}
+
+		public static void Text(string text, Vector2 position, Color color, SpriteFont font)
+		{
+			sb.DrawString(font, text, position, color);
 		}
 		#endregion
 
@@ -116,7 +136,7 @@ namespace MGE.Graphics
 
 		public static void DrawBox(Rect rect, Color color, float angle = 0.0f)
 		{
-			Graphics.Draw(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
+			GFX.Draw(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
 		}
 
 		public static void DrawRectangle(Rect rect, Color color, float thickness = 1.0f)
@@ -156,7 +176,7 @@ namespace MGE.Graphics
 
 		public static void DrawPoint(Vector2 position, Color color)
 		{
-			Graphics.Draw(pixel, position, color);
+			GFX.Draw(pixel, position, color);
 		}
 		#endregion
 	}

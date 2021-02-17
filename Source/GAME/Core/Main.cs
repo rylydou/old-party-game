@@ -1,13 +1,15 @@
+using System.Collections.Generic;
 using MGE;
+using MGE.ECS;
 using Microsoft.Xna.Framework;
 
 namespace GAME
 {
-	public class Game : Microsoft.Xna.Framework.Game
+	public class Main : Microsoft.Xna.Framework.Game
 	{
 		public Engine engine;
 
-		public Game()
+		public Main()
 		{
 			engine = new Engine(this);
 		}
@@ -21,6 +23,16 @@ namespace GAME
 		protected override void LoadContent()
 		{
 			engine.LoadContent();
+			new SceneManager(
+				new Scene(new List<Layer>()
+				{
+					new Layer(new List<Entity>()
+					{
+						new Entity(new List<Component>(){new GAME.Components.CBackground()}),
+						new Entity(new List<Component>(){new GAME.Components.CPlayer()})
+					})
+				})
+			);
 			base.LoadContent();
 		}
 

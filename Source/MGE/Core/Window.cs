@@ -1,3 +1,4 @@
+using MGE.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,8 +12,10 @@ namespace MGE
 		Fullscreen
 	}
 
-	public class Window : EssentialVars
+	public class Window
 	{
+		public static GameWindow gameWindow { get => Engine.game.Window; }
+
 		public static WindowMode windowMode;
 
 		static bool _isFocused;
@@ -40,7 +43,7 @@ namespace MGE
 				return _monitorSize;
 			}
 		}
-		public static Viewport veiwport { get => graphicsDevice.Viewport; }
+		public static Viewport veiwport { get => Engine.game.GraphicsDevice.Viewport; }
 
 		public static Vector2 aspectRatioFrac;
 		public static float aspectRatio { get => (float)(aspectRatioFrac.y / aspectRatioFrac.x); }
@@ -55,28 +58,28 @@ namespace MGE
 			switch (windowMode)
 			{
 				case WindowMode.Windowed:
-					window.Position = windowedPosition;
-					graphics.PreferredBackBufferWidth = windowedSize.x;
-					graphics.PreferredBackBufferHeight = windowedSize.y;
-					graphics.IsFullScreen = false;
-					window.IsBorderless = false;
-					graphics.ApplyChanges();
+					gameWindow.Position = windowedPosition;
+					GFX.graphics.PreferredBackBufferWidth = windowedSize.x;
+					GFX.graphics.PreferredBackBufferHeight = windowedSize.y;
+					GFX.graphics.IsFullScreen = false;
+					gameWindow.IsBorderless = false;
+					GFX.graphics.ApplyChanges();
 					break;
 				case WindowMode.BorderlessWindowed:
-					// windowedPosition = window.Position;
-					window.Position = Vector2Int.zero;
-					graphics.PreferredBackBufferWidth = monitorSize.x;
-					graphics.PreferredBackBufferHeight = monitorSize.y;
-					graphics.IsFullScreen = false;
-					window.IsBorderless = true;
-					graphics.ApplyChanges();
+					// windowedPosition = gameWindow.Position;
+					gameWindow.Position = Vector2Int.zero;
+					GFX.graphics.PreferredBackBufferWidth = monitorSize.x;
+					GFX.graphics.PreferredBackBufferHeight = monitorSize.y;
+					GFX.graphics.IsFullScreen = false;
+					gameWindow.IsBorderless = true;
+					GFX.graphics.ApplyChanges();
 					break;
 				case WindowMode.Fullscreen:
-					graphics.PreferredBackBufferWidth = monitorSize.x;
-					graphics.PreferredBackBufferHeight = monitorSize.y;
-					graphics.IsFullScreen = true;
-					window.IsBorderless = false;
-					graphics.ApplyChanges();
+					GFX.graphics.PreferredBackBufferWidth = monitorSize.x;
+					GFX.graphics.PreferredBackBufferHeight = monitorSize.y;
+					GFX.graphics.IsFullScreen = true;
+					gameWindow.IsBorderless = false;
+					GFX.graphics.ApplyChanges();
 					break;
 			}
 
@@ -87,16 +90,16 @@ namespace MGE
 		{
 			if (windowMode != WindowMode.Windowed) return;
 
-			int horizontalSize = Math.Clamp(graphics.PreferredBackBufferWidth, MGEConfig.minWindowHorizontalSize, int.MaxValue);
+			int horizontalSize = Math.Clamp(GFX.graphics.PreferredBackBufferWidth, MGEConfig.minWindowHorizontalSize, int.MaxValue);
 			Vector2Int size = new Vector2Int(horizontalSize, (int)(horizontalSize * aspectRatio));
 
-			graphics.PreferredBackBufferWidth = size.x;
-			graphics.PreferredBackBufferHeight = size.y;
+			GFX.graphics.PreferredBackBufferWidth = size.x;
+			GFX.graphics.PreferredBackBufferHeight = size.y;
 
 			windowedSize = size;
 			windowedPosition = Engine.game.Window.Position;
 
-			graphics.ApplyChanges();
+			GFX.graphics.ApplyChanges();
 		}
 	}
 }

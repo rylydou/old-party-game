@@ -8,7 +8,7 @@ using MGE.FileIO;
 
 namespace MGE
 {
-	public class Assets : EssentialVars
+	public class Assets
 	{
 		public static string[] activeRP = new string[] { };
 
@@ -81,14 +81,14 @@ namespace MGE
 				case ".png":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = Texture2D.FromStream(graphicsDevice, fs);
+						asset = Texture2D.FromStream(Engine.game.GraphicsDevice, fs);
 						Logger.LogWarning($"Upgrade {path} to a psd");
 					}
 					break;
 				case ".psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = Texture2D.FromStream(graphicsDevice, fs);
+						asset = Texture2D.FromStream(Engine.game.GraphicsDevice, fs);
 					}
 					break;
 				// > Audio
@@ -102,7 +102,7 @@ namespace MGE
 				case ".font.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						var fontTex = Texture2D.FromStream(graphicsDevice, fs);
+						var fontTex = Texture2D.FromStream(Engine.game.GraphicsDevice, fs);
 						var info = IO.GetInfoFileLines(path);
 
 						var bounds = new List<Rectangle>();

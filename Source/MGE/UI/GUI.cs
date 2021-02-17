@@ -1,17 +1,23 @@
 using System.Collections.Generic;
 using MGE.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.UI
 {
-	public class GUI : EssentialVars
+	public class GUI
 	{
 		static List<GUIElement> elements = new List<GUIElement>();
 
 		public static int uiDraws { get; internal set; }
 
+		internal static void Update()
+		{
+			elements = new List<GUIElement>();
+		}
+
 		internal static void Draw()
 		{
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch(transform: null, blendState: BlendState.Opaque))
 			{
 				uiDraws = 0;
 

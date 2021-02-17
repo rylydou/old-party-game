@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame;
-using MonoGame.Framework;
-using MonoGame.Framework.Utilities;
 using MGE.Graphics;
 using MGE.UI;
 using MGE.InputSystem;
-using MGE.FileIO;
-using MGE.ECS;
+using MGE.UI.Elements;
+using System.Collections.Generic;
 
 namespace MGE
 {
@@ -58,6 +54,11 @@ namespace MGE
 
 				Pointer.mode = PointerMode.System;
 				Pointer.mouseCursor = MouseCursor.Wait;
+
+				// IntPtr hWnd = game.Window.Handle;
+				// System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
+				// System.Windows.Forms.Form form = ctrl.FindForm();
+				// form.TransparencyKey = Color.clear;
 			}
 		}
 
@@ -103,19 +104,6 @@ namespace MGE
 				Assets.ReloadAssets();
 
 				Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer");
-
-				new SceneManager(
-					new Scene(new List<Layer>()
-						{
-							new Layer(new List<Entity>()
-								{
-									new Entity(new List<Component>(){new GAME.Components.CBackground()}),
-									new Entity(new List<Component>(){new GAME.Components.CPlayer()})
-								}
-							)
-						}
-					)
-				);
 			}
 		}
 
@@ -149,12 +137,24 @@ namespace MGE
 			}
 			statsUpdateCooldown -= (float)Time.deltaTime;
 
+			GUI.Update();
+
+			GUI.AddElement(new GUIStackLayout(new List<GUIElement>()
+			{
+				new GUIImage() { color = Color.red },
+				new GUIImage() { color = Color.green },
+				new GUIImage() { color = Color.blue },
+				new GUIImage() { color = new Color(1, 0, 0, 0.5f) },
+				new GUIImage() { color = new Color(0, 1, 0, 0.5f) },
+				new GUIImage() { color = new Color(0, 0, 1, 0.5f) },
+			}, 64));
+
 			SceneManager.current.Update();
 		}
 
 		public void Draw(GameTime gameTime)
 		{
-			Graphics.Graphics.drawCalls = 0;
+			GFX.drawCalls = 0;
 
 			game.GraphicsDevice.Clear(Color.nullColor);
 

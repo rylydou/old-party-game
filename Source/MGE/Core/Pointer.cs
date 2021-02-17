@@ -12,7 +12,7 @@ namespace MGE
 		Texture
 	}
 
-	public class Pointer : EssentialVars
+	public class Pointer
 	{
 		static PointerMode _mode = PointerMode.System;
 		public static PointerMode mode { get => _mode; set { _mode = value; Engine.game.IsMouseVisible = _mode == PointerMode.System; } }
@@ -41,12 +41,12 @@ namespace MGE
 			{
 				using (new DrawBatch(transform: null))
 				{
-					Graphics.Graphics.Draw(
+					GFX.Draw(
 						Pointer.texture,
 						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size),
 						Pointer.shadowColor);
 
-					Graphics.Graphics.Draw(
+					GFX.Draw(
 						Pointer.texture,
 						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size),
 						Pointer.color);

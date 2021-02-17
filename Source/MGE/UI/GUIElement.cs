@@ -1,13 +1,13 @@
 namespace MGE.UI
 {
-	public abstract class GUIElement : EssentialVars
+	public abstract class GUIElement
 	{
 		public Color color;
 		public Rect rect;
 
 		protected GUIElement()
 		{
-			this.rect = new Rect(0.0, 0.0, 128, 64);
+			this.rect = new Rect(0.0, 0.0, 64, 64);
 			this.color = Color.white;
 		}
 

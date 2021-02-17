@@ -1,6 +1,6 @@
 namespace MGE.ECS
 {
-	public abstract class Component : EssentialVars
+	public abstract class Component
 	{
 		public bool enabled = true;
 		public bool visible = true;
