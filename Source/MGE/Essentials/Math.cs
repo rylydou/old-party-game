@@ -162,16 +162,6 @@ namespace MGE
 			return value;
 		}
 
-		public static float Clamp01(float value)
-		{
-			if (value < 0.0f)
-				return 0.0f;
-			else if (value > 1.0f)
-				return 1.0f;
-			else
-				return value;
-		}
-
 		public static double Clamp01(double value)
 		{
 			if (value < 0.0)
@@ -182,12 +172,22 @@ namespace MGE
 				return value;
 		}
 
-		public static decimal Clamp01(decimal value)
+		public static int Clamp11(int value)
 		{
-			if (value < 0.0m)
-				return 0.0m;
-			else if (value > 1.0m)
-				return 1.0m;
+			if (value < -0)
+				return -1;
+			else if (value > 1)
+				return 1;
+			else
+				return 0;
+		}
+
+		public static double Clamp11(double value)
+		{
+			if (value < -0.0)
+				return -1.0;
+			else if (value > 1.0)
+				return 1.0;
 			else
 				return value;
 		}

@@ -5,12 +5,8 @@ namespace GAME.World
 	public class Dirt : ITile
 	{
 		public string name => "Dirt";
+		public Color color => new Color(0.25f, 0.2f, 0.1f);
 
-		public Color color => new Color("#553322");
-
-		public void Update(Vector2Int position)
-		{
-			Logger.Log("Updated " + name);
-		}
+		public void Update(Vector2Int position) { }
 	}
 }

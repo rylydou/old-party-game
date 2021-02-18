@@ -97,7 +97,7 @@ namespace MGE.InputSystem
 			if (mouseState.MiddleButton == ButtonState.Pressed)
 				_mouseButtons.Add(Inputs.MouseMiddle);
 
-			scroll = _mouseWheelAdditionPrev - mouseState.ScrollWheelValue;
+			scroll = Math.Clamp11(_mouseWheelAdditionPrev - mouseState.ScrollWheelValue);
 			_mouseWheelAdditionPrev = mouseState.ScrollWheelValue;
 			#endregion
 

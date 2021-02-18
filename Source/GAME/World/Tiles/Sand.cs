@@ -6,8 +6,7 @@ namespace GAME.World
 	public class Sand : ITile
 	{
 		public string name => "Sand";
-
-		public Color color => Color.yellow;
+		public Color color => new Color(0.9f, 0.9f, 0.1f);
 
 		public void Update(Vector2Int position)
 		{

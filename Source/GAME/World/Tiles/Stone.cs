@@ -5,11 +5,8 @@ namespace GAME.World
 	public class Stone : ITile
 	{
 		public string name => "Stone";
+		public Color color => new Color(1f / 3f);
 
-		public Color color => new Color("#555");
-
-		public void Update(Vector2Int position)
-		{
-		}
+		public void Update(Vector2Int position) { }
 	}
 }

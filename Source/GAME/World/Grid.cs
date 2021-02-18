@@ -19,6 +19,7 @@ namespace GAME.World
 			new Stone(),
 			new Sand(),
 			new Water(),
+			new TNT(),
 		};
 
 		public int[,] oldWorld;
@@ -33,9 +34,9 @@ namespace GAME.World
 			this.position = Window.gameSize / 2 - size / 2;
 
 			this.newWorld = new int[size.x, size.y];
-			this.oldWorld = newWorld;
-
 			new GenTest().Generate(ref newWorld);
+
+			this.oldWorld = newWorld.Clone() as int[,];
 		}
 
 		public int GetTileID(Vector2Int position) => GetTileID(position.x, position.y);
@@ -90,19 +91,18 @@ namespace GAME.World
 		public void Update()
 		{
 			for (int y = 0; y < size.y; y++)
-			{
 				for (int x = 0; x < size.x; x++)
-				{
-					GetTileLogic(x, y).Update(new Vector2Int(x, y));
-				}
-			}
+					oldWorld[x, y] = newWorld[x, y];
 
-			this.oldWorld = newWorld;
+			for (int x = 0; x < size.x; x++)
+				for (int y = 0; y < size.y; y++)
+					if (GetTileID(x, y) != 0)
+						GetTileLogic(x, y).Update(new Vector2Int(x, y));
 		}
 
 		public void Draw()
 		{
-			using (new DrawBatch(SamplerState.PointClamp, null, SpriteSortMode.Deferred, BlendState.Opaque))
+			using (new DrawBatch(SamplerState.PointClamp, null, SpriteSortMode.Deferred, BlendState.NonPremultiplied))
 			{
 				for (int y = 0; y < size.y; y++)
 				{
@@ -113,10 +113,6 @@ namespace GAME.World
 					}
 				}
 			}
-
-			var pos = CamToTile(Input.cameraMousePosition);
-
-			GUI.AddElement(new GUIText($"{pos} {GetTileLogic(pos).name}") { rect = new Rect(Input.windowMousePosition + new Vector2(16, -16), Vector2.zero) });
 		}
 	}
 }
