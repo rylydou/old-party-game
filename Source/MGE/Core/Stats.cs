@@ -6,8 +6,8 @@ namespace MGE
 {
 	public struct Stats
 	{
-		public static double fps = 0.0;
-		public static Queue<int> fpsHistory = new Queue<int>();
+		public static double fps { get; internal set; } = 0.0;
+		public static Queue<int> fpsHistory { get; internal set; } = new Queue<int>();
 		public static double averageFps
 		{
 			get
@@ -29,7 +29,7 @@ namespace MGE
 			}
 		}
 
-		public static void Update()
+		internal static void Update()
 		{
 			fps = 1.0 / Time.deltaTime;
 

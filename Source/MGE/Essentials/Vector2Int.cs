@@ -99,16 +99,22 @@ namespace MGE
 		#endregion
 
 		#region Methods
-		public void Clamp(int length)
+		public void Clamp(int max)
 		{
-			x = Math.Clamp(x, 0, length);
-			y = Math.Clamp(y, 0, length);
+			x = Math.Clamp(x, 0, max);
+			y = Math.Clamp(y, 0, max);
 		}
 
-		public void Clamp(int lengthX, int lengthY)
+		public void Clamp(int min, int max)
 		{
-			x = Math.Clamp(x, 0, lengthX);
-			y = Math.Clamp(y, 0, lengthY);
+			x = Math.Clamp(x, min, max);
+			y = Math.Clamp(y, min, max);
+		}
+
+		public void Clamp(int minX, int minY, int maxX, int maxY)
+		{
+			x = Math.Clamp(x, minX, maxX);
+			y = Math.Clamp(y, minY, maxY);
 		}
 		#endregion
 

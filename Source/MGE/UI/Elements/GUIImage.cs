@@ -7,12 +7,7 @@ namespace MGE.UI.Elements
 	{
 		public Texture2D texture;
 
-		public GUIImage()
-		{
-			this.texture = GFX.pixel;
-		}
-
-		public GUIImage(Texture2D texture)
+		public GUIImage(Texture2D texture = null)
 		{
 			this.texture = texture;
 		}

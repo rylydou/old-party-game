@@ -9,9 +9,9 @@ namespace MGE.InputSystem
 	public class Input
 	{
 		#region Mouse
-		public static Vector2 absoluteMousePosition = Vector2.zero;
-		public static Vector2 cameraMousePosition = Vector2.zero;
 		public static Vector2 windowMousePosition = Vector2.zero;
+		public static Vector2 cameraMousePosition = Vector2.zero;
+		public static Vector2 absoluteMousePosition = Vector2.zero;
 
 		public static bool isMouseInWindow = false;
 
@@ -77,9 +77,9 @@ namespace MGE.InputSystem
 			#region Mouse
 			MouseState mouseState = Mouse.GetState();
 
-			absoluteMousePosition = (Vector2Int)mouseState.Position + Window.windowedPosition + new Vector2Int(8, 31);
 			windowMousePosition = mouseState.Position;
-			cameraMousePosition = Camera.main.WindowToCameraPos(mouseState.Position);
+			cameraMousePosition = Camera.main.WinToCam(mouseState.Position);
+			absoluteMousePosition = (Vector2Int)mouseState.Position + Window.windowedPosition + new Vector2Int(8, 31);
 
 			isMouseInWindow =
 			windowMousePosition.x >= 0 && windowMousePosition.x < Window.windowedSize.x &&
@@ -180,7 +180,7 @@ namespace MGE.InputSystem
 		}
 
 		#region Button Checks
-		public static bool CheckButton(Inputs button, int index = 0)
+		public static bool GetButton(Inputs button, int index = 0)
 		{
 			var buttonCode = (int)button;
 
@@ -190,7 +190,7 @@ namespace MGE.InputSystem
 				|| buttonCode < _mouseMaxCode && !_mouseCleared && _mouseButtons.Contains(button);
 		}
 
-		public static bool CheckButtonPress(Inputs button, int index = 0)
+		public static bool GetButtonPress(Inputs button, int index = 0)
 		{
 			var buttonCode = (int)button;
 
@@ -200,7 +200,7 @@ namespace MGE.InputSystem
 				|| buttonCode < _mouseMaxCode && !_mouseCleared && _mouseButtons.Contains(button) && !_oldMouseButtons.Contains(button);
 		}
 
-		public static bool CheckButtonRelease(Inputs button, int index = 0)
+		public static bool GetButtonRelease(Inputs button, int index = 0)
 		{
 			var buttonCode = (int)button;
 

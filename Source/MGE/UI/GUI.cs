@@ -17,7 +17,7 @@ namespace MGE.UI
 
 		internal static void Draw()
 		{
-			using (new DrawBatch(transform: null, blendState: BlendState.Opaque))
+			using (new DrawBatch(transform: null))
 			{
 				uiDraws = 0;
 

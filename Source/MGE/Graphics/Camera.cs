@@ -58,11 +58,14 @@ namespace MGE.Graphics
 			return _transform;
 		}
 
-		public Vector2 WindowToCameraPos(Vector2 position)
+		public Vector2 WinToCam(Vector2 position)
 		{
-			// TODO: Don't be bad
-
 			return position * scaleDownFactor + this.position;
+		}
+
+		public Vector2 CamToWin(Vector2 position)
+		{
+			return position * scaleUpFactor + this.position;
 		}
 	}
 }

@@ -200,6 +200,24 @@ namespace MGE
 			else
 				this = zero;
 		}
+
+		public void Clamp(double max)
+		{
+			x = Math.Clamp(x, 0, max);
+			y = Math.Clamp(y, 0, max);
+		}
+
+		public void Clamp(double min, double max)
+		{
+			x = Math.Clamp(x, min, max);
+			y = Math.Clamp(y, min, max);
+		}
+
+		public void Clamp(double minX, double minY, double maxX, double maxY)
+		{
+			x = Math.Clamp(x, minX, maxX);
+			y = Math.Clamp(y, minY, maxY);
+		}
 		#endregion
 
 		#region Implicit

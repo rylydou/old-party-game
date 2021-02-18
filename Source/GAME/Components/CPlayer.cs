@@ -25,8 +25,8 @@ namespace GAME.Components
 
 			var input = new Vector2();
 
-			input.y = System.Convert.ToUInt16(Input.CheckButton(Inputs.S)) - System.Convert.ToUInt16(Input.CheckButton(Inputs.W));
-			input.x = System.Convert.ToUInt16(Input.CheckButton(Inputs.D)) - System.Convert.ToUInt16(Input.CheckButton(Inputs.A));
+			input.y = System.Convert.ToUInt16(Input.GetButton(Inputs.S)) - System.Convert.ToUInt16(Input.GetButton(Inputs.W));
+			input.x = System.Convert.ToUInt16(Input.GetButton(Inputs.D)) - System.Convert.ToUInt16(Input.GetButton(Inputs.A));
 
 			velocity = input.normalized * speed * Time.deltaTime;
 		}

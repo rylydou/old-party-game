@@ -2,8 +2,8 @@ namespace MGE.UI
 {
 	public abstract class GUIElement
 	{
-		public Color color;
-		public Rect rect;
+		public Color color = Color.white;
+		public Rect rect = default;
 
 		protected GUIElement()
 		{

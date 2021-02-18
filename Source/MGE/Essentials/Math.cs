@@ -11,7 +11,7 @@ namespace MGE
 		public const double Log2E = 1.442695;
 		public const double pi = Mathd.PI;
 		public const double pi2 = Mathd.PI * 2;
-		public const double tau = Mathd.PI * 2;
+		public const double pi4 = Mathd.PI * 4;
 		public const double piOver2 = Mathd.PI / 2;
 		public const double piOver4 = Mathd.PI / 4;
 		public const double infinity = Double.PositiveInfinity;

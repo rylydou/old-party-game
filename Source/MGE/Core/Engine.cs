@@ -111,9 +111,10 @@ namespace MGE
 
 		public void Update(GameTime gameTime)
 		{
+			Time.Update(gameTime);
 			Input.Update();
 
-			if (Input.CheckButtonPress(Inputs.F11))
+			if (Input.GetButtonPress(Inputs.F11))
 			{
 				switch (MGE.Window.windowMode)
 				{
@@ -127,9 +128,6 @@ namespace MGE
 				MGE.Window.Apply();
 			}
 
-			Time.time = gameTime.TotalGameTime.TotalSeconds;
-			Time.deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
-
 			if (statsUpdateCooldown < 0.0f)
 			{
 				statsUpdateCooldown = MGEConfig.timeBtwStatsUpdate;
@@ -139,17 +137,14 @@ namespace MGE
 
 			GUI.Update();
 
-			GUI.AddElement(new GUIStackLayout(new List<GUIElement>()
-			{
-				new GUIImage() { color = Color.red },
-				new GUIImage() { color = Color.green },
-				new GUIImage() { color = Color.blue },
-				new GUIImage() { color = new Color(1, 0, 0, 0.5f) },
-				new GUIImage() { color = new Color(0, 1, 0, 0.5f) },
-				new GUIImage() { color = new Color(0, 0, 1, 0.5f) },
-			}, 64));
-
 			SceneManager.current.Update();
+
+			// GUI.AddElement(new GUIStackLayout(new List<GUIElement>()
+			// {
+			// 	new GUIImage() { color = new Color(1f, 0.25f, 0f, 0.5f) },
+			// 	new GUIImage() { color = new Color(0f, 1f, 0.25f, 0.5f) },
+			// 	new GUIImage() { color = new Color(0.25f, 0f, 1f, 0.5f) },
+			// }, 64));
 		}
 
 		public void Draw(GameTime gameTime)

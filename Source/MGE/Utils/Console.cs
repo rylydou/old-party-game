@@ -31,9 +31,9 @@ namespace MGE
 				GFX.Text($"Entities: {SceneManager.current.activeScene.entityCount}", layout.AddElement());
 				GFX.Text($"Components: {SceneManager.current.activeScene.componentCount}", layout.AddElement());
 				GFX.Text("--- Input ---", layout.AddElement());
-				GFX.Text($"Abs Mouse Pos: {Input.absoluteMousePosition}", layout.AddElement());
 				GFX.Text($"Win Mouse Pos: {Input.windowMousePosition}" + (Input.isMouseInWindow ? "" : "!"), layout.AddElement());
 				GFX.Text($"Cam Mouse Pos: {Input.cameraMousePosition}", layout.AddElement());
+				GFX.Text($"Abs Mouse Pos: {Input.absoluteMousePosition}", layout.AddElement());
 				GFX.Text($"Keyboard String: {Util.RemoveBadChars(Input.keyboardString)}", layout.AddElement());
 				if (Input.GamepadConnected(0))
 					GFX.Text($"Gamepad: {Input.GamepadGetLeftStick(0)}", layout.AddElement());
