@@ -8,7 +8,7 @@ namespace GAME.Components
 {
 	public class CWorld : Component
 	{
-		public Grid grid;
+		public static Grid grid;
 
 		public override void Init()
 		{
@@ -17,10 +17,17 @@ namespace GAME.Components
 
 		public override void Update()
 		{
-			if (Input.GetButton(Inputs.MouseLeft))
-			{
+			if (Input.GetButton(Inputs.MouseRight))
 				grid.SetTileID(grid.CamToTile(Input.cameraMousePosition), 0);
-			}
+
+			if (Input.GetButton(Inputs.MouseLeft))
+				grid.SetTileID(grid.CamToTile(Input.cameraMousePosition), 3);
+
+			if (Input.GetButton(Inputs.MouseMiddle))
+				grid.SetTileID(grid.CamToTile(Input.cameraMousePosition), 4);
+
+			if (Input.GetButton(Inputs.Space))
+				grid.Update();
 		}
 
 		public override void Draw()

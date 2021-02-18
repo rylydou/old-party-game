@@ -8,7 +8,7 @@ namespace GAME.World
 
 		public Color color => Color.clear;
 
-		public void Update()
+		public void Update(Vector2Int position)
 		{
 		}
 	}

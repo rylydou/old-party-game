@@ -8,7 +8,7 @@ namespace GAME.World
 
 		public Color color => new Color("#555");
 
-		public void Update()
+		public void Update(Vector2Int position)
 		{
 		}
 	}

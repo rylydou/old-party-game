@@ -17,9 +17,12 @@ namespace GAME.World
 			new Air(),
 			new Dirt(),
 			new Stone(),
+			new Sand(),
+			new Water(),
 		};
 
-		public int[,] world;
+		public int[,] oldWorld;
+		public int[,] newWorld;
 		public Vector2 position;
 
 		public readonly Vector2Int size;
@@ -29,22 +32,43 @@ namespace GAME.World
 			this.size = size;
 			this.position = Window.gameSize / 2 - size / 2;
 
-			world = new int[size.x, size.y];
+			this.newWorld = new int[size.x, size.y];
+			this.oldWorld = newWorld;
 
-			new GenTest().Generate(ref world);
+			new GenTest().Generate(ref newWorld);
 		}
 
 		public int GetTileID(Vector2Int position) => GetTileID(position.x, position.y);
-		public int GetTileID(int x, int y) => world[x, y];
+		public int GetTileID(int x, int y)
+		{
+			if (x < 0 || x >= size.x || y < 0 || y >= size.y) return 1;
+			return oldWorld[x, y];
+		}
 
 		public ITile GetTileLogic(Vector2Int position) => tiles[GetTileID(position)];
 		public ITile GetTileLogic(int x, int y) => tiles[GetTileID(x, y)];
 
-		public void SetTileID(Vector2Int position, int id) => SetTileID(position.x, position.y, id);
-		public void SetTileID(int x, int y, int id) => world[x, y] = id;
+		public bool SetTileID(Vector2Int position, int id) => SetTileID(position.x, position.y, id);
+		public bool SetTileID(int x, int y, int id)
+		{
+			if (x < 0 || x >= size.x || y < 0 || y >= size.y) return false;
+			newWorld[x, y] = id;
+			return true;
+		}
 
-		public void SetTileLogic(Vector2Int position, Type tile) => SetTileLogic(position.x, position.y, tile);
-		public void SetTileLogic(int x, int y, Type tile) => SetTileID(x, y, TileToID(tile));
+		public bool SetTileLogic(Vector2Int position, Type tile) => SetTileLogic(position.x, position.y, tile);
+		public bool SetTileLogic(int x, int y, Type tile) => SetTileID(x, y, TileToID(tile));
+
+		public bool MoveTile(Vector2Int from, Vector2Int to)
+		{
+			if (GetTileID(to) != 0) return false;
+
+			var tile = GetTileID(from);
+			SetTileID(from, 0);
+			SetTileID(to, tile);
+
+			return true;
+		}
 
 		public static ITile IDToTile(int id) => tiles[id];
 		public static int TileToID(Type tile) => tiles.IndexOf(tile as ITile);
@@ -61,6 +85,19 @@ namespace GAME.World
 			tilePos.Clamp(0, 0, size.x - 1, size.y - 1);
 
 			return tilePos;
+		}
+
+		public void Update()
+		{
+			for (int y = 0; y < size.y; y++)
+			{
+				for (int x = 0; x < size.x; x++)
+				{
+					GetTileLogic(x, y).Update(new Vector2Int(x, y));
+				}
+			}
+
+			this.oldWorld = newWorld;
 		}
 
 		public void Draw()

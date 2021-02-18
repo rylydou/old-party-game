@@ -7,6 +7,6 @@ namespace GAME.World
 		string name { get; }
 		Color color { get; }
 
-		void Update();
+		void Update(Vector2Int position);
 	}
 }

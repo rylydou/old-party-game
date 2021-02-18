@@ -16,9 +16,9 @@ namespace GAME.World.Generation
 					var value = perlin.Noise((double)x / size.x * 25, (double)y / size.y * 25, (double)(x + y) / size.x + size.y);
 
 					if (value < 0.0)
-						world[x, y] = 2;
+						world[x, y] = 3;
 					else
-						world[x, y] = 1;
+						world[x, y] = 0;
 				}
 			}
 		}
