@@ -8,6 +8,6 @@ namespace GAME.World
 		public override Color color => Color.clear;
 		public override int density => int.MinValue;
 
-		public override void Update(Vector2Int position) { }
+		protected override void OnUpdate(Vector2Int position) { }
 	}
 }

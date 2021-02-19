@@ -12,6 +12,8 @@ namespace GAME.Components
 	{
 		public static Grid grid;
 		public int currentTile = 1;
+		public int brushSize = 1;
+		public int brushFuzz = 3;
 
 		public override void Init()
 		{
@@ -22,10 +24,23 @@ namespace GAME.Components
 		{
 			Vector2Int mousePos = grid.CamToTile(Input.cameraMousePosition);
 
-			currentTile += Input.scroll;
+			if (Input.GetButton(Inputs.LeftShift))
+			{
+				brushSize -= Input.scroll;
+				brushSize = Math.Clamp(brushSize, 0, 50);
+			}
+			else if (Input.GetButton(Inputs.LeftAlt))
+			{
+				brushFuzz -= Input.scroll;
+				brushFuzz = Math.Clamp(brushFuzz, 1, 10);
+			}
+			else
+			{
+				currentTile -= Input.scroll;
 
-			if (currentTile < 1) currentTile = Grid.tiles.Count - 1;
-			else if (currentTile >= Grid.tiles.Count) currentTile = 1;
+				if (currentTile < 1) currentTile = Grid.tiles.Count - 1;
+				else if (currentTile >= Grid.tiles.Count) currentTile = 1;
+			}
 
 			if (Input.GetButton(Inputs.MouseLeft)) Paint(mousePos, currentTile);
 
@@ -38,7 +53,15 @@ namespace GAME.Components
 
 			GUI.AddElement(new GUIText(Grid.IDToTile(currentTile).name)
 			{
-				rect = new Rect(Input.windowMousePosition + new Vector2(16, -16), Vector2.zero)
+				rect = new Rect(Input.windowMousePosition + new Vector2(16, -32), Vector2.zero)
+			});
+			GUI.AddElement(new GUIText((brushSize * 2 + 1).ToString())
+			{
+				rect = new Rect(Input.windowMousePosition + new Vector2(-32 - 16, -32), Vector2.zero)
+			});
+			GUI.AddElement(new GUIText(brushFuzz + "/10")
+			{
+				rect = new Rect(Input.windowMousePosition + new Vector2(-64 - 16, 0), Vector2.zero)
 			});
 		}
 
@@ -49,12 +72,15 @@ namespace GAME.Components
 
 		public void Paint(Vector2Int position, int id)
 		{
-			for (int y = -5; y <= 5; y++)
+			for (int y = -brushSize; y <= brushSize; y++)
 			{
-				for (int x = -5; x <= 5; x++)
+				for (int x = -brushSize; x <= brushSize; x++)
 				{
-					if (Random.Bool(25))
-						grid.SetTileID(grid.CamToTile(Input.cameraMousePosition) + new Vector2Int(x, y), id);
+					if (Random.Bool(1.0 / (double)brushFuzz))
+					{
+						var pos = grid.CamToTile(Input.cameraMousePosition) + new Vector2Int(x, y);
+						grid.SetTile(pos, Grid.IDToTile(id));
+					}
 				}
 			}
 		}

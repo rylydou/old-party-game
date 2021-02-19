@@ -4,7 +4,7 @@ namespace GAME.World.Generation
 {
 	public class GenTest : IGenerator
 	{
-		public void Generate(ref int[,] world)
+		public void Generate(ref Tile[,] world)
 		{
 			var perlin = new Perlin();
 			Vector2Int size = new Vector2Int(world.GetLength(0), world.GetLength(1));
@@ -16,7 +16,9 @@ namespace GAME.World.Generation
 					var value = perlin.Noise((double)x / size.x * 25, (double)y / size.y * 25, (double)(x + y) / size.x + size.y);
 
 					if (value < 0.0)
-						world[x, y] = 3;
+						world[x, y] = new Sand();
+					else
+						world[x, y] = new Air();
 				}
 			}
 		}
