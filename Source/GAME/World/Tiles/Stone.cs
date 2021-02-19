@@ -2,11 +2,11 @@ using MGE;
 
 namespace GAME.World
 {
-	public class Stone : ITile
+	public class Stone : Wall
 	{
-		public string name => "Stone";
-		public Color color => new Color(1f / 3f);
+		public override string name => "Stone";
+		public override Color color => new Color(1f / 3f);
 
-		public void Update(Vector2Int position) { }
+		public override void Update(Vector2Int position) { }
 	}
 }

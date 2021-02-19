@@ -6,7 +6,7 @@ namespace GAME.World.Generation
 	{
 		public void Generate(ref int[,] world)
 		{
-			var perlin = new Perlin("cat".GetHashCode());
+			var perlin = new Perlin();
 			Vector2Int size = new Vector2Int(world.GetLength(0), world.GetLength(1));
 
 			for (int y = 0; y < size.y; y++)
@@ -17,8 +17,6 @@ namespace GAME.World.Generation
 
 					if (value < 0.0)
 						world[x, y] = 3;
-					else
-						world[x, y] = 0;
 				}
 			}
 		}

@@ -248,7 +248,8 @@ namespace MGE
 		public static implicit operator Microsoft.Xna.Framework.Vector4(Color color) => new Microsoft.Xna.Framework.Vector4(color.r, color.g, color.b, color.a);
 		public static implicit operator Color(Microsoft.Xna.Framework.Vector4 vector) => new Microsoft.Xna.Framework.Vector4(vector.X, vector.Y, vector.Z, vector.W);
 
-		public static implicit operator System.Drawing.Color(Color color) => System.Drawing.Color.FromArgb((int)color.a * 255, (int)color.r * 255, (int)color.g * 255, (int)color.b * 255);
+		public static implicit operator System.Drawing.Color(Color color) =>
+			System.Drawing.Color.FromArgb((int)Math.Clamp01(color.a) * 255, (int)Math.Clamp01(color.r) * 255, (int)Math.Clamp01(color.g) * 255, (int)Math.Clamp01(color.b) * 255);
 		public static implicit operator Color(System.Drawing.Color color) => new Color(color.R, color.G, color.B, color.A);
 		#endregion
 

@@ -2,11 +2,12 @@ using MGE;
 
 namespace GAME.World
 {
-	public class Air : ITile
+	public class Air : Tile
 	{
-		public string name => "Air";
-		public Color color => Color.clear;
+		public override string name => "Air";
+		public override Color color => Color.clear;
+		public override int density => int.MinValue;
 
-		public void Update(Vector2Int position) { }
+		public override void Update(Vector2Int position) { }
 	}
 }

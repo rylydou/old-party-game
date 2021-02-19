@@ -11,11 +11,11 @@ namespace GAME.Components
 	public class CWorld : Component
 	{
 		public static Grid grid;
-		public int currentTile;
+		public int currentTile = 1;
 
 		public override void Init()
 		{
-			grid = new Grid(new Vector2Int(64 * 4, 64 * 2), new GenTest());
+			grid = new Grid(Window.gameSize, new GenTest());
 		}
 
 		public override void Update()
@@ -24,14 +24,14 @@ namespace GAME.Components
 
 			currentTile += Input.scroll;
 
-			if (currentTile < 0) currentTile = Grid.tiles.Count - 1;
-			else if (currentTile >= Grid.tiles.Count) currentTile = 0;
+			if (currentTile < 1) currentTile = Grid.tiles.Count - 1;
+			else if (currentTile >= Grid.tiles.Count) currentTile = 1;
 
 			if (Input.GetButton(Inputs.MouseLeft)) Paint(mousePos, currentTile);
 
 			if (Input.GetButton(Inputs.MouseRight)) Paint(mousePos, 0);
 
-			if (!Input.GetButton(Inputs.Space))
+			if (!Input.GetButton(Inputs.Escape))
 				grid.Update();
 
 			var pos = grid.CamToTile(Input.cameraMousePosition);
@@ -53,7 +53,8 @@ namespace GAME.Components
 			{
 				for (int x = -5; x <= 5; x++)
 				{
-					grid.SetTileID(grid.CamToTile(Input.cameraMousePosition) + new Vector2Int(x, y), id);
+					if (Random.Bool(25))
+						grid.SetTileID(grid.CamToTile(Input.cameraMousePosition) + new Vector2Int(x, y), id);
 				}
 			}
 		}

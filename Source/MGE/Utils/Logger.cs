@@ -75,7 +75,7 @@ namespace MGE
 
 		public static void WriteToLogRaw(string text)
 		{
-			log.WriteLine(text);
+			// log.WriteLine(text);
 		}
 	}
 }

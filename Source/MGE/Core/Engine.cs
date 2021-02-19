@@ -68,7 +68,9 @@ namespace MGE
 
 			using (Timmer.Create("Initialize"))
 			{
-				graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
+				// graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
+				graphics.SynchronizeWithVerticalRetrace = false;
+				game.IsFixedTimeStep = false;
 				graphics.ApplyChanges();
 
 				MGE.Window.aspectRatioFrac = MGEConfig.aspectRatio;
