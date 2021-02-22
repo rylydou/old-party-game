@@ -2,25 +2,30 @@ using MGE;
 
 namespace GAME.World
 {
-	public class TNT : Powder
+	public class TNT : Gravity, IExplodable
 	{
-		const int exploSize = 10;
+		readonly Vector2Int exploSize = new Vector2Int(32, 32);
 
 		public override string name => "TNT";
 		public override Color color => new Color(0.75f, 0.25f, 0.25f);
-		public override int density => 0;
+		public override short density => 0;
+		public override TileType type => TileType.Solid;
+		public override TileInfo info => TileInfo.None;
 
-		protected override void OnUpdate(Vector2Int position)
+		public void Explode(Vector2Int position, bool recursive)
 		{
-			base.OnUpdate(position);
+			grid.SetTile(position.x, position.y, null);
+			grid.Explode(position, exploSize, recursive, true);
+		}
 
-			if (!grid.TileIsType(position.x, position.y + 1, typeof(Air)))
-			{
-				if (grid.TileIsType(position.x, position.y + 1, typeof(TNT))) return;
-				for (int y = -exploSize; y <= exploSize; y++)
-					for (int x = -exploSize; x <= exploSize; x++)
-						if (Random.Bool(Math.Abs((double)(y * x) / exploSize))) grid.SetTile(position.x + x, position.y + y, null);
-			}
+		public override void Update(Vector2Int position)
+		{
+			base.Update(position);
+
+			var tileType = grid.GetTile(position.x, position.y + 1).GetType();
+			if (tileType == typeof(Air) || tileType == typeof(TNT)) return;
+
+			Explode(position, true);
 		}
 	}
 }

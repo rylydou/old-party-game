@@ -53,6 +53,26 @@ namespace MGE
 		public static Color FromHex(string hex) => new Color(hex);
 		public static string ToHex(Color color, int length = 8) => color.ToHex(length);
 
+		public static Color Lerp(Color a, Color b, float t)
+		{
+			t = (float)Math.Clamp01(t);
+			return new Color(
+					a.r + (b.r - a.r) * t,
+					a.g + (b.g - a.g) * t,
+					a.b + (b.b - a.b) * t,
+					a.a + (b.a - a.a) * t
+			);
+		}
+
+		public static Color LerpUnclamped(Color a, Color b, float t)
+		{
+			return new Color(
+					a.r + (b.r - a.r) * t,
+					a.g + (b.g - a.g) * t,
+					a.b + (b.b - a.b) * t,
+					a.a + (b.a - a.a) * t
+			);
+		}
 		#endregion
 
 		#endregion
@@ -93,9 +113,10 @@ namespace MGE
 		}
 		#endregion
 
-		#region Feilds
+		#region Perams
 		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
 		public float max { get => (float)Math.Max(Math.Max(r, g), b); }
+		public Color opaque { get => ChangeAlpha(1f); }
 		#endregion
 
 		#region Constructors
@@ -195,26 +216,7 @@ namespace MGE
 			return string.Empty;
 		}
 
-		public static Color Lerp(Color a, Color b, float t)
-		{
-			t = (float)Math.Clamp01(t);
-			return new Color(
-					a.r + (b.r - a.r) * t,
-					a.g + (b.g - a.g) * t,
-					a.b + (b.b - a.b) * t,
-					a.a + (b.a - a.a) * t
-			);
-		}
-
-		public static Color LerpUnclamped(Color a, Color b, float t)
-		{
-			return new Color(
-					a.r + (b.r - a.r) * t,
-					a.g + (b.g - a.g) * t,
-					a.b + (b.b - a.b) * t,
-					a.a + (b.a - a.a) * t
-			);
-		}
+		public Color ChangeAlpha(float a) => new Color(this.r, this.g, this.b, a);
 		#endregion
 
 		#region Implicit

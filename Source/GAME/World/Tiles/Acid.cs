@@ -7,9 +7,10 @@ namespace GAME.World
 	{
 		public override string name => "Acid";
 		public override Color color => new Color(0, 1, 0, 0.75f);
-		public override int density => -1;
+		public override short density => -1;
+		public override TileInfo info => TileInfo.NonCorruptible;
 
-		protected override void OnUpdate(Vector2Int position)
+		public override void Update(Vector2Int position)
 		{
 			for (int y = -1; y <= 1; y++)
 				for (int x = -1; x <= 1; x++)
@@ -21,7 +22,7 @@ namespace GAME.World
 					grid.SetTile(position.x + x, position.y + y, null);
 				}
 
-			base.OnUpdate(position);
+			base.Update(position);
 		}
 	}
 }

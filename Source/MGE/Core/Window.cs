@@ -30,7 +30,17 @@ namespace MGE
 		}
 		public static Action<bool> focusChanged = (x) => { };
 
-		public static Vector2Int windowedSize;
+		public static Vector2Int _windowedSize;
+		public static Vector2Int windowedSize
+		{
+			get
+			{
+				if (windowMode == WindowMode.Windowed)
+					return _windowedSize;
+				return monitorSize;
+			}
+			set => _windowedSize = value;
+		}
 		public static Vector2Int windowedPosition;
 		static Vector2Int _monitorSize;
 		public static Vector2Int monitorSize

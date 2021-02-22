@@ -23,7 +23,7 @@ namespace GAME
 		protected override void LoadContent()
 		{
 			engine.LoadContent();
-			new SceneManager(
+			SceneManager.QueueScene(
 				new Scene(new List<Layer>()
 				{
 					new Layer(new List<Entity>()

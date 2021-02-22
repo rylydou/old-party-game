@@ -26,9 +26,9 @@ namespace MGE
 				// GFX.Text("--- Asset ---", layout.AddElement());
 				// GFX.Text($"Preloaded: {Assets.preloadedAssets.Count}", layout.AddElement());
 				// GFX.Text($"Unloaded: {Assets.unloadedAssets.Count}", layout.AddElement());
-				// GFX.Text("--- Scene ---", layout.AddElement());
-				// GFX.Text($"Entities: {SceneManager.current.activeScene.entityCount}", layout.AddElement());
-				// GFX.Text($"Components: {SceneManager.current.activeScene.componentCount}", layout.AddElement());
+				GFX.Text("--- Scene ---", layout.AddElement());
+				GFX.Text($"Entities: {SceneManager.activeScene.entityCount}", layout.AddElement());
+				GFX.Text($"Components: {SceneManager.activeScene.componentCount}", layout.AddElement());
 				// GFX.Text("--- Input ---", layout.AddElement());
 				// GFX.Text($"Win Mouse Pos: {Input.windowMousePosition}" + (Input.isMouseInWindow ? "" : "!"), layout.AddElement());
 				// GFX.Text($"Cam Mouse Pos: {Input.cameraMousePosition}", layout.AddElement());

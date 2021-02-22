@@ -6,8 +6,10 @@ namespace GAME.World
 	{
 		public override string name => "Air";
 		public override Color color => Color.clear;
-		public override int density => int.MinValue;
+		public override short density => short.MinValue;
+		public override TileType type => TileType.Gas;
+		public override TileInfo info => TileInfo.NonCorruptible;
 
-		protected override void OnUpdate(Vector2Int position) { }
+		public override void Update(Vector2Int position) { }
 	}
 }

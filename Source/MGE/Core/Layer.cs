@@ -15,12 +15,12 @@ namespace MGE
 
 		public int prioity = 0;
 
-		List<Entity> _entities = new List<Entity>();
+		SafeList<Entity> _entities = new SafeList<Entity>();
 
 		public Scene scene;
 
 		public int entityCount { get => _entities.Count; }
-		public int componentCount { get => _entities.Sum((x) => x.componentCount); }
+		// public int componentCount { get => _entities.Sum((x) => x.componentCount); }
 
 		public Layer(List<Entity> entities = null)
 		{
@@ -36,6 +36,8 @@ namespace MGE
 		{
 			if (entity.layer != null)
 				throw new Exception("Entity aready has an owner!");
+
+			entity._layer = this;
 
 			_entities.Add(entity);
 		}

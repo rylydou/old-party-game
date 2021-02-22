@@ -2,6 +2,6 @@ namespace GAME.World
 {
 	public abstract class Wall : Solid
 	{
-		public override int density => int.MaxValue;
+		public override short density => short.MaxValue;
 	}
 }

@@ -18,7 +18,7 @@ namespace MGE.ECS
 
 		int priority = 0;
 
-		Layer _layer;
+		internal Layer _layer;
 		public Layer layer
 		{
 			get => _layer;
@@ -32,7 +32,6 @@ namespace MGE.ECS
 		}
 
 		public int componentCount { get => _components.Count; }
-
 
 		public Entity(List<Component> components = null)
 		{

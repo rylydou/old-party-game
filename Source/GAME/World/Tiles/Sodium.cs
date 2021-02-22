@@ -3,26 +3,29 @@ using GAME.Components;
 
 namespace GAME.World
 {
-	public class Sodium : Powder
+	public class Sodium : Powder, IExplodable
 	{
+		readonly Vector2Int exploSize = new Vector2Int(5, 5);
+
 		public override string name => "Sodium";
 		public override Color color => Color.white;
-		public override int density => 0;
+		public override short density => 0;
+		public override TileInfo info => TileInfo.None;
 
-		protected override void OnUpdate(Vector2Int position)
+		public void Explode(Vector2Int position, bool recursive)
+		{
+			grid.SetTile(position.x, position.y, null);
+			grid.Explode(position, exploSize, recursive, false);
+		}
+
+		public override void Update(Vector2Int position)
 		{
 			for (int y = -1; y <= 1; y++)
 				for (int x = -1; x <= 1; x++)
 					if (grid.TileIsType(position.x + x, position.y + y, typeof(Water)))
-					{
-						grid.SetTile(position.x, position.y, null);
+						Explode(position, true);
 
-						for (int yy = -2; yy <= 2; yy++)
-							for (int xx = -2; xx <= 2; xx++)
-								if (xx != 0 && yy != 0) grid.SetTile(position.x + xx, position.y + yy, null);
-					}
-
-			base.OnUpdate(position);
+			base.Update(position);
 		}
 	}
 }

@@ -5,29 +5,14 @@ namespace MGE
 {
 	public class SceneManager
 	{
-		static SceneManager _current;
-		public static SceneManager current { get => _current; }
+		static Scene _activeScene;
+		public static Scene activeScene { get => _activeScene; }
+		static Scene _queuedScene;
+		public static Scene queuedScene { get => _queuedScene; }
 
-		Scene _activeScene;
-		public Scene activeScene { get => _activeScene; }
-		Scene _queuedScene;
-		public Scene queuedScene { get => _queuedScene; }
+		public static Action onSceneChanged = () => { };
 
-		public Action onSceneChanged = () => { };
-
-		public SceneManager(Scene scene)
-		{
-			if (_current != null)
-				throw new Exception("Don't create more that one Scene Manager");
-
-			if (scene == null)
-				throw new Exception("New Scene can not be null!");
-
-			_current = this;
-			_activeScene = scene;
-		}
-
-		public bool QueueScene(Scene scene)
+		public static bool QueueScene(Scene scene)
 		{
 			if (scene == null)
 				throw new Exception("New Scene can not be null!");
@@ -63,7 +48,7 @@ namespace MGE
 			return false;
 		}
 
-		void DequeueScene()
+		static void DequeueScene()
 		{
 			_activeScene.onDoneCleaningUp -= () => DequeueScene();
 
@@ -77,9 +62,9 @@ namespace MGE
 			onSceneChanged.Invoke();
 		}
 
-		public void FixedUpdate() => activeScene?.FixedUpdate();
-		public void Update() => activeScene?.Update();
-		public void Draw() => activeScene?.Draw();
-		public void DrawUI() => activeScene?.DrawUI();
+		public static void FixedUpdate() => activeScene?.FixedUpdate();
+		public static void Update() => activeScene?.Update();
+		public static void Draw() => activeScene?.Draw();
+		public static void DrawUI() => activeScene?.DrawUI();
 	}
 }

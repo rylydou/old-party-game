@@ -41,6 +41,24 @@ namespace MGE
 			return text;
 		}
 
+		public static List<Vector2Int> LineToPointsInGrid(Vector2 start, Vector2 end)
+		{
+			var points = new List<Vector2Int>();
+
+			Vector2 t = start;
+			var frac = 1 / Math.Sqrt(Math.Pow(end.x - start.x, 2) + Math.Pow(end.y - start.y, 2));
+			var ctr = 0.0;
+
+			while ((int)t.x != (int)end.x || (int)t.y != (int)end.y)
+			{
+				t = Vector2.Lerp(start, end, ctr);
+				ctr += frac;
+				points.Add(t);
+			}
+
+			return points;
+		}
+
 		public static int GetHashCode(object obj)
 		{
 			if (obj is string s)

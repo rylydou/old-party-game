@@ -8,13 +8,14 @@ namespace GAME.World
 
 		public abstract string name { get; }
 		public abstract Color color { get; }
-		public abstract int density { get; }
+		public abstract short density { get; }
+		public abstract TileType type { get; }
+		public abstract TileInfo info { get; }
 
-		public void Update(Vector2Int position)
-		{
-			OnUpdate(position);
-		}
+		public bool isDirty = true;
+		public uint lastUpdated = 0;
+		// public Vector2Int velocity = Vector2Int.zero;
 
-		protected abstract void OnUpdate(Vector2Int position);
+		public abstract void Update(Vector2Int position);
 	}
 }

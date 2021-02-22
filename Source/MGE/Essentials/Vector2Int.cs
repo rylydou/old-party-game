@@ -2,7 +2,6 @@ using System;
 
 namespace MGE
 {
-	// TODO: Make this not suck
 	public struct Vector2Int
 	{
 		#region Static

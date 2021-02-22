@@ -139,7 +139,7 @@ namespace MGE
 
 			GUI.Update();
 
-			SceneManager.current.Update();
+			SceneManager.Update();
 
 			// GUI.AddElement(new GUIStackLayout(new List<GUIElement>()
 			// {
@@ -155,9 +155,9 @@ namespace MGE
 
 			game.GraphicsDevice.Clear(Color.nullColor);
 
-			SceneManager.current.Draw();
+			SceneManager.Draw();
 
-			SceneManager.current.DrawUI();
+			SceneManager.DrawUI();
 
 			GUI.Draw();
 
