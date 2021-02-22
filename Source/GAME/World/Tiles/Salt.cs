@@ -8,7 +8,7 @@ namespace GAME.World
 		public override string name => "Salt";
 		public override Color color => new Color(0.75f, 0.75f, 0.75f);
 		public override short density => 0;
-		public override TileInfo info => TileInfo.None;
+		public override TileInfo info => TileInfo.BadForEnvironment | TileInfo.Airtight;
 
 		public override void Update(Vector2Int position)
 		{

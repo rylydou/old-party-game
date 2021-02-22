@@ -10,7 +10,7 @@ namespace GAME.World
 		public override Color color => new Color(0.75f, 0.25f, 0.25f);
 		public override short density => 0;
 		public override TileType type => TileType.Solid;
-		public override TileInfo info => TileInfo.None;
+		public override TileInfo info => TileInfo.BadForEnvironment | TileInfo.Airtight;
 
 		public void Explode(Vector2Int position, bool recursive)
 		{

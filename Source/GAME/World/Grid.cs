@@ -168,6 +168,17 @@ namespace GAME.World
 					GetTile(x + xx, y + yy).isDirty = true;
 		}
 
+		public bool Erode(int x, int y)
+		{
+			var tile = GetTile(x, y);
+
+			if (tile.type == TileType.Gas || tile.info.HasFlag(TileInfo.NonErodable)) return false;
+
+			SetTile(x, y, null);
+
+			return true;
+		}
+
 		public void Explode(Vector2Int position, Vector2Int size, bool recursive = true, bool ignoreLiquids = true)
 		{
 			for (int y = -size.y / 2; y <= size.y / 2; y++)

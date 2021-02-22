@@ -18,13 +18,15 @@ namespace GAME.World
 			if (wetness < 1)
 				grid.SetTile(position.x, position.y, null);
 
-			var surroundedTiles = 0;
+			var blockedBy = 0;
 
 			for (int y = -1; y <= 1; y++)
 			{
 				for (int x = -1; x <= 1; x++)
 				{
 					if (x == 0 && y == 0) continue;
+
+					var tile = grid.GetTile(position.x + x, position.y + y);
 
 					if (grid.TileIsType(position.x + x, position.y + y, typeof(Water)))
 					{
@@ -42,12 +44,17 @@ namespace GAME.World
 									if (Random.Bool(1.0 / 9.0)) grid.SetTile(position.x + x + xx, position.y + y + yy, new Vine());
 						}
 					}
-					else if (grid.TileExists(position.x + x, position.y + y, typeof(Vine)))
-						surroundedTiles++;
+					// else if (tile.info.HasFlag(TileInfo.BadForEnvironment))
+					// {
+					// 	grid.SetTile(position.x, position.y, null);
+					// 	return;
+					// }
+					else if (tile.info.HasFlag(TileInfo.Airtight))
+						blockedBy++;
 				}
 			}
 
-			if (surroundedTiles > 4)
+			if (blockedBy > 5)
 				grid.SetTile(position, new Oil());
 		}
 	}

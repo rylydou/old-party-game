@@ -7,6 +7,6 @@ namespace GAME.World
 		public override string name => "Oil";
 		public override Color color => new Color(0.1f);
 		public override short density => -1;
-		public override TileInfo info => TileInfo.None;
+		public override TileInfo info => TileInfo.BadForEnvironment | TileInfo.Airtight;
 	}
 }

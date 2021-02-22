@@ -7,7 +7,7 @@ namespace GAME.World
 	{
 		public override string name => "Void";
 		public override Color color => new Color(Random.Color().grayscale * 0.15f);
-		public override TileInfo info => TileInfo.None;
+		public override TileInfo info => TileInfo.BadForEnvironment | TileInfo.Airtight;
 
 		public override void Update(Vector2Int position)
 		{

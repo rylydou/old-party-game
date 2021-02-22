@@ -3,10 +3,15 @@ namespace GAME.World
 	[System.Flags]
 	public enum TileInfo
 	{
-		None,
-		BlastProof,
+		None = 0,
+
+		Airtight,
+
 		BadForEnvironment,
+
+		NonErodable,
+		BlastProof,
 		NonCorruptible,
-		Invincible = BlastProof | NonCorruptible
+		Invincible = NonErodable | BlastProof | NonCorruptible
 	}
 }

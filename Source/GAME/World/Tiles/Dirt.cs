@@ -6,7 +6,7 @@ namespace GAME.World
 	{
 		public override string name => "Dirt";
 		public override Color color => new Color(0.4f, 0.3f, 0.2f);
-		public override TileInfo info => TileInfo.None;
+		public override TileInfo info => TileInfo.Airtight;
 
 		public override void Update(Vector2Int position)
 		{

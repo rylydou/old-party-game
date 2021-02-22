@@ -10,7 +10,7 @@ namespace GAME.World
 		public override string name => "Sodium";
 		public override Color color => Color.white;
 		public override short density => 0;
-		public override TileInfo info => TileInfo.None;
+		public override TileInfo info => TileInfo.BadForEnvironment | TileInfo.Airtight;
 
 		public void Explode(Vector2Int position, bool recursive)
 		{
