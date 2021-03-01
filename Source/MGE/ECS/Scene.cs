@@ -4,22 +4,18 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MGE
+namespace MGE.ECS
 {
 	public class Scene
 	{
 		public string name;
 
-		bool _doneCleaningUp = false;
-		public bool doneCleaningUp { get => _doneCleaningUp; set => _doneCleaningUp = value; }
+		public bool doneCleaningUp { get; private set; } = false;
 		public Action onDoneCleaningUp = () => { };
 
-		public List<Layer> layers = new List<Layer>();
+		public SafeList<Layer> layers = new SafeList<Layer>();
 
-		public int entityCount { get => layers.Sum((x) => x.entityCount); }
-		public int componentCount { get => layers.Sum((x) => x.entityCount); }
-
-		public Scene(List<Layer> layers = null)
+		public Scene(ICollection<Layer> layers = null)
 		{
 			if (layers != null)
 			{
@@ -28,9 +24,8 @@ namespace MGE
 					if (layer.scene != null)
 						throw new Exception("Layer aready has an owner!");
 					layer.scene = this;
+					this.layers.Add(layer);
 				}
-
-				this.layers = layers;
 			}
 		}
 
@@ -75,10 +70,16 @@ namespace MGE
 				DoneCleaningUp();
 			}
 		}
-		protected virtual void OnCleanUp() { }
+		protected virtual void OnCleanUp()
+		{
+			foreach (var layer in layers)
+			{
+				layer.DestroyAllEntites();
+			}
+		}
 		protected virtual void DoneCleaningUp()
 		{
-			_doneCleaningUp = true;
+			doneCleaningUp = true;
 			onDoneCleaningUp.Invoke();
 		}
 		#endregion

@@ -31,9 +31,7 @@ namespace MGE.ECS
 			}
 		}
 
-		public int componentCount { get => _components.Count; }
-
-		public Entity(List<Component> components = null)
+		public Entity(ICollection<Component> components = null)
 		{
 			if (components != null)
 				foreach (var component in components)
@@ -143,9 +141,7 @@ namespace MGE.ECS
 				if (enabled)
 				{
 					foreach (var component in _components.Values)
-					{
 						component.Destroy();
-					}
 				}
 			}
 		}

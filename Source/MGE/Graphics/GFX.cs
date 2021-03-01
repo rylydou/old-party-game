@@ -141,10 +141,10 @@ namespace MGE.Graphics
 
 		public static void DrawRectangle(Rect rect, Color color, float thickness = 1.0f)
 		{
-			DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.right, rect.y), color, thickness); // Top
-			DrawLine(new Vector2(rect.x + 0.5f, rect.y), new Vector2(rect.x + 0.5f, rect.bottom + thickness), color, thickness); // Left
+			DrawLine(new Vector2(rect.x - thickness, rect.y - thickness), new Vector2(rect.right, rect.y - thickness), color, thickness); // Top
+			DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, rect.bottom + thickness), color, thickness); // Left
 			DrawLine(new Vector2(rect.x, rect.bottom), new Vector2(rect.right, rect.bottom), color, thickness); // Bottom
-			DrawLine(new Vector2(rect.right + 0.5f, rect.y), new Vector2(rect.right + 0.5f, rect.bottom + thickness), color, thickness); // Right
+			DrawLine(new Vector2(rect.right + thickness, rect.y - thickness), new Vector2(rect.right + thickness, rect.bottom + thickness), color, thickness); // Right
 		}
 
 		public static void DrawLine(Vector2 from, Vector2 to, Color color, float thickness = 1.0f)

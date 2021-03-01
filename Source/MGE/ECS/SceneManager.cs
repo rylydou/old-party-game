@@ -1,14 +1,11 @@
-using System.Collections;
 using System;
 
-namespace MGE
+namespace MGE.ECS
 {
-	public class SceneManager
+	public static class SceneManager
 	{
-		static Scene _activeScene;
-		public static Scene activeScene { get => _activeScene; }
-		static Scene _queuedScene;
-		public static Scene queuedScene { get => _queuedScene; }
+		public static Scene activeScene { get; private set; }
+		public static Scene queuedScene { get; private set; }
 
 		public static Action onSceneChanged = () => { };
 
@@ -17,23 +14,23 @@ namespace MGE
 			if (scene == null)
 				throw new Exception("New Scene can not be null!");
 
-			if (_activeScene == scene)
-				throw new Exception("Can not queue the same Scene!");
+			// if (_activeScene == scene)
+			// throw new Exception("Can not queue the same Scene!");
 
-			if (_queuedScene == null)
+			if (queuedScene == null)
 			{
 				if (activeScene != null)
 				{
-					_queuedScene = scene;
-					_activeScene.CleanUp();
+					queuedScene = scene;
+					activeScene.CleanUp();
 
-					_activeScene.onDoneCleaningUp += () => DequeueScene();
+					activeScene.onDoneCleaningUp += () => DequeueScene();
 				}
 				else
 				{
-					_activeScene = scene;
+					activeScene = scene;
 					// _activeScene.Init();
-					_activeScene.onDoneCleaningUp += () => DequeueScene();
+					activeScene.onDoneCleaningUp += () => DequeueScene();
 
 					onSceneChanged.Invoke();
 				}
@@ -50,14 +47,14 @@ namespace MGE
 
 		static void DequeueScene()
 		{
-			_activeScene.onDoneCleaningUp -= () => DequeueScene();
+			activeScene.onDoneCleaningUp -= () => DequeueScene();
 
-			if (_queuedScene == null)
+			if (queuedScene == null)
 				throw new Exception("Queued Scene is null, how did this happen");
 
-			_activeScene = _queuedScene;
-			// _activeScene.Init();
-			_queuedScene = null;
+			activeScene = queuedScene;
+			// activeScene.Init();
+			queuedScene = null;
 
 			onSceneChanged.Invoke();
 		}

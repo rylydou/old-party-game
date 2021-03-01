@@ -116,10 +116,8 @@ namespace GAME.Components
 			{
 				var rect = new Rect(mousePos - actualBrushSize / 2, actualBrushSize);
 
-				GFX.DrawBox(rect, color);
-
-				if (actualBrushSize.x > 3)
-					GFX.DrawRectangle(rect, Color.red, 1);
+				// GFX.DrawBox(rect, color);
+				GFX.DrawRectangle(rect, Color.red, 1);
 			}
 		}
 

@@ -6,8 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MGE.Graphics;
 using MGE.UI;
 using MGE.InputSystem;
-using MGE.UI.Elements;
-using System.Collections.Generic;
+using MGE.ECS;
 
 namespace MGE
 {
@@ -69,8 +68,8 @@ namespace MGE
 			using (Timmer.Create("Initialize"))
 			{
 				// graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
-				graphics.SynchronizeWithVerticalRetrace = false;
-				game.IsFixedTimeStep = false;
+				graphics.SynchronizeWithVerticalRetrace = true;
+				game.IsFixedTimeStep = true;
 				graphics.ApplyChanges();
 
 				MGE.Window.aspectRatioFrac = MGEConfig.aspectRatio;

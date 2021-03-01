@@ -29,7 +29,7 @@ namespace GAME
 					new Layer(new List<Entity>()
 					{
 						new Entity(new List<Component>(){new GAME.Components.CBackground()}),
-						new Entity(new List<Component>(){new GAME.Components.CWorld()}),
+						// new Entity(new List<Component>(){new GAME.Components.CWorld()}),
 						new Entity(new List<Component>(){new GAME.Components.CPlayer()}),
 					})
 				})

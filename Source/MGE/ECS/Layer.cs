@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using MGE.ECS;
 
-namespace MGE
+namespace MGE.ECS
 {
 	public class Layer
 	{
@@ -19,10 +18,7 @@ namespace MGE
 
 		public Scene scene;
 
-		public int entityCount { get => _entities.Count; }
-		// public int componentCount { get => _entities.Sum((x) => x.componentCount); }
-
-		public Layer(List<Entity> entities = null)
+		public Layer(ICollection<Entity> entities = null)
 		{
 			if (entities != null)
 			{
@@ -46,6 +42,9 @@ namespace MGE
 		{
 			if (entity.layer != this)
 				throw new Exception("Layer does not own entity");
+
+			entity.Destroy();
+			entity._layer = null;
 
 			_entities.Remove(entity);
 		}
@@ -114,45 +113,36 @@ namespace MGE
 		public void FixedUpdate()
 		{
 			foreach (var entity in _entities)
-			{
 				if (entity.enabled && !entity.destroyed)
-				{
 					entity.FixedUpdate();
-				}
-			}
 		}
 
 		public void Update()
 		{
 			foreach (var entity in _entities)
-			{
 				if (entity.enabled && !entity.destroyed)
-				{
 					entity.Update();
-				}
-			}
 		}
 
 		public void Draw()
 		{
 			foreach (var entity in _entities)
-			{
 				if (entity.visible && !entity.destroyed)
-				{
 					entity.Draw();
-				}
-			}
 		}
 
 		public void DrawUI()
 		{
 			foreach (var entity in _entities)
-			{
 				if (entity.visible && !entity.destroyed)
-				{
 					entity.Draw();
-				}
-			}
+		}
+
+		public void DestroyAllEntites()
+		{
+			foreach (var entity in _entities)
+				if (!entity.destroyed)
+					entity.Destroy();
 		}
 		#endregion
 	}

@@ -9,10 +9,12 @@ namespace GAME.Components
 	public class CPlayer : Component
 	{
 		public double speed = 64;
-		public double jumpForce = -2;
+		public double jumpForce = -3;
 		public Vector2 gravity = new Vector2(0, 8);
 
+		// double acceleration;
 		Vector2 velocity;
+
 		Texture2D body;
 
 		public override void Init()
