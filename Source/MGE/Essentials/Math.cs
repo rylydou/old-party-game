@@ -49,6 +49,7 @@ namespace MGE
 		public static int FloorToInt(double value) => (int)Mathd.Floor(value);
 		public static int RoundToInt(double value) => (int)Mathd.Round(value);
 		public static double Sign(double value) => value >= 0.0 ? 1.0 : -1.0;
+		public static double Sign0(double value) => value == 0.0 ? 0.0 : value >= 0.0 ? 1.0 : -1.0;
 		#endregion
 
 		#region Min Maxes

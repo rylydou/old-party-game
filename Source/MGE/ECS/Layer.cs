@@ -18,7 +18,12 @@ namespace MGE.ECS
 
 		public Scene scene;
 
-		public Layer(ICollection<Entity> entities = null)
+		public Layer()
+		{
+
+		}
+
+		public Layer(params Entity[] entities)
 		{
 			if (entities != null)
 			{

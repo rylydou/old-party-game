@@ -3,12 +3,13 @@ using MGE.ECS;
 using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.Physics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GAME.Components
 {
 	public class CStage : Component
 	{
-		public static string stage =
+		public const string stage =
 		"########################" +
 		"#                      #" +
 		"#                      #" +
@@ -25,6 +26,8 @@ namespace GAME.Components
 
 		public static readonly Vector2Int size = new Vector2Int(24, 12);
 
+		public static CStage current { get; private set; }
+
 		public float tileSize = 8.0f;
 
 		public Vector2 startPos = new Vector2(1, 1);
@@ -34,6 +37,13 @@ namespace GAME.Components
 
 		public override void Init()
 		{
+			if (current != null)
+			{
+				entity.RemoveComponent(this.GetType());
+				return;
+			}
+			current = this;
+
 			entity.position = new Vector2(tileSize);
 		}
 
@@ -44,7 +54,7 @@ namespace GAME.Components
 			if (Input.GetButton(Inputs.MouseRight))
 				endPos = (Input.cameraMousePosition - entity.position) / tileSize;
 
-			hit = Physics.RayVsGrid(startPos, (endPos - startPos).normalized, (x, y) => GetTile(x, y));
+			hit = Raycast(startPos, (endPos - startPos));
 		}
 
 		public override void Draw()
@@ -56,9 +66,9 @@ namespace GAME.Components
 						if (GetTile(x, y))
 							GFX.DrawBox(new Rect(x * tileSize + entity.position.x, y * tileSize + entity.position.y, tileSize, tileSize), Color.black);
 
-				GFX.DrawCircle(startPos * tileSize + entity.position, 0.5f * tileSize, Color.red, 0.5f);
+				GFX.DrawCircle(startPos * tileSize + entity.position, 0.5f * tileSize, Color.red, 1f);
 
-				GFX.DrawCircle(endPos * tileSize + entity.position, 0.5f * tileSize, Color.blue, 0.5f);
+				GFX.DrawCircle(endPos * tileSize + entity.position, 0.5f * tileSize, Color.blue, 1f);
 
 				GFX.DrawLine(startPos * tileSize + entity.position, endPos * tileSize + entity.position, Color.gray, 0.25f);
 
@@ -74,9 +84,16 @@ namespace GAME.Components
 
 					GFX.DrawLine(startPos * tileSize + entity.position, hit.position * tileSize + entity.position, Color.green, 0.25f);
 
-					GFX.DrawLine(hit.position * tileSize + entity.position, (hit.position + hit.normal) * tileSize + entity.position, Color.red, 0.25f);
+					GFX.DrawLine(hit.position * tileSize + entity.position, (hit.position + hit.normal / 2) * tileSize + entity.position, Color.red, 0.25f);
 				}
 			}
+		}
+
+		public RaycastHit Raycast(Vector2 origin, Vector2 direction, int maxIterations = -1)
+		{
+			if (maxIterations < 0) maxIterations = size.max;
+
+			return Physics.RayVsGrid(startPos, (endPos - startPos).normalized, (x, y) => GetTile(x, y));
 		}
 
 		public bool GetTile(int x, int y)

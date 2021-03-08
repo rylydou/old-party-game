@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using GAME.Components;
 using MGE;
-using MGE.Debug;
-using MGE.Debug.Menus;
+// using MGE.Debug;
+// using MGE.Debug.Menus;
 using MGE.ECS;
 using Microsoft.Xna.Framework;
 
@@ -28,16 +28,13 @@ namespace GAME
 			engine.LoadContent();
 
 			SceneManager.QueueScene(
-				new Scene(new List<Layer>()
-				{
-					new Layer(new List<Entity>()
-					{
-						new Entity(new List<Component>(){new CBackground()}),
-						// new Entity(new List<Component>(){new CWorld()}),
-						new Entity(new List<Component>(){new CStage()}),
-						new Entity(new List<Component>(){new CPlayer()}),
-					})
-				})
+				new Scene(
+					new Layer(
+						new Entity(new CBackground()),
+						new Entity(new CStage()),
+						new Entity(new CRigidbody(), new CPlayer())
+					)
+				)
 			);
 
 			base.LoadContent();

@@ -4,9 +4,9 @@ namespace MGE.Physics
 {
 	public static class Physics
 	{
-		/// <summary>
-		/// Speed: Slow, 3 Sqrts
-		/// </summary>
+		public static Vector2 gravity = new Vector2(0, 9.8);
+
+		/// <summary> Speed: Slow, 3 Sqrts </summary>
 		public static bool LineVsPoint(Vector2 lineStart, Vector2 lineEnd, Vector2 point, double buffer = 0.1)
 		{
 			var distStart = Vector2.Distance(point, lineStart);
@@ -17,9 +17,7 @@ namespace MGE.Physics
 			return distStart + distEnd >= length - buffer && distStart + distEnd <= length + buffer;
 		}
 
-		/// <summary>
-		/// Speed: Medium
-		/// </summary>
+		/// <summary> Speed: Medium </summary>
 		public static bool LineVsLine(Vector2 lineAStart, Vector2 lineAEnd, Vector2 lineBStart, Vector2 lineBEnd)
 		{
 			var uA =
@@ -42,9 +40,7 @@ namespace MGE.Physics
 			return uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1;
 		}
 
-		/// <summary>
-		/// Speed: Slow, 4 LineVsLine()
-		/// </summary>
+		/// <summary> Speed: Slow, 4 LineVsLine() </summary>
 		public static bool LineVsRect(Vector2 lineStart, Vector2 lineEnd, Rect rect)
 		{
 			var left = LineVsLine(
@@ -73,9 +69,7 @@ namespace MGE.Physics
 			return left || right || top || bottom;
 		}
 
-		/// <summary>
-		/// Speed: Slow, 2 Sqrts
-		/// </summary>
+		/// <summary> Speed: Slow, 2 Sqrts </summary>
 		public static bool LineVsCirc(Vector2 lineStart, Vector2 lineEnd, Vector2 circPos, double circRad)
 		{
 			if (CircVsPoint(circPos, circRad, lineStart) || CircVsPoint(circPos, circRad, lineEnd)) return true;
@@ -93,41 +87,31 @@ namespace MGE.Physics
 			return distance < circRad;
 		}
 
-		/// <summary>
-		/// Speed: Super Fast
-		/// </summary>
+		/// <summary> Speed: Super Fast </summary>
 		public static bool RectVsPoint(Rect rect, Vector2 point)
 		{
 			return rect.Contains(point);
 		}
 
-		/// <summary>
-		/// Speed: Super Fast
-		/// </summary>
+		/// <summary> Speed: Super Fast </summary>
 		public static bool RectVsRect(Rect rectA, Rect rectB)
 		{
 			return rectB.Overlaps(rectA);
 		}
 
-		/// <summary>
-		/// Speed: Fast
-		/// </summary>
+		/// <summary> Speed: Fast </summary>
 		public static bool CircVsPoint(Vector2 circPos, double circRadius, Vector2 point)
 		{
 			return (circPos - point).sqrMagnitude < circRadius * circRadius;
 		}
 
-		/// <summary>
-		/// Speed: Fast
-		/// </summary>
+		/// <summary> Speed: Fast </summary>
 		public static bool CircVsCirc(Vector2 circAPos, double circARadius, Vector2 circBPos, double circBRadius)
 		{
 			return (circAPos - circBPos).sqrMagnitude < (circARadius * circARadius + circBRadius * circBRadius);
 		}
 
-		/// <summary>
-		/// Speed: Medium, 1 Sqrt
-		/// </summary>
+		/// <summary> Speed: Medium, 1 Sqrt </summary>
 		public static bool CircVsRect(Vector2 circPos, double circRadius, Rect rect)
 		{
 			var test = Vector2.zero;
@@ -140,6 +124,7 @@ namespace MGE.Physics
 			return Vector2.Distance(circPos, test) <= circRadius;
 		}
 
+		/// <summary> Speed: Slowish, lots of looping, so turn down the maxIterations </summary>
 		public static RaycastHit RayVsGrid(Vector2 origin, Vector2 direction, Func<int, int, bool> isSolid, int maxIterations = 64)
 		{
 			var mapPos = (Vector2Int)origin;
@@ -149,7 +134,7 @@ namespace MGE.Physics
 
 			if (isSolid.Invoke(mapPos.x, mapPos.y))
 			{
-				return new RaycastHit(-step)
+				return new RaycastHit(Vector2.zero)
 				{
 					origin = origin,
 
@@ -210,8 +195,7 @@ namespace MGE.Physics
 
 			if (hasHit)
 			{
-				// TODO: Get normals working
-				return new RaycastHit(Math.Abs(direction.x) > Math.Abs(direction.y) ? new Vector2(-Math.Sign(direction.x), 0.0) : new Vector2(0.0, -Math.Sign(direction.y)))
+				return new RaycastHit(side == 0 ? new Vector2(-Math.Sign(direction.x), 0.0) : new Vector2(0.0, -Math.Sign(direction.y)))
 				{
 					origin = origin,
 

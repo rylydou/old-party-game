@@ -25,5 +25,16 @@ namespace MGE.Physics
 		{
 			_normal = normal;
 		}
+
+		public static implicit operator bool(RaycastHit raycastHit)
+		{
+			if (raycastHit == null)
+				return false;
+
+			if (raycastHit.normal == Vector2.zero)
+				return false;
+
+			return true;
+		}
 	}
 }

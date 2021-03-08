@@ -18,7 +18,12 @@ namespace MGE.ECS
 		public bool clearScreen = true;
 		public Color screenClearColor = Color.nullColor;
 
-		public Scene(ICollection<Layer> layers = null)
+		public Scene()
+		{
+
+		}
+
+		public Scene(params Layer[] layers)
 		{
 			if (layers != null)
 			{

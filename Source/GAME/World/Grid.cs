@@ -194,7 +194,7 @@ namespace GAME.World
 								SetTile(position.x + x, position.y + y, null);
 					}
 
-			SceneManager.activeScene.layers[0].AddEntity(new Entity(new List<Component>() { new CFlash(position, (float)size.magnitude, 256) }));
+			SceneManager.activeScene.layers[0].AddEntity(new Entity(new CFlash(position, (float)size.magnitude, 256)));
 
 			GUI.gui.Image(new Rect((Vector2)position * Camera.main.scaleUpFactor, (Vector2)size * Camera.main.scaleUpFactor), Color.yellow);
 		}

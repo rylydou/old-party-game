@@ -31,7 +31,12 @@ namespace MGE.ECS
 			}
 		}
 
-		public Entity(ICollection<Component> components = null)
+		public Entity()
+		{
+
+		}
+
+		public Entity(params Component[] components)
 		{
 			if (components != null)
 				foreach (var component in components)

@@ -8,37 +8,24 @@ namespace GAME.Components
 {
 	public class CPlayer : Component
 	{
-		public double speed = 64;
-		public double jumpForce = -3;
-		public Vector2 gravity = new Vector2(0, 8);
-
-		// double acceleration;
-		public Vector2 velocity;
-
-		public Entity isNull = null;
-
+		CRigidbody rb;
 		Texture2D body;
 
 		public override void Init()
 		{
 			body = Assets.GetAsset<Texture2D>("Sprites/Player");
+
+			rb = entity.GetComponent<CRigidbody>();
+
+			rb.position = new Vector2(CStage.current.tileSize * 4);
 		}
 
 		public override void Update()
 		{
-			velocity += gravity * Time.deltaTime;
-
-			velocity.x = (System.Convert.ToUInt16(Input.GetButton(Inputs.D)) - System.Convert.ToUInt16(Input.GetButton(Inputs.A))) * speed * Time.deltaTime;
+			rb.velocity.x += (Input.GetButton(Inputs.D) ? 1.0 : 0.0) - (Input.GetButton(Inputs.A) ? 1.0 : 0.0);
 
 			if (Input.GetButtonPress(Inputs.Space))
-				velocity.y = jumpForce;
-
-			if ((entity.position + velocity).y + body.Height > Window.gameSize.y)
-			{
-				velocity.y = 0;
-			}
-
-			entity.position += velocity;
+				rb.velocity.y = -16;
 		}
 
 		public override void Draw()

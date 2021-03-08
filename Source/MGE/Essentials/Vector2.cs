@@ -172,6 +172,10 @@ namespace MGE
 				return vector;
 			}
 		}
+		public Vector2 sign { get => new Vector2(Math.Sign0(x), Math.Sign0(y)); }
+
+		public Vector2 isolateX { get => new Vector2(x, 0.0); }
+		public Vector2 isolateY { get => new Vector2(0.0, y); }
 
 		public double sqrMagnitude { get => x * x + y * y; }
 		public double magnitude { get => Math.Sqrt(sqrMagnitude); }
@@ -232,6 +236,8 @@ namespace MGE
 
 		public static Vector2 operator -(Vector2 vector) => new Vector2(-vector.x, -vector.y);
 
+		public static Vector2 operator +(Vector2 left, double right) => new Vector2(left.x + right, left.y + right);
+		public static Vector2 operator -(Vector2 left, double right) => new Vector2(left.x - right, left.y - right);
 		public static Vector2 operator *(Vector2 left, double right) => new Vector2(left.x * right, left.y * right);
 		public static Vector2 operator *(double left, Vector2 right) => new Vector2(right.x * left, right.y * left);
 		public static Vector2 operator /(Vector2 left, double right) => new Vector2(left.x / right, left.y / right);
