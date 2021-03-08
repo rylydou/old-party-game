@@ -6,12 +6,12 @@ namespace MGE
 {
 	public struct Logger
 	{
-		public const string logPath = @"\Logs\";
+		const string logPath = @"\Logs\";
 
 		public static bool throwOnError = false;
 
 		static string _logFolderPath;
-		public static string logFolderPath
+		static string logFolderPath
 		{
 			get
 			{
@@ -22,7 +22,7 @@ namespace MGE
 		}
 
 		static StreamWriter _log = null;
-		public static StreamWriter log
+		static StreamWriter log
 		{
 			get
 			{
@@ -38,17 +38,17 @@ namespace MGE
 
 		public static void Log(object obj)
 		{
-			WriteToLog(obj.ToString());
+			WriteToLog(obj?.ToString());
 		}
 
 		public static void LogWarning(object obj)
 		{
-			WriteToLog(obj.ToString());
+			WriteToLog(obj?.ToString());
 		}
 
 		public static void LogError(object obj)
 		{
-			var text = obj.ToString();
+			var text = obj?.ToString();
 
 			WriteToLog(text);
 

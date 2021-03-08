@@ -13,7 +13,9 @@ namespace GAME.Components
 		public Vector2 gravity = new Vector2(0, 8);
 
 		// double acceleration;
-		Vector2 velocity;
+		public Vector2 velocity;
+
+		public Entity isNull = null;
 
 		Texture2D body;
 

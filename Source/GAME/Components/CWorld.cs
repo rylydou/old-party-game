@@ -83,25 +83,25 @@ namespace GAME.Components
 			{
 				var rect = new Rect((i - 1) * uiItemSize + invOffset, 0, uiItemSize, uiItemSize);
 
-				if (GUI.MouseInside(rect))
+				if (GUI.gui.MouseInside(rect))
 				{
 					block = Grid.IDToTile(i);
-					GUI.Image(rect, new Color("#FF7504"));
+					GUI.gui.Image(rect, new Color("#FF7504"));
 				}
 
 				if (currentTile == i)
-					GUI.Image(rect, new Color("#FF7504"));
+					GUI.gui.Image(rect, new Color("#FF7504"));
 
-				GUI.Image(new Rect((i - 1) * uiItemSize + uiItemPadding / 2 + invOffset, uiItemPadding / 2, uiItemSize - uiItemPadding, uiItemSize - uiItemPadding), Grid.IDToTile(i).color.opaque);
+				GUI.gui.Image(new Rect((i - 1) * uiItemSize + uiItemPadding / 2 + invOffset, uiItemPadding / 2, uiItemSize - uiItemPadding, uiItemSize - uiItemPadding), Grid.IDToTile(i).color.opaque);
 
-				if (GUI.MouseClick(rect))
+				if (GUI.gui.MouseClick(rect))
 					currentTile = i;
 			}
 
 			var textOffset = new Vector2(Window.windowedSize.x / 2 - block.name.Length * 16 / 2, 42);
 
-			GUI.Text(block.name, textOffset + Vector2.one * 2, new Color(0, 0.1f));
-			GUI.Text(block.name, textOffset, block.color.opaque);
+			GUI.gui.Text(block.name, textOffset + Vector2.one * 2, new Color(0, 0.1f));
+			GUI.gui.Text(block.name, textOffset, block.color.opaque);
 			// GUI.Text(grid.GetTile(mousePos).velocity.ToString(), Input.windowMousePosition, block.color.opaque);
 		}
 

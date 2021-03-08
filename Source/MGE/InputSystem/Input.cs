@@ -11,14 +11,14 @@ namespace MGE.InputSystem
 		#region Mouse
 		public static Vector2 windowMousePosition = Vector2.zero;
 		public static Vector2 cameraMousePosition = Vector2.zero;
-		public static Vector2 absoluteMousePosition = Vector2.zero;
 
-		public static bool isMouseInWindow = false;
+		public static bool mouseIsInWindow = false;
 
 		static List<Inputs> _mouseButtons = new List<Inputs>();
 		static List<Inputs> _oldMouseButtons = new List<Inputs>();
 
 		public static int scroll = 0;
+		public static int scrollRaw = 0;
 		static int _mouseWheelAdditionPrev = 0;
 		#endregion
 
@@ -44,7 +44,6 @@ namespace MGE.InputSystem
 		public static GamePadDeadZone gamepadDeadzoneType = GamePadDeadZone.Circular;
 
 		static int _maxGamepadCount = 2;
-
 		public static int maxGamepadCount
 		{
 			get => _maxGamepadCount;
@@ -75,13 +74,12 @@ namespace MGE.InputSystem
 			_gamepadCleared = false;
 
 			#region Mouse
-			MouseState mouseState = Mouse.GetState();
+			var mouseState = Mouse.GetState();
 
 			windowMousePosition = mouseState.Position;
 			cameraMousePosition = Camera.main.WinToCam(mouseState.Position);
-			absoluteMousePosition = (Vector2Int)mouseState.Position + Window.windowedPosition + new Vector2Int(8, 31);
 
-			isMouseInWindow =
+			mouseIsInWindow =
 			windowMousePosition.x >= 0 && windowMousePosition.x < Window.windowedSize.x &&
 			windowMousePosition.y >= 0 && windowMousePosition.y < Window.windowedSize.y;
 
@@ -97,8 +95,10 @@ namespace MGE.InputSystem
 			if (mouseState.MiddleButton == ButtonState.Pressed)
 				_mouseButtons.Add(Inputs.MouseMiddle);
 
-			scroll = Math.Clamp11(_mouseWheelAdditionPrev - mouseState.ScrollWheelValue);
+			scrollRaw = _mouseWheelAdditionPrev - mouseState.ScrollWheelValue;
 			_mouseWheelAdditionPrev = mouseState.ScrollWheelValue;
+
+			scroll = Math.Clamp11(scrollRaw);
 			#endregion
 
 			#region Keyboard
@@ -106,9 +106,7 @@ namespace MGE.InputSystem
 			_keyboardBuffer.Clear();
 
 			if (keyboardString.Length > 0)
-			{
 				keyboardLastChar = keyboardString[keyboardString.Length - 1];
-			}
 
 			keyboardLastKey = _keyboardLastKeyBuffer;
 
@@ -118,13 +116,9 @@ namespace MGE.InputSystem
 			_currentKeys.AddRange(Keyboard.GetState().GetPressedKeys());
 
 			if (_currentKeys.Count > 0)
-			{
 				keyboardKey = _currentKeys[_currentKeys.Count - 1];
-			}
 			else
-			{
 				keyboardKey = Keys.None;
-			}
 			#endregion
 
 			#region Gamepad
@@ -175,7 +169,6 @@ namespace MGE.InputSystem
 				if (_gamepadState[i].Buttons.Back == ButtonState.Pressed)
 					_gamepadButtons[i].Add(Inputs.Select);
 			}
-
 			#endregion
 		}
 
@@ -185,9 +178,10 @@ namespace MGE.InputSystem
 			var buttonCode = (int)button;
 
 			return
-				index < _gamepadButtons.Length && !_gamepadCleared && _gamepadButtons[index].Contains(button)
-				|| buttonCode < _keyboardMaxCode && !_keyboardCleared && _currentKeys.Contains((Keys)button)
-				|| buttonCode < _mouseMaxCode && !_mouseCleared && _mouseButtons.Contains(button);
+				index <
+				_gamepadButtons.Length && !_gamepadCleared && _gamepadButtons[index].Contains(button) ||
+				buttonCode < _keyboardMaxCode && !_keyboardCleared && _currentKeys.Contains((Keys)button) ||
+				buttonCode < _mouseMaxCode && !_mouseCleared && _mouseButtons.Contains(button);
 		}
 
 		public static bool GetButtonPress(Inputs button, int index = 0)
@@ -195,9 +189,10 @@ namespace MGE.InputSystem
 			var buttonCode = (int)button;
 
 			return
-				index < _gamepadButtons.Length && !_gamepadCleared && _gamepadButtons[index].Contains(button) && !_oldGamepadButtons[index].Contains(button)
-				|| buttonCode < _keyboardMaxCode && !_keyboardCleared && _currentKeys.Contains((Keys)button) && !_oldKeys.Contains((Keys)button)
-				|| buttonCode < _mouseMaxCode && !_mouseCleared && _mouseButtons.Contains(button) && !_oldMouseButtons.Contains(button);
+				index <
+				_gamepadButtons.Length && !_gamepadCleared && _gamepadButtons[index].Contains(button) && !_oldGamepadButtons[index].Contains(button) ||
+				buttonCode < _keyboardMaxCode && !_keyboardCleared && _currentKeys.Contains((Keys)button) && !_oldKeys.Contains((Keys)button) ||
+				buttonCode < _mouseMaxCode && !_mouseCleared && _mouseButtons.Contains(button) && !_oldMouseButtons.Contains(button);
 		}
 
 		public static bool GetButtonRelease(Inputs button, int index = 0)
@@ -205,9 +200,10 @@ namespace MGE.InputSystem
 			var buttonCode = (int)button;
 
 			return
-			index < _gamepadButtons.Length && !_gamepadCleared && !_gamepadButtons[index].Contains(button) && _oldGamepadButtons[index].Contains(button)
-				|| buttonCode < _keyboardMaxCode && !_keyboardCleared && !_currentKeys.Contains((Keys)button) && _oldKeys.Contains((Keys)button)
-				|| buttonCode < _mouseMaxCode && !_mouseCleared && !_mouseButtons.Contains(button) && _oldMouseButtons.Contains(button);
+			index <
+				_gamepadButtons.Length && !_gamepadCleared && !_gamepadButtons[index].Contains(button) && _oldGamepadButtons[index].Contains(button) ||
+				buttonCode < _keyboardMaxCode && !_keyboardCleared && !_currentKeys.Contains((Keys)button) && _oldKeys.Contains((Keys)button) ||
+				buttonCode < _mouseMaxCode && !_mouseCleared && !_mouseButtons.Contains(button) && _oldMouseButtons.Contains(button);
 		}
 		#endregion
 
@@ -216,11 +212,11 @@ namespace MGE.InputSystem
 		#endregion
 
 		#region Keyboard
-		public static bool KeyboardCheckAnyKey() => !_keyboardCleared && _currentKeys.Count > 0;
+		public static bool GetAnyKey() => !_keyboardCleared && _currentKeys.Count > 0;
 
-		public static bool KeyboardCheckAnyKeyPress() => !_keyboardCleared && _currentKeys.Count > 0 && _oldKeys.Count == 0;
+		public static bool GetAnyKeyPress() => !_keyboardCleared && _currentKeys.Count > 0 && _oldKeys.Count == 0;
 
-		public static bool KeyboardCheckAnyKeyRelease() => !_keyboardCleared && _currentKeys.Count == 0 && _oldKeys.Count > 0;
+		public static bool GetAnyKeyRelease() => !_keyboardCleared && _currentKeys.Count == 0 && _oldKeys.Count > 0;
 
 		public static void ClearKeyboardInput() => _keyboardCleared = true;
 
@@ -237,6 +233,7 @@ namespace MGE.InputSystem
 			_gamepadButtons = new List<Inputs>[_maxGamepadCount];
 			for (var i = 0; i < _gamepadButtons.Length; i += 1)
 				_gamepadButtons[i] = new List<Inputs>();
+
 			_oldGamepadButtons = new List<Inputs>[_maxGamepadCount];
 			for (var i = 0; i < _oldGamepadButtons.Length; i += 1)
 				_oldGamepadButtons[i] = new List<Inputs>();
@@ -244,55 +241,46 @@ namespace MGE.InputSystem
 			_gamepadState = new GamePadState[_maxGamepadCount];
 			for (var i = 0; i < _gamepadState.Length; i += 1)
 				_gamepadState[i] = new GamePadState();
+
 			_oldGamepadState = _gamepadState;
 		}
 
-		public static bool GamepadConnected(int index)
+		public static bool GamepadConnected(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
-			{
 				return _gamepadState[index].IsConnected;
-			}
 			return false;
 		}
 
-		public static Vector2 GamepadGetLeftStick(int index)
+		public static Vector2 GetLeftStick(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
-			{
 				return _gamepadState[index].ThumbSticks.Left;
-			}
 			return Vector2.zero;
 		}
 
-		public static Vector2 GamepadGetRightStick(int index)
+		public static Vector2 GetRightStick(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
-			{
 				return _gamepadState[index].ThumbSticks.Right;
-			}
 			return Vector2.zero;
 		}
 
-		public static float GamepadGetLeftTrigger(int index)
+		public static float GetLeftTrigger(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
-			{
 				return _gamepadState[index].Triggers.Left;
-			}
 			return 0;
 		}
 
-		public static float GamepadGetRightTrigger(int index)
+		public static float GetRightTrigger(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
-			{
 				return _gamepadState[index].Triggers.Right;
-			}
 			return 0;
 		}
 
-		public static void GamepadSetVibration(int index, Vector3 position, float strength)
+		public static void SetVibration3D(Vector3 position, float strength, int index = 0)
 		{
 			position.Normalize();
 			var multiplier = 1.0f - position.Length();
@@ -303,13 +291,13 @@ namespace MGE.InputSystem
 				strength * (float)Math.Clamp01(multiplier + 0.25f));
 		}
 
-		public static void GamepadSetVibrationRaw(int index, float leftMotor, float rightMotor) =>
-		GamePad.SetVibration(index, leftMotor, rightMotor);
+		public static void SetVibrationRaw(float leftMotor, float rightMotor, int index = 0) =>
+			GamePad.SetVibration(index, leftMotor, rightMotor);
 
 		public static void ClearGamepadInput() => _gamepadCleared = true;
 		#endregion
 
-		public static void ClearInput()
+		public static void ClearAllInput()
 		{
 			ClearMouseInput();
 			ClearKeyboardInput();

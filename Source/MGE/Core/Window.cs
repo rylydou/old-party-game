@@ -59,7 +59,7 @@ namespace MGE
 		public static float aspectRatio { get => (float)(aspectRatioFrac.y / aspectRatioFrac.x); }
 
 		public static Vector2Int renderSize;
-		public static Vector2Int gameSize = MGEConfig.gameSize;
+		public static Vector2Int gameSize = Config.gameSize;
 
 		public static Action onResize = () => { };
 
@@ -100,7 +100,7 @@ namespace MGE
 		{
 			if (windowMode != WindowMode.Windowed) return;
 
-			int horizontalSize = Math.Clamp(GFX.graphics.PreferredBackBufferWidth, MGEConfig.minWindowHorizontalSize, int.MaxValue);
+			int horizontalSize = Math.Clamp(GFX.graphics.PreferredBackBufferWidth, Config.minWindowHorizontalSize, int.MaxValue);
 			Vector2Int size = new Vector2Int(horizontalSize, (int)(horizontalSize * aspectRatio));
 
 			GFX.graphics.PreferredBackBufferWidth = size.x;

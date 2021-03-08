@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -37,17 +38,17 @@ namespace MGE.Graphics
 			drawCalls++;
 		}
 
-		public static void Text(string text, Vector2 position)
+		public static void DrawText(string text, Vector2 position)
 		{
-			Text(text, position, Color.white, MGEConfig.defualtFont);
+			DrawText(text, position, Color.white, Config.defualtFont);
 		}
 
-		public static void Text(string text, Vector2 position, Color color)
+		public static void DrawText(string text, Vector2 position, Color color)
 		{
-			Text(text, position, color, MGEConfig.defualtFont);
+			DrawText(text, position, color, Config.defualtFont);
 		}
 
-		public static void Text(string text, Vector2 position, Color color, SpriteFont font)
+		public static void DrawText(string text, Vector2 position, Color color, SpriteFont font)
 		{
 			sb.DrawString(font, text, position, color);
 		}
@@ -77,8 +78,8 @@ namespace MGE.Graphics
 			points.AddRange(CreateCircle(radius, sides));
 			points.RemoveAt(points.Count - 1);
 
-			double curAngle = 0.0;
-			double anglePerSide = Math.pi2 / sides;
+			var curAngle = 0.0;
+			var anglePerSide = Math.pi2 / sides;
 
 			while ((curAngle + (anglePerSide / 2.0)) < startingAngle)
 			{
@@ -90,7 +91,7 @@ namespace MGE.Graphics
 
 			points.Add(points[0]);
 
-			int sidesInArc = (int)((radians / anglePerSide) + 0.5);
+			var sidesInArc = (int)((radians / anglePerSide) + 0.5);
 			points.RemoveRange(sidesInArc + 1, points.Count - sidesInArc - 1);
 
 			return points;
@@ -99,20 +100,17 @@ namespace MGE.Graphics
 		static List<Vector2> CreateCircle(double radius, int sides = 0)
 		{
 			if (sides == 0)
-			{
 				sides = Math.RoundToInt(Math.Clamp(radius / 16f * 4f, 16, 64));
-			}
 
-			int circleKey = ((byte)radius ^ (byte)sides).GetHashCode();
+			var circleKey = ((byte)radius ^ (byte)sides).GetHashCode();
 			if (circleCache.ContainsKey(circleKey))
 				return circleCache[circleKey];
 
-			List<Vector2> vectors = new List<Vector2>();
+			var vectors = new List<Vector2>();
 
-			const double max = 2.0 * Math.pi;
-			double step = max / sides;
+			var step = Math.pi2 / sides;
 
-			for (double theta = 0.0; theta < max; theta += step)
+			for (double theta = 0.0; theta < Math.pi2; theta += step)
 				vectors.Add(new Vector2((radius * Math.Cos(theta)), (radius * Math.Sin(theta))));
 
 			vectors.Add(new Vector2((radius * Math.Cos(0.0)), (radius * Math.Sin(0.0))));
@@ -149,9 +147,9 @@ namespace MGE.Graphics
 
 		public static void DrawLine(Vector2 from, Vector2 to, Color color, float thickness = 1.0f)
 		{
-			float distance = (float)Vector2.Distance(from, to);
+			var distance = (float)Vector2.Distance(from, to);
 
-			float angle = (float)Math.Atan2(to.y - from.y, to.x - from.x);
+			var angle = (float)Math.Atan2(to.y - from.y, to.x - from.x);
 
 			DrawLine(from, distance, color, angle, thickness);
 		}

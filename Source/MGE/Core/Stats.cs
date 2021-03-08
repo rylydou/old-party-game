@@ -34,7 +34,7 @@ namespace MGE
 			fps = 1.0 / Time.deltaTime;
 
 			fpsHistory.Enqueue((int)fps);
-			if (fpsHistory.Count > MGEConfig.fpsHistorySize)
+			if (fpsHistory.Count > Config.fpsHistorySize)
 				fpsHistory.Dequeue();
 		}
 	}

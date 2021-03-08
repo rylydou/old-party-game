@@ -3,6 +3,7 @@ using System;
 
 namespace MGE.Graphics
 {
+	// TODO: Make this not suck
 	public class Render : IDisposable
 	{
 		public RenderTarget2D render;

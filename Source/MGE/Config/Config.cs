@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
-	public abstract class MGEConfig
+	public abstract class Config
 	{
 		// > General
 		public static readonly string gameName = "MGE Game";

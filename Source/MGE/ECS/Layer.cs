@@ -14,7 +14,7 @@ namespace MGE.ECS
 
 		public int prioity = 0;
 
-		SafeList<Entity> _entities = new SafeList<Entity>();
+		public SafeList<Entity> entities = new SafeList<Entity>();
 
 		public Scene scene;
 
@@ -35,7 +35,7 @@ namespace MGE.ECS
 
 			entity._layer = this;
 
-			_entities.Add(entity);
+			entities.Add(entity);
 		}
 
 		public void RemoveEntity(Entity entity)
@@ -46,14 +46,14 @@ namespace MGE.ECS
 			entity.Destroy();
 			entity._layer = null;
 
-			_entities.Remove(entity);
+			entities.Remove(entity);
 		}
 
 		public bool ContainsEntity<T>() where T : Entity
 		{
-			for (var i = 0; i < _entities.Count; i++)
+			for (var i = 0; i < entities.Count; i++)
 			{
-				if (_entities[i] is T)
+				if (entities[i] is T)
 					return true;
 			}
 			return false;
@@ -61,21 +61,21 @@ namespace MGE.ECS
 
 		public T FindEntity<T>() where T : Entity
 		{
-			for (var i = 0; i < _entities.Count; i++)
+			for (var i = 0; i < entities.Count; i++)
 			{
-				if (_entities[i] is T)
-					return (T)_entities[i];
+				if (entities[i] is T)
+					return (T)entities[i];
 			}
 			return null;
 		}
 
 		public Entity FindEntityByComponent<T>() where T : Component
 		{
-			for (var i = 0; i < _entities.Count; i += 1)
+			for (var i = 0; i < entities.Count; i += 1)
 			{
-				if (_entities[i].HasComponent<T>())
+				if (entities[i].HasComponent<T>())
 				{
-					return _entities[i];
+					return entities[i];
 				}
 			}
 			return null;
@@ -83,10 +83,10 @@ namespace MGE.ECS
 
 		internal void CleanupEntityList()
 		{
-			foreach (var entity in _entities)
+			foreach (var entity in entities)
 			{
 				if (entity.destroyed)
-					_entities.Remove(entity);
+					entities.Remove(entity);
 			}
 		}
 
@@ -94,8 +94,8 @@ namespace MGE.ECS
 		{
 			if (entity.layer != this) throw new Exception("Cannot reorder entity - it doesn't belong to this layer.");
 
-			_entities.Remove(entity);
-			_entities.Insert(index, entity);
+			entities.Remove(entity);
+			entities.Insert(index, entity);
 		}
 
 		public void ReorderEntityToTop(Entity entity) => ReorderEntity(entity, 0);
@@ -104,43 +104,75 @@ namespace MGE.ECS
 		{
 			if (entity.layer != this) throw new Exception("Cannot reorder entity - it doesn't belong to this layer.");
 
-			_entities.Remove(entity);
-			_entities.Add(entity);
+			entities.Remove(entity);
+			entities.Add(entity);
 		}
 		#endregion
 
 		#region Updates
 		public void FixedUpdate()
 		{
-			foreach (var entity in _entities)
-				if (entity.enabled && !entity.destroyed)
-					entity.FixedUpdate();
+			foreach (var entity in entities)
+			{
+				if (!entity.enabled) continue;
+				if (entity.destroyed)
+				{
+					entities.Remove(entity);
+					continue;
+				}
+
+				entity.FixedUpdate();
+			}
 		}
 
 		public void Update()
 		{
-			foreach (var entity in _entities)
-				if (entity.enabled && !entity.destroyed)
-					entity.Update();
+			foreach (var entity in entities)
+			{
+				if (!entity.enabled) continue;
+				if (entity.destroyed)
+				{
+					entities.Remove(entity);
+					continue;
+				}
+
+				entity.Update();
+			}
 		}
 
 		public void Draw()
 		{
-			foreach (var entity in _entities)
-				if (entity.visible && !entity.destroyed)
-					entity.Draw();
+			foreach (var entity in entities)
+			{
+				if (!entity.visible) continue;
+				if (entity.destroyed)
+				{
+					entities.Remove(entity);
+					continue;
+				}
+
+				entity.Draw();
+			}
 		}
 
 		public void DrawUI()
 		{
-			foreach (var entity in _entities)
-				if (entity.visible && !entity.destroyed)
-					entity.Draw();
+			foreach (var entity in entities)
+			{
+				if (!entity.visible) continue;
+				if (entity.destroyed)
+				{
+					entities.Remove(entity);
+					continue;
+				}
+
+				entity.Draw();
+			}
 		}
 
 		public void DestroyAllEntites()
 		{
-			foreach (var entity in _entities)
+			foreach (var entity in entities)
 				if (!entity.destroyed)
 					entity.Destroy();
 		}

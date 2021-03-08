@@ -10,7 +10,7 @@ namespace MGE.ECS
 
 		public bool destroyed { get; protected set; } = false;
 
-		protected Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
+		public Dictionary<Type, Component> components = new Dictionary<Type, Component>();
 
 		public Vector2 position;
 		public float roation;
@@ -46,7 +46,7 @@ namespace MGE.ECS
 			if (component.entity != null)
 				Logger.LogError($"Component {component} already is atached to an entity!");
 
-			_components.Add(component.GetType(), component);
+			components.Add(component.GetType(), component);
 			component.entity = this;
 			component.Init();
 			component.inited = true;
@@ -56,10 +56,10 @@ namespace MGE.ECS
 
 		public Component RemoveComponent(Type type)
 		{
-			if (_components.TryGetValue(type, out Component component))
+			if (components.TryGetValue(type, out Component component))
 			{
 				component.Destroy();
-				_components.Remove(type);
+				components.Remove(type);
 				component.entity = null;
 				return component;
 			}
@@ -68,19 +68,19 @@ namespace MGE.ECS
 
 		public T GetComponent<T>() where T : Component
 		{
-			if (_components.ContainsKey(typeof(T)))
-				return (T)_components[typeof(T)];
+			if (components.ContainsKey(typeof(T)))
+				return (T)components[typeof(T)];
 			return null;
 		}
 
-		public bool HasComponent<T>() where T : Component => _components.ContainsKey(typeof(T));
+		public bool HasComponent<T>() where T : Component => components.ContainsKey(typeof(T));
 
 		public Component[] GetAllComponents()
 		{
-			var components = new Component[_components.Count];
+			var components = new Component[this.components.Count];
 			var index = 0;
 
-			foreach (var component in _components)
+			foreach (var component in this.components)
 			{
 				components[index] = component.Value;
 				index++;
@@ -92,34 +92,31 @@ namespace MGE.ECS
 		#region Updates
 		public virtual void FixedUpdate()
 		{
-			foreach (var component in _components.Values)
+			foreach (var component in components.Values)
 			{
-				if (component.enabled)
-				{
-					component.FixedUpdate();
-				}
+				if (!component.enabled) continue;
+
+				component.FixedUpdate();
 			}
 		}
 
 		public virtual void Update()
 		{
-			foreach (var component in _components.Values)
+			foreach (var component in components.Values)
 			{
-				if (component.enabled)
-				{
-					component.Update();
-				}
+				if (!component.enabled) continue;
+
+				component.Update();
 			}
 		}
 
 		public virtual void Draw()
 		{
-			foreach (var component in _components.Values)
+			foreach (var component in components.Values)
 			{
-				if (component.enabled)
-				{
-					component.Draw();
-				}
+				if (!component.visible) continue;
+
+				component.Draw();
 			}
 		}
 
@@ -128,6 +125,7 @@ namespace MGE.ECS
 			if (!destroyed)
 			{
 				destroyed = true;
+
 				if (enabled)
 					OnDestroy();
 			}
@@ -135,14 +133,12 @@ namespace MGE.ECS
 
 		protected virtual void OnDestroy()
 		{
-			if (!destroyed)
+			destroyed = true;
+
+			if (enabled)
 			{
-				destroyed = true;
-				if (enabled)
-				{
-					foreach (var component in _components.Values)
-						component.Destroy();
-				}
+				foreach (var component in components.Values)
+					component.Destroy();
 			}
 		}
 		#endregion

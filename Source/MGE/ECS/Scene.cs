@@ -15,6 +15,9 @@ namespace MGE.ECS
 
 		public SafeList<Layer> layers = new SafeList<Layer>();
 
+		public bool clearScreen = true;
+		public Color screenClearColor = Color.nullColor;
+
 		public Scene(ICollection<Layer> layers = null)
 		{
 			if (layers != null)
@@ -35,31 +38,56 @@ namespace MGE.ECS
 			layers.Add(layer);
 		}
 
+		public void RemoveLayer(Layer layer)
+		{
+			layer.scene = null;
+			layers.Remove(layer);
+		}
+
 		#region Updates
 		public virtual void FixedUpdate()
 		{
 			foreach (var layer in layers)
+			{
+				if (!layer.enabled) continue;
+
 				layer.FixedUpdate();
+			}
 		}
 
 		public virtual void Update()
 		{
 			foreach (var layer in layers)
+			{
+				if (!layer.enabled) continue;
+
 				layer.Update();
+			}
 		}
 
 		public virtual void Draw()
 		{
+			if (clearScreen)
+				Engine.game.GraphicsDevice.Clear(screenClearColor);
+
 			foreach (var layer in layers)
+			{
+				if (!layer.visible) continue;
+
 				if (!layer.isUI)
 					layer.Draw();
+			}
 		}
 
 		public virtual void DrawUI()
 		{
 			foreach (var layer in layers)
-				if (layer.isUI)
-					layer.DrawUI();
+			{
+				if (!layer.enabled) continue;
+				if (!layer.isUI) continue;
+
+				layer.DrawUI();
+			}
 		}
 
 		public void CleanUp()

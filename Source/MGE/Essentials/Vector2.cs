@@ -173,8 +173,11 @@ namespace MGE
 			}
 		}
 
-		public double magnitude { get => Math.Sqrt(x * x + y * y); }
 		public double sqrMagnitude { get => x * x + y * y; }
+		public double magnitude { get => Math.Sqrt(sqrMagnitude); }
+
+		public double max { get => Math.Max(x, y); }
+		public double min { get => Math.Min(x, y); }
 		#endregion
 
 		#region Constructors
@@ -194,7 +197,8 @@ namespace MGE
 		#region Methods
 		public void Normalize()
 		{
-			double mag = magnitude;
+			var mag = magnitude;
+
 			if (mag > epsilon)
 				this = this / mag;
 			else
@@ -234,9 +238,9 @@ namespace MGE
 
 		public static bool operator ==(Vector2 left, Vector2 right)
 		{
-			double diff_x = left.x - right.x;
-			double diff_y = left.y - right.y;
-			return (diff_x * diff_x + diff_y * diff_y) < epsilon * epsilon;
+			var diff_x = left.x - right.x;
+			var diff_y = left.y - right.y;
+			return Math.Abs(diff_x * diff_x + diff_y * diff_y) < epsilonNormalSqrt;
 		}
 		public static bool operator !=(Vector2 left, Vector2 right) => !(left == right);
 

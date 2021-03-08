@@ -79,8 +79,11 @@ namespace MGE
 		#endregion
 
 		#region Properties
-		public double magnitude { get => Math.Sqrt(x * x + y * y); }
 		public int sqrMagnitude { get => x * x + y * y; }
+		public double magnitude { get => Math.Sqrt(sqrMagnitude); }
+
+		public int max { get => Math.Max(x, y); }
+		public int min { get => Math.Min(x, y); }
 		#endregion
 
 		#region Constructors

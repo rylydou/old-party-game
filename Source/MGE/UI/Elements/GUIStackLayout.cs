@@ -32,7 +32,6 @@ namespace MGE.UI.Elements
 				elements[i].rect.width = rect.width;
 				elements[i].rect.height = rect.height;
 
-				GUI.uiDraws++;
 				elements[i].Draw();
 			}
 		}

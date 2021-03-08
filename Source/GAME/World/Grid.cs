@@ -196,7 +196,7 @@ namespace GAME.World
 
 			SceneManager.activeScene.layers[0].AddEntity(new Entity(new List<Component>() { new CFlash(position, (float)size.magnitude, 256) }));
 
-			GUI.Image(new Rect((Vector2)position * Camera.main.scaleUpFactor, (Vector2)size * Camera.main.scaleUpFactor), Color.yellow);
+			GUI.gui.Image(new Rect((Vector2)position * Camera.main.scaleUpFactor, (Vector2)size * Camera.main.scaleUpFactor), Color.yellow);
 		}
 
 		public Vector2Int CamToTile(Vector2 mousePos)
@@ -230,7 +230,7 @@ namespace GAME.World
 						tile.Update(new Vector2Int(x, y));
 
 						if (debugEnabled)
-							GUI.Image(new Rect(new Vector2(x, y) * Camera.main.scaleUpFactor, Camera.main.scaleUpFactor), new Color(0, 1, 0, 0.5f));
+							GUI.gui.Image(new Rect(new Vector2(x, y) * Camera.main.scaleUpFactor, Camera.main.scaleUpFactor), new Color(0, 1, 0, 0.5f));
 					}
 				}
 		}

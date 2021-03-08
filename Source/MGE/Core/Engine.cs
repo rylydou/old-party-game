@@ -7,6 +7,7 @@ using MGE.Graphics;
 using MGE.UI;
 using MGE.InputSystem;
 using MGE.ECS;
+using MGE.Debug;
 
 namespace MGE
 {
@@ -44,8 +45,8 @@ namespace MGE
 
 				game.InactiveSleepTime = TimeSpan.Zero;
 				game.IsFixedTimeStep = false;
-				game.Window.Title = MGEConfig.gameName;
-				game.Window.AllowUserResizing = MGEConfig.allowWindowResizing;
+				game.Window.Title = Config.gameName;
+				game.Window.AllowUserResizing = Config.allowWindowResizing;
 				game.Window.ClientSizeChanged += (sender, args) => OnResize();
 				game.Window.TextInput += (sender, args) => Input.TextInput(args);
 				game.Activated += (sender, args) => Window.isFocused = true;
@@ -67,14 +68,14 @@ namespace MGE
 
 			using (Timmer.Create("Initialize"))
 			{
-				// graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
+				graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
 				graphics.SynchronizeWithVerticalRetrace = true;
 				game.IsFixedTimeStep = true;
 				graphics.ApplyChanges();
 
-				MGE.Window.aspectRatioFrac = MGEConfig.aspectRatio;
-				MGE.Window.windowedSize = MGEConfig.defaultWindowSize;
-				MGE.Window.windowedPosition = (MGE.Window.monitorSize - MGEConfig.defaultWindowSize) / 2;
+				MGE.Window.aspectRatioFrac = Config.aspectRatio;
+				MGE.Window.windowedSize = Config.defaultWindowSize;
+				MGE.Window.windowedPosition = (MGE.Window.monitorSize - Config.defaultWindowSize) / 2;
 				MGE.Window.Apply();
 
 				OnResize();
@@ -89,8 +90,6 @@ namespace MGE
 				Pointer.color = Color.red;
 				Pointer.shadowColor = new Color(0.0f, 0.1f);
 				Pointer.shadowOffset = new Vector2(2);
-
-				// IO.Save("/Data/settings.json", new TestStruct(true));
 			}
 		}
 
@@ -131,7 +130,7 @@ namespace MGE
 
 			if (statsUpdateCooldown < 0.0f)
 			{
-				statsUpdateCooldown = MGEConfig.timeBtwStatsUpdate;
+				statsUpdateCooldown = Config.timeBtwStatsUpdate;
 				Stats.Update();
 			}
 			statsUpdateCooldown -= (float)Time.deltaTime;
@@ -140,25 +139,20 @@ namespace MGE
 
 			SceneManager.Update();
 
-			// GUI.AddElement(new GUIStackLayout(new List<GUIElement>()
-			// {
-			// 	new GUIImage() { color = new Color(1f, 0.25f, 0f, 0.5f) },
-			// 	new GUIImage() { color = new Color(0f, 1f, 0.25f, 0.5f) },
-			// 	new GUIImage() { color = new Color(0.25f, 0f, 1f, 0.5f) },
-			// }, 64));
+			Menuing.Update();
 		}
 
 		public void Draw(GameTime gameTime)
 		{
 			GFX.drawCalls = 0;
 
-			game.GraphicsDevice.Clear(Color.nullColor);
-
 			SceneManager.Draw();
 
 			SceneManager.DrawUI();
 
-			GUI.Draw();
+			GUI.gui.Draw();
+
+			Menuing.Draw();
 
 			Terminal.Draw();
 

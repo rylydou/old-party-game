@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using MGE.FileIO;
+using System.Text;
 
 namespace MGE
 {
@@ -48,7 +49,7 @@ namespace MGE
 		{
 			foreach (var file in index)
 			{
-				if (MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file.Value)))
+				if (Config.typeToExtention.ContainsValue(IO.GetFullExt(file.Value)))
 				{
 					object asset = LoadAsset(file.Value);
 
@@ -111,6 +112,9 @@ namespace MGE
 						var kernings = new List<Vector3>();
 
 						chars = info.Select((x) => x[0]).ToList();
+						chars.Sort();
+
+						Logger.Log(string.Join(' ', chars));
 
 						for (int i = 0; i < chars.Count; i++)
 						{
@@ -119,7 +123,7 @@ namespace MGE
 							kernings.Add(new Vector3(0, 12, 0));
 						}
 
-						asset = new SpriteFont(fontTex, bounds, croppings, chars, 16, 0, kernings, null);
+						asset = new SpriteFont(fontTex, bounds, croppings, chars, 16, 0, kernings, '*');
 					}
 					break;
 				default:
@@ -135,7 +139,7 @@ namespace MGE
 		{
 			foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
 			{
-				if (!MGEConfig.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
+				if (!Config.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
 
 				string relitivePath = folder.GetRelitivePath(file);
 
@@ -160,7 +164,7 @@ namespace MGE
 		#region Asset Getting
 		public static T GetAsset<T>(string path) where T : class
 		{
-			if (!path.Contains('.')) path += MGEConfig.typeToExtention[typeof(T)];
+			if (!path.Contains('.')) path += Config.typeToExtention[typeof(T)];
 
 			if (preloadedAssets.ContainsKey(path))
 				return preloadedAssets[path] as T;

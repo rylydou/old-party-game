@@ -14,9 +14,6 @@ namespace MGE.ECS
 			if (scene == null)
 				throw new Exception("New Scene can not be null!");
 
-			// if (_activeScene == scene)
-			// throw new Exception("Can not queue the same Scene!");
-
 			if (queuedScene == null)
 			{
 				if (activeScene != null)
@@ -29,7 +26,6 @@ namespace MGE.ECS
 				else
 				{
 					activeScene = scene;
-					// _activeScene.Init();
 					activeScene.onDoneCleaningUp += () => DequeueScene();
 
 					onSceneChanged.Invoke();
@@ -52,8 +48,11 @@ namespace MGE.ECS
 			if (queuedScene == null)
 				throw new Exception("Queued Scene is null, how did this happen");
 
+			activeScene = null;
+
+			GC.Collect();
+
 			activeScene = queuedScene;
-			// activeScene.Init();
 			queuedScene = null;
 
 			onSceneChanged.Invoke();

@@ -18,6 +18,6 @@ namespace MGE
 			}
 		}
 
-		public static string dataPath { get => MGEConfig.saveDataPath; }
+		public static string dataPath { get => Config.saveDataPath; }
 	}
 }
