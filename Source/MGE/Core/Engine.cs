@@ -7,7 +7,7 @@ using MGE.Graphics;
 using MGE.UI;
 using MGE.InputSystem;
 using MGE.ECS;
-// using MGE.Debug;
+using MGE.Debug;
 
 namespace MGE
 {
@@ -140,7 +140,7 @@ namespace MGE
 			SceneManager.FixedUpdate();
 			SceneManager.Update();
 
-			// Menuing.Update();
+			Menuing.Update();
 		}
 
 		public void Draw(GameTime gameTime)
@@ -153,9 +153,9 @@ namespace MGE
 
 			GUI.gui.Draw();
 
-			// Menuing.Draw();
+			Menuing.Draw();
 
-			// Terminal.Draw();
+			Terminal.Draw();
 
 			Pointer.Draw();
 		}

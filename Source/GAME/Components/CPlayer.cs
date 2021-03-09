@@ -22,17 +22,17 @@ namespace GAME.Components
 
 		public override void Update()
 		{
-			rb.velocity.x += (Input.GetButton(Inputs.D) ? 1.0 : 0.0) - (Input.GetButton(Inputs.A) ? 1.0 : 0.0);
+			rb.velocity.x += ((Input.GetButton(Inputs.D) ? 1.0 : 0.0) - (Input.GetButton(Inputs.A) ? 1.0 : 0.0)) * Time.deltaTime;
 
 			if (Input.GetButtonPress(Inputs.Space))
-				rb.velocity.y = -16;
+				rb.velocity.y = -4.0 * Time.deltaTime;
 		}
 
 		public override void Draw()
 		{
 			using (new DrawBatch())
 			{
-				GFX.Draw(body, entity.position, Color.white);
+				GFX.Draw(body, entity.position, new Color(1, 0.5f));
 			}
 		}
 	}

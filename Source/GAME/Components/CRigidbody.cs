@@ -11,13 +11,13 @@ namespace GAME.Components
 	{
 		public bool interpolate = true;
 
-		Vector2 _size = new Vector2(1, 1);
+		Vector2 _size = Vector2.zero;
 		public Vector2 size
 		{
 			get => _size;
 			set
 			{
-				_size = size;
+				_size = value;
 				CalcRaySpacing();
 			}
 		}
@@ -25,7 +25,7 @@ namespace GAME.Components
 		public Vector2 position = Vector2.zero;
 		public Vector2 velocity = Vector2.zero;
 
-		public double skinWidth = 0.125;
+		public double skinWidth = 0.0;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -33,7 +33,7 @@ namespace GAME.Components
 			get => _raycastsCount;
 			set
 			{
-				_raycastsCount = raycastsCount;
+				_raycastsCount = value;
 				CalcRaySpacing();
 			}
 		}
@@ -46,46 +46,39 @@ namespace GAME.Components
 
 		public override void Init()
 		{
+			size = new Vector2(CStage.current.tileSize);
 			CalcRaySpacing();
 		}
 
 		public override void FixedUpdate()
 		{
-			velocity += Physics.gravity;
+			position += velocity;
+
+			velocity += Physics.gravity * Time.deltaTime;
 
 			var direction = velocity.sign;
 
+			// if (velocity.y > 0)
+			// {
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var rayPos = position + new Vector2(skinWidth, i * raySpacing.y);
-				var hit = CStage.current.Raycast(rayPos, direction.isolateY, 1);
+				var rayPos = position + new Vector2(raySpacing.y * i, -skinWidth + size.y) / CStage.current.tileSize;
+				var hit = CStage.current.Raycast(rayPos, Vector2.up);
 				rays.Add(rayPos);
-				rays.Add(direction.isolateY);
+				rays.Add(Vector2.up * velocity.y);
 
-				if (hit)
+				if (hit /* && Math.Abs(hit.distance) < velocity.y */)
 				{
-					position.y = hit.position.y - (direction.x > 0.0 ? effectiveSize.y : 0.0);
-					velocity.y = 0.0;
+					rays.Add(hit.position);
+					rays.Add(hit.normal);
+					if (hit.distance < velocity.y)
+					{
+						position.y = hit.position.y;
+						velocity.y = 0.0;
+					}
 				}
 			}
-
-			for (int i = 0; i < raycastsCount.y; i++)
-			{
-				var rayPos = position + new Vector2(skinWidth, i * raySpacing.y);
-				var hit = CStage.current.Raycast(rayPos, direction.isolateX, 1);
-				rays.Add(rayPos);
-				rays.Add(direction.isolateY);
-
-				if (hit)
-				{
-					position.x = hit.position.x - (direction.y > 0.0 ? effectiveSize.x : 0.0);
-					velocity.x = 0.0;
-				}
-			}
-
-			position += velocity;
-
-			Logger.Log($"Dir: {direction}, Vel: {velocity}");
+			// }
 		}
 
 		public override void Update()
@@ -102,7 +95,7 @@ namespace GAME.Components
 			{
 				for (int i = 0; i < rays.Count / 2; i++)
 				{
-					GFX.DrawLine(rays[i * 2], rays[i * 2] + rays[i * 2 + 1], Color.red, 0.25f);
+					GFX.DrawLine(rays[i * 2], rays[i * 2] + rays[i * 2 + 1], Color.red, 0.5f);
 				}
 			}
 
