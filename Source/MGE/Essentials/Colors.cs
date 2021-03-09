@@ -23,13 +23,13 @@ namespace MGE
 		static readonly Color _lightGray = new Color("#333");
 		public static Color lightGray { get => _lightGray; }
 
-		static readonly Color _highlight = new Color(1.0f, 0.1f);
+		static readonly Color _highlight = accent.ChangeAlpha(0.25f);
 		public static Color highlight { get => _highlight; }
 
-		static readonly Color _transBG = new Color(0.05f, 0.8f);
+		static readonly Color _transBG = new Color(0.05f, 0.9f);
 		public static Color transBG { get => _transBG; }
 
-		static readonly Color _transBlack = new Color(0.0f, 0.9f);
+		static readonly Color _transBlack = new Color(0.0f, 0.95f);
 		public static Color transBlack { get => _transBlack; }
 	}
 }

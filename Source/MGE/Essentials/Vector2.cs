@@ -203,10 +203,11 @@ namespace MGE
 		{
 			var mag = magnitude;
 
-			if (mag > epsilon)
-				this = this / mag;
-			else
-				this = zero;
+			if (mag > 1.0)
+				if (mag > epsilon)
+					this = this / mag;
+				else
+					this = zero;
 		}
 
 		public void Clamp(double max)

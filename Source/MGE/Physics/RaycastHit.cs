@@ -7,19 +7,27 @@ namespace MGE.Physics
 		public double distance;
 		public Vector2 direction;
 
-		Vector2 _normal;
-
+		Vector2? _normal;
 		public Vector2 normal
 		{
 			get
 			{
-				if (_normal.sqrMagnitude > 1.0)
+				if (!_normal.HasValue)
 					_normal = ((Vector2)_normal).normalized;
-				return _normal;
+				return _normal.Value;
 			}
 		}
 
-		public Vector2 position { get => origin + direction * distance; }
+		Vector2? _position;
+		public Vector2 position
+		{
+			get
+			{
+				if (!_position.HasValue)
+					_position = origin + direction * distance;
+				return _position.Value;
+			}
+		}
 
 		public RaycastHit(Vector2 normal)
 		{

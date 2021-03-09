@@ -8,6 +8,12 @@ namespace GAME.Components
 {
 	public class CPlayer : Component
 	{
+		public double maxSpeed = 0.5;
+		public double acceleration = 8.0;
+		public double friction = 1.0 - 0.0125;
+
+		public double jumpVel = 1;
+
 		CRigidbody rb;
 		Texture2D body;
 
@@ -22,17 +28,23 @@ namespace GAME.Components
 
 		public override void Update()
 		{
-			rb.velocity.x += ((Input.GetButton(Inputs.D) ? 1.0 : 0.0) - (Input.GetButton(Inputs.A) ? 1.0 : 0.0)) * Time.deltaTime;
+			var moveInput = ((Input.GetButton(Inputs.D) ? 1.0 : 0.0) - (Input.GetButton(Inputs.A) ? 1.0 : 0.0));
+
+			rb.velocity.x = rb.velocity.x * friction;
+
+			rb.velocity.x += moveInput * acceleration * Time.deltaTime;
+
+			rb.velocity.x = Math.Clamp(rb.velocity.x, -maxSpeed, maxSpeed);
 
 			if (Input.GetButtonPress(Inputs.Space))
-				rb.velocity.y = -4.0 * Time.deltaTime;
+				rb.velocity.y = -jumpVel;
 		}
 
 		public override void Draw()
 		{
 			using (new DrawBatch())
 			{
-				GFX.Draw(body, entity.position, new Color(1, 0.5f));
+				GFX.Draw(body, entity.position, Color.white);
 			}
 		}
 	}

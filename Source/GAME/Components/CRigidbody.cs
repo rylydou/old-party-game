@@ -25,7 +25,7 @@ namespace GAME.Components
 		public Vector2 position = Vector2.zero;
 		public Vector2 velocity = Vector2.zero;
 
-		public double skinWidth = 0.0;
+		public double skinWidth = 0.125;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -52,39 +52,64 @@ namespace GAME.Components
 
 		public override void FixedUpdate()
 		{
-			position += velocity;
-
 			velocity += Physics.gravity * Time.deltaTime;
 
 			var direction = velocity.sign;
 
-			// if (velocity.y > 0)
-			// {
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var rayPos = position + new Vector2(raySpacing.y * i, -skinWidth + size.y) / CStage.current.tileSize;
-				var hit = CStage.current.Raycast(rayPos, Vector2.up);
-				rays.Add(rayPos);
-				rays.Add(Vector2.up * velocity.y);
+				var offset = direction.y > 0.0 ? size.y - skinWidth : skinWidth * 2;
 
-				if (hit /* && Math.Abs(hit.distance) < velocity.y */)
+				var rayPos = position + new Vector2(raySpacing.y * i, offset);
+				var rayDir = velocity.isolateY.sign;
+
+				var hit = CStage.current.Raycast(rayPos, rayDir);
+
+				rays.Add(rayPos);
+				rays.Add(rayDir);
+
+				if (hit && Math.Abs(hit.distance) < (rayDir.y + skinWidth) * 4)
 				{
-					rays.Add(hit.position);
-					rays.Add(hit.normal);
 					if (hit.distance < velocity.y)
 					{
-						position.y = hit.position.y;
+						position.y = hit.position.y - (direction.y > 0.0 ? size.y + skinWidth : -skinWidth);
 						velocity.y = 0.0;
 					}
 				}
 			}
-			// }
+
+			for (int i = 0; i < raycastsCount.y; i++)
+			{
+				var offset = direction.x > 0.0 ? size.x - skinWidth : skinWidth * 2;
+
+				var rayPos = position + new Vector2(offset, raySpacing.x * i);
+				var rayDir = velocity.isolateX.sign;
+
+				var hit = CStage.current.Raycast(rayPos, rayDir);
+
+				rays.Add(rayPos);
+				rays.Add(rayDir);
+
+				if (hit && Math.Abs(hit.distance) < (rayDir.x + skinWidth) * 4)
+				{
+					if (hit.distance < velocity.x)
+					{
+						position.x = hit.position.x - (direction.x > 0.0 ? size.x + skinWidth : -skinWidth);
+						velocity.x = 0.0;
+					}
+				}
+			}
+
+			position += velocity;
 		}
 
 		public override void Update()
 		{
-			if (Input.GetButtonPress(Inputs.MouseLeft))
+			if (Input.GetButtonPress(Inputs.MouseMiddle))
+			{
 				position = Input.cameraMousePosition;
+				velocity = Vector2.zero;
+			}
 
 			entity.position = position;
 		}
@@ -95,7 +120,12 @@ namespace GAME.Components
 			{
 				for (int i = 0; i < rays.Count / 2; i++)
 				{
-					GFX.DrawLine(rays[i * 2], rays[i * 2] + rays[i * 2 + 1], Color.red, 0.5f);
+					GFX.DrawLine(
+						rays[i * 2],
+						(rays[i * 2] + rays[i * 2 + 1]),
+						new Color(1, 0, 0, 1.0f / 3.0f),
+						0.5f
+					);
 				}
 			}
 

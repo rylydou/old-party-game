@@ -5,6 +5,7 @@ namespace MGE.Physics
 	public static class Physics
 	{
 		public static Vector2 gravity = new Vector2(0, 1);
+		public static double friction = 1.0 / 3.0;
 
 		/// <summary> Speed: Slow, 3 Sqrts </summary>
 		public static bool LineVsPoint(Vector2 lineStart, Vector2 lineEnd, Vector2 point, double buffer = 0.1)
