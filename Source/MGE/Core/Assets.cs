@@ -78,22 +78,22 @@ namespace MGE
 			switch (IO.GetFullExt(path))
 			{
 				// > Image
-				case ".png":
-					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-					{
-						Logger.LogWarning($"Upgrade {path} to a psd!");
-						goto case ".psd";
-					}
+				// case ".png":
+				// 	using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
+				// 	{
+				// 		Logger.LogWarning($"Upgrade {path} to a psd!");
+				// 		goto case ".psd";
+				// 	}
 				case ".psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = new Texture(Texture2D.FromStream(Engine.game.GraphicsDevice, fs));
+						asset = Texture.FromStream(fs);
 					}
 					break;
 				case ".spritesheet.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						var tex = new Texture(Texture2D.FromStream(Engine.game.GraphicsDevice, fs));
+						var tex = Texture.FromStream(fs);
 						asset = new SpriteSheet(tex, IO.LoadJson<SpriteSheet>(path + ".info").regions);
 					}
 					break;
@@ -108,7 +108,7 @@ namespace MGE
 				case ".font.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						var fontTex = Texture2D.FromStream(Engine.game.GraphicsDevice, fs);
+						var fontTex = Texture.FromStream(fs);
 						var info = IO.GetInfoFileLines(path);
 
 						var bounds = new List<Rectangle>();

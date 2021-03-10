@@ -8,24 +8,11 @@ namespace MGE
 	{
 		[JsonIgnore] public readonly Texture texture;
 
-		public Dictionary<string, Rect> regions;
+		public Dictionary<string, RectInt> regions;
 
-		// public Sprite(Texture texture, Vector2 size, params string[] names)
-		// {
-		// 	this.texture = texture;
+		public SpriteSheet() { }
 
-		// 	for (int i = 0; i < size.x; i++)
-		// 	{
-
-		// 	}
-		// }
-
-		public SpriteSheet()
-		{
-
-		}
-
-		public SpriteSheet(Texture texture, Dictionary<string, Rect> regions)
+		public SpriteSheet(Texture texture, Dictionary<string, RectInt> regions)
 		{
 			this.texture = texture;
 			this.regions = regions;

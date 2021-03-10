@@ -99,6 +99,8 @@ namespace MGE
 
 		public bool Contains(Vector2 point) => (point.x >= xMin) && (point.x < xMax) && (point.y >= yMin) && (point.y < yMax);
 
+		public bool Contains(Rect rect) => (rect.xMin >= xMin) && (rect.xMax < xMax) && (rect.yMin >= yMin) && (rect.yMax < yMax);
+
 		public bool Overlaps(Rect other) => other.xMax > xMin && other.xMin < xMax && other.yMax > yMin && other.yMin < yMax;
 
 		public bool Overlaps(Rect other, bool allowInverse)
@@ -131,12 +133,12 @@ namespace MGE
 		#endregion
 
 		#region Inherited
-		public override int GetHashCode() => x.GetHashCode() ^ (width.GetHashCode() << 2) ^ (y.GetHashCode() >> 2) ^ (height.GetHashCode() >> 1);
+		public override int GetHashCode() =>
+			x.GetHashCode() ^ (width.GetHashCode() << 2) ^ (y.GetHashCode() >> 2) ^ (height.GetHashCode() >> 1);
 
 		public override bool Equals(object other)
 		{
 			if (!(other is Rect)) return false;
-
 			return Equals((Rect)other);
 		}
 
@@ -157,6 +159,8 @@ namespace MGE
 		#region Implicit Operations
 		public static bool operator !=(Rect lhs, Rect rhs) => !(lhs == rhs);
 		public static bool operator ==(Rect lhs, Rect rhs) => lhs.x == rhs.x && lhs.y == rhs.y && lhs.width == rhs.width && lhs.height == rhs.height;
+		public static implicit operator Rect(RectInt rect) => new Rect(rect.x, rect.y, rect.width, rect.height);
+		public static implicit operator RectInt(Rect rect) => new RectInt((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
 		public static implicit operator Rectangle(Rect rect) => new Microsoft.Xna.Framework.Rectangle(rect.position, rect.size);
 		public static implicit operator Rect(Rectangle rect) => new Rect(rect.Location, rect.Size);
 		#endregion
