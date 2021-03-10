@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace MGE
 {
@@ -80,10 +81,10 @@ namespace MGE
 		#region Object
 
 		#region Variables
-		public float r;
-		public float g;
-		public float b;
-		public float a;
+		[JsonIgnore] public float r;
+		[JsonIgnore] public float g;
+		[JsonIgnore] public float b;
+		[JsonIgnore] public float a;
 
 		public float this[int index]
 		{
@@ -114,9 +115,10 @@ namespace MGE
 		#endregion
 
 		#region Perams
-		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
-		public float max { get => (float)Math.Max(Math.Max(r, g), b); }
-		public Color opaque { get => ChangeAlpha(1f); }
+		public string hex { get => ToHex(); set => this = FromHex(value); }
+		[JsonIgnore] public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
+		[JsonIgnore] public float max { get => (float)Math.Max(Math.Max(r, g), b); }
+		[JsonIgnore] public Color opaque { get => ChangeAlpha(1f); }
 		#endregion
 
 		#region Constructors
@@ -252,7 +254,7 @@ namespace MGE
 
 		public static implicit operator System.Drawing.Color(Color color) =>
 			System.Drawing.Color.FromArgb((int)Math.Clamp01(color.a) * 255, (int)Math.Clamp01(color.r) * 255, (int)Math.Clamp01(color.g) * 255, (int)Math.Clamp01(color.b) * 255);
-		public static implicit operator Color(System.Drawing.Color color) => new Color(color.R, color.G, color.B, color.A);
+		public static implicit operator Color(System.Drawing.Color color) => new Color((float)color.R / 255, (float)color.G / 255, (float)color.B / 255, (float)color.A / 255);
 		#endregion
 
 		#region Inherited

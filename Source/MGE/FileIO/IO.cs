@@ -5,8 +5,19 @@ using MGE;
 
 namespace MGE.FileIO
 {
-	public struct IO
+	public static class IO
 	{
+		static BinaryFormatter _bf;
+		public static BinaryFormatter bf
+		{
+			get
+			{
+				if (_bf == null)
+					_bf = new BinaryFormatter();
+				return _bf;
+			}
+		}
+
 		public static string GetInfoFileText(string file)
 		{
 			return File.ReadAllText(file + Config.infoFileExt);
@@ -20,22 +31,34 @@ namespace MGE.FileIO
 		#region Saving & Loading
 		public static void Save(string path, object obj)
 		{
-			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
 			{
-				// var bf = new BinaryFormatter();
-				// bf.Serialize(fs, obj);
-
-				var text = Serializer.Serialize(obj);
-				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length);
+				bf.Serialize(fs, obj);
 			}
-			File.WriteAllText(IO.ParsePath(path), Serializer.Serialize(obj));
 		}
 
-		public static T Load<T>(string path, T obj) where T : ISerializable
+		public static T Load<T>(string path, T obj)
 		{
-			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{
-				return Serializer.Deserialize<T>(File.ReadAllText(IO.ParsePath(path)));
+				return (T)bf.Deserialize(fs);
+			}
+		}
+
+		public static void SaveJson(string path, object obj)
+		{
+			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
+			{
+				var text = Serializer.SerializeJson(obj);
+				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length);
+			}
+		}
+
+		public static T LoadJson<T>(string path)
+		{
+			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
+			{
+				return Serializer.DeserializeJson<T>(File.ReadAllText(IO.ParsePath(path)));
 			}
 		}
 		#endregion

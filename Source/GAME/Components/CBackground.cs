@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework.Graphics;
 using MGE;
 using MGE.Graphics;
 using MGE.ECS;
@@ -7,18 +6,18 @@ namespace GAME.Components
 {
 	public class CBackground : Component
 	{
-		Texture2D background;
+		Texture background;
 
 		public override void Init()
 		{
-			background = Assets.GetAsset<Texture2D>("Sprites/Background");
+			background = Assets.GetAsset<Texture>("Sprites/Background");
 		}
 
 		public override void Draw()
 		{
-			using (new DrawBatch())
+			using (new DrawBatch(transform: null))
 			{
-				GFX.Draw(background, new Rect(Vector2.zero, Window.gameSize), Color.white);
+				GFX.Draw(background, new Rect(Vector2.zero, Window.windowedSize), Color.white);
 			}
 		}
 	}

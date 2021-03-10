@@ -14,25 +14,31 @@ namespace MGE.Graphics
 		public static ulong drawCalls { get; internal set; }
 
 		#region Normal Drawing
-		public static void Draw(Texture2D texture, Vector2 position, Color color)
+		public static void Draw(Texture texture, Vector2 position, Color color)
 		{
 			sb.Draw(texture != null ? texture : pixel, position, color);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture2D texture, Rect rect, Color color)
+		public static void Draw(Texture texture, Rect rect, Color color)
 		{
 			sb.Draw(texture != null ? texture : pixel, rect, color);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture2D texture, Vector2 position, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+		public static void Draw(Texture texture, Rect source, Rect destination, Color color)
+		{
+			sb.Draw(texture != null ? texture : pixel, destination, source, color);
+			drawCalls++;
+		}
+
+		public static void Draw(Texture texture, Vector2 position, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
 		{
 			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture2D texture, Rect destinationRectangle, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+		public static void Draw(Texture texture, Rect destinationRectangle, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
 		{
 			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
 			drawCalls++;
@@ -57,15 +63,15 @@ namespace MGE.Graphics
 		#region Primitive Drawing
 		static readonly Dictionary<int, List<Vector2>> circleCache = new Dictionary<int, List<Vector2>>();
 
-		static Texture2D _pixel;
-		public static Texture2D pixel
+		static Texture _pixel;
+		public static Texture pixel
 		{
 			get
 			{
 				if (_pixel == null)
 				{
-					_pixel = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Color);
-					_pixel.SetData(new[] { Microsoft.Xna.Framework.Color.White });
+					_pixel = new Texture(new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Color));
+					_pixel.texture.SetData(new[] { Microsoft.Xna.Framework.Color.White });
 				}
 
 				return _pixel;

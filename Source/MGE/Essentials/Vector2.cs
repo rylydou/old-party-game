@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace MGE
 {
@@ -163,6 +164,7 @@ namespace MGE
 		#endregion
 
 		#region Properties
+		[JsonIgnore]
 		public Vector2 normalized
 		{
 			get
@@ -172,16 +174,16 @@ namespace MGE
 				return vector;
 			}
 		}
-		public Vector2 sign { get => new Vector2(Math.Sign0(x), Math.Sign0(y)); }
+		[JsonIgnore] public Vector2 sign { get => new Vector2(Math.Sign0(x), Math.Sign0(y)); }
 
-		public Vector2 isolateX { get => new Vector2(x, 0.0); }
-		public Vector2 isolateY { get => new Vector2(0.0, y); }
+		[JsonIgnore] public Vector2 isolateX { get => new Vector2(x, 0.0); }
+		[JsonIgnore] public Vector2 isolateY { get => new Vector2(0.0, y); }
 
-		public double sqrMagnitude { get => x * x + y * y; }
-		public double magnitude { get => Math.Sqrt(sqrMagnitude); }
+		[JsonIgnore] public double sqrMagnitude { get => x * x + y * y; }
+		[JsonIgnore] public double magnitude { get => Math.Sqrt(sqrMagnitude); }
 
-		public double max { get => Math.Max(x, y); }
-		public double min { get => Math.Min(x, y); }
+		[JsonIgnore] public double max { get => Math.Max(x, y); }
+		[JsonIgnore] public double min { get => Math.Min(x, y); }
 		#endregion
 
 		#region Constructors

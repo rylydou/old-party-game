@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework.Graphics;
 using MGE;
 using MGE.ECS;
 using MGE.InputSystem;
@@ -8,18 +7,18 @@ namespace GAME.Components
 {
 	public class CPlayer : Component
 	{
-		public double maxSpeed = 0.5;
-		public double acceleration = 8.0;
-		public double friction = 1.0 - 0.0125;
+		public double maxSpeed = 0.75;
+		public double acceleration = 12.0;
+		public double friction = 1.0 - 0.05;
 
-		public double jumpVel = 1;
+		public double jumpVel = 1.5;
 
 		CRigidbody rb;
-		Texture2D body;
+		Texture body;
 
 		public override void Init()
 		{
-			body = Assets.GetAsset<Texture2D>("Sprites/Player");
+			body = Assets.GetAsset<Texture>("Sprites/Player");
 
 			rb = entity.GetComponent<CRigidbody>();
 
@@ -38,6 +37,8 @@ namespace GAME.Components
 
 			if (Input.GetButtonPress(Inputs.Space))
 				rb.velocity.y = -jumpVel;
+
+			Camera.main.position = entity.position + rb.size - (Vector2)Window.gameSize / 2;
 		}
 
 		public override void Draw()

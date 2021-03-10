@@ -53,7 +53,7 @@ namespace MGE.UI
 			AddElement(new GUIImage() { rect = rect, color = color });
 		}
 
-		public void Image(Rect rect, Texture2D texture, Color color)
+		public void Image(Rect rect, Texture texture, Color color)
 		{
 			AddElement(new GUIImage(texture) { rect = rect, color = color });
 		}

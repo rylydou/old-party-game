@@ -1,0 +1,28 @@
+{
+	"regions": {
+		"Empty": {
+			"x": 0,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Normal": {
+			"x": 16,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Extra": {
+			"x": 32,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Poison": {
+			"x": 48,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		}
+	}
+}

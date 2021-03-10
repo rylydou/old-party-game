@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using MGE.FileIO;
-using System.Text;
 
 namespace MGE
 {
@@ -82,14 +81,20 @@ namespace MGE
 				case ".png":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = Texture2D.FromStream(Engine.game.GraphicsDevice, fs);
-						Logger.LogWarning($"Upgrade {path} to a psd");
+						Logger.LogWarning($"Upgrade {path} to a psd!");
+						goto case ".psd";
 					}
-					break;
 				case ".psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = Texture2D.FromStream(Engine.game.GraphicsDevice, fs);
+						asset = new Texture(Texture2D.FromStream(Engine.game.GraphicsDevice, fs));
+					}
+					break;
+				case ".spritesheet.psd":
+					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
+					{
+						var tex = new Texture(Texture2D.FromStream(Engine.game.GraphicsDevice, fs));
+						asset = new SpriteSheet(tex, IO.LoadJson<SpriteSheet>(path + ".info").regions);
 					}
 					break;
 				// > Audio

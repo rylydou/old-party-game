@@ -5,9 +5,9 @@ namespace MGE.UI.Elements
 {
 	public class GUIImage : GUIElement
 	{
-		public Texture2D texture;
+		public Texture texture;
 
-		public GUIImage(Texture2D texture = null)
+		public GUIImage(Texture texture = null)
 		{
 			this.texture = texture;
 		}

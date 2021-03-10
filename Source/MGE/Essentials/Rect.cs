@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 
 namespace MGE
 {
@@ -27,45 +28,46 @@ namespace MGE
 		#region Object
 
 		#region Varibles
-		double _xMin;
-		double _yMin;
-		double _width;
-		double _height;
+		[JsonIgnore] double _xMin;
+		[JsonIgnore] double _yMin;
+		[JsonIgnore] double _width;
+		[JsonIgnore] double _height;
 		#endregion
 
 		#region Properties
 		public double x { get { return _xMin; } set { _xMin = value; } }
 		public double y { get { return _yMin; } set { _yMin = value; } }
+		public double width { get => _width; set => _width = value; }
+		public double height { get => _height; set => _height = value; }
 
+		[JsonIgnore]
 		public Vector2 position
 		{
 			get => new Vector2(_xMin, _yMin);
 			set { _xMin = value.x; _yMin = value.y; }
 		}
 
+		[JsonIgnore]
 		public Vector2 center
 		{
 			get => new Vector2(x + _width / 2f, y + _height / 2f);
 			set { _xMin = value.x - _width / 2f; _yMin = value.y - _height / 2f; }
 		}
 
-		public Vector2 min { get => new Vector2(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
-		public Vector2 max { get => new Vector2(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
+		[JsonIgnore] public Vector2 min { get => new Vector2(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
+		[JsonIgnore] public Vector2 max { get => new Vector2(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
 
-		public double width { get => _width; set => _width = value; }
-		public double height { get => _height; set => _height = value; }
+		[JsonIgnore] public Vector2 size { get { return new Vector2(_width, _height); } set { _width = value.x; _height = value.y; } }
 
-		public Vector2 size { get { return new Vector2(_width, _height); } set { _width = value.x; _height = value.y; } }
+		[JsonIgnore] public double xMin { get => _xMin; set { double oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
+		[JsonIgnore] public double yMin { get => _yMin; set { double oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
+		[JsonIgnore] public double xMax { get => _width + _xMin; set { _width = value - _xMin; } }
+		[JsonIgnore] public double yMax { get => _height + _yMin; set { _height = value - _yMin; } }
 
-		public double xMin { get => _xMin; set { double oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
-		public double yMin { get => _yMin; set { double oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
-		public double xMax { get => _width + _xMin; set { _width = value - _xMin; } }
-		public double yMax { get => _height + _yMin; set { _height = value - _yMin; } }
-
-		public double left { get => xMin; }
-		public double right { get => xMax; }
-		public double top { get => yMin; }
-		public double bottom { get => yMax; }
+		[JsonIgnore] public double left { get => xMin; }
+		[JsonIgnore] public double right { get => xMax; }
+		[JsonIgnore] public double top { get => yMin; }
+		[JsonIgnore] public double bottom { get => yMax; }
 		#endregion
 
 		#region Contructors

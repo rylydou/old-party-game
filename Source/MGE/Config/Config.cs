@@ -24,7 +24,8 @@ namespace MGE
 		// > Asset Management
 		public static readonly Dictionary<Type, string> typeToExtention = new Dictionary<Type, string>()
 		{
-			{typeof(Texture2D), ".psd"},
+			{typeof(Texture), ".psd"},
+			{typeof(SpriteSheet), ".spritesheet.psd"},
 			{typeof(SoundEffect), ".wav"},
 			{typeof(SpriteFont), ".font.psd"},
 		};

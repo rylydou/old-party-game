@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace MGE.ECS
 {
@@ -18,18 +16,20 @@ namespace MGE.ECS
 
 		public Scene scene;
 
-		public Layer()
+		public Layer(bool isUI = false)
 		{
-
+			this.isUI = isUI;
 		}
 
-		public Layer(params Entity[] entities)
+		public Layer(bool isUI, params Entity[] entities)
 		{
 			if (entities != null)
 			{
 				foreach (var entity in entities)
 					AddEntity(entity);
 			}
+
+			this.isUI = isUI;
 		}
 
 		#region Entity Management

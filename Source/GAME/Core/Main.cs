@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GAME.Components;
+using GAME.Components.UI;
 using MGE;
 // using MGE.Debug;
 // using MGE.Debug.Menus;
@@ -30,9 +31,14 @@ namespace GAME
 			SceneManager.QueueScene(
 				new Scene(
 					new Layer(
+						false,
 						new Entity(new CBackground()),
 						new Entity(new CStage()),
 						new Entity(new CRigidbody(), new CPlayer())
+					),
+					new Layer(
+						true,
+						new Entity(new CUIHUD())
 					)
 				)
 			);

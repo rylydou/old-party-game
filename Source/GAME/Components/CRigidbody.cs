@@ -41,12 +41,17 @@ namespace GAME.Components
 		public Vector2 raySpacing { get; private set; } = Vector2.zero;
 
 		public Vector2 effectiveSize { get; private set; } = Vector2.zero;
+		public Vector2 effectivePosition
+		{
+			get => position + skinWidth;
+			set => position = value - skinWidth;
+		}
 
 		List<Vector2> rays = new List<Vector2>();
 
 		public override void Init()
 		{
-			size = new Vector2(CStage.current.tileSize);
+			size = new Vector2(CStage.current.tileSize - 1.0);
 			CalcRaySpacing();
 		}
 
@@ -58,9 +63,9 @@ namespace GAME.Components
 
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var offset = direction.y > 0.0 ? size.y - skinWidth : skinWidth * 2;
+				var offset = direction.y > 0.0 ? size.y - skinWidth : skinWidth;
 
-				var rayPos = position + new Vector2(raySpacing.y * i, offset);
+				var rayPos = effectivePosition + new Vector2(raySpacing.y * i, offset);
 				var rayDir = velocity.isolateY.sign;
 
 				var hit = CStage.current.Raycast(rayPos, rayDir);
@@ -68,21 +73,18 @@ namespace GAME.Components
 				rays.Add(rayPos);
 				rays.Add(rayDir);
 
-				if (hit && Math.Abs(hit.distance) < (rayDir.y + skinWidth) * 4)
+				if (hit is object && hit.distance < Math.Abs(velocity.y) + skinWidth)
 				{
-					if (hit.distance < velocity.y)
-					{
-						position.y = hit.position.y - (direction.y > 0.0 ? size.y + skinWidth : -skinWidth);
-						velocity.y = 0.0;
-					}
+					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0 ? size.y + skinWidth : -skinWidth));
+					velocity.y = 0.0;
 				}
 			}
 
 			for (int i = 0; i < raycastsCount.y; i++)
 			{
-				var offset = direction.x > 0.0 ? size.x - skinWidth : skinWidth * 2;
+				var offset = direction.x > 0.0 ? size.x - skinWidth : skinWidth;
 
-				var rayPos = position + new Vector2(offset, raySpacing.x * i);
+				var rayPos = effectivePosition + new Vector2(offset, raySpacing.x * i);
 				var rayDir = velocity.isolateX.sign;
 
 				var hit = CStage.current.Raycast(rayPos, rayDir);
@@ -90,13 +92,10 @@ namespace GAME.Components
 				rays.Add(rayPos);
 				rays.Add(rayDir);
 
-				if (hit && Math.Abs(hit.distance) < (rayDir.x + skinWidth) * 4)
+				if (hit is object && hit.distance < Math.Abs(velocity.x) + skinWidth)
 				{
-					if (hit.distance < velocity.x)
-					{
-						position.x = hit.position.x - (direction.x > 0.0 ? size.x + skinWidth : -skinWidth);
-						velocity.x = 0.0;
-					}
+					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0 ? size.x + skinWidth : -skinWidth), effectivePosition.y);
+					velocity.x = 0.0;
 				}
 			}
 
@@ -123,7 +122,7 @@ namespace GAME.Components
 					GFX.DrawLine(
 						rays[i * 2],
 						(rays[i * 2] + rays[i * 2 + 1]),
-						new Color(1, 0, 0, 1.0f / 3.0f),
+						Color.red,
 						0.5f
 					);
 				}

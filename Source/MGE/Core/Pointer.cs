@@ -28,7 +28,7 @@ namespace MGE
 			}
 		}
 
-		public static Texture2D texture;
+		public static Texture texture;
 		public static Color color;
 		public static Vector2 hotspot;
 		public static Vector2 size;

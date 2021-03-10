@@ -103,7 +103,7 @@ namespace MGE
 
 				Assets.ReloadAssets();
 
-				Pointer.texture = Assets.GetAsset<Texture2D>("Sprites/Pointer");
+				Pointer.texture = Assets.GetAsset<Texture>("Sprites/Pointer");
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace MGE
 
 			Menuing.Draw();
 
-			Terminal.Draw();
+			// Terminal.Draw();
 
 			Pointer.Draw();
 		}
