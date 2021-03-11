@@ -34,6 +34,8 @@ namespace GAME.Components
 
 		public RaycastHit hit = null;
 
+		TileSheet tiles;
+
 		public override void Init()
 		{
 			if (current != null)
@@ -42,6 +44,8 @@ namespace GAME.Components
 				return;
 			}
 			current = this;
+
+			tiles = Assets.GetAsset<TileSheet>("Sprites/Tiles");
 
 			entity.position = new Vector2(tileSize);
 		}
@@ -60,10 +64,7 @@ namespace GAME.Components
 		{
 			using (new DrawBatch())
 			{
-				for (int y = 0; y < size.y; y++)
-					for (int x = 0; x < size.x; x++)
-						if (GetTile(x, y))
-							GFX.DrawBox(new Rect(x * tileSize + entity.position.x, y * tileSize + entity.position.y, tileSize, tileSize), Color.black);
+				tiles.Draw(entity.position, tileSize, size, (x, y) => GetTile(x, y));
 
 				GFX.DrawCircle(startPos, 0.5f * tileSize, Color.red, 1f);
 

@@ -94,7 +94,17 @@ namespace MGE
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
 						var tex = Texture.FromStream(fs);
+
 						asset = new SpriteSheet(tex, IO.LoadJson<SpriteSheet>(path + ".info").regions);
+					}
+					break;
+				case ".tilesheet.psd":
+					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
+					{
+						var tex = Texture.FromStream(fs);
+						var info = IO.LoadJson<TileSheet>(path + ".info");
+
+						asset = new TileSheet(tex, info.defualtTile, info.tiles);
 					}
 					break;
 				// > Audio

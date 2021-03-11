@@ -26,6 +26,7 @@ namespace MGE
 		{
 			{typeof(Texture), ".psd"},
 			{typeof(SpriteSheet), ".spritesheet.psd"},
+			{typeof(TileSheet), ".tilesheet.psd"},
 			{typeof(SoundEffect), ".wav"},
 			{typeof(SpriteFont), ".font.psd"},
 		};

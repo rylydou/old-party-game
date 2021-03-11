@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	public class RectInt
+	public struct RectInt
 	{
 		#region Static
 		static RectInt OrderMinMax(RectInt rect)

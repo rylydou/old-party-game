@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
-	public class Texture : IDisposable
+	public class Texture
 	{
 		#region Static
 		public static List<Texture2D> textures = new List<Texture2D>();
@@ -25,7 +25,6 @@ namespace MGE
 
 		#region Object
 		public readonly int id;
-		public bool isDisposed = false;
 
 		public Texture2D texture { get => textures[id]; }
 
@@ -45,22 +44,6 @@ namespace MGE
 			}
 			else
 				this.id = id;
-		}
-
-		~Texture()
-		{
-			Dispose();
-		}
-
-		public void Dispose()
-		{
-			if (!isDisposed)
-			{
-				isDisposed = true;
-
-				texture.Dispose();
-				textures.RemoveAt(id);
-			}
 		}
 
 		public Color GetPixel(Vector2Int position) => GetPixel(position.x, position.y);
