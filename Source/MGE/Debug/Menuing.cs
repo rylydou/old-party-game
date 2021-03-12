@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using MGE.Debug.Menus;
 using MGE.InputSystem;
 using MGE.UI;
 
@@ -10,12 +9,6 @@ namespace MGE.Debug
 	{
 		const int menuMenuSize = 32;
 		const int menuMenuItemOffset = 16;
-
-		public static DebugMenu[] availableMenus = new DebugMenu[]
-		{
-			new DMenuTest(),
-			new DMenuHierarchy(),
-		};
 
 		public static List<DebugMenu> menus = new List<DebugMenu>();
 
@@ -68,14 +61,14 @@ namespace MGE.Debug
 			{
 				gui.Image(new Rect(0, 0, Window.windowedSize.x, menuMenuSize), Colors.transBG);
 
-				var offsetIncerment = (float)menuMenuItemOffset / 2;
-				var yOffset = menuMenuSize / 2 - Config.defualtFont.LineSpacing / 2;
+				var offsetIncerment = (double)menuMenuItemOffset / 2;
+				var yOffset = menuMenuSize / 2 - Config.defualtFont.charPaddingSize.y / 2;
 
-				foreach (var menu in availableMenus)
+				foreach (var menu in Config.availableMenus)
 				{
 					var text = $"[{menu.name}]";
 
-					var width = Config.defualtFont.MeasureString(text).X;
+					var width = Config.defualtFont.charPaddingSize.x * text.Length;
 
 					gui.Text(text, new Vector2(offsetIncerment, yOffset), Colors.text);
 

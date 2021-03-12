@@ -9,12 +9,7 @@ namespace MGE.Debug.Menus
 		public override string name => "Hierarchy";
 
 		const int itemSize = 24;
-		const string disabledChar = "Ç";
-		const string enabledChar = "â";
-		const string invisChar = "é";
-		const string visChar = "ü";
 
-		readonly Vector2 offset = new Vector2(16, 16);
 		readonly Color disabledColor = Colors.textDark;
 		readonly Color enabledColor = Colors.text;
 
@@ -78,7 +73,7 @@ namespace MGE.Debug.Menus
 						else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.Destroy();
 					}
 
-					gui.Text("| " + (entity.destroyed ? "¡" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect.position + offset, layer.enabled && entity.enabled ? enabledColor : disabledColor);
+					gui.Text("| " + (entity.destroyed ? "§Error§" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect.position + offset, layer.enabled && entity.enabled ? enabledColor : disabledColor);
 
 					i++;
 
@@ -107,6 +102,6 @@ namespace MGE.Debug.Menus
 		}
 
 		static string GetStatus(bool enabled, bool visible) =>
-			$"{(enabled ? enabledChar : disabledChar)} {(visible ? visChar : invisChar)} ";
+			$"{(enabled ? "§Enabled§" : "§Disabled§")} {(visible ? "§Visible§" : "§Invisible§")} ";
 	}
 }

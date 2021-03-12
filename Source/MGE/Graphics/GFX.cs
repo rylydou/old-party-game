@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,37 +25,22 @@ namespace MGE.Graphics
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, Rect source, Rect destination, Color color)
+		public static void Draw(Texture texture, RectInt source, Rect destination, Color color)
 		{
 			sb.Draw(texture != null ? texture : pixel, destination, source, color);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, Vector2 position, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+		public static void Draw(Texture texture, Vector2 position, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
 		{
 			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, Rect destinationRectangle, Rect? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+		public static void Draw(Texture texture, Rect destinationRectangle, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
 		{
 			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
 			drawCalls++;
-		}
-
-		public static void DrawText(string text, Vector2 position)
-		{
-			DrawText(text, position, Color.white, Config.defualtFont);
-		}
-
-		public static void DrawText(string text, Vector2 position, Color color)
-		{
-			DrawText(text, position, color, Config.defualtFont);
-		}
-
-		public static void DrawText(string text, Vector2 position, Color color, SpriteFont font)
-		{
-			sb.DrawString(font, text, position, color);
 		}
 		#endregion
 

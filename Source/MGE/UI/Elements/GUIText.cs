@@ -13,7 +13,7 @@ namespace MGE.UI.Elements
 
 		public override void Draw()
 		{
-			GFX.DrawText(text, rect.position, color);
+			Config.defualtFont.DrawText(text, rect.position, color);
 		}
 	}
 }

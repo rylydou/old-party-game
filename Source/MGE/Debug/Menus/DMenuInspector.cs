@@ -9,12 +9,7 @@ namespace MGE.Debug.Menus
 		public override string name => "Inspector";
 
 		const int itemSize = 24;
-		const string disabledChar = "Ç";
-		const string enabledChar = "â";
-		const string invisChar = "é";
-		const string visChar = "ü";
 
-		readonly Vector2 offset = new Vector2(16, 16);
 		readonly Color disabledColor = Colors.textDark;
 		readonly Color enabledColor = Colors.text;
 
@@ -69,7 +64,7 @@ namespace MGE.Debug.Menus
 					var value = field.GetValue(comp.Value)?.ToString();
 
 					if (field.FieldType.ToString() == value || string.IsNullOrEmpty(value))
-						gui.Text($"| | {field.Name}: " + (string.IsNullOrEmpty(value) ? "Ø" : "!Ø"), rect.position + offset, Colors.text);
+						gui.Text($"| | {field.Name}: " + (string.IsNullOrEmpty(value) ? "§Null§" : "!§Null§"), rect.position + offset, Colors.text);
 					else
 						gui.Text($"| | {field.Name}: {value}", rect.position + offset, Colors.text);
 
@@ -79,6 +74,6 @@ namespace MGE.Debug.Menus
 		}
 
 		static string GetStatus(bool enabled, bool visible) =>
-			$"{(enabled ? enabledChar : disabledChar)} {(visible ? visChar : invisChar)} ";
+			$"{(enabled ? "§Enabled§" : "§Disabled§")} {(visible ? "§Visible§" : "§Invisible§")} ";
 	}
 }

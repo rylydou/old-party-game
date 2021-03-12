@@ -6,7 +6,7 @@ namespace MGE
 {
 	public class SpriteSheet
 	{
-		[JsonIgnore] public readonly Texture texture;
+		[JsonIgnore] public Texture texture;
 
 		public Dictionary<string, RectInt> regions;
 

@@ -1,5 +1,4 @@
 using MGE.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.UI.Elements
 {

@@ -11,9 +11,11 @@ namespace MGE.Debug
 		public const int barSize = allSize;
 
 		public abstract string name { get; }
+
 		public string title = "Window";
 		public Vector2 position = Vector2.zero;
 		public Vector2 size = new Vector2(allSize * 12, allSize * 12);
+		public Vector2 offset = new Vector2(8);
 
 		protected Rect barRect;
 
@@ -123,8 +125,7 @@ namespace MGE.Debug
 			gui.Image(new Rect(Vector2.zero, size), bgColor);
 
 			var text = $"[{title}]";
-			var textSize = (Vector2)Config.defualtFont.MeasureString(text);
-			gui.Text(text, new Vector2(size.x / 2 - textSize.x / 2, barSize / 2 - textSize.y / 2 - barSize), Colors.text);
+			gui.Text(text, new Vector2(size.x / 2 - Config.defualtFont.charPaddingSize.x * text.Length / 2, barSize / 2 - Config.defualtFont.charPaddingSize.y / 2 - barSize), Colors.text);
 
 			gui.Rect(new Rect(0, -barSize, size.x, size.y + barSize), Colors.black, 1);
 		}

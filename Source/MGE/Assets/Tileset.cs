@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	public class TileSheet
+	public class Tileset
 	{
 		[JsonIgnore] public Texture texture;
 
@@ -13,9 +13,9 @@ namespace MGE
 
 		public Dictionary<TileConnection, RectInt> tiles;
 
-		public TileSheet() { }
+		public Tileset() { }
 
-		public TileSheet(Texture texture, RectInt defualtTile, Dictionary<TileConnection, RectInt> tiles)
+		public Tileset(Texture texture, RectInt defualtTile, Dictionary<TileConnection, RectInt> tiles)
 		{
 			this.texture = texture;
 			this.defualtTile = defualtTile;
@@ -45,19 +45,6 @@ namespace MGE
 					}
 				}
 			}
-
-			for (short y = -1; y <= 1; y++)
-			{
-				for (short x = -1; x <= 1; x++)
-				{
-					if (Math.Abs(x) + Math.Abs(y) > 1 || (x == 0 && y == 0)) continue;
-
-					if (isSolid.Invoke(x, y))
-						GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.green);
-					else
-						GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.blue);
-				}
-			}
 		}
 
 		TileConnection GetConnections(int x, int y, ref Func<int, int, bool> isSolid)
@@ -71,7 +58,24 @@ namespace MGE
 					if (Math.Abs(checkX) + Math.Abs(checkY) > 1 || (checkX == 0 && checkY == 0)) continue;
 
 					if (isSolid.Invoke(x + checkX, y + checkY))
-						connection |= (TileConnection)((checkX << 2) ^ (checkY >> 2));
+					{
+						// TODO: Make not jank
+						switch (checkX << 1 | checkY >> 1)
+						{
+							case 0 << 1 | -1 >> 1:
+								connection |= TileConnection.Top;
+								break;
+							case 1 << 1 | 0 >> 1:
+								connection |= TileConnection.Right;
+								break;
+							case 0 << 1 | 1 >> 1:
+								connection |= TileConnection.Bottom;
+								break;
+							case -1 << 1 | 0 >> 1:
+								connection |= TileConnection.Left;
+								break;
+						}
+					}
 				}
 			}
 

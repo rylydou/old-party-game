@@ -44,7 +44,6 @@ namespace MGE
 				GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 
 				game.InactiveSleepTime = TimeSpan.Zero;
-				game.IsFixedTimeStep = false;
 				game.Window.Title = Config.gameName;
 				game.Window.AllowUserResizing = Config.allowWindowResizing;
 				game.Window.ClientSizeChanged += (sender, args) => OnResize();
@@ -68,7 +67,7 @@ namespace MGE
 
 			using (Timmer.Create("Initialize"))
 			{
-				graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
+				// graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
 				graphics.SynchronizeWithVerticalRetrace = true;
 				game.IsFixedTimeStep = true;
 				graphics.ApplyChanges();
@@ -155,7 +154,7 @@ namespace MGE
 
 			Menuing.Draw();
 
-			// Terminal.Draw();
+			Terminal.Draw();
 
 			Pointer.Draw();
 		}

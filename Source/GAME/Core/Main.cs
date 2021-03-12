@@ -2,19 +2,25 @@ using System.Collections.Generic;
 using GAME.Components;
 using GAME.Components.UI;
 using MGE;
-// using MGE.Debug;
-// using MGE.Debug.Menus;
 using MGE.ECS;
 using Microsoft.Xna.Framework;
 
 namespace GAME
 {
-	public class Main : Microsoft.Xna.Framework.Game
+	public class Main : Game
 	{
+		public static Main current { get; private set; }
+
+		public int health = 2;
+		public int extraHealth = 1;
+		public int maxHealth = 3;
+
 		public Engine engine;
 
 		public Main()
 		{
+			current = this;
+
 			engine = new Engine(this);
 		}
 

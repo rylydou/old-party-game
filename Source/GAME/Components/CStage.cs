@@ -3,38 +3,47 @@ using MGE.ECS;
 using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.Physics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace GAME.Components
 {
 	public class CStage : Component
 	{
 		public const string stage =
-		"########################" +
-		"#                      #" +
-		"#                      #" +
-		"#               #####  #" +
-		"# #           ##       #" +
-		"# ####   #####       ###" +
-		"#                 # ## #" +
-		"#            ##  #     #" +
-		"#  #       ##        ###" +
-		"# ##   ###        #    #" +
-		"######          # # ####" +
-		"########################";
+		"##################################" +
+		"#                                #" +
+		"#                                #" +
+		"#    #                          ##" +
+		"#    #                        ####" +
+		"#   ##          ####     #########" +
+		"#    ######              #       #" +
+		"#    #                 ###       #" +
+		"#    #         ####              #" +
+		"#            ###       ####      #" +
+		"#     ###                        #" +
+		"#            ####                #" +
+		"#                  ###           #" +
+		"#     #####               #####  #" +
+		"# #                     ##       #" +
+		"# ####   ###############       ###" +
+		"#                           # ## #" +
+		"#                 #    ##  #     #" +
+		"#  #       #### ########       ###" +
+		"# ##   ###                  #    #" +
+		"######                    # # ####" +
+		"##################################";
 
-		public static readonly Vector2Int size = new Vector2Int(24, 12);
+		public static readonly Vector2Int size = new Vector2Int(34, 22);
 
 		public static CStage current { get; private set; }
 
 		public float tileSize = 8.0f;
 
-		public Vector2 startPos = new Vector2(1, 1);
-		public Vector2 endPos = new Vector2(8, 8);
+		public Vector2 startPos = new Vector2(3, 4);
+		public Vector2 endPos = new Vector2(16, 12);
 
 		public RaycastHit hit = null;
 
-		TileSheet tiles;
+		Tileset tiles;
 
 		public override void Init()
 		{
@@ -45,7 +54,7 @@ namespace GAME.Components
 			}
 			current = this;
 
-			tiles = Assets.GetAsset<TileSheet>("Sprites/Tiles");
+			tiles = Assets.GetAsset<Tileset>("Sprites/Tiles");
 
 			entity.position = new Vector2(tileSize);
 		}

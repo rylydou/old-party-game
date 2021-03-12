@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.UI.Elements;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.UI
 {

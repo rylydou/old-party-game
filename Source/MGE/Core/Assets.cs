@@ -78,12 +78,6 @@ namespace MGE
 			switch (IO.GetFullExt(path))
 			{
 				// > Image
-				// case ".png":
-				// 	using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-				// 	{
-				// 		Logger.LogWarning($"Upgrade {path} to a psd!");
-				// 		goto case ".psd";
-				// 	}
 				case ".psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
@@ -94,17 +88,18 @@ namespace MGE
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
 						var tex = Texture.FromStream(fs);
-
-						asset = new SpriteSheet(tex, IO.LoadJson<SpriteSheet>(path + ".info").regions);
+						var info = IO.LoadJson<SpriteSheet>(path + ".info");
+						info.texture = tex;
+						asset = info;
 					}
 					break;
-				case ".tilesheet.psd":
+				case ".tileset.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
 						var tex = Texture.FromStream(fs);
-						var info = IO.LoadJson<TileSheet>(path + ".info");
-
-						asset = new TileSheet(tex, info.defualtTile, info.tiles);
+						var info = IO.LoadJson<Tileset>(path + ".info");
+						info.texture = tex;
+						asset = info;
 					}
 					break;
 				// > Audio
@@ -114,31 +109,13 @@ namespace MGE
 						asset = SoundEffect.FromStream(fs);
 					}
 					break;
-				// > Font
 				case ".font.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						var fontTex = Texture.FromStream(fs);
-						var info = IO.GetInfoFileLines(path);
-
-						var bounds = new List<Rectangle>();
-						var croppings = new List<Rectangle>();
-						var chars = new List<char>();
-						var kernings = new List<Vector3>();
-
-						chars = info.Select((x) => x[0]).ToList();
-						chars.Sort();
-
-						Logger.Log(string.Join(' ', chars));
-
-						for (int i = 0; i < chars.Count; i++)
-						{
-							bounds.Add(new Rectangle(i * 10, 0, 10, 16));
-							croppings.Add(new Rectangle(0, 0, 0, 0));
-							kernings.Add(new Vector3(0, 12, 0));
-						}
-
-						asset = new SpriteFont(fontTex, bounds, croppings, chars, 16, 0, kernings, '*');
+						var tex = Texture.FromStream(fs);
+						var info = IO.LoadJson<Font>(path + ".info");
+						info.texture = tex;
+						asset = info;
 					}
 					break;
 				default:

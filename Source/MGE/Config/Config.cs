@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using MGE.Debug;
+using MGE.Debug.Menus;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,7 +12,7 @@ namespace MGE
 		// > General
 		public static readonly string gameName = "MGE Game";
 		static readonly string defualtFontPath = @"Fonts/Basic";
-		// C:/Users/{current-user}AppData/Local/Company/Game/
+		// C:/Users/{current-user}/AppData/Local/Company/Game/
 		public static string saveDataPath = @"%LocalAppData%/MGE/MGEGame/";
 
 		// > Graphics
@@ -26,13 +28,20 @@ namespace MGE
 		{
 			{typeof(Texture), ".psd"},
 			{typeof(SpriteSheet), ".spritesheet.psd"},
-			{typeof(TileSheet), ".tilesheet.psd"},
+			{typeof(Tileset), ".tileset.psd"},
 			{typeof(SoundEffect), ".wav"},
-			{typeof(SpriteFont), ".font.psd"},
+			{typeof(Font), ".font.psd"},
 		};
 		public static readonly string infoFileExt = ".info";
 
 		// > Debuging
+		public static DebugMenu[] availableMenus = new DebugMenu[]
+		{
+			new DMenuHierarchy(),
+			new DMenuAssets(),
+			new DMenuInput(),
+		};
+
 		public static readonly Color statsColor = new Color("#EEE5");
 
 		public static readonly int statsUpdatesPerSec = 15;
@@ -46,13 +55,13 @@ namespace MGE
 
 		////////////////////////////////////////
 		#region Config Utils
-		static SpriteFont _defualtFont;
-		public static SpriteFont defualtFont
+		static Font _defualtFont;
+		public static Font defualtFont
 		{
 			get
 			{
 				if (_defualtFont == null)
-					_defualtFont = Assets.GetAsset<SpriteFont>(defualtFontPath);
+					_defualtFont = Assets.GetAsset<Font>(defualtFontPath);
 				return _defualtFont;
 			}
 		}

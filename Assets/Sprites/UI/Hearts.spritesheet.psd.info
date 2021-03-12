@@ -6,20 +6,26 @@
 			"width": 16,
 			"height": 16
 		},
-		"Normal": {
+		"Shadow": {
 			"x": 16,
 			"y": 0,
 			"width": 16,
 			"height": 16
 		},
-		"Extra": {
+		"Normal": {
 			"x": 32,
 			"y": 0,
 			"width": 16,
 			"height": 16
 		},
-		"Poison": {
+		"Extra": {
 			"x": 48,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Poison": {
+			"x": 64,
 			"y": 0,
 			"width": 16,
 			"height": 16
