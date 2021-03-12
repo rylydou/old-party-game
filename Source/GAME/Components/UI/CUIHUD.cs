@@ -8,7 +8,8 @@ namespace GAME.Components.UI
 	{
 		public Vector2 offset = new Vector2(8);
 
-		public double heartSize = 32 + 16;
+		public float itemSize = 32;
+		public float heartSize = 32 + 16;
 
 		Font font;
 		SpriteSheet hearts;
@@ -40,6 +41,11 @@ namespace GAME.Components.UI
 				{
 					hearts.Draw("Extra", new Rect(offset.x + (Main.current.maxHealth + i) * heartSize, offset.y, heartSize, heartSize), Color.white);
 				}
+			}
+
+			for (int i = 0; i < Main.current.inv.Length; i++)
+			{
+
 			}
 		}
 	}

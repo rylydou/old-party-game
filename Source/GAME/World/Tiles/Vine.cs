@@ -41,7 +41,7 @@ namespace GAME.World
 
 							for (int yy = -1; yy <= 1; yy++)
 								for (int xx = -1; xx <= 1; xx++)
-									if (Random.Bool(1.0 / 9.0)) grid.SetTile(position.x + x + xx, position.y + y + yy, new Vine());
+									if (Random.Bool(1.0f / 9.0f)) grid.SetTile(position.x + x + xx, position.y + y + yy, new Vine());
 						}
 					}
 					// else if (tile.info.HasFlag(TileInfo.BadForEnvironment))

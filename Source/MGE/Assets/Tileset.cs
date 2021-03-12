@@ -22,7 +22,7 @@ namespace MGE
 			this.tiles = tiles;
 		}
 
-		public void Draw(Vector2 position, double scale, Vector2Int mapSize, Func<int, int, bool> isSolid)
+		public void Draw(Vector2 position, float scale, Vector2Int mapSize, Func<int, int, bool> isSolid, Color color)
 		{
 			for (int y = 0; y < mapSize.y; y++)
 			{
@@ -40,7 +40,7 @@ namespace MGE
 						}
 						else
 						{
-							GFX.Draw(texture, tile, new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.white);
+							GFX.Draw(texture, tile, new Rect(position.x + x * scale, position.y + y * scale, scale, scale), color);
 						}
 					}
 				}

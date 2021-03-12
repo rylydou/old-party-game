@@ -38,6 +38,8 @@ namespace GAME.Components
 
 		public float tileSize = 8.0f;
 
+		public Vector2 shadowOffset = new Vector2(1.0f);
+
 		public Vector2 startPos = new Vector2(3, 4);
 		public Vector2 endPos = new Vector2(16, 12);
 
@@ -61,10 +63,13 @@ namespace GAME.Components
 
 		public override void Update()
 		{
-			if (Input.GetButton(Inputs.MouseLeft))
-				startPos = Input.cameraMousePosition;
-			if (Input.GetButton(Inputs.MouseRight))
-				endPos = Input.cameraMousePosition;
+			if (Input.GetButton(Inputs.LeftAlt))
+			{
+				if (Input.GetButton(Inputs.MouseLeft))
+					startPos = Input.cameraMousePosition;
+				else if (Input.GetButton(Inputs.MouseRight))
+					endPos = Input.cameraMousePosition;
+			}
 
 			hit = Raycast(startPos, (endPos - startPos));
 		}
@@ -73,7 +78,8 @@ namespace GAME.Components
 		{
 			using (new DrawBatch())
 			{
-				tiles.Draw(entity.position, tileSize, size, (x, y) => GetTile(x, y));
+				tiles.Draw(entity.position + shadowOffset, tileSize, size, (x, y) => GetTile(x, y), new Color(0, 0.1f));
+				tiles.Draw(entity.position, tileSize, size, (x, y) => GetTile(x, y), Color.white);
 
 				GFX.DrawCircle(startPos, 0.5f * tileSize, Color.red, 1f);
 

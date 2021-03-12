@@ -4,11 +4,11 @@ namespace MGE.Physics
 {
 	public static class Physics
 	{
-		public static Vector2 gravity = new Vector2(0.0, 3.0);
-		public static double friction = 1.0 / 3.0;
+		public static Vector2 gravity = new Vector2(0.0f, 3.0f);
+		public static float friction = 1.0f / 3.0f;
 
 		/// <summary> Speed: Slow, 3 Sqrts </summary>
-		public static bool LineVsPoint(Vector2 lineStart, Vector2 lineEnd, Vector2 point, double buffer = 0.1)
+		public static bool LineVsPoint(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer = 0.1f)
 		{
 			var distStart = Vector2.Distance(point, lineStart);
 			var distEnd = Vector2.Distance(point, lineEnd);
@@ -71,7 +71,7 @@ namespace MGE.Physics
 		}
 
 		/// <summary> Speed: Slow, 2 Sqrts </summary>
-		public static bool LineVsCirc(Vector2 lineStart, Vector2 lineEnd, Vector2 circPos, double circRad)
+		public static bool LineVsCirc(Vector2 lineStart, Vector2 lineEnd, Vector2 circPos, float circRad)
 		{
 			if (CircVsPoint(circPos, circRad, lineStart) || CircVsPoint(circPos, circRad, lineEnd)) return true;
 
@@ -101,19 +101,19 @@ namespace MGE.Physics
 		}
 
 		/// <summary> Speed: Fast </summary>
-		public static bool CircVsPoint(Vector2 circPos, double circRadius, Vector2 point)
+		public static bool CircVsPoint(Vector2 circPos, float circRadius, Vector2 point)
 		{
 			return (circPos - point).sqrMagnitude < circRadius * circRadius;
 		}
 
 		/// <summary> Speed: Fast </summary>
-		public static bool CircVsCirc(Vector2 circAPos, double circARadius, Vector2 circBPos, double circBRadius)
+		public static bool CircVsCirc(Vector2 circAPos, float circARadius, Vector2 circBPos, float circBRadius)
 		{
 			return (circAPos - circBPos).sqrMagnitude < (circARadius * circARadius + circBRadius * circBRadius);
 		}
 
 		/// <summary> Speed: Medium, 1 Sqrt </summary>
-		public static bool CircVsRect(Vector2 circPos, double circRadius, Rect rect)
+		public static bool CircVsRect(Vector2 circPos, float circRadius, Rect rect)
 		{
 			var test = Vector2.zero;
 
@@ -130,7 +130,7 @@ namespace MGE.Physics
 		{
 			var mapPos = (Vector2Int)origin;
 			var sideDist = Vector2.zero;
-			var deltaDist = new Vector2(Math.Abs(1.0 / direction.x), Math.Abs(1.0 / direction.y));
+			var deltaDist = new Vector2(Math.Abs(1.0f / direction.x), Math.Abs(1.0f / direction.y));
 			var step = Vector2Int.zero;
 
 			if (isSolid.Invoke(mapPos.x, mapPos.y))
@@ -139,7 +139,7 @@ namespace MGE.Physics
 				{
 					origin = origin,
 
-					distance = 0.0,
+					distance = 0.0f,
 					direction = direction,
 				};
 			}
@@ -152,7 +152,7 @@ namespace MGE.Physics
 			else
 			{
 				step.x = 1;
-				sideDist.x = (mapPos.x + 1.0 - origin.x) * deltaDist.x;
+				sideDist.x = (mapPos.x + 1.0f - origin.x) * deltaDist.x;
 			}
 			if (direction.y < 0)
 			{
@@ -162,7 +162,7 @@ namespace MGE.Physics
 			else
 			{
 				step.y = 1;
-				sideDist.y = (mapPos.y + 1.0 - origin.y) * deltaDist.y;
+				sideDist.y = (mapPos.y + 1.0f - origin.y) * deltaDist.y;
 			}
 
 			var hasHit = false;
@@ -189,14 +189,14 @@ namespace MGE.Physics
 				interations++;
 			}
 
-			var distance = 0.0;
+			var distance = 0.0f;
 
 			if (side == 0) distance = (mapPos.x - origin.x + (1 - step.x) / 2) / direction.x;
 			else distance = (mapPos.y - origin.y + (1 - step.y) / 2) / direction.y;
 
 			if (hasHit)
 			{
-				return new RaycastHit(side == 0 ? new Vector2(-Math.Sign(direction.x), 0.0) : new Vector2(0.0, -Math.Sign(direction.y)))
+				return new RaycastHit(side == 0 ? new Vector2(-Math.Sign(direction.x), 0.0f) : new Vector2(0.0f, -Math.Sign(direction.y)))
 				{
 					origin = origin,
 

@@ -127,7 +127,7 @@ namespace GAME.Components
 			{
 				for (int x = -brushSize; x <= brushSize; x++)
 				{
-					if (Random.Bool(1.0 / (double)brushFuzz))
+					if (Random.Bool(1.0f / (float)brushFuzz))
 					{
 						var pos = mousePos + new Vector2Int(x, y);
 						grid.SetTile(pos, (Tile)System.Activator.CreateInstance(Grid.IDToTile(id).GetType()));

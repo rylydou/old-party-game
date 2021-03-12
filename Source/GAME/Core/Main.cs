@@ -15,6 +15,8 @@ namespace GAME
 		public int extraHealth = 1;
 		public int maxHealth = 3;
 
+		public Item[] inv = new Item[10];
+
 		public Engine engine;
 
 		public Main()

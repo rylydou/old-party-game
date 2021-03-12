@@ -11,13 +11,13 @@ namespace MGE
 		{
 			if (rect.xMin > rect.xMax)
 			{
-				double temp = rect.xMin;
+				float temp = rect.xMin;
 				rect.xMin = rect.xMax;
 				rect.xMax = temp;
 			}
 			if (rect.yMin > rect.yMax)
 			{
-				double temp = rect.yMin;
+				float temp = rect.yMin;
 				rect.yMin = rect.yMax;
 				rect.yMax = temp;
 			}
@@ -28,17 +28,17 @@ namespace MGE
 		#region Object
 
 		#region Varibles
-		[JsonIgnore] double _xMin;
-		[JsonIgnore] double _yMin;
-		[JsonIgnore] double _width;
-		[JsonIgnore] double _height;
+		[JsonIgnore] float _xMin;
+		[JsonIgnore] float _yMin;
+		[JsonIgnore] float _width;
+		[JsonIgnore] float _height;
 		#endregion
 
 		#region Properties
-		public double x { get { return _xMin; } set { _xMin = value; } }
-		public double y { get { return _yMin; } set { _yMin = value; } }
-		public double width { get => _width; set => _width = value; }
-		public double height { get => _height; set => _height = value; }
+		public float x { get { return _xMin; } set { _xMin = value; } }
+		public float y { get { return _yMin; } set { _yMin = value; } }
+		public float width { get => _width; set => _width = value; }
+		public float height { get => _height; set => _height = value; }
 
 		[JsonIgnore]
 		public Vector2 position
@@ -59,15 +59,15 @@ namespace MGE
 
 		[JsonIgnore] public Vector2 size { get { return new Vector2(_width, _height); } set { _width = value.x; _height = value.y; } }
 
-		[JsonIgnore] public double xMin { get => _xMin; set { double oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
-		[JsonIgnore] public double yMin { get => _yMin; set { double oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
-		[JsonIgnore] public double xMax { get => _width + _xMin; set { _width = value - _xMin; } }
-		[JsonIgnore] public double yMax { get => _height + _yMin; set { _height = value - _yMin; } }
+		[JsonIgnore] public float xMin { get => _xMin; set { float oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
+		[JsonIgnore] public float yMin { get => _yMin; set { float oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
+		[JsonIgnore] public float xMax { get => _width + _xMin; set { _width = value - _xMin; } }
+		[JsonIgnore] public float yMax { get => _height + _yMin; set { _height = value - _yMin; } }
 
-		[JsonIgnore] public double left { get => xMin; }
-		[JsonIgnore] public double right { get => xMax; }
-		[JsonIgnore] public double top { get => yMin; }
-		[JsonIgnore] public double bottom { get => yMax; }
+		[JsonIgnore] public float left { get => xMin; }
+		[JsonIgnore] public float right { get => xMax; }
+		[JsonIgnore] public float top { get => yMin; }
+		[JsonIgnore] public float bottom { get => yMax; }
 		#endregion
 
 		#region Contructors
@@ -79,7 +79,7 @@ namespace MGE
 			this._height = size.y;
 		}
 
-		public Rect(double x, double y, double width, double height)
+		public Rect(float x, float y, float width, float height)
 		{
 			this._xMin = x;
 			this._yMin = y;
@@ -89,7 +89,7 @@ namespace MGE
 		#endregion
 
 		#region Methods
-		public void Set(double x, double y, double width, double height)
+		public void Set(float x, float y, float width, float height)
 		{
 			_xMin = x;
 			_yMin = y;

@@ -18,7 +18,7 @@ namespace MGE
 		// > Graphics
 		// >> Windowing
 		public static readonly bool allowWindowResizing = true;
-		public static readonly Vector2 aspectRatio = new Vector2(16.0, 9.0);
+		public static readonly Vector2 aspectRatio = new Vector2(16.0f, 9.0f);
 		public static readonly Vector2Int defaultWindowSize = new Vector2Int(1280, 720);
 		public static readonly int minWindowHorizontalSize = 1920 / 4;
 		public static readonly Vector2Int gameSize = new Vector2Int(1920 / 6, 1080 / 6);

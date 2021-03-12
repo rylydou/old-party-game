@@ -14,7 +14,7 @@ namespace MGE
 		public int someInt { get; set; }
 		public double[] someDoubleArray { get; set; }
 		public List<double> someDoubleList { get; set; }
-		public Dictionary<string, double> someDoubleDictionary { get; set; }
+		public Dictionary<string, float> someDoubleDictionary { get; set; }
 		public Dictionary<string, TestSubstruct> someTestSubstructDictionary { get; set; }
 
 		public TestStruct(bool dontWorryAboutThis)
@@ -27,25 +27,25 @@ namespace MGE
 			this.someInt = 255;
 			this.someDoubleArray = new double[] { 0.9, 1.25, 4.33, 65.42 };
 			this.someDoubleList = new List<double>() { 0.9, 1.25, 4.33, 65.42 };
-			this.someDoubleDictionary = new Dictionary<string, double>()
+			this.someDoubleDictionary = new Dictionary<string, float>()
 			{
-				{"health", 69.1},
-				{"mana", 1337.5},
-				{"exp", 888.12}
+				{"health", 69.1f},
+				{"mana", 1337.5f},
+				{"exp", 888.12f}
 			};
 			this.someTestSubstructDictionary = new Dictionary<string, TestSubstruct>()
 			{
-				{"player 1", new TestSubstruct('B', "Bob", false, 55.3f, 756.52, 4714.41678m, new double[]{0.5, 1.5, 2.4}, new List<double>() {0.4, 0.72, 1.85}, new Dictionary<string, double>()
+				{"player 1", new TestSubstruct('B', "Bob", false, 55.3f, 756.52f, 4714.41678m, new float[]{0.5f, 1.5f, 2.4f}, new List<float>() {0.4f, 0.72f, 1.85f}, new Dictionary<string, float>()
 				{
-					{"item 1", 0.45},
-					{"item 2", 1.15},
-					{"item 3", 0.99}
+					{"item 1", 0.45f},
+					{"item 2", 1.15f},
+					{"item 3", 0.99f}
 				})},
-				{"player 2", new TestSubstruct('B', "Bob", false, 55.3f, 756.52, 4714.41678m, new double[]{0.5, 1.5, 2.4}, new List<double>() {0.4, 0.72, 1.85}, new Dictionary<string, double>()
+				{"player 2", new TestSubstruct('B', "Bob", false, 55.3f, 756.52f, 4714.41678m, new float[]{0.5f, 1.5f, 2.4f}, new List<float>() {0.4f, 0.72f, 1.85f}, new Dictionary<string, float>()
 				{
-					{"item 1", 0.69},
-					{"item 2", 4.20},
-					{"item 3", 13.37}
+					{"item 1", 0.69f},
+					{"item 2", 4.20f},
+					{"item 3", 13.37f}
 				})}
 			};
 		}
@@ -57,13 +57,13 @@ namespace MGE
 			public string someString { get; set; }
 			public bool someBool { get; set; }
 			public float someFloat { get; set; }
-			public double someDouble { get; set; }
+			public float someDouble { get; set; }
 			public decimal someDecimal { get; set; }
-			public double[] someDoubleArray { get; set; }
-			public List<double> someDoubleList { get; set; }
-			public Dictionary<string, double> someDoubleDictionary { get; set; }
+			public float[] someDoubleArray { get; set; }
+			public List<float> someDoubleList { get; set; }
+			public Dictionary<string, float> someDoubleDictionary { get; set; }
 
-			public TestSubstruct(char someChar, string someString, bool someBool, float someFloat, double someDouble, decimal someDecimal, double[] someDoubleArray, List<double> someDoubleList, Dictionary<string, double> someDoubleDictionary)
+			public TestSubstruct(char someChar, string someString, bool someBool, float someFloat, float someDouble, decimal someDecimal, float[] someDoubleArray, List<float> someDoubleList, Dictionary<string, float> someDoubleDictionary)
 			{
 				this.someChar = someChar;
 				this.someString = someString;

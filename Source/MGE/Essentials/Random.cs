@@ -34,22 +34,22 @@ namespace MGE
 		public static float Float(float min, float max) => min + Float(max - min);
 
 		public static double Double() => rng.NextDouble();
-		public static double Double(double max) => Double() * max;
-		public static double Double(double min, double max) => min + Double(max - min);
+		public static double Double(float max) => Double() * max;
+		public static double Double(float min, float max) => min + Double(max - min);
 
 		public static decimal Decimal() => (decimal)rng.NextDouble();
 		public static decimal Decimal(decimal max) => Decimal() * max;
 		public static decimal Decimal(decimal min, decimal max) => min + Decimal(max - min);
 
-		public static double Angle() => Double() * Math.pi2;
+		public static float Angle() => Float() * Math.pi2;
 
 		public static Color Color() => new Color(Float(), Float(), Float());
 
 		public static Vector2 UnitVector() => Vector().normalized;
-		public static Vector2 Vector() => new Vector2(Double(-1, 1), Double(-1, 1));
-		public static Vector2 Vector(double max) => new Vector2(Double(-max, max), Double(-max, max));
-		public static Vector2 Vector(double min, double max) => new Vector2(Double(min, max), Double(min, max));
+		public static Vector2 Vector() => new Vector2(Float(-1, 1), Float(-1, 1));
+		public static Vector2 Vector(float max) => new Vector2(Float(-max, max), Float(-max, max));
+		public static Vector2 Vector(float min, float max) => new Vector2(Float(min, max), Float(min, max));
 
-		public static double Noise(double x, double y, double z) => perlin.Noise(x, y, z);
+		public static float Noise(float x, float y, float z) => perlin.Noise(x, y, z);
 	}
 }

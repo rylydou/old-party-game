@@ -47,7 +47,7 @@ namespace GAME.World
 		public Tile[,] world;
 
 		public Vector2 position;
-		public double scale;
+		public float scale;
 
 		public readonly Vector2Int size;
 

@@ -7,7 +7,7 @@ namespace MGE.UI
 
 		protected GUIElement()
 		{
-			this.rect = new Rect(0.0, 0.0, 64, 64);
+			this.rect = new Rect(0.0f, 0.0f, 64, 64);
 			this.color = Color.white;
 		}
 

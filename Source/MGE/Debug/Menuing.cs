@@ -61,7 +61,7 @@ namespace MGE.Debug
 			{
 				gui.Image(new Rect(0, 0, Window.windowedSize.x, menuMenuSize), Colors.transBG);
 
-				var offsetIncerment = (double)menuMenuItemOffset / 2;
+				var offsetIncerment = (float)menuMenuItemOffset / 2;
 				var yOffset = menuMenuSize / 2 - Config.defualtFont.charPaddingSize.y / 2;
 
 				foreach (var menu in Config.availableMenus)

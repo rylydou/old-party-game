@@ -20,7 +20,7 @@ namespace GAME.World.Generation
 			for (int y = 0; y < size.y; y++)
 				for (int x = 0; x < size.x; x++)
 				{
-					var value = perlin.Noise((double)x / size.x * 10, (double)y / size.y * 5, (double)(x + y) / size.x + size.y);
+					var value = perlin.Noise((float)x / size.x * 10, (float)y / size.y * 5, (float)(x + y) / size.x + size.y);
 
 					if (value < -0.25)
 						world[x, y] = new Sand();
@@ -30,7 +30,7 @@ namespace GAME.World.Generation
 			for (int y = 0; y < size.y; y++)
 				for (int x = 0; x < size.x; x++)
 				{
-					var value = perlin.Noise((double)x / size.x * 40, (double)y / size.y * 20, (double)(x + y) / size.x + size.y);
+					var value = perlin.Noise((float)x / size.x * 40, (float)y / size.y * 20, (float)(x + y) / size.x + size.y);
 
 					if (value < -0.33)
 						world[x, y] = new Sand();
@@ -38,7 +38,7 @@ namespace GAME.World.Generation
 
 			// Place Sand mountains
 			for (int x = 0; x < size.x; x++)
-				for (int y = size.y - 1; y >= size.y - perlin.Noise((double)x / size.x * 15, 0, 0) * 16 - 50; y--)
+				for (int y = size.y - 1; y >= size.y - perlin.Noise((float)x / size.x * 15, 0, 0) * 16 - 50; y--)
 					world[x, y] = new Sand();
 
 			int lineThickness = Random.Int(size.x / 4, size.x / 3);
@@ -46,13 +46,13 @@ namespace GAME.World.Generation
 			// Replace Sand > Salt
 			for (int x = size.x / 2 - lineThickness / 2; x < size.x / 2 + lineThickness / 2; x++)
 				for (int y = 0; y < size.y; y++)
-					if (Random.Bool(1.0 / 10.0))
+					if (Random.Bool(1.0f / 10.0f))
 						if (world[x, y].GetType() == typeof(Sand)) world[x, y] = new Salt();
 
 			// Replace Salt > Sodium
 			for (int x = size.x / 2 - lineThickness / 2; x < size.x / 2 + lineThickness / 2; x++)
 				for (int y = 0; y < size.y; y++)
-					if (Random.Bool(1.0 / 3.0))
+					if (Random.Bool(1.0f / 3.0f))
 						if (world[x, y].GetType() == typeof(Salt)) world[x, y] = new Sodium();
 
 			// Replace Sand @ edges > Water
@@ -66,7 +66,7 @@ namespace GAME.World.Generation
 
 			// Place stone base
 			for (int x = 0; x < size.x; x++)
-				for (int y = size.y - 1; y >= size.y - perlin.Noise((double)x / size.x * 25, 0, 0) * 4 - 25; y--)
+				for (int y = size.y - 1; y >= size.y - perlin.Noise((float)x / size.x * 25, 0, 0) * 4 - 25; y--)
 					world[x, y] = new Stone();
 
 			// Place floating Sand @ top

@@ -81,7 +81,7 @@ namespace MGE
 
 		#region Properties
 		[JsonIgnore] public int sqrMagnitude { get => x * x + y * y; }
-		[JsonIgnore] public double magnitude { get => Math.Sqrt(sqrMagnitude); }
+		[JsonIgnore] public float magnitude { get => Math.Sqrt(sqrMagnitude); }
 
 		[JsonIgnore] public int max { get => Math.Max(x, y); }
 		[JsonIgnore] public int min { get => Math.Min(x, y); }

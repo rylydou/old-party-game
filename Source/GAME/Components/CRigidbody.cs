@@ -25,7 +25,7 @@ namespace GAME.Components
 		public Vector2 position = Vector2.zero;
 		public Vector2 velocity = Vector2.zero;
 
-		public double skinWidth = 0.125;
+		public float skinWidth = 0.125f;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -51,7 +51,7 @@ namespace GAME.Components
 
 		public override void Init()
 		{
-			size = new Vector2(CStage.current.tileSize - 1.0);
+			size = new Vector2(CStage.current.tileSize - 1.0f);
 			CalcRaySpacing();
 		}
 
@@ -63,7 +63,7 @@ namespace GAME.Components
 
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var offset = direction.y > 0.0 ? size.y - skinWidth : skinWidth;
+				var offset = direction.y > 0.0f ? size.y - skinWidth : skinWidth;
 
 				var rayPos = effectivePosition + new Vector2(raySpacing.y * i, offset);
 				var rayDir = velocity.isolateY.sign;
@@ -75,14 +75,14 @@ namespace GAME.Components
 
 				if (hit is object && hit.distance < Math.Abs(velocity.y) + skinWidth)
 				{
-					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0 ? size.y + skinWidth : -skinWidth));
-					velocity.y = 0.0;
+					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0f ? size.y + skinWidth : -skinWidth));
+					velocity.y = 0.0f;
 				}
 			}
 
 			for (int i = 0; i < raycastsCount.y; i++)
 			{
-				var offset = direction.x > 0.0 ? size.x - skinWidth : skinWidth;
+				var offset = direction.x > 0.0f ? size.x - skinWidth : skinWidth;
 
 				var rayPos = effectivePosition + new Vector2(offset, raySpacing.x * i);
 				var rayDir = velocity.isolateX.sign;
@@ -94,8 +94,8 @@ namespace GAME.Components
 
 				if (hit is object && hit.distance < Math.Abs(velocity.x) + skinWidth)
 				{
-					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0 ? size.x + skinWidth : -skinWidth), effectivePosition.y);
-					velocity.x = 0.0;
+					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0f ? size.x + skinWidth : -skinWidth), effectivePosition.y);
+					velocity.x = 0.0f;
 				}
 			}
 

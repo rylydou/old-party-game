@@ -68,10 +68,10 @@ namespace MGE.Graphics
 			points.AddRange(CreateCircle(radius, sides));
 			points.RemoveAt(points.Count - 1);
 
-			var curAngle = 0.0;
+			var curAngle = 0.0f;
 			var anglePerSide = Math.pi2 / sides;
 
-			while ((curAngle + (anglePerSide / 2.0)) < startingAngle)
+			while ((curAngle + (anglePerSide / 2.0f)) < startingAngle)
 			{
 				curAngle += anglePerSide;
 
@@ -87,7 +87,7 @@ namespace MGE.Graphics
 			return points;
 		}
 
-		static List<Vector2> CreateCircle(double radius, int sides = 0)
+		static List<Vector2> CreateCircle(float radius, int sides = 0)
 		{
 			if (sides == 0)
 				sides = Math.RoundToInt(Math.Clamp(radius / 16f * 4f, 16, 64));
@@ -100,10 +100,10 @@ namespace MGE.Graphics
 
 			var step = Math.pi2 / sides;
 
-			for (double theta = 0.0; theta < Math.pi2; theta += step)
+			for (float theta = 0.0f; theta < Math.pi2; theta += step)
 				vectors.Add(new Vector2((radius * Math.Cos(theta)), (radius * Math.Sin(theta))));
 
-			vectors.Add(new Vector2((radius * Math.Cos(0.0)), (radius * Math.Sin(0.0))));
+			vectors.Add(new Vector2((radius * Math.Cos(0.0f)), (radius * Math.Sin(0.0f))));
 
 			circleCache.Add(circleKey, vectors);
 

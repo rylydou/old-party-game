@@ -11,7 +11,7 @@ namespace MGE
 		UInt32,
 		UInt64,
 		Float,
-		Double,
+		Single,
 		Decimal,
 		Char,
 		String

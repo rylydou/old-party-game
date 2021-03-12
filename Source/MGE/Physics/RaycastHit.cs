@@ -4,7 +4,7 @@ namespace MGE.Physics
 	{
 		public Vector2 origin;
 
-		public double distance;
+		public float distance;
 		public Vector2 direction;
 
 		Vector2? _normal;

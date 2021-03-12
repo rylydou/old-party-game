@@ -39,7 +39,7 @@ namespace MGE.InputSystem
 		#endregion
 
 		#region Gamepad
-		public static double gamepadTriggersDeadzone = 0.5;
+		public static float gamepadTriggersDeadzone = 0.5f;
 
 		public static GamePadDeadZone gamepadDeadzoneType = GamePadDeadZone.Circular;
 

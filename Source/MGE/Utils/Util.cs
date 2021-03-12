@@ -25,12 +25,12 @@ namespace MGE
 			}
 		}
 
-		public static string CleanRound(double fps)
+		public static string CleanRound(float fps)
 		{
-			if (fps > 1.0)
+			if (fps > 1.0f)
 				return Math.Round(fps).ToString();
 			else
-				return (Math.Round(fps * 100.0) / 100.0).ToString();
+				return (Math.Round(fps * 100.0f) / 100.0f).ToString();
 		}
 
 		public static string RemoveBadChars(string text)
@@ -47,7 +47,7 @@ namespace MGE
 
 			Vector2 t = start;
 			var frac = 1 / Math.Sqrt(Math.Pow(end.x - start.x, 2) + Math.Pow(end.y - start.y, 2));
-			var ctr = 0.0;
+			var ctr = 0.0f;
 
 			while ((int)t.x != (int)end.x || (int)t.y != (int)end.y)
 			{

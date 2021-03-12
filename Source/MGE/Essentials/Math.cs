@@ -1,66 +1,66 @@
 using System;
-using Mathd = System.Math;
+using Mathf = System.MathF;
 
 namespace MGE
 {
 	public static class Math
 	{
 		#region Constants
-		public const double e = 2.71828175;
-		public const double log10E = 0.4342945;
-		public const double Log2E = 1.442695;
-		public const double pi = Mathd.PI;
-		public const double pi2 = Mathd.PI * 2;
-		public const double pi4 = Mathd.PI * 4;
-		public const double piOver2 = Mathd.PI / 2;
-		public const double piOver4 = Mathd.PI / 4;
-		public const double infinity = Double.PositiveInfinity;
-		public const double negativeInfinity = Double.NegativeInfinity;
-		public const double deg2Rad = pi * 2.0 / 360.0;
-		public const double rad2Deg = 1.0 / deg2Rad;
-		public const double epsilon = Double.Epsilon;
+		public const float e = 2.71828175f;
+		public const float log10E = 0.4342945f;
+		public const float Log2E = 1.442695f;
+		public const float pi = Mathf.PI;
+		public const float pi2 = Mathf.PI * 2;
+		public const float pi4 = Mathf.PI * 4;
+		public const float piOver2 = Mathf.PI / 2;
+		public const float piOver4 = Mathf.PI / 4;
+		public const float infinity = Single.PositiveInfinity;
+		public const float negativeInfinity = Single.NegativeInfinity;
+		public const float deg2Rad = pi * 2.0f / 360.0f;
+		public const float rad2Deg = 1.0f / deg2Rad;
+		public const float epsilon = Single.Epsilon;
 		#endregion
 
 		#region General
-		public static double Sin(double value) => Mathd.Sin(value);
-		public static double Cos(double value) => Mathd.Cos(value);
-		public static double Tan(double value) => Mathd.Tan(value);
-		public static double Asin(double value) => Mathd.Asin(value);
-		public static double Acos(double value) => Mathd.Acos(value);
-		public static double Atan(double value) => Mathd.Atan(value);
-		public static double Atan2(double y, double x) => Mathd.Atan2(y, x);
-		public static double Sqrt(double value) => Mathd.Sqrt(value);
-		public static double Abs(double value) => Mathd.Abs(value);
-		public static int Abs(int value) => Mathd.Abs(value);
-		public static double Pow(double value, double power) => Mathd.Pow(value, power);
-		public static double Exp(double power) => Mathd.Exp(power);
-		public static double Log(double value, double power) => Mathd.Log(value, power);
-		public static double Log(double value) => Mathd.Log(value);
-		public static double Log10(double value) => Mathd.Log10(value);
-		public static double Ceil(double value) => Mathd.Ceiling(value);
-		public static double Floor(double value) => Mathd.Floor(value);
-		public static double Round(double value) => Mathd.Round(value);
-		public static double Round(double value, int places)
+		public static float Sin(float value) => Mathf.Sin(value);
+		public static float Cos(float value) => Mathf.Cos(value);
+		public static float Tan(float value) => Mathf.Tan(value);
+		public static float Asin(float value) => Mathf.Asin(value);
+		public static float Acos(float value) => Mathf.Acos(value);
+		public static float Atan(float value) => Mathf.Atan(value);
+		public static float Atan2(float y, float x) => Mathf.Atan2(y, x);
+		public static float Sqrt(float value) => Mathf.Sqrt(value);
+		public static float Abs(float value) => Mathf.Abs(value);
+		public static int Abs(int value) => (int)Mathf.Abs(value);
+		public static float Pow(float value, float power) => Mathf.Pow(value, power);
+		public static float Exp(float power) => Mathf.Exp(power);
+		public static float Log(float value, float power) => Mathf.Log(value, power);
+		public static float Log(float value) => Mathf.Log(value);
+		public static float Log10(float value) => Mathf.Log10(value);
+		public static float Ceil(float value) => Mathf.Ceiling(value);
+		public static float Floor(float value) => Mathf.Floor(value);
+		public static float Round(float value) => Mathf.Round(value);
+		public static float Round(float value, int places)
 		{
 			var amount = (int)Math.Pow(10, places);
 			return Round(value * amount) / amount;
 		}
-		public static int CeilToInt(double value) => (int)Mathd.Ceiling(value);
-		public static int FloorToInt(double value) => (int)Mathd.Floor(value);
-		public static int RoundToInt(double value) => (int)Mathd.Round(value);
-		public static double Sign(double value) => value >= 0.0 ? 1.0 : -1.0;
-		public static double Sign0(double value) => value == 0.0 ? 0.0 : value >= 0.0 ? 1.0 : -1.0;
+		public static int CeilToInt(float value) => (int)Mathf.Ceiling(value);
+		public static int FloorToInt(float value) => (int)Mathf.Floor(value);
+		public static int RoundToInt(float value) => (int)Mathf.Round(value);
+		public static float Sign(float value) => value >= 0.0f ? 1.0f : -1.0f;
+		public static float Sign0(float value) => value == 0.0f ? 0.0f : value >= 0.0f ? 1.0f : -1.0f;
 		#endregion
 
 		#region Min Maxes
-		public static double Min(double a, double b) { return a < b ? a : b; }
+		public static float Min(float a, float b) { return a < b ? a : b; }
 
-		public static double Min(params double[] values)
+		public static float Min(params float[] values)
 		{
 			int length = values.Length;
 			if (length == 0)
 				return 0;
-			double min = values[0];
+			float min = values[0];
 			for (int i = 1; i < length; i++)
 			{
 				if (values[i] < min)
@@ -84,14 +84,14 @@ namespace MGE
 			return min;
 		}
 
-		public static double Max(double a, double b) { return a > b ? a : b; }
+		public static float Max(float a, float b) { return a > b ? a : b; }
 
-		public static double Max(params double[] values)
+		public static float Max(params float[] values)
 		{
 			int length = values.Length;
 			if (length == 0)
 				return 0;
-			double min = values[0];
+			float min = values[0];
 			for (int i = 1; i < length; i++)
 			{
 				if (values[i] > min)
@@ -163,12 +163,12 @@ namespace MGE
 			return value;
 		}
 
-		public static double Clamp01(double value)
+		public static float Clamp01(float value)
 		{
-			if (value < 0.0)
-				return 0.0;
-			else if (value > 1.0)
-				return 1.0;
+			if (value < 0.0f)
+				return 0.0f;
+			else if (value > 1.0f)
+				return 1.0f;
 			else
 				return value;
 		}
@@ -183,88 +183,88 @@ namespace MGE
 				return 0;
 		}
 
-		public static double Clamp11(double value)
+		public static float Clamp11(float value)
 		{
-			if (value < -0.0)
-				return -1.0;
-			else if (value > 1.0)
-				return 1.0;
+			if (value < -0.0f)
+				return -1.0f;
+			else if (value > 1.0f)
+				return 1.0f;
 			else
 				return value;
 		}
 		#endregion
 
 		#region Lerps
-		public static double Lerp(double current, double target, double time) =>
+		public static float Lerp(float current, float target, float time) =>
 		current + (target - current) * Clamp01(time);
 
-		public static double LerpUnclamped(double current, double target, double time) =>
+		public static float LerpUnclamped(float current, float target, float time) =>
 		current + (target - current) * time;
 
-		public static double LerpPrecise(double current, double target, double time)
+		public static float LerpPrecise(float current, float target, float time)
 		{
 			time = Clamp01(time);
 			return ((1 - time) * current) + (target * time);
 		}
 
-		public static double LerpPreciseUnclamped(double current, double target, double time) =>
+		public static float LerpPreciseUnclamped(float current, float target, float time) =>
 		((1 - time) * current) + (target * time);
 
-		public static double InverseLerp(double current, double target, double time)
+		public static float InverseLerp(float current, float target, float time)
 		{
 			if (current != target)
 				return Clamp01((time - current) / (target - current));
 			else
-				return 0.0;
+				return 0.0f;
 		}
 
-		public static double LerpAngle(double current, double target, double time)
+		public static float LerpAngle(float current, float target, float time)
 		{
-			double delta = Repeat((target - current), 360.0);
-			if (delta > 180.0)
-				delta -= 360.0;
+			float delta = Repeat((target - current), 360.0f);
+			if (delta > 180.0f)
+				delta -= 360.0f;
 			return current + delta * Clamp01(time);
 		}
 
-		static public double MoveTowards(double current, double target, double maxDelta)
+		static public float MoveTowards(float current, float target, float maxDelta)
 		{
 			if (Abs(target - current) <= maxDelta)
 				return target;
 			return current + Sign(target - current) * maxDelta;
 		}
 
-		static public double MoveTowardsAngle(double current, double target, double maxDelta)
+		static public float MoveTowardsAngle(float current, float target, float maxDelta)
 		{
-			double deltaAngle = DeltaAngle(current, target);
+			float deltaAngle = DeltaAngle(current, target);
 			if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
 				return target;
 			target = current + deltaAngle;
 			return MoveTowards(current, target, maxDelta);
 		}
 
-		public static double SmoothStep(double from, double to, double time)
+		public static float SmoothStep(float from, float to, float time)
 		{
 			time = Math.Clamp01(time);
-			time = -2.0 * time * time * time + 3.0 * time * time;
+			time = -2.0f * time * time * time + 3.0f * time * time;
 			return to * time + from * (1 - time);
 		}
 		#endregion
 
 		#region Utils
-		public static double Repeat(double target, double length)
+		public static float Repeat(float target, float length)
 		{
-			return Clamp(target - Floor(target / length) * length, 0.0, length);
+			return Clamp(target - Floor(target / length) * length, 0.0f, length);
 		}
 
-		public static double DeltaAngle(double current, double target)
+		public static float DeltaAngle(float current, float target)
 		{
-			double delta = Repeat((target - current), 360.0);
-			if (delta > 180.0)
-				delta -= 360.0;
+			float delta = Repeat((target - current), 360.0f);
+			if (delta > 180.0f)
+				delta -= 360.0f;
 			return delta;
 		}
 
-		public static bool Approximately(double a, double b) => Abs(b - a) < Max(0.000001 * Max(Abs(a), Abs(b)), epsilon * 8);
+		public static bool Approximately(float a, float b) => Abs(b - a) < Max(0.000001f * Max(Abs(a), Abs(b)), epsilon * 8);
 
 		public static int BitwiseDouble(int value) => value << 1;
 		public static int BitwiseHalf(int value) => value >> 1;

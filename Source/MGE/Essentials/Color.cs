@@ -34,8 +34,8 @@ namespace MGE
 		static readonly Color _clear = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 		public static Color clear { get => _clear; }
 
-		public const double epsilon = 0.000010;
-		public const double epsilonNormalSqrt = 1e-150;
+		public const float epsilon = 0.000010f;
+		public const float epsilonNormalSqrt = 1e-150f;
 		#endregion
 
 		#region Feilds
