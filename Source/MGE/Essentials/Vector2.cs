@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
+	[System.Serializable]
 	public struct Vector2
 	{
 		#region Static

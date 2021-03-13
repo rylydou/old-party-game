@@ -1,5 +1,6 @@
 using MGE;
 using MGE.ECS;
+using MGE.FileIO;
 using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.Physics;
@@ -8,37 +9,15 @@ namespace GAME.Components
 {
 	public class CStage : Component
 	{
-		public const string stage =
-		"##################################" +
-		"#                                #" +
-		"#                                #" +
-		"#    #                          ##" +
-		"#    #                        ####" +
-		"#   ##          ####     #########" +
-		"#    ######              #       #" +
-		"#    #                 ###       #" +
-		"#    #         ####              #" +
-		"#            ###       ####      #" +
-		"#     ###                        #" +
-		"#            ####                #" +
-		"#                  ###           #" +
-		"#     #####               #####  #" +
-		"# #                     ##       #" +
-		"# ####   ###############       ###" +
-		"#                           # ## #" +
-		"#                 #    ##  #     #" +
-		"#  #       #### ########       ###" +
-		"# ##   ###                  #    #" +
-		"######                    # # ####" +
-		"##################################";
-
-		public static readonly Vector2Int size = new Vector2Int(34, 22);
-
 		public static CStage current { get; private set; }
+
+		public ChunkData data;
 
 		public float tileSize = 8.0f;
 
 		public Vector2 shadowOffset = new Vector2(1.0f);
+
+		public Vector2Int pos;
 
 		public Vector2 startPos = new Vector2(3, 4);
 		public Vector2 endPos = new Vector2(16, 12);
@@ -58,11 +37,16 @@ namespace GAME.Components
 
 			tiles = Assets.GetAsset<Tileset>("Sprites/Tiles");
 
+			Load();
+
 			entity.position = new Vector2(tileSize);
 		}
 
 		public override void Update()
 		{
+			pos = (Input.cameraMousePosition - entity.position) / tileSize;
+			pos.Clamp(0, 0, data.tiles.GetLength(0) - 1, data.tiles.GetLength(1) - 1);
+
 			if (Input.GetButton(Inputs.LeftAlt))
 			{
 				if (Input.GetButton(Inputs.MouseLeft))
@@ -70,16 +54,30 @@ namespace GAME.Components
 				else if (Input.GetButton(Inputs.MouseRight))
 					endPos = Input.cameraMousePosition;
 			}
+			else if (Input.GetButton(Inputs.MouseLeft))
+				data.tiles[pos.x, pos.y] = true;
+			else if (Input.GetButton(Inputs.MouseRight))
+				data.tiles[pos.x, pos.y] = false;
 
 			hit = Raycast(startPos, (endPos - startPos));
+		}
+
+		public void Save()
+		{
+			IO.Save(App.exePath + "/Data/Chunks/test.chunk", data);
+		}
+
+		public void Load()
+		{
+			data = IO.Load<ChunkData>(App.exePath + "/Data/Chunks/test.chunk");
 		}
 
 		public override void Draw()
 		{
 			using (new DrawBatch())
 			{
-				tiles.Draw(entity.position + shadowOffset, tileSize, size, (x, y) => GetTile(x, y), new Color(0, 0.1f));
-				tiles.Draw(entity.position, tileSize, size, (x, y) => GetTile(x, y), Color.white);
+				tiles.Draw(entity.position + shadowOffset, tileSize, data.size, (x, y) => GetTile(x, y), new Color(0, 0.25f));
+				tiles.Draw(entity.position, tileSize, data.size, (x, y) => GetTile(x, y), Color.white);
 
 				GFX.DrawCircle(startPos, 0.5f * tileSize, Color.red, 1f);
 
@@ -101,12 +99,14 @@ namespace GAME.Components
 
 					GFX.DrawLine(hit.position, (hit.position + hit.normal * tileSize / 2), Color.red, 0.25f);
 				}
+
+				GFX.DrawRectangle(new Rect(pos.x * tileSize + entity.position.x, pos.y * tileSize + entity.position.y, tileSize, tileSize), Colors.accent2, 1.0f);
 			}
 		}
 
 		public RaycastHit Raycast(Vector2 origin, Vector2 direction, bool worldSpce = true, int maxIterations = -1)
 		{
-			if (maxIterations < 0) maxIterations = size.max;
+			if (maxIterations < 0) maxIterations = data.size.max;
 
 			if (worldSpce)
 			{
@@ -129,9 +129,9 @@ namespace GAME.Components
 
 		public bool GetTile(int x, int y)
 		{
-			if (x < 0 || x >= size.x || y < 0 || y >= size.y) return true;
+			if (x < 0 || x >= data.tiles.GetLength(0) || y < 0 || y >= data.tiles.GetLength(1)) return true;
 
-			return stage[y * size.x + x] == '#';
+			return data.tiles[x, y];
 		}
 	}
 }

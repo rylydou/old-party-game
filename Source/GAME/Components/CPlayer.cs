@@ -38,7 +38,7 @@ namespace GAME.Components
 			if (Input.GetButtonPress(Inputs.Space))
 				rb.velocity.y = -jumpVel;
 
-			Camera.main.position = entity.position + rb.size - (Vector2)Window.gameSize / 2;
+			Camera.main.position = Vector2.Lerp(Camera.main.position, entity.position + rb.size - (Vector2)Window.gameSize / 2, 0.9f);
 		}
 
 		public override void Draw()

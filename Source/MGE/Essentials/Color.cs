@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
+	[System.Serializable]
 	public struct Color
 	{
 		#region Static

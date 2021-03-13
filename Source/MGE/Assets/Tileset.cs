@@ -9,18 +9,13 @@ namespace MGE
 	{
 		[JsonIgnore] public Texture texture;
 
-		public RectInt defualtTile;
+		public Vector2Int tileSize;
 
-		public Dictionary<TileConnection, RectInt> tiles;
+		public Vector2Int defualtTile;
+
+		public Dictionary<TileConnection, Vector2Int> tiles;
 
 		public Tileset() { }
-
-		public Tileset(Texture texture, RectInt defualtTile, Dictionary<TileConnection, RectInt> tiles)
-		{
-			this.texture = texture;
-			this.defualtTile = defualtTile;
-			this.tiles = tiles;
-		}
 
 		public void Draw(Vector2 position, float scale, Vector2Int mapSize, Func<int, int, bool> isSolid, Color color)
 		{
@@ -35,19 +30,19 @@ namespace MGE
 
 						if (!tiles.TryGetValue(connection, out tile))
 						{
-							Logger.Log($"Used Defualt: {((TileConnection)connection)} {tile.position}");
-							GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.red);
+							Logger.Log($"Used Defualt: {((TileConnection)connection)} {tile}");
+							GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.nullColor);
 						}
 						else
 						{
-							GFX.Draw(texture, tile, new Rect(position.x + x * scale, position.y + y * scale, scale, scale), color);
+							GFX.Draw(texture, new RectInt(tile.x, tile.y, tileSize.x, tileSize.y), new Rect(position.x + x * scale, position.y + y * scale, scale, scale), color);
 						}
 					}
 				}
 			}
 		}
 
-		TileConnection GetConnections(int x, int y, ref Func<int, int, bool> isSolid)
+		public TileConnection GetConnections(int x, int y, ref Func<int, int, bool> isSolid)
 		{
 			var connection = TileConnection.None;
 

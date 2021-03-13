@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
+	[System.Serializable]
 	public struct Rect
 	{
 		#region Static

@@ -1,106 +1,76 @@
 {
+	"tileSize": {
+		"x": 16,
+		"y": 16
+	},
 	"defualtTile": {
 		"x": 16,
-		"y": 16,
-		"width": 16,
-		"height": 16
+		"y": 16
 	},
 	"tiles": {
 		"Right, Bottom": {
 			"x": 0,
-			"y": 0,
-			"width": 16,
-			"height": 16
+			"y": 0
 		},
 		"Right, Bottom, Left": {
 			"x": 16,
-			"y": 0,
-			"width": 16,
-			"height": 16
+			"y": 0
 		},
 		"Bottom, Left": {
 			"x": 32,
-			"y": 0,
-			"width": 16,
-			"height": 16
+			"y": 0
 		},
 		"Top, Right, Bottom": {
 			"x": 0,
-			"y": 16,
-			"width": 16,
-			"height": 16
+			"y": 16
 		},
 		"Top, Right, Left, Bottom": {
 			"x": 16,
-			"y": 16,
-			"width": 16,
-			"height": 16
+			"y": 16
 		},
 		"Top, Left, Bottom": {
 			"x": 32,
-			"y": 16,
-			"width": 16,
-			"height": 16
+			"y": 16
 		},
 		"Top, Right": {
 			"x": 0,
-			"y": 32,
-			"width": 16,
-			"height": 16
+			"y": 32
 		},
 		"Top, Right, Left": {
 			"x": 16,
-			"y": 32,
-			"width": 16,
-			"height": 16
+			"y": 32
 		},
 		"Top, Left": {
 			"x": 32,
-			"y": 32,
-			"width": 16,
-			"height": 16
+			"y": 32
 		},
 		"Bottom": {
 			"x": 48,
-			"y": 0,
-			"width": 16,
-			"height": 16
+			"y": 0
 		},
 		"Top, Bottom": {
 			"x": 48,
-			"y": 16,
-			"width": 16,
-			"height": 16
+			"y": 16
 		},
 		"Top": {
 			"x": 48,
-			"y": 32,
-			"width": 16,
-			"height": 16
+			"y": 32
 		},
 		"Right": {
 			"x": 0,
-			"y": 48,
-			"width": 16,
-			"height": 16
+			"y": 48
 		},
 		"Right, Left": {
 			"x": 16,
-			"y": 48,
-			"width": 16,
-			"height": 16
+			"y": 48
 		},
 		"Left": {
 			"x": 32,
-			"y": 48,
-			"width": 16,
-			"height": 16
+			"y": 48
 		},
 		"None": {
 			"x": 48,
-			"y": 48,
-			"width": 16,
-			"height": 16
+			"y": 48
 		}
 	}
 }

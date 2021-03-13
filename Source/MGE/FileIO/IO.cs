@@ -37,7 +37,7 @@ namespace MGE.FileIO
 			}
 		}
 
-		public static T Load<T>(string path, T obj)
+		public static T Load<T>(string path)
 		{
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{

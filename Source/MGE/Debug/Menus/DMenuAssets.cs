@@ -23,7 +23,7 @@ namespace MGE.Debug.Menus
 
 				foreach (var asset in Assets.unloadedAssets)
 				{
-					gui.Text($"{asset.Value.GetType()} > {asset.Key}", layout.AddElement(), Colors.text);
+					gui.Text($"{asset.Key}", layout.AddElement(), Colors.text);
 				}
 			}
 		}

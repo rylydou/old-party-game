@@ -5,6 +5,9 @@ namespace MGE
 		static readonly Color _accent = new Color("#FF7504");
 		public static Color accent { get => _accent; }
 
+		static readonly Color _accent2 = new Color("#FFAA00");
+		public static Color accent2 { get => _accent2; }
+
 		static readonly Color _text = new Color("#EEE");
 		public static Color text { get => _text; }
 
