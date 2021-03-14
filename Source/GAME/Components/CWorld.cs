@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using MGE;
 using MGE.ECS;
 using MGE.FileIO;
+using MGE.Graphics;
+using MGE.InputSystem;
 using MGE.Physics;
 
 namespace GAME.Components
@@ -11,22 +14,31 @@ namespace GAME.Components
 	{
 		public const string chunkPath = "/Chunks";
 		public const int chunkSize = 16;
-		public const int loadDistance = 2;
-		public const int unloadDistance = 4;
+		public const int loadDistance = 3;
+		public const int unloadDistance = 5;
+		public const int tileSize = 8;
 
-		public List<CChunk> chunks = new List<CChunk>();
-
-		public Folder worldFolder;
+		public Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
+		public List<Tileset> tilesets = new List<Tileset>();
 
 		Entity player;
 
 		bool firstFrame = true;
+		int updateChunkIndex = 0;
+		Folder worldFolder;
 
-		int currentPos = 0;
+		Font font;
 
 		public override void Init()
 		{
 			worldFolder = new Folder(App.exePath + "/Data/World");
+
+			foreach (var chunk in worldFolder.GetFilesInDir("/Chunks/"))
+				File.Delete(chunk);
+
+			tilesets.Add(Assets.GetAsset<Tileset>("Sprites/Grass"));
+
+			font = Assets.GetAsset<Font>("Fonts/Basic");
 		}
 
 		public override void Update()
@@ -45,41 +57,74 @@ namespace GAME.Components
 				for (int x = -loadDistance; x <= loadDistance; x++)
 				{
 					var pos = playerPos + new Vector2Int(x, y);
-					if (!chunks.Any((x) => x.data.position == pos))
+					if (!chunks.ContainsKey(pos))
 						LoadChunk(pos);
 				}
 			}
 
-			for (int i = 0; i < chunks.Count; i++)
+			if (Input.GetButton(Inputs.MouseLeft))
+				SetTile(Input.cameraMousePosition / tileSize, 1);
+			else if (Input.GetButton(Inputs.MouseRight))
+				SetTile(Input.cameraMousePosition / tileSize, 0);
+
+			if (updateChunkIndex >= chunks.Count)
+				updateChunkIndex = 0;
+
+			var chunkToUpdate = chunks.ElementAt(updateChunkIndex);
+
+			if ((playerPos - chunkToUpdate.Key).sqrMagnitude > unloadDistance * unloadDistance)
 			{
-				if ((playerPos - chunks[i].data.position).sqrMagnitude > unloadDistance * unloadDistance)
+				UnloadChunk(chunkToUpdate.Key);
+			}
+			else
+			{
+				chunkToUpdate.Value.Save(worldFolder);
+			}
+
+			updateChunkIndex++;
+		}
+
+		public override void Draw()
+		{
+			using (new DrawBatch())
+			{
+				foreach (var chunk in chunks)
 				{
-					entity.layer.RemoveEntity(chunks[i].entity);
-					chunks.RemoveAt(i);
+					tilesets[0].Draw(
+						(Vector2)chunk.Value.position * chunkSize * tileSize,
+						tileSize, new Vector2Int(chunkSize),
+						(x, y) =>
+						{
+							if (chunk.Value.tiles.IsInBounds(x, y))
+								return chunk.Value.tiles[x, y] != 0;
+							return true;
+						},
+						Color.white
+					);
 				}
 			}
 
-			if (currentPos >= chunks.Count)
-				currentPos = 0;
-
-			var chunk = chunks[currentPos];
-
-			chunk.Save(worldFolder.GetFullPath($"/Chunks/{chunk.data.position.x} {chunk.data.position.y}.chunk"));
-
-			currentPos++;
+			using (new DrawBatch())
+			{
+				foreach (var chunk in chunks)
+				{
+					GFX.DrawRectangle(new Rect((Vector2)chunk.Key * chunkSize * tileSize, new Vector2(chunkSize * tileSize)), new Color(0, 0, 1, 0.5f), 0.5f);
+					font.DrawText(chunk.Key.ToString(), (Vector2)chunk.Key * chunkSize * tileSize + tileSize / 2, new Color(0, 0, 1, 0.5f), 0.25f);
+				}
+			}
 		}
 
 		public void LoadChunk(Vector2Int position)
 		{
 			var path = $"/Chunks/{position.x} {position.y}.chunk";
 
-			CChunk newChunk = null;
+			Chunk newChunk = null;
 
 			if (worldFolder.FileExists(path))
-				newChunk = new CChunk(IO.Load<ChunkData>(worldFolder.GetFullPath(path)));
+				newChunk = Chunk.Load(worldFolder, position.x, position.y);
 			else
 			{
-				var data = new bool[chunkSize, chunkSize];
+				var data = new Grid<ushort>(chunkSize, chunkSize, 0);
 
 				for (int y = 0; y < chunkSize; y++)
 				{
@@ -88,58 +133,110 @@ namespace GAME.Components
 						var absPos = position * chunkSize + new Vector2Int(x, y);
 						if (absPos.y > chunkSize * 1)
 						{
-							if (absPos.y > chunkSize * 6)
-							{
-								data[x, y] = Random.Bool(95);
-							}
-							if (absPos.y > chunkSize * 5)
-							{
-								data[x, y] = Random.Bool(10);
-							}
 							if (absPos.y > chunkSize * 4)
 							{
-								data[x, y] = Random.Bool(67);
+								data[x, y] = System.Convert.ToUInt16(Random.Bool(95));
 							}
 							else if (absPos.y > chunkSize * 3)
 							{
-								data[x, y] = Random.Bool(75);
+								data[x, y] = System.Convert.ToUInt16(Random.Bool(75));
 							}
 							else if (absPos.y > chunkSize * 2)
 							{
-								data[x, y] = Random.Bool(90);
+								data[x, y] = System.Convert.ToUInt16(Random.Bool(90));
 							}
 							else
 							{
-								data[x, y] = Random.Bool(99);
+								data[x, y] = System.Convert.ToUInt16(Random.Bool(99));
 							}
 						}
-						else if (absPos.y == chunkSize)
+						else if (absPos.y == chunkSize + 1)
 						{
-							data[x, y] = Math.Sin(absPos.x * Math.Abs(position.x)) < 0.5f;
+							data[x, y] = System.Convert.ToUInt16(Math.Sin(absPos.x * Math.Abs(position.x)) < 0.5f);
 						}
 					}
 				}
 
-				newChunk = new CChunk(new ChunkData(position, data));
+				newChunk = new Chunk(position, data);
 			}
 
-			chunks.Add(newChunk);
+			chunks.Add(position, newChunk);
+		}
 
-			entity.layer.AddEntity(new Entity(newChunk) { position = position * chunkSize * 8 });
+		public void UnloadChunk(Vector2Int position)
+		{
+			chunks[position].Save(worldFolder);
+			chunks.Remove(position);
 		}
 
 		public RaycastHit Raycast(Vector2 origin, Vector2 direction, int maxIterations = -1)
 		{
-			var originPosition = (Vector2Int)(origin / chunkSize / 8);
+			var chunkPos = WorldToChunk(origin);
 
-			var chunk = chunks.Find((x) => x.data.position == originPosition);
+			Chunk chunk = null;
+
+			chunks.TryGetValue(chunkPos, out chunk);
+
+			RaycastHit hit = null;
 
 			if (chunk != null)
-				return chunk.Raycast(origin, direction, maxIterations);
+				hit = Physics.RayVsGrid((origin - (Vector2)chunkPos * chunkSize * tileSize) / tileSize, direction, (x, y) => chunk.tiles.Get(x, y) != 0, maxIterations);
 
-			Logger.LogWarning($"Could not find chunk {originPosition}");
+			if (hit is object)
+			{
+				hit.origin = origin;
+				hit.distance = hit.distance * tileSize;
+			}
 
-			return null;
+			return hit;
+		}
+
+		public Vector2Int WorldToChunk(Vector2 position)
+		{
+			var newPos = (position / chunkSize / tileSize);
+
+			if (position.x > 0)
+				newPos.x = Math.Floor(newPos.x);
+			else
+				newPos.x = Math.Ceil(newPos.x - 1);
+
+			if (position.y > 0)
+				newPos.y = Math.Floor(newPos.y);
+			else
+				newPos.y = Math.Ceil(newPos.y - 1);
+
+			return newPos;
+		}
+
+		public bool SetTile(Vector2Int position, ushort tile)
+		{
+			Vector2 tmpChunkPos = (Vector2)position / chunkSize;
+
+			var chunkPos = Vector2Int.zero;
+
+			if (position.x > 0)
+				chunkPos.x = (int)Math.Floor(tmpChunkPos.x);
+			else
+				chunkPos.x = (int)Math.Ceil(tmpChunkPos.x - 1);
+
+			if (position.y > 0)
+				chunkPos.y = (int)Math.Floor(tmpChunkPos.y);
+			else
+				chunkPos.y = (int)Math.Ceil(tmpChunkPos.y - 1);
+
+			Vector2Int chunkTilePos = position - chunkPos * chunkSize;
+
+			Logger.Log($"{chunkPos} {chunkTilePos}");
+
+			Chunk chunk = null;
+
+			if (chunks.TryGetValue(chunkPos, out chunk))
+			{
+				chunk.tiles[chunkTilePos] = tile;
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

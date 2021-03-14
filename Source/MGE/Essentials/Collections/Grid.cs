@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace MGE
 {
+	[Serializable]
 	public class Grid<T> : ICollection, IEnumerable
 	{
 		public T[,] array;
@@ -69,6 +70,17 @@ namespace MGE
 				for (int x = 0; x < width; x++)
 				{
 					action.Invoke(x, y);
+				}
+			}
+		}
+
+		public void For(Action<int, int, T> action)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					action.Invoke(x, y, array[x, y]);
 				}
 			}
 		}

@@ -128,6 +128,8 @@ namespace MGE.Physics
 		/// <summary> Speed: Slowish, lots of looping, so turn down the maxIterations </summary>
 		public static RaycastHit RayVsGrid(Vector2 origin, Vector2 direction, Func<int, int, bool> isSolid, int maxIterations = 64)
 		{
+			if (maxIterations < 0) maxIterations = 64;
+
 			var mapPos = (Vector2Int)origin;
 			var sideDist = Vector2.zero;
 			var deltaDist = new Vector2(Math.Abs(1.0f / direction.x), Math.Abs(1.0f / direction.y));

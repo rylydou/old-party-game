@@ -50,6 +50,8 @@ namespace MGE
 		public static int RoundToInt(float value) => (int)Mathf.Round(value);
 		public static float Sign(float value) => value >= 0.0f ? 1.0f : -1.0f;
 		public static float Sign0(float value) => value == 0.0f ? 0.0f : value >= 0.0f ? 1.0f : -1.0f;
+		public static int Sign(int value) => value >= 0 ? 1 : -1;
+		public static int Sign0(int value) => value == 0 ? 0 : value >= 0 ? 1 : -1;
 		#endregion
 
 		#region Min Maxes

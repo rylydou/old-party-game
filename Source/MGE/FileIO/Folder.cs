@@ -91,7 +91,7 @@ namespace MGE.FileIO
 
 		public string[] GetFilesInDir(string path)
 		{
-			return Directory.GetFiles(path);
+			return Directory.GetFiles(GetFullPath(path));
 		}
 
 		public string[] GetDirsInDir()
