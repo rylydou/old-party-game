@@ -17,7 +17,7 @@ namespace GAME.Components.UI
 		float hotbarItemSpacing = 12;
 
 		Vector2 buttonSize = new Vector2(128, 32);
-		float buttonOffset = 16;
+		// float buttonOffset = 16;
 
 		Font font;
 		SpriteSheet hearts;
@@ -57,31 +57,31 @@ namespace GAME.Components.UI
 					GFX.Draw(panel, new Rect(hotbarOffset.x + (hotbarItemSize + hotbarItemSpacing) * i, Window.windowedSize.y - hotbarItemSize - hotbarOffset.y, hotbarItemSize, hotbarItemSize), new Color(0, 0.5f));
 				}
 
-				var buttonRect = new Rect(Window.windowedSize.x - buttonSize.x - buttonOffset, buttonOffset, buttonSize.x, buttonSize.y);
+				// var buttonRect = new Rect(Window.windowedSize.x - buttonSize.x - buttonOffset, buttonOffset, buttonSize.x, buttonSize.y);
 
-				if (buttonRect.Contains(Input.windowMousePosition))
-				{
-					GFX.DrawBox(buttonRect, Colors.gray);
-					if (Input.GetButtonPress(Inputs.MouseLeft))
-						CStage.current.Save();
-				}
-				else
-					GFX.DrawBox(buttonRect, Colors.black);
+				// if (buttonRect.Contains(Input.windowMousePosition))
+				// {
+				// 	GFX.DrawBox(buttonRect, Colors.gray);
+				// 	if (Input.GetButtonPress(Inputs.MouseLeft))
+				// 		CChunk.current.Save();
+				// }
+				// else
+				// 	GFX.DrawBox(buttonRect, Colors.black);
 
-				font.DrawText("Save", buttonRect.position, Colors.text);
+				// font.DrawText("Save", buttonRect.position, Colors.text);
 
-				buttonRect = new Rect(Window.windowedSize.x - buttonSize.x - buttonOffset, buttonOffset * 2 + buttonSize.y, buttonSize.x, buttonSize.y);
+				// buttonRect = new Rect(Window.windowedSize.x - buttonSize.x - buttonOffset, buttonOffset * 2 + buttonSize.y, buttonSize.x, buttonSize.y);
 
-				if (buttonRect.Contains(Input.windowMousePosition))
-				{
-					GFX.DrawBox(buttonRect, Colors.gray);
-					if (Input.GetButtonPress(Inputs.MouseLeft))
-						CStage.current.Load();
-				}
-				else
-					GFX.DrawBox(buttonRect, Colors.black);
+				// if (buttonRect.Contains(Input.windowMousePosition))
+				// {
+				// 	GFX.DrawBox(buttonRect, Colors.gray);
+				// 	if (Input.GetButtonPress(Inputs.MouseLeft))
+				// 		CChunk.current.Load();
+				// }
+				// else
+				// 	GFX.DrawBox(buttonRect, Colors.black);
 
-				font.DrawText("Load", buttonRect.position, Colors.text);
+				// font.DrawText("Load", buttonRect.position, Colors.text);
 			}
 		}
 	}

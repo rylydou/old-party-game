@@ -41,8 +41,8 @@ namespace GAME
 					new Layer(
 						false,
 						new Entity(new CBackground()),
-						new Entity(new CStage()),
-						new Entity(new CRigidbody(), new CPlayer())
+						new Entity(new CRigidbody(), new CPlayer()),
+						new Entity(new CWorld())
 					),
 					new Layer(
 						true,

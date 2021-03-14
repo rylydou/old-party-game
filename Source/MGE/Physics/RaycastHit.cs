@@ -34,6 +34,13 @@ namespace MGE.Physics
 			_normal = normal;
 		}
 
+		public static bool WithinDistance(RaycastHit hit, float distance)
+		{
+			if (hit is null)
+				return false;
+			return hit.distance < distance;
+		}
+
 		public static implicit operator bool(RaycastHit raycastHit)
 		{
 			if (raycastHit == null)

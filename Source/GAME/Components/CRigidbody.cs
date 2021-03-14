@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using MGE;
 using MGE.ECS;
-using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.Physics;
 
@@ -11,7 +9,9 @@ namespace GAME.Components
 	{
 		public bool interpolate = true;
 
-		Vector2 _size = Vector2.zero;
+		public ICanRaycast raycaster;
+
+		Vector2 _size = new Vector2(6);
 		public Vector2 size
 		{
 			get => _size;
@@ -21,11 +21,18 @@ namespace GAME.Components
 				CalcRaySpacing();
 			}
 		}
+		public Vector2 effectiveSize { get; private set; } = Vector2.zero;
 
 		public Vector2 position = Vector2.zero;
+		public Vector2 effectivePosition
+		{
+			get => position + skinWidth;
+			set => position = value - skinWidth;
+		}
+
 		public Vector2 velocity = Vector2.zero;
 
-		public float skinWidth = 0.125f;
+		public float skinWidth = 1;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -40,61 +47,47 @@ namespace GAME.Components
 
 		public Vector2 raySpacing { get; private set; } = Vector2.zero;
 
-		public Vector2 effectiveSize { get; private set; } = Vector2.zero;
-		public Vector2 effectivePosition
-		{
-			get => position + skinWidth;
-			set => position = value - skinWidth;
-		}
-
-		List<Vector2> rays = new List<Vector2>();
-
 		public override void Init()
 		{
-			size = new Vector2(CStage.current.tileSize - 1.0f);
 			CalcRaySpacing();
 		}
 
 		public override void FixedUpdate()
 		{
+			if (raycaster == null) raycaster = entity.layer.FindEntityByComponent<CWorld>().GetComponent<CWorld>();
+
 			velocity += Physics.gravity * Time.deltaTime;
 
 			var direction = velocity.sign;
 
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var offset = direction.y > 0.0f ? size.y - skinWidth : skinWidth;
+				var offset = direction.y > 0.0f ? effectiveSize.y - skinWidth : skinWidth;
 
 				var rayPos = effectivePosition + new Vector2(raySpacing.y * i, offset);
 				var rayDir = velocity.isolateY.sign;
 
-				var hit = CStage.current.Raycast(rayPos, rayDir);
+				var hit = raycaster.Raycast(rayPos, rayDir);
 
-				rays.Add(rayPos);
-				rays.Add(rayDir);
-
-				if (hit is object && hit.distance < Math.Abs(velocity.y) + skinWidth)
+				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.y) + skinWidth * 2))
 				{
-					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0f ? size.y + skinWidth : -skinWidth));
+					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0f ? effectiveSize.y + skinWidth : -skinWidth));
 					velocity.y = 0.0f;
 				}
 			}
 
 			for (int i = 0; i < raycastsCount.y; i++)
 			{
-				var offset = direction.x > 0.0f ? size.x - skinWidth : skinWidth;
+				var offset = direction.x > 0.0f ? effectiveSize.x - skinWidth : skinWidth;
 
 				var rayPos = effectivePosition + new Vector2(offset, raySpacing.x * i);
 				var rayDir = velocity.isolateX.sign;
 
-				var hit = CStage.current.Raycast(rayPos, rayDir);
+				var hit = raycaster.Raycast(rayPos, rayDir);
 
-				rays.Add(rayPos);
-				rays.Add(rayDir);
-
-				if (hit is object && hit.distance < Math.Abs(velocity.x) + skinWidth)
+				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.x) + skinWidth * 2))
 				{
-					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0f ? size.x + skinWidth : -skinWidth), effectivePosition.y);
+					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0f ? effectiveSize.x + skinWidth : -skinWidth), effectivePosition.y);
 					velocity.x = 0.0f;
 				}
 			}
@@ -113,27 +106,9 @@ namespace GAME.Components
 			entity.position = position;
 		}
 
-		public override void Draw()
-		{
-			using (new DrawBatch())
-			{
-				for (int i = 0; i < rays.Count / 2; i++)
-				{
-					GFX.DrawLine(
-						rays[i * 2],
-						(rays[i * 2] + rays[i * 2 + 1]),
-						Color.red,
-						0.5f
-					);
-				}
-			}
-
-			rays.Clear();
-		}
-
 		public void CalcRaySpacing()
 		{
-			effectiveSize = size - skinWidth * 2;
+			effectiveSize = size - skinWidth;
 			raySpacing = effectiveSize / (Vector2)raycastsCount;
 		}
 	}

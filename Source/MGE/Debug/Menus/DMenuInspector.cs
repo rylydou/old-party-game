@@ -22,6 +22,8 @@ namespace MGE.Debug.Menus
 
 		public override void UpdateBG()
 		{
+			if (entity is null) Close();
+
 			base.UpdateBG();
 
 			if (entity == null)
@@ -50,8 +52,6 @@ namespace MGE.Debug.Menus
 					else if (Input.GetButtonPress(Inputs.MouseRight)) comp.Value.visible = !comp.Value.visible;
 					else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.RemoveComponent(comp.Key);
 				}
-
-				gui.Text("| " + GetStatus(comp.Value.enabled, comp.Value.visible) + comp.Key.Name, rect.position + offset, entity.layer.enabled && entity.enabled && comp.Value.enabled ? enabledColor : disabledColor);
 
 				i++;
 

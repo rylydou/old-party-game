@@ -1,139 +1,145 @@
+using System.Collections.Generic;
+using System.Linq;
 using MGE;
 using MGE.ECS;
-using MGE.InputSystem;
-using GAME.World;
-using GAME.World.Generation;
-using MGE.UI;
-using MGE.UI.Elements;
-using MGE.Graphics;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using MGE.FileIO;
+using MGE.Physics;
 
 namespace GAME.Components
 {
-	public class CWorld : Component
+	public class CWorld : Component, ICanRaycast
 	{
-		const int uiItemSize = 32;
-		const int uiItemPadding = 8;
-		const int maxBrushFuzz = 10;
+		public const string chunkPath = "/Chunks";
+		public const int chunkSize = 16;
+		public const int loadDistance = 2;
+		public const int unloadDistance = 4;
 
-		public static Grid grid;
+		public List<CChunk> chunks = new List<CChunk>();
 
-		int currentTile = 1;
-		int brushSize = 1;
-		int brushFuzz = 3;
+		public Folder worldFolder;
 
-		Vector2Int mousePos = Vector2.zero;
+		Entity player;
+
+		bool firstFrame = true;
+
+		int currentPos = 0;
 
 		public override void Init()
 		{
-			grid = new Grid(Window.gameSize, new GenTest());
+			worldFolder = new Folder(App.exePath + "/Data/World");
 		}
 
 		public override void Update()
 		{
-			mousePos = grid.CamToTile(Input.cameraMousePosition);
-			bool inMenu = Input.windowMousePosition.y < 32;
+			if (firstFrame)
+			{
+				if (player == null) player = entity.layer.FindEntityByComponent<CPlayer>();
+				LoadChunk(Vector2Int.zero);
+			}
+			firstFrame = false;
 
-			if (Input.GetButton(Inputs.LeftShift))
+			var playerPos = (Vector2Int)(player.position / chunkSize / 8);
+
+			for (int y = -loadDistance; y <= loadDistance; y++)
 			{
-				brushSize -= Input.scroll;
-				brushSize = Math.Clamp(brushSize, 0, 50);
+				for (int x = -loadDistance; x <= loadDistance; x++)
+				{
+					var pos = playerPos + new Vector2Int(x, y);
+					if (!chunks.Any((x) => x.data.position == pos))
+						LoadChunk(pos);
+				}
 			}
-			else if (Input.GetButton(Inputs.LeftAlt))
+
+			for (int i = 0; i < chunks.Count; i++)
 			{
-				brushFuzz += Input.scroll;
-				brushFuzz = Math.Clamp(brushFuzz, 1, maxBrushFuzz);
+				if ((playerPos - chunks[i].data.position).sqrMagnitude > unloadDistance * unloadDistance)
+				{
+					entity.layer.RemoveEntity(chunks[i].entity);
+					chunks.RemoveAt(i);
+				}
 			}
+
+			if (currentPos >= chunks.Count)
+				currentPos = 0;
+
+			var chunk = chunks[currentPos];
+
+			chunk.Save(worldFolder.GetFullPath($"/Chunks/{chunk.data.position.x} {chunk.data.position.y}.chunk"));
+
+			currentPos++;
+		}
+
+		public void LoadChunk(Vector2Int position)
+		{
+			var path = $"/Chunks/{position.x} {position.y}.chunk";
+
+			CChunk newChunk = null;
+
+			if (worldFolder.FileExists(path))
+				newChunk = new CChunk(IO.Load<ChunkData>(worldFolder.GetFullPath(path)));
 			else
 			{
-				currentTile -= Input.scroll;
+				var data = new bool[chunkSize, chunkSize];
 
-				if (currentTile < 1) currentTile = Grid.tiles.Count - 1;
-				else if (currentTile >= Grid.tiles.Count) currentTile = 1;
-			}
-
-			if (Input.GetButtonPress(Inputs.F3))
-				grid.debugEnabled = !grid.debugEnabled;
-
-			if (!inMenu)
-			{
-				if (Input.GetButton(Inputs.MouseLeft)) Paint(mousePos, currentTile);
-				else if (Input.GetButton(Inputs.MouseRight)) Paint(mousePos, 0);
-				else if (Input.GetButton(Inputs.MouseMiddle))
+				for (int y = 0; y < chunkSize; y++)
 				{
-					for (int y = -brushSize; y <= brushSize; y++)
+					for (int x = 0; x < chunkSize; x++)
 					{
-						for (int x = -brushSize; x <= brushSize; x++)
+						var absPos = position * chunkSize + new Vector2Int(x, y);
+						if (absPos.y > chunkSize * 1)
 						{
-							var pos = mousePos + new Vector2Int(x, y);
-							grid.UpdateArea(pos);
+							if (absPos.y > chunkSize * 6)
+							{
+								data[x, y] = Random.Bool(95);
+							}
+							if (absPos.y > chunkSize * 5)
+							{
+								data[x, y] = Random.Bool(10);
+							}
+							if (absPos.y > chunkSize * 4)
+							{
+								data[x, y] = Random.Bool(67);
+							}
+							else if (absPos.y > chunkSize * 3)
+							{
+								data[x, y] = Random.Bool(75);
+							}
+							else if (absPos.y > chunkSize * 2)
+							{
+								data[x, y] = Random.Bool(90);
+							}
+							else
+							{
+								data[x, y] = Random.Bool(99);
+							}
+						}
+						else if (absPos.y == chunkSize)
+						{
+							data[x, y] = Math.Sin(absPos.x * Math.Abs(position.x)) < 0.5f;
 						}
 					}
 				}
+
+				newChunk = new CChunk(new ChunkData(position, data));
 			}
 
-			if (!Input.GetButton(Inputs.Escape))
-				grid.Update();
+			chunks.Add(newChunk);
 
-			int invOffset = Window.windowedSize.x / 2 - (Grid.tiles.Count) * uiItemSize / 2;
-			var block = Grid.IDToTile(currentTile);
-
-			for (int i = 1; i < Grid.tiles.Count; i++)
-			{
-				var rect = new Rect((i - 1) * uiItemSize + invOffset, 0, uiItemSize, uiItemSize);
-
-				if (GUI.gui.MouseInside(rect))
-				{
-					block = Grid.IDToTile(i);
-					GUI.gui.Image(rect, new Color("#FF7504"));
-				}
-
-				if (currentTile == i)
-					GUI.gui.Image(rect, new Color("#FF7504"));
-
-				GUI.gui.Image(new Rect((i - 1) * uiItemSize + uiItemPadding / 2 + invOffset, uiItemPadding / 2, uiItemSize - uiItemPadding, uiItemSize - uiItemPadding), Grid.IDToTile(i).color.opaque);
-
-				if (GUI.gui.MouseClick(rect))
-					currentTile = i;
-			}
-
-			var textOffset = new Vector2(Window.windowedSize.x / 2 - block.name.Length * 16 / 2, 42);
-
-			GUI.gui.Text(block.name, textOffset + Vector2.one * 2, new Color(0, 0.1f));
-			GUI.gui.Text(block.name, textOffset, block.color.opaque);
-			// GUI.Text(grid.GetTile(mousePos).velocity.ToString(), Input.windowMousePosition, block.color.opaque);
+			entity.layer.AddEntity(new Entity(newChunk) { position = position * chunkSize * 8 });
 		}
 
-		public override void Draw()
+		public RaycastHit Raycast(Vector2 origin, Vector2 direction, int maxIterations = -1)
 		{
-			grid.Draw();
+			var originPosition = (Vector2Int)(origin / chunkSize / 8);
 
-			var actualBrushSize = new Vector2Int(brushSize * 2 + 1);
-			var color = Color.Lerp(new Color(1, 0, 0, 0.1f), new Color(1, 0, 0, 0.25f), 1 - (float)brushFuzz / maxBrushFuzz);
+			var chunk = chunks.Find((x) => x.data.position == originPosition);
 
-			using (new DrawBatch())
-			{
-				var rect = new Rect(mousePos - actualBrushSize / 2, actualBrushSize);
+			if (chunk != null)
+				return chunk.Raycast(origin, direction, maxIterations);
 
-				// GFX.DrawBox(rect, color);
-				GFX.DrawRectangle(rect, Color.red, 1);
-			}
-		}
+			Logger.LogWarning($"Could not find chunk {originPosition}");
 
-		public void Paint(Vector2Int position, int id)
-		{
-			for (int y = -brushSize; y <= brushSize; y++)
-			{
-				for (int x = -brushSize; x <= brushSize; x++)
-				{
-					if (Random.Bool(1.0f / (float)brushFuzz))
-					{
-						var pos = mousePos + new Vector2Int(x, y);
-						grid.SetTile(pos, (Tile)System.Activator.CreateInstance(Grid.IDToTile(id).GetType()));
-					}
-				}
-			}
+			return null;
 		}
 	}
 }

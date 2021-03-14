@@ -34,9 +34,7 @@ namespace MGE.FileIO
 				this._path = path;
 		}
 
-		public void Dispose()
-		{
-		}
+		public void Dispose() { }
 
 		#region File
 		public void DeleteFile(string path)

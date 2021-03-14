@@ -16,7 +16,7 @@ namespace MGE.Debug.Menus
 
 				foreach (var asset in Assets.preloadedAssets)
 				{
-					gui.Text($"{asset.Value.GetType()} > {asset.Key}", layout.AddElement(), Colors.text);
+					gui.Text($"{asset.Value.GetType()} - {asset.Key}", layout.AddElement(), Colors.text);
 				}
 
 				gui.Text($"--- Unloaded ({Assets.unloadedAssets.Count}) ---", layout.AddElement(), Colors.text);

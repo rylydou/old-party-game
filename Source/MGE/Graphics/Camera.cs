@@ -16,8 +16,8 @@ namespace MGE.Graphics
 		protected float _zoom;
 		public float zoom { get => _zoom; set { _zoom = value; if (_zoom < 0.1f) _zoom = 0.1f; _isDirty = true; } }
 
-		public Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.gameSize); }
-		public Vector2 scaleDownFactor { get => ((Vector2)Window.gameSize / (Vector2)Window.renderSize); }
+		public Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.gameSize) * (zoom * zoom); }
+		public Vector2 scaleDownFactor { get => ((Vector2)Window.gameSize / (Vector2)Window.renderSize) / (zoom * zoom); }
 
 		protected Matrix _transform;
 
@@ -45,11 +45,12 @@ namespace MGE.Graphics
 			if (_isDirty)
 			{
 				_transform =
-					Matrix.CreateTranslation(new Vector3(-(float)_position.x - Window.veiwport.Width / 2, -(float)_position.y - Window.veiwport.Height / 2, 0.0f)) *
+					Matrix.CreateTranslation(new Vector3(-_position.x, -_position.y, 0.0f)) *
+					Matrix.CreateTranslation(new Vector3(-(float)GFX.graphicsDevice.Viewport.Width / 2, -(float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
 					Matrix.CreateRotationZ(rotation) *
-					Matrix.CreateScale(new Vector3(zoom, zoom, 1.0f)) *
-					Matrix.CreateTranslation(new Vector3(GFX.graphicsDevice.Viewport.Width / 2, GFX.graphicsDevice.Viewport.Height / 2, 0)) *
-					Matrix.CreateScale((float)scaleUpFactor.x, (float)scaleUpFactor.y, 1f);
+					// Matrix.CreateScale(zoom) *
+					Matrix.CreateTranslation(new Vector3((float)GFX.graphicsDevice.Viewport.Width / 2, (float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
+					Matrix.CreateScale(scaleUpFactor.x, scaleUpFactor.y, 1f);
 
 				_isDirty = false;
 			}
