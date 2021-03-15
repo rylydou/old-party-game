@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GAME.Components;
 using GAME.Components.UI;
 using MGE;
+using MGE.Components;
 using MGE.ECS;
 using Microsoft.Xna.Framework;
 
@@ -42,7 +43,8 @@ namespace GAME
 						false,
 						new Entity(new CBackground()),
 						new Entity(new CRigidbody(), new CPlayer()),
-						new Entity(new CWorld())
+						new Entity(new CWorld()),
+						new Entity(new CEditor())
 					),
 					new Layer(
 						true,

@@ -129,6 +129,7 @@ namespace MGE
 			return value;
 		}
 
+		public static int Clamp(int value, int max) => Clamp(value, 0, max);
 		public static int Clamp(int value, int min, int max)
 		{
 			if (value < min)
@@ -138,6 +139,7 @@ namespace MGE
 			return value;
 		}
 
+		public static float Clamp(float value, float max) => Clamp(value, 0, max);
 		public static float Clamp(float value, float min, float max)
 		{
 			if (value < min)
@@ -147,6 +149,7 @@ namespace MGE
 			return value;
 		}
 
+		public static double Clamp(double value, double max) => Clamp(value, 0, max);
 		public static double Clamp(double value, double min, double max)
 		{
 			if (value < min)
@@ -156,6 +159,7 @@ namespace MGE
 			return value;
 		}
 
+		public static decimal Clamp(decimal value, decimal max) => Clamp(value, 0, max);
 		public static decimal Clamp(decimal value, decimal min, decimal max)
 		{
 			if (value < min)

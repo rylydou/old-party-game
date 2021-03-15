@@ -4,11 +4,12 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
+	[JsonObject(MemberSerialization.OptIn)]
 	public class SpriteSheet
 	{
-		[JsonIgnore] public Texture texture;
+		public Texture texture;
 
-		public Dictionary<string, RectInt> regions;
+		[JsonProperty] public Dictionary<string, RectInt> regions;
 
 		public SpriteSheet() { }
 

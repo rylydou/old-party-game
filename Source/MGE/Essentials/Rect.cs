@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[System.Serializable]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public struct Rect
 	{
 		#region Static
@@ -29,46 +29,44 @@ namespace MGE
 		#region Object
 
 		#region Varibles
-		[JsonIgnore] float _xMin;
-		[JsonIgnore] float _yMin;
-		[JsonIgnore] float _width;
-		[JsonIgnore] float _height;
+		float _xMin;
+		float _yMin;
+		float _width;
+		float _height;
 		#endregion
 
 		#region Properties
-		public float x { get { return _xMin; } set { _xMin = value; } }
-		public float y { get { return _yMin; } set { _yMin = value; } }
-		public float width { get => _width; set => _width = value; }
-		public float height { get => _height; set => _height = value; }
+		[JsonProperty] public float x { get { return _xMin; } set { _xMin = value; } }
+		[JsonProperty] public float y { get { return _yMin; } set { _yMin = value; } }
+		[JsonProperty] public float width { get => _width; set => _width = value; }
+		[JsonProperty] public float height { get => _height; set => _height = value; }
 
-		[JsonIgnore]
 		public Vector2 position
 		{
 			get => new Vector2(_xMin, _yMin);
 			set { _xMin = value.x; _yMin = value.y; }
 		}
 
-		[JsonIgnore]
 		public Vector2 center
 		{
 			get => new Vector2(x + _width / 2f, y + _height / 2f);
 			set { _xMin = value.x - _width / 2f; _yMin = value.y - _height / 2f; }
 		}
 
-		[JsonIgnore] public Vector2 min { get => new Vector2(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
-		[JsonIgnore] public Vector2 max { get => new Vector2(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
+		public Vector2 min { get => new Vector2(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
+		public Vector2 max { get => new Vector2(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
 
-		[JsonIgnore] public Vector2 size { get { return new Vector2(_width, _height); } set { _width = value.x; _height = value.y; } }
+		public Vector2 size { get { return new Vector2(_width, _height); } set { _width = value.x; _height = value.y; } }
 
-		[JsonIgnore] public float xMin { get => _xMin; set { float oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
-		[JsonIgnore] public float yMin { get => _yMin; set { float oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
-		[JsonIgnore] public float xMax { get => _width + _xMin; set { _width = value - _xMin; } }
-		[JsonIgnore] public float yMax { get => _height + _yMin; set { _height = value - _yMin; } }
+		public float xMin { get => _xMin; set { float oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
+		public float yMin { get => _yMin; set { float oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
+		public float xMax { get => _width + _xMin; set { _width = value - _xMin; } }
+		public float yMax { get => _height + _yMin; set { _height = value - _yMin; } }
 
-		[JsonIgnore] public float left { get => xMin; }
-		[JsonIgnore] public float right { get => xMax; }
-		[JsonIgnore] public float top { get => yMin; }
-		[JsonIgnore] public float bottom { get => yMax; }
+		public float left { get => xMin; }
+		public float right { get => xMax; }
+		public float top { get => yMin; }
+		public float bottom { get => yMax; }
 		#endregion
 
 		#region Contructors

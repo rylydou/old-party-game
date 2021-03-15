@@ -16,6 +16,8 @@ namespace MGE.ECS
 
 		public Scene scene;
 
+		public Layer() { }
+
 		public Layer(bool isUI = false)
 		{
 			this.isUI = isUI;
@@ -115,6 +117,16 @@ namespace MGE.ECS
 		#endregion
 
 		#region Updates
+		internal virtual void Init()
+		{
+			foreach (var entity in entities)
+			{
+				if (!entity.enabled) continue;
+
+				entity.Init();
+			}
+		}
+
 		public void FixedUpdate()
 		{
 			foreach (var entity in entities)

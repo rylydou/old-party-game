@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[System.Serializable]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public struct Vector2Int
 	{
 		#region Static
@@ -53,8 +53,8 @@ namespace MGE
 		#region Object
 
 		#region Variables
-		public int x;
-		public int y;
+		[JsonProperty] public int x;
+		[JsonProperty] public int y;
 
 		public int this[int index]
 		{
@@ -81,13 +81,13 @@ namespace MGE
 		#endregion
 
 		#region Properties
-		[JsonIgnore] public Vector2Int sign { get => new Vector2Int(Math.Sign0(x), Math.Sign0(y)); }
+		public Vector2Int sign { get => new Vector2Int(Math.Sign0(x), Math.Sign0(y)); }
 
-		[JsonIgnore] public int sqrMagnitude { get => x * x + y * y; }
-		[JsonIgnore] public float magnitude { get => Math.Sqrt(sqrMagnitude); }
+		public int sqrMagnitude { get => x * x + y * y; }
+		public float magnitude { get => Math.Sqrt(sqrMagnitude); }
 
-		[JsonIgnore] public int max { get => Math.Max(x, y); }
-		[JsonIgnore] public int min { get => Math.Min(x, y); }
+		public int max { get => Math.Max(x, y); }
+		public int min { get => Math.Min(x, y); }
 
 		#endregion
 

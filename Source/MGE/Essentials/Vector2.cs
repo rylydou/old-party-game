@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[System.Serializable]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public struct Vector2
 	{
 		#region Static
@@ -100,10 +100,7 @@ namespace MGE
 		public static bool DistanceGT(Vector2 from, Vector2 to, float value) =>
 			DistanceSqr(from, to) > value * value;
 
-		public static float Distance(Vector2 from, Vector2 to)
-		{
-			return Math.Sqrt(DistanceSqr(from, to));
-		}
+		public static float Distance(Vector2 from, Vector2 to) => Math.Sqrt(DistanceSqr(from, to));
 
 		public static float DistanceSqr(Vector2 from, Vector2 to) => (from - to).sqrMagnitude;
 
@@ -137,8 +134,8 @@ namespace MGE
 		#region Object
 
 		#region Variables
-		public float x;
-		public float y;
+		[JsonProperty] public float x;
+		[JsonProperty] public float y;
 
 		public float this[int index]
 		{
@@ -165,7 +162,6 @@ namespace MGE
 		#endregion
 
 		#region Properties
-		[JsonIgnore]
 		public Vector2 normalized
 		{
 			get
@@ -175,16 +171,16 @@ namespace MGE
 				return vector;
 			}
 		}
-		[JsonIgnore] public Vector2 sign { get => new Vector2(Math.Sign0(x), Math.Sign0(y)); }
+		public Vector2 sign { get => new Vector2(Math.Sign0(x), Math.Sign0(y)); }
 
-		[JsonIgnore] public Vector2 isolateX { get => new Vector2(x, 0.0f); }
-		[JsonIgnore] public Vector2 isolateY { get => new Vector2(0.0f, y); }
+		public Vector2 isolateX { get => new Vector2(x, 0.0f); }
+		public Vector2 isolateY { get => new Vector2(0.0f, y); }
 
-		[JsonIgnore] public float sqrMagnitude { get => x * x + y * y; }
-		[JsonIgnore] public float magnitude { get => Math.Sqrt(sqrMagnitude); }
+		public float sqrMagnitude { get => x * x + y * y; }
+		public float magnitude { get => Math.Sqrt(sqrMagnitude); }
 
-		[JsonIgnore] public float max { get => Math.Max(x, y); }
-		[JsonIgnore] public float min { get => Math.Min(x, y); }
+		public float max { get => Math.Max(x, y); }
+		public float min { get => Math.Min(x, y); }
 		#endregion
 
 		#region Constructors

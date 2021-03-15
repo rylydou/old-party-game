@@ -14,10 +14,7 @@ namespace MGE.ECS
 		public bool clearScreen = true;
 		public Color screenClearColor = Color.nullColor;
 
-		public Scene()
-		{
-
-		}
+		public Scene() { }
 
 		public Scene(params Layer[] layers)
 		{
@@ -31,6 +28,8 @@ namespace MGE.ECS
 					this.layers.Add(layer);
 				}
 			}
+
+			Init();
 		}
 
 		public void AddLayer(Layer layer)
@@ -46,6 +45,16 @@ namespace MGE.ECS
 		}
 
 		#region Updates
+		internal virtual void Init()
+		{
+			foreach (var layer in layers)
+			{
+				if (!layer.enabled) continue;
+
+				layer.Init();
+			}
+		}
+
 		public virtual void FixedUpdate()
 		{
 			foreach (var layer in layers)

@@ -1,9 +1,8 @@
-using MGE;
 using MGE.ECS;
 using MGE.InputSystem;
 using MGE.Physics;
 
-namespace GAME.Components
+namespace MGE.Components
 {
 	public class CRigidbody : Component
 	{
@@ -54,9 +53,7 @@ namespace GAME.Components
 
 		public override void FixedUpdate()
 		{
-			if (raycaster == null) raycaster = entity.layer.FindEntityByComponent<CWorld>().GetComponent<CWorld>();
-
-			velocity += Physics.gravity * Time.deltaTime;
+			velocity += Physics.Physics.gravity * Time.deltaTime;
 
 			var direction = velocity.sign;
 

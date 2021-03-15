@@ -5,15 +5,16 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Tileset
 	{
-		[JsonIgnore] public Texture texture;
+		public Texture texture;
 
-		public Vector2Int tileSize;
+		[JsonProperty] public Vector2Int tileSize;
 
-		public Vector2Int defualtTile;
+		[JsonProperty] public Vector2Int defualtTile;
 
-		public Dictionary<TileConnection, Vector2Int> tiles;
+		[JsonProperty] public Dictionary<TileConnection, Vector2Int> tiles;
 
 		public Tileset() { }
 

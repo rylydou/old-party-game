@@ -31,10 +31,7 @@ namespace MGE.ECS
 			}
 		}
 
-		public Entity()
-		{
-
-		}
+		public Entity() { }
 
 		public Entity(params Component[] components)
 		{
@@ -43,7 +40,13 @@ namespace MGE.ECS
 					if (component == null)
 						throw new Exception("Component is null");
 					else
-						AddComponent(component);
+					{
+						if (component.entity != null)
+							Logger.LogError($"Component {component} already is atached to an entity!");
+
+						this.components.Add(component.GetType(), component);
+						component.entity = this;
+					}
 		}
 
 		public virtual T AddComponent<T>(T component) where T : Component
@@ -95,6 +98,17 @@ namespace MGE.ECS
 		}
 
 		#region Updates
+		internal virtual void Init()
+		{
+			foreach (var component in components.Values)
+			{
+				if (!component.enabled) continue;
+
+				component.Init();
+				component.inited = true;
+			}
+		}
+
 		public virtual void FixedUpdate()
 		{
 			foreach (var component in components.Values)

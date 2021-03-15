@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GAME.Generators;
 using MGE;
 using MGE.ECS;
 using MGE.FileIO;
@@ -18,38 +19,33 @@ namespace GAME.Components
 		public const int unloadDistance = 5;
 		public const int tileSize = 8;
 
+		public readonly IGenerator generator = new PlainsGenerator(Random.Int());
+
 		public Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 		public List<Tileset> tilesets = new List<Tileset>();
 
 		Entity player;
 
-		bool firstFrame = true;
 		int updateChunkIndex = 0;
 		Folder worldFolder;
 
-		Font font;
-
 		public override void Init()
 		{
+			player = entity.layer.FindEntityByComponent<CPlayer>();
+
 			worldFolder = new Folder(App.exePath + "/Data/World");
 
 			foreach (var chunk in worldFolder.GetFilesInDir("/Chunks/"))
 				File.Delete(chunk);
 
-			tilesets.Add(Assets.GetAsset<Tileset>("Sprites/Grass"));
+			tilesets.Add(Assets.GetAsset<Tileset>("Sprites/Tilesets/Stone"));
+			tilesets.Add(Assets.GetAsset<Tileset>("Sprites/Tilesets/Grass"));
 
-			font = Assets.GetAsset<Font>("Fonts/Basic");
+			LoadChunk(Vector2Int.zero);
 		}
 
 		public override void Update()
 		{
-			if (firstFrame)
-			{
-				if (player == null) player = entity.layer.FindEntityByComponent<CPlayer>();
-				LoadChunk(Vector2Int.zero);
-			}
-			firstFrame = false;
-
 			var playerPos = (Vector2Int)(player.position / chunkSize / 8);
 
 			for (int y = -loadDistance; y <= loadDistance; y++)
@@ -90,17 +86,22 @@ namespace GAME.Components
 			{
 				foreach (var chunk in chunks)
 				{
-					tilesets[0].Draw(
-						(Vector2)chunk.Value.position * chunkSize * tileSize,
-						tileSize, new Vector2Int(chunkSize),
-						(x, y) =>
-						{
-							if (chunk.Value.tiles.IsInBounds(x, y))
-								return chunk.Value.tiles[x, y] != 0;
-							return true;
-						},
-						Color.white
-					);
+					int tilesetId = 0;
+					foreach (var tileset in tilesets)
+					{
+						tileset.Draw(
+							(Vector2)chunk.Value.position * chunkSize * tileSize,
+							tileSize, new Vector2Int(chunkSize),
+							(x, y) =>
+							{
+								if (chunk.Value.tiles.IsInBounds(x, y))
+									return chunk.Value.tiles[x, y] != 0 && chunk.Value.tiles[x, y] != tilesetId + 1;
+								return true;
+							},
+							Color.white
+						);
+						tilesetId++;
+					}
 				}
 			}
 
@@ -108,8 +109,21 @@ namespace GAME.Components
 			{
 				foreach (var chunk in chunks)
 				{
-					GFX.DrawRectangle(new Rect((Vector2)chunk.Key * chunkSize * tileSize, new Vector2(chunkSize * tileSize)), new Color(0, 0, 1, 0.5f), 0.5f);
-					font.DrawText(chunk.Key.ToString(), (Vector2)chunk.Key * chunkSize * tileSize + tileSize / 2, new Color(0, 0, 1, 0.5f), 0.25f);
+					GFX.DrawRectangle(
+						new Rect((Vector2)chunk.Key * chunkSize * tileSize,
+						new Vector2(chunkSize * tileSize)),
+						new Color(0, 0, 1, 0.5f),
+						1f
+					);
+					if (chunk.Key == chunks.ElementAt(updateChunkIndex.Clamp(0, chunks.Count - 1)).Key)
+					{
+						GFX.DrawBox(
+							new Rect((Vector2)chunk.Key * chunkSize * tileSize,
+							new Vector2(chunkSize * tileSize)),
+							new Color(0, 0.1f)
+						);
+					}
+					Config.defualtFont.DrawText(chunk.Key.ToString(), (Vector2)chunk.Key * chunkSize * tileSize + tileSize / 2, new Color(0, 0, 1, 0.5f), 0.25f);
 				}
 			}
 		}
@@ -130,30 +144,7 @@ namespace GAME.Components
 				{
 					for (int x = 0; x < chunkSize; x++)
 					{
-						var absPos = position * chunkSize + new Vector2Int(x, y);
-						if (absPos.y > chunkSize * 1)
-						{
-							if (absPos.y > chunkSize * 4)
-							{
-								data[x, y] = System.Convert.ToUInt16(Random.Bool(95));
-							}
-							else if (absPos.y > chunkSize * 3)
-							{
-								data[x, y] = System.Convert.ToUInt16(Random.Bool(75));
-							}
-							else if (absPos.y > chunkSize * 2)
-							{
-								data[x, y] = System.Convert.ToUInt16(Random.Bool(90));
-							}
-							else
-							{
-								data[x, y] = System.Convert.ToUInt16(Random.Bool(99));
-							}
-						}
-						else if (absPos.y == chunkSize + 1)
-						{
-							data[x, y] = System.Convert.ToUInt16(Math.Sin(absPos.x * Math.Abs(position.x)) < 0.5f);
-						}
+						data[x, y] = generator.Generate(position.x * chunkSize + x, position.y * chunkSize + y);
 					}
 				}
 
@@ -214,17 +205,21 @@ namespace GAME.Components
 
 			var chunkPos = Vector2Int.zero;
 
-			if (position.x > 0)
-				chunkPos.x = (int)Math.Floor(tmpChunkPos.x);
-			else
-				chunkPos.x = (int)Math.Ceil(tmpChunkPos.x - 1);
+			if (position.x != 0)
+				if (position.x > 0)
+					chunkPos.x = Math.FloorToInt(tmpChunkPos.x);
+				else
+					chunkPos.x = Math.CeilToInt(tmpChunkPos.x - 1f);
 
-			if (position.y > 0)
-				chunkPos.y = (int)Math.Floor(tmpChunkPos.y);
-			else
-				chunkPos.y = (int)Math.Ceil(tmpChunkPos.y - 1);
+			if (position.y != 0)
+				if (position.y > 0)
+					chunkPos.y = Math.FloorToInt(tmpChunkPos.y);
+				else
+					chunkPos.y = Math.CeilToInt(tmpChunkPos.y - 1f);
 
 			Vector2Int chunkTilePos = position - chunkPos * chunkSize;
+
+			chunkTilePos.Clamp(0, chunkSize - 1);
 
 			Logger.Log($"{chunkPos} {chunkTilePos}");
 

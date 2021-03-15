@@ -5,16 +5,17 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Font
 	{
-		[JsonIgnore] public Texture texture;
+		public Texture texture;
 
-		public int offset;
-		public char defualtChar;
-		public char spIndicator;
-		public Vector2Int charSize;
-		public Vector2 charPaddingSize;
-		public List<string> spChars;
+		[JsonProperty] public int offset;
+		[JsonProperty] public char defualtChar;
+		[JsonProperty] public char spIndicator;
+		[JsonProperty] public Vector2Int charSize;
+		[JsonProperty] public Vector2 charPaddingSize;
+		[JsonProperty] public List<string> spChars;
 
 		public Font() { }
 

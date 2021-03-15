@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[System.Serializable]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public struct Color
 	{
 		#region Static
@@ -39,18 +39,6 @@ namespace MGE
 		public const float epsilonNormalSqrt = 1e-150f;
 		#endregion
 
-		#region Feilds
-		static System.Drawing.ColorConverter _converter;
-		public static System.Drawing.ColorConverter converter
-		{
-			get
-			{
-				if (_converter == null) _converter = new System.Drawing.ColorConverter();
-				return _converter;
-			}
-		}
-		#endregion
-
 		#region Methods
 		public static Color FromHex(string hex) => new Color(hex);
 		public static string ToHex(Color color, int length = 8) => color.ToHex(length);
@@ -59,20 +47,20 @@ namespace MGE
 		{
 			t = (float)Math.Clamp01(t);
 			return new Color(
-					a.r + (b.r - a.r) * t,
-					a.g + (b.g - a.g) * t,
-					a.b + (b.b - a.b) * t,
-					a.a + (b.a - a.a) * t
+				a.r + (b.r - a.r) * t,
+				a.g + (b.g - a.g) * t,
+				a.b + (b.b - a.b) * t,
+				a.a + (b.a - a.a) * t
 			);
 		}
 
 		public static Color LerpUnclamped(Color a, Color b, float t)
 		{
 			return new Color(
-					a.r + (b.r - a.r) * t,
-					a.g + (b.g - a.g) * t,
-					a.b + (b.b - a.b) * t,
-					a.a + (b.a - a.a) * t
+				a.r + (b.r - a.r) * t,
+				a.g + (b.g - a.g) * t,
+				a.b + (b.b - a.b) * t,
+				a.a + (b.a - a.a) * t
 			);
 		}
 		#endregion
@@ -82,10 +70,10 @@ namespace MGE
 		#region Object
 
 		#region Variables
-		[JsonIgnore] public float r;
-		[JsonIgnore] public float g;
-		[JsonIgnore] public float b;
-		[JsonIgnore] public float a;
+		public float r;
+		public float g;
+		public float b;
+		public float a;
 
 		public float this[int index]
 		{
@@ -116,10 +104,10 @@ namespace MGE
 		#endregion
 
 		#region Perams
-		public string hex { get => ToHex(); set => this = FromHex(value); }
-		[JsonIgnore] public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
-		[JsonIgnore] public float max { get => (float)Math.Max(Math.Max(r, g), b); }
-		[JsonIgnore] public Color opaque { get => ChangeAlpha(1f); }
+		[JsonProperty] public string hex { get => ToHex(); set => this = FromHex(value); }
+		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
+		public float max { get => (float)Math.Max(Math.Max(r, g), b); }
+		public Color opaque { get => ChangeAlpha(1f); }
 		#endregion
 
 		#region Constructors
@@ -255,7 +243,8 @@ namespace MGE
 
 		public static implicit operator System.Drawing.Color(Color color) =>
 			System.Drawing.Color.FromArgb((int)Math.Clamp01(color.a) * 255, (int)Math.Clamp01(color.r) * 255, (int)Math.Clamp01(color.g) * 255, (int)Math.Clamp01(color.b) * 255);
-		public static implicit operator Color(System.Drawing.Color color) => new Color((float)color.R / 255, (float)color.G / 255, (float)color.B / 255, (float)color.A / 255);
+		public static implicit operator Color(System.Drawing.Color color) =>
+			new Color((float)color.R / 255, (float)color.G / 255, (float)color.B / 255, (float)color.A / 255);
 		#endregion
 
 		#region Inherited

@@ -3,6 +3,7 @@ using MGE.ECS;
 using MGE.InputSystem;
 using MGE.Graphics;
 using MGE.Physics;
+using MGE.Components;
 
 namespace GAME.Components
 {
@@ -28,6 +29,7 @@ namespace GAME.Components
 			body = Assets.GetAsset<Texture>("Sprites/Player");
 
 			rb = entity.GetComponent<CRigidbody>();
+			rb.raycaster = entity.layer.FindEntityByComponent<CWorld>().GetComponent<CWorld>();
 
 			rb.position = new Vector2(64);
 		}
