@@ -3,6 +3,7 @@ using System;
 
 namespace MGE.ECS
 {
+	[System.Serializable]
 	public class Entity : IComparable<Entity>
 	{
 		public bool enabled = true;

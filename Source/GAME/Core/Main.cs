@@ -41,15 +41,15 @@ namespace GAME
 				new Scene(
 					new Layer(
 						false,
-						new Entity(new CBackground()),
-						new Entity(new CRigidbody(), new CPlayer()),
-						new Entity(new CWorld()),
+						// new Entity(new CBackground()),
+						// new Entity(new CRigidbody(), new CPlayer()),
+						// new Entity(new CWorld()),
 						new Entity(new CEditor())
-					),
+					)/* ,
 					new Layer(
 						true,
 						new Entity(new CUIHUD())
-					)
+					) */
 				)
 			);
 

@@ -2,6 +2,7 @@ using System;
 
 namespace MGE.ECS
 {
+	[System.Serializable]
 	public class Layer
 	{
 		public readonly string name;

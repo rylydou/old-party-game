@@ -1,5 +1,6 @@
 namespace MGE.ECS
 {
+	[System.Serializable]
 	public abstract class Component
 	{
 		public bool enabled = true;

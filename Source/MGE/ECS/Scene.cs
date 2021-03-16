@@ -2,6 +2,7 @@ using System;
 
 namespace MGE.ECS
 {
+	[System.Serializable]
 	public class Scene
 	{
 		public string name;

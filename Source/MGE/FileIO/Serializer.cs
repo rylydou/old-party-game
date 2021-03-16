@@ -12,6 +12,13 @@ namespace MGE.FileIO
 
 		public static T DeserializeJson<T>(string data)
 		{
+			// JsonConvert.DefaultSettings += () =>
+			// {
+			// 	return new JsonSerializerSettings()
+			// 	{
+			// 		TypeNameHandling = TypeNameHandling.All,
+			// 	};
+			// };
 			return JsonConvert.DeserializeObject<T>(data);
 		}
 	}
