@@ -4,6 +4,8 @@ using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.StageSystem;
 using MGE.StageSystem.Layers;
+using MGE.UI;
+using MGE.UI.Layouts;
 
 namespace MGE.Components
 {
@@ -34,6 +36,9 @@ namespace MGE.Components
 		Vector2 panMouseStartPos = Vector2.zero;
 		Vector2 panStartPos = Vector2.zero;
 
+		GUI inspectorGUI;
+		GUI layersGUI;
+
 		public override void Init()
 		{
 			current = this;
@@ -49,6 +54,15 @@ namespace MGE.Components
 
 		public override void Update()
 		{
+			layersGUI = new GUI(new Rect(0, 0, 64 * 6, Window.windowedSize.y), true);
+			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 6, 0, 64 * 6, Window.windowedSize.y), true);
+
+			layersGUI.Image(layersGUI.rect, Colors.transBlack);
+			layersGUI.Rect(layersGUI.rect, Color.black, 2);
+
+			inspectorGUI.Image(inspectorGUI.rect, Colors.transBlack);
+			inspectorGUI.Rect(inspectorGUI.rect, Color.black, 2);
+
 			shift = Input.GetButton(Inputs.LeftShift);
 			ctrl = Input.GetButton(Inputs.LeftControl);
 			alt = Input.GetButton(Inputs.LeftAlt);
@@ -102,6 +116,32 @@ namespace MGE.Components
 					}
 				}
 			}
+
+			using (var layout = new StackLayout(new Vector2Int(0, 16), 32, false))
+			{
+				int index = 0;
+				foreach (var layer in stage.layers)
+				{
+					var rect = new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize));
+
+					if (index == layerIndex)
+						layersGUI.Image(rect, Colors.highlight);
+
+					switch (layersGUI.MouseInteraction(rect))
+					{
+						case PointerInteraction.Hover:
+							layersGUI.Image(rect, Colors.highlight);
+							break;
+						case PointerInteraction.LClick:
+							layerIndex = index;
+							break;
+					}
+
+					layersGUI.Text(layer.typeId, rect, Colors.text, 1, TextAlignment.Center);
+
+					index++;
+				}
+			}
 		}
 
 		public override void Draw()
@@ -118,6 +158,9 @@ namespace MGE.Components
 					layer.Draw(pan, zoom);
 				}
 			}
+
+			layersGUI.Draw();
+			inspectorGUI.Draw();
 		}
 
 		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * tileSize;

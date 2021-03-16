@@ -18,7 +18,7 @@ namespace MGE.UI
 			}
 		}
 
-		Rect rect;
+		public readonly Rect rect;
 		List<GUIElement> elements = new List<GUIElement>();
 
 		bool active = true;
@@ -59,14 +59,21 @@ namespace MGE.UI
 
 		public void Text(string text, Vector2 position, Color color)
 		{
-			AddElement(new GUIText(text) { rect = new Rect(position, rect.size), color = color });
+			AddElement(new GUIText(text) { rect = new Rect(position.x, position.y, rect.size.x, 0), color = color, scale = 1 });
 		}
 
 		public void Text(string text, Rect rect, Color color)
 		{
 			rect.position += this.rect.position;
 
-			AddElement(new GUIText(text) { rect = rect, color = color });
+			AddElement(new GUIText(text) { rect = rect, color = color, scale = 1 });
+		}
+
+		public void Text(string text, Rect rect, Color color, float scale = 1.0f, TextAlignment alignment = TextAlignment.Left)
+		{
+			rect.position += this.rect.position;
+
+			AddElement(new GUIText(text) { rect = rect, color = color, scale = scale, alignment = alignment });
 		}
 
 		public void AddElement(GUIElement element)

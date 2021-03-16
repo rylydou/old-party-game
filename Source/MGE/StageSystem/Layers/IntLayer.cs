@@ -7,6 +7,8 @@ namespace MGE.StageSystem.Layers
 	[System.Serializable]
 	public class IntLayer : StageLayer
 	{
+		public override string typeId => "Int Grid";
+
 		public Grid<ushort> tiles;
 		public List<Color> colors;
 

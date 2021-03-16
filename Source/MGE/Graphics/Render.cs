@@ -6,21 +6,14 @@ namespace MGE.Graphics
 	// TODO: Make this not suck
 	public class Render : IDisposable
 	{
+		public readonly Color color;
+
 		public RenderTarget2D render;
-		public bool drawOnDispose;
 
-		public Render(Vector2Int size, bool drawOnDispose = true)
+		public Render(Vector2Int size, Color color)
 		{
+			this.color = color;
 			this.render = new RenderTarget2D(Engine.game.GraphicsDevice, size.x, size.y);
-			this.drawOnDispose = drawOnDispose;
-
-			Engine.game.GraphicsDevice.SetRenderTarget(render);
-		}
-
-		public Render(Rect size, bool drawOnDispose = true)
-		{
-			this.render = new RenderTarget2D(Engine.game.GraphicsDevice, (int)size.width, (int)size.height);
-			this.drawOnDispose = drawOnDispose;
 
 			Engine.game.GraphicsDevice.SetRenderTarget(render);
 		}
@@ -31,13 +24,20 @@ namespace MGE.Graphics
 			return ref render;
 		}
 
+		public void Done(Rect rect)
+		{
+			Engine.game.GraphicsDevice.SetRenderTarget(null);
+
+			using (new DrawBatch(transform: null))
+				GFX.sb.Draw(render, rect, Color.white);
+		}
+
 		public void Dispose()
 		{
 			Done();
 
-			GFX.sb.Begin(samplerState: SamplerState.PointClamp);
-			GFX.sb.Draw(render, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
-			GFX.sb.End();
+			using (new DrawBatch(transform: null))
+				GFX.sb.Draw(render, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
 
 			render.Dispose();
 		}

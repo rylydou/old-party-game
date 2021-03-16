@@ -8,8 +8,6 @@ namespace MGE.Debug.Menus
 	{
 		public override string name => "Hierarchy";
 
-		const int itemSize = 24;
-
 		readonly Color disabledColor = Colors.textDark;
 		readonly Color enabledColor = Colors.text;
 
@@ -41,8 +39,8 @@ namespace MGE.Debug.Menus
 			{
 				layers++;
 
-				rect = new Rect(0, i * itemSize, size.x, itemSize);
-				clickRect = new Rect(rect.position.x, rect.position.y + itemSize / 2, rect.size.x, rect.size.y);
+				rect = new Rect(0, i * allSize, size.x, allSize);
+				clickRect = new Rect(rect.position.x, rect.position.y + allSize / 2, rect.size.x, rect.size.y);
 
 				if (gui.MouseInside(clickRect))
 				{
@@ -53,7 +51,7 @@ namespace MGE.Debug.Menus
 					else if (Input.GetButtonPress(Inputs.MouseMiddle)) SceneManager.activeScene.RemoveLayer(layer);
 				}
 
-				gui.Text(GetStatus(layer.enabled, layer.visible) + (layer.isUI ? "UI " : "Layer ") + layer.name, rect.position + offset, layer.enabled ? enabledColor : disabledColor);
+				gui.Text(GetStatus(layer.enabled, layer.visible) + (layer.isUI ? "UI " : "Layer ") + layer.name, rect, layer.enabled ? enabledColor : disabledColor);
 
 				i++;
 
@@ -61,8 +59,8 @@ namespace MGE.Debug.Menus
 				{
 					entities++;
 
-					rect = new Rect(0, i * itemSize, size.x, itemSize);
-					clickRect = new Rect(rect.position.x, rect.position.y + itemSize / 2, rect.size.x, rect.size.y);
+					rect = new Rect(0, i * allSize, size.x, allSize);
+					clickRect = new Rect(rect.position.x, rect.position.y + allSize / 2, rect.size.x, rect.size.y);
 
 					if (gui.MouseInside(clickRect))
 					{
@@ -73,7 +71,7 @@ namespace MGE.Debug.Menus
 						else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.Destroy();
 					}
 
-					gui.Text("| " + (entity.destroyed ? "§Error§" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect.position + offset, layer.enabled && entity.enabled ? enabledColor : disabledColor);
+					gui.Text("| " + (entity.destroyed ? "§Error§" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect, layer.enabled && entity.enabled ? enabledColor : disabledColor);
 
 					i++;
 
@@ -81,8 +79,8 @@ namespace MGE.Debug.Menus
 					{
 						components++;
 
-						rect = new Rect(0, i * itemSize, size.x, itemSize);
-						clickRect = new Rect(rect.position.x, rect.position.y + itemSize / 2, rect.size.x, rect.size.y);
+						rect = new Rect(0, i * allSize, size.x, allSize);
+						clickRect = new Rect(rect.position.x, rect.position.y + allSize / 2, rect.size.x, rect.size.y);
 
 						if (gui.MouseInside(clickRect))
 						{
@@ -93,7 +91,7 @@ namespace MGE.Debug.Menus
 							else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.RemoveComponent(comp.Key);
 						}
 
-						gui.Text("| | " + GetStatus(comp.Value.enabled, comp.Value.visible) + comp.Key.Name, rect.position + offset, layer.enabled && entity.enabled && comp.Value.enabled ? enabledColor : disabledColor);
+						gui.Text("| | " + GetStatus(comp.Value.enabled, comp.Value.visible) + comp.Key.Name, rect, layer.enabled && entity.enabled && comp.Value.enabled ? enabledColor : disabledColor);
 
 						i++;
 					}

@@ -4,15 +4,15 @@ using MGE.UI;
 
 namespace MGE.Debug
 {
-	public abstract class DebugMenu : ILogic
+	public abstract class DebugMenu
 	{
-		public const int allSize = 32;
+		public const int allSize = 24;
 
 		public const int barSize = allSize;
 
 		public abstract string name { get; }
 
-		public string title = "Window";
+		public string title = "A Window With No Name";
 		public Vector2 position = Vector2.zero;
 		public Vector2 size = new Vector2(allSize * 12, allSize * 12);
 		public Vector2 offset = new Vector2(8);
@@ -124,13 +124,24 @@ namespace MGE.Debug
 			gui.Image(new Rect(new Vector2(0, -barSize), new Vector2(size.x, barSize)), barColor);
 			gui.Image(new Rect(Vector2.zero, size), bgColor);
 
-			var text = $"[{title}]";
-			gui.Text(text, new Vector2(size.x / 2 - Config.defualtFont.charPaddingSize.x * text.Length / 2, barSize / 2 - Config.defualtFont.charPaddingSize.y / 2 - barSize), Colors.text);
+			gui.Text($"[{title}]", new Rect(0, -barSize, size.x, barSize), Colors.text, 1, TextAlignment.Center);
 
 			gui.Rect(new Rect(0, -barSize, size.x, size.y + barSize), Colors.black, 1);
 		}
 
-		public virtual void Draw()
+		public void Draw()
+		{
+			// var renderer = new Render(size);
+
+			OnDraw();
+
+			// var render = renderer.Done();
+
+			// using (new DrawBatch(transform: null))
+			// 	GFX.sb.Draw(render, position, Color.white);
+		}
+
+		protected virtual void OnDraw()
 		{
 			gui?.Draw();
 		}

@@ -33,16 +33,16 @@ namespace MGE
 			Calculate();
 		}
 
-		public float Noise(float x, float y, float z)
+		public double Noise(double x, double y, double z)
 		{
 			int
-				X = (int)Math.Floor(x) & 255,
-				Y = (int)Math.Floor(y) & 255,
-				Z = (int)Math.Floor(z) & 255;
-			x -= Math.Floor(x);
-			y -= Math.Floor(y);
-			z -= Math.Floor(z);
-			float u = Fade(x),
+				X = (int)x & 255,
+				Y = (int)y & 255,
+				Z = (int)z & 255;
+			x -= (int)x;
+			y -= (int)y;
+			z -= (int)z;
+			double u = Fade(x),
 			v = Fade(y),
 			w = Fade(z);
 			int
@@ -60,15 +60,15 @@ namespace MGE
 				Lerp(u, Gradient(p[AB + 1], x, y - 1, z - 1), Gradient(p[BB + 1], x - 1, y - 1, z - 1))));
 		}
 
-		float Lerp(float t, float a, float b) => a + t * (b - a);
+		double Lerp(double t, double a, double b) => a + t * (b - a);
 
-		float Fade(float t) =>
-		 t * t * t * (t * (t * 6f - 15f) + 10f);
+		double Fade(double t) =>
+		 t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 
-		float Gradient(int hash, float x, float y, float z)
+		double Gradient(int hash, double x, double y, double z)
 		{
 			int h = hash & 15;
-			float u = h < 8 ? x : y,
+			double u = h < 8 ? x : y,
 			v = h < 4 ? y : h == 12 || h == 14 ? x : z;
 			return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 		}

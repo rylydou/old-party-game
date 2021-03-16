@@ -69,13 +69,9 @@ namespace GAME.Components
 			var chunkToUpdate = chunks.ElementAt(updateChunkIndex);
 
 			if ((playerPos - chunkToUpdate.Key).sqrMagnitude > unloadDistance * unloadDistance)
-			{
 				UnloadChunk(chunkToUpdate.Key);
-			}
 			else
-			{
 				chunkToUpdate.Value.Save(worldFolder);
-			}
 
 			updateChunkIndex++;
 		}

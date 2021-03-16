@@ -5,6 +5,8 @@ namespace MGE.UI.Elements
 	public class GUIText : GUIElement
 	{
 		public string text;
+		public float scale;
+		public TextAlignment alignment;
 
 		public GUIText(string text)
 		{
@@ -13,7 +15,7 @@ namespace MGE.UI.Elements
 
 		public override void Draw()
 		{
-			Config.defualtFont.DrawText(text, rect.position, color);
+			Config.defualtFont.DrawText(text, rect, color, scale, alignment);
 		}
 	}
 }

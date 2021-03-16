@@ -21,9 +21,30 @@ namespace MGE
 
 		public void DrawText(string text, Vector2 position, Color color, float scale = 1.0f)
 		{
+			DrawText(text, new Rect(position, Measure(text, scale)), color, scale);
+		}
+
+		public void DrawText(string text, Rect rect, Color color, float scale = 1.0f, TextAlignment alignment = TextAlignment.Left)
+		{
 			var drawIndex = 0;
 			var isSp = false;
 			var spName = new StringBuilder();
+			var textSize = Measure(text, scale);
+			var startingPos = Vector2.zero;
+
+			switch (alignment)
+			{
+				case TextAlignment.Left:
+					startingPos.x = rect.position.x;
+					break;
+				case TextAlignment.Center:
+					startingPos.x = (rect.position.x + rect.width) / 2 - (textSize.x / 2);
+					break;
+				case TextAlignment.Right:
+					startingPos.x = rect.position.x + rect.width - textSize.x;
+					break;
+			}
+			startingPos.y = rect.position.y + (rect.height / 2 - (textSize.y / 2));
 
 			for (int i = 0; i < text.Length; i++)
 			{
@@ -37,13 +58,7 @@ namespace MGE
 						var spChar = spChars.FindIndex((x) => x == spCharName);
 						spChar = Math.Max(spChar, 0);
 
-						GFX.Draw(
-							texture,
-							new Rect(spChar * charSize.x, charSize.y, charSize.x, charSize.y),
-							new Rect(position.x + charPaddingSize.x * drawIndex * scale, position.y, charSize.x * scale, charSize.y * scale),
-							color
-						);
-						drawIndex++;
+						DrawChar(spChar, true, startingPos, ref drawIndex, scale, color);
 
 						spName.Clear();
 					}
@@ -57,14 +72,25 @@ namespace MGE
 					spName.Append(text[i]);
 				else
 				{
-					GFX.Draw(
-						texture,
-						new Rect((text[i] + offset) * charSize.x, 0, charSize.x, charSize.y),
-						new Rect(position.x + charPaddingSize.x * drawIndex * scale, position.y, charSize.x * scale, charSize.y * scale), color
-					);
-					drawIndex++;
+					DrawChar(text[i] + offset, false, startingPos, ref drawIndex, scale, color);
 				}
 			}
+		}
+
+		public void DrawChar(int charPos, bool isSp, Vector2 startingPos, ref int drawIndex, float scale, Color color)
+		{
+			GFX.Draw(
+				texture,
+				new Rect(charPos * charSize.x, isSp ? charSize.y : 0, charSize.x, charSize.y),
+				new Rect(startingPos.x + charPaddingSize.x * drawIndex * scale, startingPos.y, charSize.x * scale, charSize.y * scale),
+				color
+			);
+			drawIndex++;
+		}
+
+		public Vector2 Measure(string text, float scale)
+		{
+			return new Vector2(text.Length * charPaddingSize.x * scale, charPaddingSize.y * scale);
 		}
 	}
 }

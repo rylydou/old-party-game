@@ -13,12 +13,16 @@ namespace MGE.UI.Layouts
 		Vector2 _offset;
 		bool _isFirstElement = true;
 
+		public int currentSize;
+		public Vector2 newElement { get => AddElement(); }
+
 		public StackLayout(Vector2Int position, int sizePerElement, bool isHorizontal)
 		{
 			_position = position;
 			_offset = position;
 			_sizePerElement = sizePerElement;
 			_isHorizontal = isHorizontal;
+			currentSize = sizePerElement;
 
 			GFX.sb.Begin(blendState: BlendState.NonPremultiplied, samplerState: SamplerState.LinearClamp);
 		}
@@ -26,6 +30,7 @@ namespace MGE.UI.Layouts
 		public Vector2Int AddElement(int elementSize = -1)
 		{
 			if (elementSize < 0) elementSize = _sizePerElement;
+			currentSize = elementSize;
 
 			if (!_isFirstElement)
 			{

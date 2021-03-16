@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using RNG = System.Random;
 
 namespace MGE
@@ -25,6 +26,9 @@ namespace MGE
 		public static bool Bool(decimal chance) => Decimal() < chance;
 		public static bool Bool(int chance) => Int(100) < chance;
 
+		public static void Byte(byte[] buffer) => rng.NextBytes(buffer);
+		public static void Byte(Span<byte> buffer) => rng.NextBytes(buffer);
+
 		public static int Int() => rng.Next();
 		public static int Int(int max) => rng.Next(max + 1);
 		public static int Int(int min, int max) => rng.Next(min, max + 1);
@@ -50,6 +54,28 @@ namespace MGE
 		public static Vector2 Vector(float max) => new Vector2(Float(-max, max), Float(-max, max));
 		public static Vector2 Vector(float min, float max) => new Vector2(Float(min, max), Float(min, max));
 
-		public static float Noise(float x, float y, float z) => perlin.Noise(x, y, z);
+		public static T WeigthedOdds<T>(T[] items, IList<int> weigths)
+		{
+			var entries = new List<int>();
+
+			for (int i = 0; i < items.Length; i++)
+				for (int ii = 0; ii < weigths[i]; ii++)
+					entries.Add(i);
+
+			return items[entries[Random.Int(0, entries.Count - 1)]];
+		}
+
+		public static T WeigthedOdds<T>(IList<T> items, IList<int> weigths)
+		{
+			var entries = new List<int>();
+
+			for (int i = 0; i < items.Count; i++)
+				for (int ii = 0; ii < weigths[i]; ii++)
+					entries.Add(i);
+
+			return items[entries[Random.Int(0, entries.Count - 1)]];
+		}
+
+		public static double Noise(double x, double y, double z) => perlin.Noise(x, y, z);
 	}
 }

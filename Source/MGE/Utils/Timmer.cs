@@ -4,103 +4,34 @@ using System;
 
 namespace MGE
 {
-	public struct Timmer : IDisposable
+	public class Timmer : IDisposable
 	{
-		#region Static
+		public static Timmer Create(string name = "Timmer") => new Timmer(name);
 
-		#region Variables
-		static List<Timmer> timmers = new List<Timmer>();
-		#endregion
+		public readonly string name;
 
-		#region Creation
-		public static Timmer Create() => new Timmer(string.Empty);
+		public readonly DateTime startTime;
+		public DateTime stopTime { get; private set; }
 
-		public static Timmer Create(string name) => new Timmer(name);
-		#endregion
-
-		#region Management
-		public static void Start(string name)
+		public TimeSpan elapsedTime
 		{
-			if (timmers.Exists((x) => x.name == name))
+			get
 			{
-				Logger.LogError($"Timmer \"{name}\" already exists!");
-				return;
-			}
-
-			timmers.Add(Create(name));
-		}
-
-		public static long Stop(string name)
-		{
-			var timmerIndex = timmers.FindIndex((x) => x.name == name);
-			if (timmerIndex == -1)
-			{
-				Logger.LogError($"Can't find timmer \"{name}\"");
-				return -1;
-			}
-			else
-			{
-				var timmer = timmers[timmerIndex];
-				timmers.RemoveAt(timmerIndex);
-				return timmer.elapsedTime;
+				Stop();
+				return TimeSpan.FromTicks(stopTime.Ticks - startTime.Ticks);
 			}
 		}
 
-		public static void Log(string name)
+		public Timmer(string name = "Timmer")
 		{
-			var timmerIndex = timmers.FindIndex((x) => x.name == name);
-			if (timmerIndex == -1)
-				Logger.LogError($"Can't find timmer \"{name}\"");
-			else
-			{
-				var timmer = timmers[timmerIndex];
-				timmers.RemoveAt(timmerIndex);
-				timmer.LogTime();
-			}
+			this.name = name;
+			this.startTime = DateTime.Now;
 		}
-		#endregion
 
-		#endregion
+		public void Stop() => stopTime = DateTime.Now;
 
-		#region Object
+		public void LogTime() => Logger.Log($"⏰ {name} Timmer: {elapsedTime}ms");
 
-		#region Variables
-		string _name;
-		internal string name { get => _name; set => _name = value; }
-
-		Stopwatch _timmer;
-		#endregion
-
-		#region Properties
-		public long time { get { _timmer.Stop(); return _timmer.ElapsedMilliseconds; } }
-
-		public long elapsedTime { get { _timmer.Stop(); return _timmer.ElapsedMilliseconds; } }
-		#endregion
-
-		#region Constructors
-		public Timmer(string name = "")
-		{
-			this._name = name;
-			this._timmer = new Stopwatch();
-			this._timmer.Start();
-		}
-		#endregion
-
-		#region Methods
-		public void Start() => _timmer.Start();
-		public void Stop() => _timmer.Stop();
-		public void Restart() => _timmer.Restart();
-
-		public void LogTime()
-		{
-			Logger.Log($"⏰ {name} Timmer: {elapsedTime}ms");
-		}
-		#endregion
-
-		#region Inherited Methods
 		public void Dispose() => LogTime();
-		#endregion
-
-		#endregion
 	}
 }

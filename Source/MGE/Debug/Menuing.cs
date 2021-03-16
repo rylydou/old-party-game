@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.UI;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Debug
 {
@@ -62,15 +64,14 @@ namespace MGE.Debug
 				gui.Image(new Rect(0, 0, Window.windowedSize.x, menuMenuSize), Colors.transBG);
 
 				var offsetIncerment = (float)menuMenuItemOffset / 2;
-				var yOffset = menuMenuSize / 2 - Config.defualtFont.charPaddingSize.y / 2;
 
 				foreach (var menu in Config.availableMenus)
 				{
 					var text = $"[{menu.name}]";
 
-					var width = Config.defualtFont.charPaddingSize.x * text.Length;
+					var width = Config.defualtFont.Measure(text, 1).x;
 
-					gui.Text(text, new Vector2(offsetIncerment, yOffset), Colors.text);
+					gui.Text(text, new Rect(offsetIncerment, 0, width, menuMenuSize), Colors.text);
 
 					var rect = new Rect(offsetIncerment - (float)menuMenuItemOffset / 2, 0, width + menuMenuItemOffset, menuMenuSize);
 
