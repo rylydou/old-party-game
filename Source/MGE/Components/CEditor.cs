@@ -36,41 +36,38 @@ namespace MGE.Components
 		Vector2 panMouseStartPos = Vector2.zero;
 		Vector2 panStartPos = Vector2.zero;
 
+		bool hideOthers = false;
+
 		GUI inspectorGUI;
-		GUI layersGUI;
+		GUI mainGUI;
 
 		public override void Init()
 		{
 			current = this;
-
-			stage.layers.Add(new IntLayer(stage.size));
-			stage.layers.Add(new EntityLayer());
-
-			(layer as IntLayer).tiles[0, 0] = 1;
-			(layer as IntLayer).tiles[1, 2] = 2;
-			(layer as IntLayer).colors.Add(Color.red);
-			(layer as IntLayer).colors.Add(Color.green);
 		}
 
 		public override void Update()
 		{
-			layersGUI = new GUI(new Rect(0, 0, 64 * 6, Window.windowedSize.y), true);
+			mainGUI = new GUI(new Rect(0, 0, 64 * 6, Window.windowedSize.y), true);
 			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 6, 0, 64 * 6, Window.windowedSize.y), true);
 
-			layersGUI.Image(layersGUI.rect, Colors.transBlack);
-			layersGUI.Rect(layersGUI.rect, Color.black, 2);
+			mainGUI.Image(mainGUI.rect, Colors.transBG);
 
-			inspectorGUI.Image(inspectorGUI.rect, Colors.transBlack);
-			inspectorGUI.Rect(inspectorGUI.rect, Color.black, 2);
+			inspectorGUI.Image(inspectorGUI.rect, Colors.transBG);
 
-			shift = Input.GetButton(Inputs.LeftShift);
-			ctrl = Input.GetButton(Inputs.LeftControl);
-			alt = Input.GetButton(Inputs.LeftAlt);
+			shift = Input.GetButton(Inputs.LeftShift) || Input.GetButton(Inputs.RightShift);
+			ctrl = Input.GetButton(Inputs.LeftControl) || Input.GetButton(Inputs.RightControl);
+			alt = Input.GetButton(Inputs.LeftAlt) || Input.GetButton(Inputs.RightAlt);
 
 			if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.S))
 				Save();
 			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.L))
 				Load();
+			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.I))
+			{
+				hideOthers = !hideOthers;
+				Logger.Log($"Hide Others: {hideOthers}");
+			}
 
 			if (Input.GetButtonPress(Inputs.MouseMiddle))
 			{
@@ -122,24 +119,24 @@ namespace MGE.Components
 				int index = 0;
 				foreach (var layer in stage.layers)
 				{
-					var rect = new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize));
+					var rect = new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize));
 
-					if (index == layerIndex)
-						layersGUI.Image(rect, Colors.highlight);
-
-					switch (layersGUI.MouseInteraction(rect))
+					switch (mainGUI.Button(layer.name, rect))
 					{
-						case PointerInteraction.Hover:
-							layersGUI.Image(rect, Colors.highlight);
-							break;
 						case PointerInteraction.LClick:
 							layerIndex = index;
 							break;
 					}
 
-					layersGUI.Text(layer.typeId, rect, Colors.text, 1, TextAlignment.Center);
+					if (index == layerIndex)
+						mainGUI.Image(rect, Colors.highlight);
 
 					index++;
+				}
+
+				if (mainGUI.ButtonClicked("Add Lew Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
+				{
+					stage.layers.Add(new IntLayer(stage.size));
 				}
 			}
 		}
@@ -153,13 +150,20 @@ namespace MGE.Components
 
 				Config.defualtFont.DrawText($"{stage.size} | {gridMousePos}", new Vector2(0, -(Config.defualtFont.charSize.y + 4) * zoom) + pan, Colors.gray, zoom);
 
-				foreach (var layer in stage.layers)
+				if (hideOthers)
 				{
 					layer.Draw(pan, zoom);
 				}
+				else
+				{
+					foreach (var layer in stage.layers)
+					{
+						layer.Draw(pan, zoom);
+					}
+				}
 			}
 
-			layersGUI.Draw();
+			mainGUI.Draw();
 			inspectorGUI.Draw();
 		}
 

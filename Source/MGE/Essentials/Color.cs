@@ -108,6 +108,7 @@ namespace MGE
 		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
 		public float max { get => (float)Math.Max(Math.Max(r, g), b); }
 		public Color opaque { get => ChangeAlpha(1f); }
+		public Color inverted { get => new Color(-r, -g, -b, a); }
 		#endregion
 
 		#region Constructors

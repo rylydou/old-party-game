@@ -7,15 +7,14 @@ namespace MGE.StageSystem.Layers
 	[System.Serializable]
 	public class IntLayer : StageLayer
 	{
-		public override string typeId => "Int Grid";
-
 		public Grid<ushort> tiles;
 		public List<Color> colors;
 
 		public IntLayer(Vector2Int size)
 		{
+			name = "Int Grid";
 			tiles = new Grid<ushort>(size.x, size.y);
-			colors = new List<Color>() { Color.clear };
+			colors = new List<Color>() { Color.clear, Colors.accent, Colors.accent.inverted };
 		}
 
 		public override void Draw(Vector2 pan, float zoom)

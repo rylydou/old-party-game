@@ -2,13 +2,12 @@ using System;
 
 namespace MGE
 {
-	[Flags]
 	public enum PointerInteraction
 	{
 		None,
 		Hover,
 		LClick,
+		MClick,
 		RClick,
-		MClick
 	}
 }

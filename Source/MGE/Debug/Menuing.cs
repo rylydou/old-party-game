@@ -30,7 +30,7 @@ namespace MGE.Debug
 
 				var interaction = GUI.gui.MouseInteraction(new Rect(menus[i].position.x, menus[i].position.y - DebugMenu.barSize, menus[i].size.x, menus[i].size.y + DebugMenu.barSize));
 
-				if (interaction.HasFlag(PointerInteraction.LClick) || interaction.HasFlag(PointerInteraction.RClick) || interaction.HasFlag(PointerInteraction.MClick))
+				if (interaction != PointerInteraction.None && interaction != PointerInteraction.Hover)
 					moveMenuToTop = i;
 			}
 

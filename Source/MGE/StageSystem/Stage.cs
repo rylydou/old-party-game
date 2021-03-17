@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MGE.StageSystem.Layers;
 
 namespace MGE.StageSystem
 {
@@ -6,8 +7,11 @@ namespace MGE.StageSystem
 	public class Stage
 	{
 		public Vector2Int size = new Vector2Int(64);
-		public List<StageLayer> layers = new List<StageLayer>();
+		public List<StageLayer> layers = new List<StageLayer>() { };
 
-		public Stage() { }
+		public Stage()
+		{
+			layers.Add(new IntLayer(size));
+		}
 	}
 }

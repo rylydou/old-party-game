@@ -42,15 +42,18 @@ namespace MGE.Debug.Menus
 			foreach (var comp in entity.components)
 			{
 				var rect = new Rect(0, i * itemSize, size.x, itemSize);
-				var clickRect = new Rect(rect.position.x, rect.position.y + itemSize / 2, rect.size.x, rect.size.y);
 
-				if (gui.MouseInside(clickRect))
+				switch (gui.Button("| | " + GetStatus(comp.Value.enabled, comp.Value.visible) + comp.Key.Name, rect))
 				{
-					gui.Image(clickRect, Colors.highlight);
-
-					if (Input.GetButtonPress(Inputs.MouseLeft)) comp.Value.enabled = !comp.Value.enabled;
-					else if (Input.GetButtonPress(Inputs.MouseRight)) comp.Value.visible = !comp.Value.visible;
-					else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.RemoveComponent(comp.Key);
+					case PointerInteraction.LClick:
+						comp.Value.enabled = !comp.Value.enabled;
+						break;
+					case PointerInteraction.RClick:
+						comp.Value.visible = !comp.Value.visible;
+						break;
+					case PointerInteraction.MClick:
+						entity.RemoveComponent(comp.Key);
+						break;
 				}
 
 				i++;

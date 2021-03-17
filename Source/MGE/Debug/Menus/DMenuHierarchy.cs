@@ -33,25 +33,25 @@ namespace MGE.Debug.Menus
 			var i = 1;
 
 			var rect = new Rect();
-			var clickRect = new Rect();
 
 			foreach (var layer in SceneManager.activeScene.layers)
 			{
 				layers++;
 
 				rect = new Rect(0, i * allSize, size.x, allSize);
-				clickRect = new Rect(rect.position.x, rect.position.y + allSize / 2, rect.size.x, rect.size.y);
 
-				if (gui.MouseInside(clickRect))
+				switch (gui.Button(GetStatus(layer.enabled, layer.visible) + (layer.isUI ? "UI " : "Layer ") + layer.name, rect))
 				{
-					gui.Image(clickRect, Colors.highlight);
-
-					if (Input.GetButtonPress(Inputs.MouseLeft)) layer.enabled = !layer.enabled;
-					else if (Input.GetButtonPress(Inputs.MouseRight)) layer.visible = !layer.visible;
-					else if (Input.GetButtonPress(Inputs.MouseMiddle)) SceneManager.activeScene.RemoveLayer(layer);
+					case PointerInteraction.LClick:
+						layer.enabled = !layer.enabled;
+						break;
+					case PointerInteraction.RClick:
+						layer.visible = !layer.visible;
+						break;
+					case PointerInteraction.MClick:
+						SceneManager.activeScene.RemoveLayer(layer);
+						break;
 				}
-
-				gui.Text(GetStatus(layer.enabled, layer.visible) + (layer.isUI ? "UI " : "Layer ") + layer.name, rect, layer.enabled ? enabledColor : disabledColor);
 
 				i++;
 
@@ -60,18 +60,20 @@ namespace MGE.Debug.Menus
 					entities++;
 
 					rect = new Rect(0, i * allSize, size.x, allSize);
-					clickRect = new Rect(rect.position.x, rect.position.y + allSize / 2, rect.size.x, rect.size.y);
 
-					if (gui.MouseInside(clickRect))
+
+					switch (gui.Button("| " + (entity.destroyed ? "§Error§" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect))
 					{
-						gui.Image(clickRect, Colors.highlight);
-
-						if (Input.GetButtonPress(Inputs.MouseLeft)) Menuing.OpenMenu(new DMenuInspector(entity), Input.windowMousePosition);
-						else if (Input.GetButtonPress(Inputs.MouseRight)) entity.visible = !entity.visible;
-						else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.Destroy();
+						case PointerInteraction.LClick:
+							Menuing.OpenMenu(new DMenuInspector(entity), Input.windowMousePosition);
+							break;
+						case PointerInteraction.RClick:
+							entity.visible = !entity.visible;
+							break;
+						case PointerInteraction.MClick:
+							entity.Destroy();
+							break;
 					}
-
-					gui.Text("| " + (entity.destroyed ? "§Error§" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect, layer.enabled && entity.enabled ? enabledColor : disabledColor);
 
 					i++;
 
@@ -80,18 +82,19 @@ namespace MGE.Debug.Menus
 						components++;
 
 						rect = new Rect(0, i * allSize, size.x, allSize);
-						clickRect = new Rect(rect.position.x, rect.position.y + allSize / 2, rect.size.x, rect.size.y);
 
-						if (gui.MouseInside(clickRect))
+						switch (gui.Button("| | " + GetStatus(comp.Value.enabled, comp.Value.visible) + comp.Key.Name, rect))
 						{
-							gui.Image(clickRect, Colors.highlight);
-
-							if (Input.GetButtonPress(Inputs.MouseLeft)) comp.Value.enabled = !comp.Value.enabled;
-							else if (Input.GetButtonPress(Inputs.MouseRight)) comp.Value.visible = !comp.Value.visible;
-							else if (Input.GetButtonPress(Inputs.MouseMiddle)) entity.RemoveComponent(comp.Key);
+							case PointerInteraction.LClick:
+								comp.Value.enabled = !comp.Value.enabled;
+								break;
+							case PointerInteraction.RClick:
+								comp.Value.visible = !comp.Value.visible;
+								break;
+							case PointerInteraction.MClick:
+								entity.RemoveComponent(comp.Key);
+								break;
 						}
-
-						gui.Text("| | " + GetStatus(comp.Value.enabled, comp.Value.visible) + comp.Key.Name, rect, layer.enabled && entity.enabled && comp.Value.enabled ? enabledColor : disabledColor);
 
 						i++;
 					}

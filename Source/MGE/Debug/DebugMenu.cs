@@ -124,6 +124,7 @@ namespace MGE.Debug
 			gui.Image(new Rect(new Vector2(0, -barSize), new Vector2(size.x, barSize)), barColor);
 			gui.Image(new Rect(Vector2.zero, size), bgColor);
 
+			// Pain
 			gui.Text($"[{title}]", new Rect(0, -barSize, size.x, barSize), Colors.text, 1, TextAlignment.Center);
 
 			gui.Rect(new Rect(0, -barSize, size.x, size.y + barSize), Colors.black, 1);

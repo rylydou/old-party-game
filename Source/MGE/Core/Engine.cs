@@ -154,7 +154,7 @@ namespace MGE
 
 			Menuing.Draw();
 
-			Terminal.Draw();
+			// Terminal.Draw();
 
 			Pointer.Draw();
 		}

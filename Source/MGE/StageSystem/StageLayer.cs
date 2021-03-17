@@ -5,9 +5,12 @@ namespace MGE.StageSystem
 	[System.Serializable]
 	public abstract class StageLayer
 	{
-		public abstract string typeId { get; }
+		public string name;
 
-		public StageLayer() { }
+		public StageLayer()
+		{
+			name = "A Layer With No Name (Very Sad)";
+		}
 
 		public virtual void Draw(Vector2 pan, float zoom) { }
 

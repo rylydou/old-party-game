@@ -64,17 +64,38 @@ namespace MGE.UI
 
 		public void Text(string text, Rect rect, Color color)
 		{
-			rect.position += this.rect.position;
-
 			AddElement(new GUIText(text) { rect = rect, color = color, scale = 1 });
 		}
 
 		public void Text(string text, Rect rect, Color color, float scale = 1.0f, TextAlignment alignment = TextAlignment.Left)
 		{
-			rect.position += this.rect.position;
-
 			AddElement(new GUIText(text) { rect = rect, color = color, scale = scale, alignment = alignment });
 		}
+
+		public PointerInteraction Button(string text, Rect rect, TextAlignment alignment = TextAlignment.Center)
+		{
+			var interaction = MouseInteraction(rect);
+
+			switch (interaction)
+			{
+				case PointerInteraction.Hover:
+					Image(rect, Colors.highlight);
+					break;
+				case PointerInteraction.LClick:
+					Image(rect, Colors.accent);
+					break;
+				default:
+					Image(rect, Colors.darkGray);
+					break;
+			}
+
+			Text(text, rect, Colors.text, 1, alignment);
+
+			return interaction;
+		}
+
+		public bool ButtonClicked(string text, Rect rect, TextAlignment alignment = TextAlignment.Center) =>
+			Button(text, rect, alignment) == PointerInteraction.LClick;
 
 		public void AddElement(GUIElement element)
 		{
@@ -107,16 +128,14 @@ namespace MGE.UI
 
 			if (rect.Contains(Input.windowMousePosition))
 			{
-				interactions = PointerInteraction.Hover;
-
 				if (Input.GetButtonPress(Inputs.MouseLeft))
-					interactions = interactions | PointerInteraction.LClick;
-
-				if (Input.GetButtonPress(Inputs.MouseRight))
-					interactions = interactions | PointerInteraction.RClick;
-
-				if (Input.GetButtonPress(Inputs.MouseMiddle))
-					interactions = interactions | PointerInteraction.MClick;
+					interactions = PointerInteraction.LClick;
+				else if (Input.GetButtonPress(Inputs.MouseRight))
+					interactions = PointerInteraction.RClick;
+				else if (Input.GetButtonPress(Inputs.MouseMiddle))
+					interactions = PointerInteraction.MClick;
+				else
+					interactions = PointerInteraction.Hover;
 			}
 
 			return interactions;
