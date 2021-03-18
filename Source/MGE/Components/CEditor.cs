@@ -1,3 +1,5 @@
+using MGE.Debug;
+using MGE.Debug.Menus;
 using MGE.ECS;
 using MGE.FileIO;
 using MGE.Graphics;
@@ -48,12 +50,12 @@ namespace MGE.Components
 
 		public override void Update()
 		{
-			mainGUI = new GUI(new Rect(0, 0, 64 * 6, Window.windowedSize.y), true);
-			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 6, 0, 64 * 6, Window.windowedSize.y), true);
+			mainGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
+			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 4, 0, 64 * 4, Window.windowedSize.y), true);
 
-			mainGUI.Image(mainGUI.rect, Colors.transBG);
+			mainGUI.Image(new Rect(Vector2.zero, mainGUI.rect.size), Colors.transBG);
 
-			inspectorGUI.Image(inspectorGUI.rect, Colors.transBG);
+			inspectorGUI.Image(new Rect(Vector2.zero, inspectorGUI.rect.size), Colors.transBG);
 
 			shift = Input.GetButton(Inputs.LeftShift) || Input.GetButton(Inputs.RightShift);
 			ctrl = Input.GetButton(Inputs.LeftControl) || Input.GetButton(Inputs.RightControl);
@@ -63,7 +65,7 @@ namespace MGE.Components
 				Save();
 			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.L))
 				Load();
-			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.I))
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Tab))
 			{
 				hideOthers = !hideOthers;
 				Logger.Log($"Hide Others: {hideOthers}");
@@ -96,8 +98,14 @@ namespace MGE.Components
 				pan = pan + (Input.windowMousePosition - pan) * (1.0f / oldZoom * zoomChange);
 			}
 
+			var mousePos = Input.windowMousePosition;
+
 			gridMousePos = (Input.windowMousePosition - pan) / (zoom * tileSize);
-			mouseInBounds = gridMousePos.x >= 0 && gridMousePos.x < stage.size.x && gridMousePos.y >= 0 && gridMousePos.y < stage.size.y;
+			mouseInBounds =
+				mousePos.x > mainGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
+				mousePos.x > 0 && mousePos.x < Window.windowedSize.y &&
+				gridMousePos.x >= 0 && gridMousePos.x < stage.size.x &&
+				gridMousePos.y >= 0 && gridMousePos.y < stage.size.y;
 
 			if (mouseInBounds)
 			{
@@ -105,7 +113,7 @@ namespace MGE.Components
 				{
 					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
 					{
-						intLayer.tiles[gridMousePos] = 1;
+						intLayer.tiles[gridMousePos] = intLayer.colorIndex;
 					}
 					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
 					{
@@ -136,9 +144,11 @@ namespace MGE.Components
 
 				if (mainGUI.ButtonClicked("Add Lew Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
 				{
-					stage.layers.Add(new IntLayer(stage.size));
+					Menuing.OpenMenu(new DMenuNewLayer());
 				}
 			}
+
+			layer.Update(ref inspectorGUI);
 		}
 
 		public override void Draw()

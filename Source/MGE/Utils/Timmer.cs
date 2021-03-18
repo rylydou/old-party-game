@@ -30,7 +30,7 @@ namespace MGE
 
 		public void Stop() => stopTime = DateTime.Now;
 
-		public void LogTime() => Logger.Log($"⏰ {name} Timmer: {elapsedTime}ms");
+		public void LogTime() => Logger.Log($"⏰ {name} Timmer: {elapsedTime.ToString(@"s\.ffff")}s");
 
 		public void Dispose() => LogTime();
 	}

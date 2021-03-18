@@ -38,7 +38,7 @@ namespace MGE
 					startingPos.x = rect.position.x;
 					break;
 				case TextAlignment.Center:
-					startingPos.x = (rect.position.x + rect.width) / 2 - (textSize.x / 2);
+					startingPos.x = rect.position.x / 2 + ((rect.position.x + rect.width) / 2 - (textSize.x / 2));
 					break;
 				case TextAlignment.Right:
 					startingPos.x = rect.position.x + rect.width - textSize.x;

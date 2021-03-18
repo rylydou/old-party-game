@@ -11,7 +11,13 @@ namespace MGE.StageSystem
 
 		public Stage()
 		{
-			layers.Add(new IntLayer(size));
+			AddLayer(new IntLayer());
+		}
+
+		public void AddLayer(StageLayer layer)
+		{
+			layer.Init(size);
+			layers.Add(layer);
 		}
 	}
 }

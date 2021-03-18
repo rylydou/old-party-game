@@ -37,6 +37,7 @@ namespace MGE.Debug
 		public virtual void Init()
 		{
 			title = name;
+			gui = new GUI(new Rect(position, size), false);
 		}
 
 		public virtual void Update()
@@ -124,7 +125,6 @@ namespace MGE.Debug
 			gui.Image(new Rect(new Vector2(0, -barSize), new Vector2(size.x, barSize)), barColor);
 			gui.Image(new Rect(Vector2.zero, size), bgColor);
 
-			// Pain
 			gui.Text($"[{title}]", new Rect(0, -barSize, size.x, barSize), Colors.text, 1, TextAlignment.Center);
 
 			gui.Rect(new Rect(0, -barSize, size.x, size.y + barSize), Colors.black, 1);
@@ -132,14 +132,7 @@ namespace MGE.Debug
 
 		public void Draw()
 		{
-			// var renderer = new Render(size);
-
 			OnDraw();
-
-			// var render = renderer.Done();
-
-			// using (new DrawBatch(transform: null))
-			// 	GFX.sb.Draw(render, position, Color.white);
 		}
 
 		protected virtual void OnDraw()

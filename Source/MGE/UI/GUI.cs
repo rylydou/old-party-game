@@ -82,10 +82,7 @@ namespace MGE.UI
 					Image(rect, Colors.highlight);
 					break;
 				case PointerInteraction.LClick:
-					Image(rect, Colors.accent);
-					break;
-				default:
-					Image(rect, Colors.darkGray);
+					Image(rect, Colors.accent2);
 					break;
 			}
 

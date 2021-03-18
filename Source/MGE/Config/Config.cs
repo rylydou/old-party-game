@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using MGE.Debug;
 using MGE.Debug.Menus;
+using MGE.StageSystem.Layers;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
@@ -42,6 +42,13 @@ namespace MGE
 			new DMenuInput(),
 		};
 
+		// > Editor
+		public static Type[] availableLayers = new Type[]
+		{
+			typeof(IntLayer),
+			typeof(EntityLayer),
+		};
+
 		public static readonly Color statsColor = new Color("#EEE5");
 
 		public static readonly int statsUpdatesPerSec = 15;
@@ -53,7 +60,8 @@ namespace MGE
 			{int.MaxValue, new Color("#EEEC")}
 		};
 
-		////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////
+
 		#region Config Utils
 		static Font _defualtFont;
 		public static Font defualtFont

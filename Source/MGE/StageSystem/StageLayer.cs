@@ -1,4 +1,6 @@
+using System;
 using MGE.Components;
+using MGE.UI;
 
 namespace MGE.StageSystem
 {
@@ -12,6 +14,14 @@ namespace MGE.StageSystem
 			name = "A Layer With No Name (Very Sad)";
 		}
 
+		public void Init(Vector2Int size)
+		{
+			OnInit(size);
+		}
+
+		protected abstract void OnInit(Vector2Int size);
+
+		public virtual void Update(ref GUI gui) { }
 		public virtual void Draw(Vector2 pan, float zoom) { }
 
 		protected Vector2 Scale(Vector2 vector) => CEditor.Scale(vector);

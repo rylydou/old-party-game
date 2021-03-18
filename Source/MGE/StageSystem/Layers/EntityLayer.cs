@@ -8,7 +8,7 @@ namespace MGE.StageSystem.Layers
 	{
 		public List<Entity> entities = new List<Entity>();
 
-		public EntityLayer()
+		protected override void OnInit(Vector2Int size)
 		{
 			name = "Entity Layer";
 		}

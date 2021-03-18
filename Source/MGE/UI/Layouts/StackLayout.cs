@@ -6,19 +6,19 @@ namespace MGE.UI.Layouts
 {
 	public class StackLayout : IDisposable
 	{
-		readonly Vector2Int _position;
-		readonly int _sizePerElement;
-		readonly bool _isHorizontal;
+		public readonly Vector2Int position;
+		float _sizePerElement;
+		bool _isHorizontal;
 
 		Vector2 _offset;
 		bool _isFirstElement = true;
 
-		public int currentSize;
+		public float currentSize;
 		public Vector2 newElement { get => AddElement(); }
 
-		public StackLayout(Vector2Int position, int sizePerElement, bool isHorizontal)
+		public StackLayout(Vector2Int position, float sizePerElement, bool isHorizontal)
 		{
-			_position = position;
+			this.position = position;
 			_offset = position;
 			_sizePerElement = sizePerElement;
 			_isHorizontal = isHorizontal;
@@ -27,7 +27,7 @@ namespace MGE.UI.Layouts
 			GFX.sb.Begin(blendState: BlendState.NonPremultiplied, samplerState: SamplerState.LinearClamp);
 		}
 
-		public Vector2Int AddElement(int elementSize = -1)
+		public Vector2Int AddElement(float elementSize = -1)
 		{
 			if (elementSize < 0) elementSize = _sizePerElement;
 			currentSize = elementSize;
@@ -47,6 +47,16 @@ namespace MGE.UI.Layouts
 			_isFirstElement = false;
 
 			return _offset;
+		}
+
+		public void ChangeDirection(bool isHorizontal)
+		{
+			_isHorizontal = isHorizontal;
+		}
+
+		public void SetDefualtSize(float size)
+		{
+			_sizePerElement = size;
 		}
 
 		public void Dispose()

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.UI;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Debug
 {
@@ -13,6 +11,7 @@ namespace MGE.Debug
 		const int menuMenuItemOffset = 16;
 
 		public static List<DebugMenu> menus = new List<DebugMenu>();
+		public static Queue<DebugMenu> menusToAdd = new Queue<DebugMenu>();
 
 		static bool menuMenuOpen = false;
 
@@ -27,6 +26,9 @@ namespace MGE.Debug
 			for (int i = menus.Count - 1; i >= 0; i--)
 			{
 				menus[i].UpdateBG();
+
+				// I don't see anything wrong with this
+				if (i > menus.Count - 1) break;
 
 				var interaction = GUI.gui.MouseInteraction(new Rect(menus[i].position.x, menus[i].position.y - DebugMenu.barSize, menus[i].size.x, menus[i].size.y + DebugMenu.barSize));
 
@@ -86,6 +88,13 @@ namespace MGE.Debug
 					offsetIncerment += width + menuMenuItemOffset;
 				}
 			}
+
+			for (int i = 0; i < menusToAdd.Count; i++)
+			{
+				var menu = menusToAdd.Dequeue();
+				menu.Init();
+				menus.Insert(0, menu);
+			}
 		}
 
 		public static void Draw()
@@ -103,8 +112,7 @@ namespace MGE.Debug
 
 			menu.position = position.Value;
 
-			menu.Init();
-			menus.Insert(0, menu);
+			menusToAdd.Enqueue(menu);
 		}
 
 		public static void CloseMenu(DebugMenu menu)
