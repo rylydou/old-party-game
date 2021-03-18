@@ -6,7 +6,7 @@ namespace MGE.UI.Layouts
 {
 	public class StackLayout : IDisposable
 	{
-		public readonly Vector2Int position;
+		public readonly Vector2 position;
 		float _sizePerElement;
 		bool _isHorizontal;
 
@@ -16,7 +16,7 @@ namespace MGE.UI.Layouts
 		public float currentSize;
 		public Vector2 newElement { get => AddElement(); }
 
-		public StackLayout(Vector2Int position, float sizePerElement, bool isHorizontal)
+		public StackLayout(Vector2 position, float sizePerElement, bool isHorizontal = false)
 		{
 			this.position = position;
 			_offset = position;

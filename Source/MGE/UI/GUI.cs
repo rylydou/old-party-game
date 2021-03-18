@@ -72,30 +72,38 @@ namespace MGE.UI
 			AddElement(new GUIText(text) { rect = rect, color = color, scale = scale, alignment = alignment });
 		}
 
-		public PointerInteraction Button(string text, Rect rect, TextAlignment alignment = TextAlignment.Center, Color? color = null)
+		public PointerInteraction ColoredButton(string text, Rect rect, Color bgColor, Color? textColor = null, bool highlight = false)
 		{
-			if (!color.HasValue)
-				color = Colors.text;
+			if (!textColor.HasValue)
+				textColor = Math.Approximately(bgColor.a, 0) ? Colors.text : bgColor.readableColor;
 
 			var interaction = MouseInteraction(rect);
+
+			Image(rect, bgColor);
 
 			switch (interaction)
 			{
 				case PointerInteraction.Hover:
-					Image(rect, Colors.highlight);
-					break;
-				case PointerInteraction.LClick:
-					Image(rect, Colors.accent2);
+					Image(rect, Math.Approximately(bgColor.a, 0) ? new Color(0, 0.5f) : Colors.highlight);
 					break;
 			}
 
-			Text(text, rect, color.Value, 1, alignment);
+			if (highlight)
+				Image(new Rect(rect.center - new Vector2(rect.height / 2), new Vector2(rect.height)), bgColor.inverted.opaque);
+
+			Text(text, rect, highlight ? textColor.Value.inverted : textColor.Value, 1, TextAlignment.Center);
 
 			return interaction;
 		}
 
-		public bool ButtonClicked(string text, Rect rect, TextAlignment alignment = TextAlignment.Center, Color? color = null) =>
-			Button(text, rect, alignment, color) == PointerInteraction.LClick;
+		public PointerInteraction Button(string text, Rect rect, Color? color = null) => ColoredButton(text, rect, Color.clear, color);
+
+		public PointerInteraction Button(string text, float position, float size = 32, Color? color = null) => Button(text, new Rect(0, position, rect.width, size), color);
+
+		public bool ButtonClicked(string text, Rect rect, Color? color = null) =>
+			Button(text, rect, color) == PointerInteraction.LClick;
+
+		public bool ButtonClicked(string text, float position, float size = 32, Color? color = null) => ButtonClicked(text, new Rect(0, position, rect.width, size), color);
 
 		public void AddElement(GUIElement element)
 		{

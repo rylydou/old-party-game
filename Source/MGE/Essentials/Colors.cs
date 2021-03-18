@@ -11,6 +11,9 @@ namespace MGE
 		static readonly Color _text = new Color("#EEE");
 		public static Color text { get => _text; }
 
+		static readonly Color _error = new Color("#E22");
+		public static Color error { get => _error; }
+
 		static readonly Color _textDark = new Color("#888");
 		public static Color textDark { get => _textDark; }
 

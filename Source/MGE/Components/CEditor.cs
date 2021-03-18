@@ -13,8 +13,6 @@ namespace MGE.Components
 {
 	public class CEditor : Component
 	{
-		public const float tileSize = 16;
-
 		public static CEditor current { get; private set; }
 
 		public Stage stage = new Stage();
@@ -130,7 +128,7 @@ namespace MGE.Components
 
 				var oldZoom = zoom;
 
-				zoom = Math.Clamp(zoom - zoomDelta, 1.0f / tileSize, tileSize * 2);
+				zoom = Math.Clamp(zoom - zoomDelta, 1.0f / stage.tileSize, stage.tileSize * 2);
 
 				var zoomChange = oldZoom - zoom;
 
@@ -139,7 +137,7 @@ namespace MGE.Components
 
 			var mousePos = Input.windowMousePosition;
 
-			gridMousePos = (Input.windowMousePosition - pan) / (zoom * tileSize);
+			gridMousePos = (Input.windowMousePosition - pan) / (zoom * stage.tileSize);
 			mouseInBounds =
 				mousePos.x > mainGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
 				mousePos.y > 0 && mousePos.y < Window.windowedSize.y &&
@@ -174,7 +172,7 @@ namespace MGE.Components
 					if (index == layerIndex)
 						mainGUI.Image(rect, Colors.highlight);
 
-					switch (mainGUI.Button(layer.name, rect, TextAlignment.Center, layer.isVisible ? Colors.text : Colors.textDark))
+					switch (mainGUI.Button(layer.name, rect, layer.isVisible ? Colors.text : Colors.textDark))
 					{
 						case PointerInteraction.LClick:
 							layerIndex = index;
@@ -195,7 +193,7 @@ namespace MGE.Components
 
 				if (mainGUI.ButtonClicked("Add Lew Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
 				{
-					Menuing.OpenMenu(new DMenuNewLayer());
+					Menuing.OpenMenu(new DMenuNewLayer(), Input.windowMousePosition);
 				}
 			}
 
@@ -231,8 +229,8 @@ namespace MGE.Components
 			inspectorGUI.Draw();
 		}
 
-		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * tileSize;
-		public static Rect Scale(Rect rect) => new Rect(Scale(rect.position), rect.size * current.zoom * tileSize);
+		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * current.stage.tileSize;
+		public static Rect Scale(Rect rect) => new Rect(Scale(rect.position), rect.size * current.zoom * current.stage.tileSize);
 
 		public void Save()
 		{

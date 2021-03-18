@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using MGE.Components;
 using MGE.Graphics;
 using MGE.UI;
 using MGE.UI.Layouts;
@@ -15,17 +14,17 @@ namespace MGE.StageSystem.Layers
 
 		[NonSerialized] public ushort colorIndex = 0;
 
-		protected override void OnInit(Vector2Int size)
+		protected override void OnInit()
 		{
 			name = "Int Grid";
 
-			tiles = new Grid<ushort>(size.x, size.y);
+			tiles = new Grid<ushort>(stage.size.x, stage.size.y);
 			colors = new List<Color>() { Color.clear, Color.red, Color.green, Color.blue };
 		}
 
 		public override void Update(ref GUI gui)
 		{
-			using (var layout = new StackLayout(new Vector2Int(0, 8), 32, false))
+			using (var layout = new StackLayout(new Vector2(0, offset), itemSize, false))
 			{
 				ushort index = 0;
 				var colorToRemove = -1;
@@ -33,15 +32,8 @@ namespace MGE.StageSystem.Layers
 				{
 					var rect = new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize));
 
-					gui.Image(rect, color);
-
-					var interaction = gui.MouseInteraction(rect);
-
-					switch (interaction)
+					switch (gui.ColoredButton(index.ToString(), rect, color, null, index == colorIndex))
 					{
-						case PointerInteraction.Hover:
-							gui.Image(rect, index == 0 ? Colors.highlight : new Color(0, 0.25f));
-							break;
 						case PointerInteraction.LClick:
 							colorIndex = index;
 							break;
@@ -49,10 +41,6 @@ namespace MGE.StageSystem.Layers
 							colorToRemove = index;
 							break;
 					}
-
-					if (index == colorIndex)
-						gui.Image(new Rect(rect.center - new Vector2(layout.currentSize / 2), new Vector2(layout.currentSize)), color.inverted.opaque);
-					gui.Text(index.ToString(), rect, index == colorIndex ? color.inverted.readableColor : color.readableColor, 1, TextAlignment.Center);
 
 					index++;
 				}

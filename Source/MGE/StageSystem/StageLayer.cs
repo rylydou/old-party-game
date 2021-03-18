@@ -7,21 +7,26 @@ namespace MGE.StageSystem
 	[System.Serializable]
 	public abstract class StageLayer
 	{
+		public const float itemSize = 32;
+		public const float offset = 8;
+
 		public string name;
 
 		[NonSerialized] public bool isVisible = true;
+
+		public Stage stage { get; internal set; }
 
 		public StageLayer()
 		{
 			name = "A Layer With No Name (Very Sad)";
 		}
 
-		public void Init(Vector2Int size)
+		public void Init()
 		{
-			OnInit(size);
+			OnInit();
 		}
 
-		protected abstract void OnInit(Vector2Int size);
+		protected abstract void OnInit();
 
 		public virtual void Update(ref GUI gui) { }
 		public virtual void Draw(Vector2 pan, float zoom) { }

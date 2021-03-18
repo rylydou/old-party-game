@@ -31,16 +31,105 @@ namespace MGE
 
 						if (!tiles.TryGetValue(connection, out tile))
 						{
-							Logger.Log($"Used Defualt: {((TileConnection)connection)} {tile}");
-							GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.nullColor);
+							Logger.LogWarning($"No tile that follows rule: {((TileConnection)connection)} {tile}");
+
+							DrawTile(
+								new RectInt(defualtTile.x, defualtTile.y, tileSize.x, tileSize.y),
+								new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
+								color
+							);
+							GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.red.ChangeAlpha(0.25f));
 						}
 						else
 						{
-							GFX.Draw(texture, new RectInt(tile.x, tile.y, tileSize.x, tileSize.y), new Rect(position.x + x * scale, position.y + y * scale, scale, scale), color);
+							DrawTile(
+								new RectInt(tile.x, tile.y, tileSize.x, tileSize.y),
+								new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
+								color
+							);
 						}
 					}
 				}
 			}
+		}
+
+		public void DrawTiles(in Grid<RectInt?> map, Vector2 position, float scale, Color color)
+		{
+			for (int y = 0; y < map.size.y; y++)
+			{
+				for (int x = 0; x < map.size.x; x++)
+				{
+					var tile = map[x, y];
+
+					if (tile.HasValue)
+						DrawTile(
+							new RectInt(tile.Value.x, tile.Value.y, tileSize.x, tileSize.y),
+							new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
+							color
+						);
+				}
+			}
+		}
+
+		public RectInt?[] GetTiles(Vector2Int mapSize, Func<int, int, bool> isSolid)
+		{
+			var tileRects = new List<RectInt?>();
+
+			for (int y = 0; y < mapSize.y; y++)
+			{
+				for (int x = 0; x < mapSize.x; x++)
+				{
+					if (isSolid.Invoke(x, y))
+					{
+						var connection = GetConnections(x, y, ref isSolid);
+						var tile = defualtTile;
+
+						if (!tiles.TryGetValue(connection, out tile))
+						{
+							Logger.LogWarning($"No tile that follows rule: {((TileConnection)connection)} {tile}");
+
+							tileRects.Add(new RectInt(defualtTile.x, defualtTile.y, tileSize.x, tileSize.y));
+						}
+						else
+						{
+							tileRects.Add(new RectInt(tile.x, tile.y, tileSize.x, tileSize.y));
+						}
+					}
+				}
+			}
+
+			return tileRects.ToArray();
+		}
+
+		public void GetTiles(ref Grid<RectInt?> map, Func<int, int, bool> isSolid)
+		{
+			for (int y = 0; y < map.size.y - 1; y++)
+			{
+				for (int x = 0; x < map.size.x - 1; x++)
+				{
+					if (isSolid.Invoke(x, y))
+					{
+						var connection = GetConnections(x, y, ref isSolid);
+						var tile = defualtTile;
+
+						if (!tiles.TryGetValue(connection, out tile))
+						{
+							Logger.LogWarning($"No tile that follows rule: {((TileConnection)connection)} {tile}");
+
+							map[x, y] = new RectInt(defualtTile.x, defualtTile.y, tileSize.x, tileSize.y);
+						}
+						else
+						{
+							map[x, y] = new RectInt(tile.x, tile.y, tileSize.x, tileSize.y);
+						}
+					}
+				}
+			}
+		}
+
+		public void DrawTile(RectInt source, Rect destination, Color color)
+		{
+			GFX.Draw(texture, source, destination, color);
 		}
 
 		public TileConnection GetConnections(int x, int y, ref Func<int, int, bool> isSolid)
