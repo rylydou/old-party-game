@@ -18,6 +18,12 @@ namespace MGE
 		public bool IsSynchronized => array.IsSynchronized;
 		public object SyncRoot => array.SyncRoot;
 
+		public Grid(Vector2Int size, T defualtElementValue = default)
+		{
+			this.array = new T[size.x, size.y];
+			this.outOfBoundsElementValue = defualtElementValue;
+		}
+
 		public Grid(int width, int height, T defualtElementValue = default)
 		{
 			this.array = new T[width, height];

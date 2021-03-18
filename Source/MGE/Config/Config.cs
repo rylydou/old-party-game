@@ -46,6 +46,7 @@ namespace MGE
 		public static Type[] availableLayers = new Type[]
 		{
 			typeof(IntLayer),
+			typeof(AutoLayer),
 			typeof(EntityLayer),
 		};
 

@@ -18,8 +18,9 @@ namespace MGE.StageSystem.Layers
 		protected override void OnInit(Vector2Int size)
 		{
 			name = "Int Grid";
+
 			tiles = new Grid<ushort>(size.x, size.y);
-			colors = new List<Color>() { Color.clear, Colors.accent, Colors.accent.inverted };
+			colors = new List<Color>() { Color.clear, Color.red, Color.green, Color.blue };
 		}
 
 		public override void Update(ref GUI gui)
@@ -27,6 +28,7 @@ namespace MGE.StageSystem.Layers
 			using (var layout = new StackLayout(new Vector2Int(0, 8), 32, false))
 			{
 				ushort index = 0;
+				var colorToRemove = -1;
 				foreach (var color in colors)
 				{
 					var rect = new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize));
@@ -38,19 +40,40 @@ namespace MGE.StageSystem.Layers
 					switch (interaction)
 					{
 						case PointerInteraction.Hover:
-							gui.Image(rect, new Color(0, 0.1f));
+							gui.Image(rect, index == 0 ? Colors.highlight : new Color(0, 0.25f));
 							break;
 						case PointerInteraction.LClick:
 							colorIndex = index;
 							break;
+						case PointerInteraction.MClick:
+							colorToRemove = index;
+							break;
 					}
 
 					if (index == colorIndex)
-						gui.Rect(rect, color.inverted, 2);
-
-					gui.Text(index.ToString(), rect, Colors.text, 1, TextAlignment.Center);
+						gui.Image(new Rect(rect.center - new Vector2(layout.currentSize / 2), new Vector2(layout.currentSize)), color.inverted.opaque);
+					gui.Text(index.ToString(), rect, index == colorIndex ? color.inverted.readableColor : color.readableColor, 1, TextAlignment.Center);
 
 					index++;
+				}
+
+				if (colorToRemove > 0)
+				{
+					colors.RemoveAt(colorToRemove);
+					tiles.ForEach((color) =>
+					{
+						if (color > colorToRemove)
+							color--;
+						else if (color == colorToRemove)
+							color = 0;
+
+						return color;
+					});
+				}
+
+				if (gui.ButtonClicked("Add New Index", new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize))))
+				{
+					colors.Add(Random.Color());
 				}
 			}
 		}

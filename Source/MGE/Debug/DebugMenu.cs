@@ -6,7 +6,7 @@ namespace MGE.Debug
 {
 	public abstract class DebugMenu
 	{
-		public const int allSize = 24;
+		public const int allSize = 28;
 
 		public const int barSize = allSize;
 

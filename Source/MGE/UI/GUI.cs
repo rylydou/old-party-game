@@ -19,7 +19,7 @@ namespace MGE.UI
 		}
 
 		public readonly Rect rect;
-		List<GUIElement> elements = new List<GUIElement>();
+		public List<GUIElement> elements = new List<GUIElement>();
 
 		bool active = true;
 
@@ -72,8 +72,11 @@ namespace MGE.UI
 			AddElement(new GUIText(text) { rect = rect, color = color, scale = scale, alignment = alignment });
 		}
 
-		public PointerInteraction Button(string text, Rect rect, TextAlignment alignment = TextAlignment.Center)
+		public PointerInteraction Button(string text, Rect rect, TextAlignment alignment = TextAlignment.Center, Color? color = null)
 		{
+			if (!color.HasValue)
+				color = Colors.text;
+
 			var interaction = MouseInteraction(rect);
 
 			switch (interaction)
@@ -86,13 +89,13 @@ namespace MGE.UI
 					break;
 			}
 
-			Text(text, rect, Colors.text, 1, alignment);
+			Text(text, rect, color.Value, 1, alignment);
 
 			return interaction;
 		}
 
-		public bool ButtonClicked(string text, Rect rect, TextAlignment alignment = TextAlignment.Center) =>
-			Button(text, rect, alignment) == PointerInteraction.LClick;
+		public bool ButtonClicked(string text, Rect rect, TextAlignment alignment = TextAlignment.Center, Color? color = null) =>
+			Button(text, rect, alignment, color) == PointerInteraction.LClick;
 
 		public void AddElement(GUIElement element)
 		{

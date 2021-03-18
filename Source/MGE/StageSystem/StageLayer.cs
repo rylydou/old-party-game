@@ -9,6 +9,8 @@ namespace MGE.StageSystem
 	{
 		public string name;
 
+		[NonSerialized] public bool isVisible = true;
+
 		public StageLayer()
 		{
 			name = "A Layer With No Name (Very Sad)";
