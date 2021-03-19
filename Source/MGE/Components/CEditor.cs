@@ -189,7 +189,11 @@ namespace MGE.Components
 				}
 
 				if (layerToRemove > 0)
+				{
 					stage.layers.RemoveAt(layerToRemove);
+					if (layerIndex >= layerToRemove)
+						layerIndex--;
+				}
 
 				if (mainGUI.ButtonClicked("Add Lew Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
 				{
@@ -206,6 +210,7 @@ namespace MGE.Components
 			{
 				GFX.DrawBox(new Rect(0, 0, Window.windowedSize.x, Window.windowedSize.y), Colors.black);
 				GFX.DrawBox(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), Colors.darkGray);
+				GFX.DrawRect(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), Colors.accent, 2);
 
 				Config.defualtFont.DrawText($"{stage.size} | {gridMousePos}", new Vector2(0, -(Config.defualtFont.charSize.y + 4) * zoom) + pan, Colors.gray, zoom);
 
@@ -224,8 +229,13 @@ namespace MGE.Components
 			}
 
 			mainGUI.Draw();
+
 			if (inspectorGUI.elements.Count < 2)
-				inspectorGUI.Text("(No properties to edit)", new Rect(0, 8, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.textDark, 1, TextAlignment.Center);
+			{
+				inspectorGUI.Text("(No properties to edit)", new Rect(0, 0, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.textDark, 1, TextAlignment.Center);
+				inspectorGUI.Text("Today is a sad day indeed", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
+			}
+
 			inspectorGUI.Draw();
 		}
 

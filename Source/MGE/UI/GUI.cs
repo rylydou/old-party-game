@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using MGE.Graphics;
 using MGE.InputSystem;
 using MGE.UI.Elements;
@@ -84,7 +85,7 @@ namespace MGE.UI
 			switch (interaction)
 			{
 				case PointerInteraction.Hover:
-					Image(rect, Math.Approximately(bgColor.a, 0) ? new Color(0, 0.5f) : Colors.highlight);
+					Image(rect, Math.Approximately(bgColor.a, 0) ? Colors.highlight : new Color(0, 0.1f));
 					break;
 			}
 
@@ -104,6 +105,64 @@ namespace MGE.UI
 			Button(text, rect, color) == PointerInteraction.LClick;
 
 		public bool ButtonClicked(string text, float position, float size = 32, Color? color = null) => ButtonClicked(text, new Rect(0, position, rect.width, size), color);
+
+		public bool Toggle(string text, Rect rect, ref bool state, Color? color)
+		{
+			if (ButtonClicked(state ? "[X]" : "[ ]", rect, color))
+			{
+				state = !state;
+				return true;
+			}
+			return false;
+		}
+
+		public void TextFeild(ref TextFeildData data, Rect rect, TextFeildRule? rule = null)
+		{
+			data.cursorIndex = Math.Clamp(data.cursorIndex, 0, data.textBuilder.Length);
+
+			var text = string.Empty;
+
+			if (rule.HasValue && rule.Value.IsValid(Input.keyboardString))
+				text = Input.keyboardString;
+
+			foreach (var key in text)
+			{
+				switch (key)
+				{
+					case '\b':
+						if (data.textBuilder.Length < 1) continue;
+						data.textBuilder.Remove(data.cursorIndex - 1, 1);
+						data.cursorIndex--;
+						break;
+					default:
+						data.textBuilder.Insert(data.cursorIndex, key);
+						data.cursorIndex++;
+						break;
+				}
+
+				data.lastTimeTyped = Time.unscaledTime;
+			}
+
+			if (Input.GetButtonPress(Inputs.Left))
+			{
+				data.cursorIndex--;
+				data.lastTimeTyped = Time.unscaledTime;
+			}
+			else if (Input.GetButtonPress(Inputs.Right))
+			{
+				data.cursorIndex++;
+				data.lastTimeTyped = Time.unscaledTime;
+			}
+
+			Text(data.text.ToString(), rect, Color.white);
+
+			float alpha = 1f;
+
+			if (Time.unscaledTime - Math.Ceil(data.lastTimeTyped) > 1f)
+				alpha = 1 - Math.Tan(Time.time * 4f);
+
+			Image(new Rect(rect.position.x + data.cursorIndex * Config.defualtFont.charPaddingSize.x, rect.position.y, 2, rect.height), Colors.accent.ChangeAlpha(alpha));
+		}
 
 		public void AddElement(GUIElement element)
 		{

@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
-using MGE;
+using System.Runtime.Serialization.Formatters;
 
 namespace MGE.FileIO
 {
@@ -13,7 +13,7 @@ namespace MGE.FileIO
 			get
 			{
 				if (_bf == null)
-					_bf = new BinaryFormatter();
+					_bf = new BinaryFormatter() { AssemblyFormat = FormatterAssemblyStyle.Simple, TypeFormat = FormatterTypeStyle.TypesWhenNeeded, FilterLevel = TypeFilterLevel.Full };
 				return _bf;
 			}
 		}

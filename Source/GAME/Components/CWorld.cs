@@ -105,7 +105,7 @@ namespace GAME.Components
 			{
 				foreach (var chunk in chunks)
 				{
-					GFX.DrawRectangle(
+					GFX.DrawRect(
 						new Rect((Vector2)chunk.Key * chunkSize * tileSize,
 						new Vector2(chunkSize * tileSize)),
 						new Color(0, 0, 1, 0.5f),

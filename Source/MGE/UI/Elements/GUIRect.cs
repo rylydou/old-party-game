@@ -13,7 +13,7 @@ namespace MGE.UI.Elements
 
 		public override void Draw()
 		{
-			GFX.DrawRectangle(rect, color, thickness);
+			GFX.DrawRect(rect, color, thickness);
 		}
 	}
 }

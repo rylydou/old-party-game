@@ -104,9 +104,9 @@ namespace MGE
 		#endregion
 
 		#region Perams
-		[JsonProperty] public string hex { get => ToHex(); set => this = FromHex(value); }
-		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
 		public float max { get => (float)Math.Max(Math.Max(r, g), b); }
+		public float grayscale { get => 0.299f * r + 0.587f * g + 0.114f * b; }
+		[JsonProperty] public string hex { get => ToHex(); set => this = FromHex(value); }
 		public Color opaque { get => ChangeAlpha(1f); }
 		public Color inverted { get => new Color(1 - r, 1 - g, 1 - b, a); }
 		public Color readableColor { get => inverted.grayscale > 0.5f ? Color.white : Color.black; }

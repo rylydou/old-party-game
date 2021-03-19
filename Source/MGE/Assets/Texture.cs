@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
+	[System.Serializable]
 	public class Texture
 	{
 		#region Static
@@ -15,16 +16,18 @@ namespace MGE
 		public static Texture FromFile(string path)
 		{
 			if (File.Exists(path))
-				return Texture2D.FromFile(GFX.graphicsDevice, path);
+				return new Texture(Texture2D.FromFile(GFX.graphicsDevice, path)) { sourcePath = path };
 			else return null;
 		}
 
 		public static Texture FromStream(Stream stream) =>
-			Texture2D.FromStream(GFX.graphicsDevice, stream);
+			new Texture(Texture2D.FromStream(GFX.graphicsDevice, stream));
 		#endregion
 
 		#region Object
+		// [NonSerialized] Just for now...
 		public readonly int id;
+		public string sourcePath { get; internal set; } = string.Empty;
 
 		public Texture2D texture { get => textures[id]; }
 

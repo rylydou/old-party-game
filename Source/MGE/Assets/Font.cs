@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[JsonObject(MemberSerialization.OptIn)]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public class Font
 	{
 		public Texture texture;

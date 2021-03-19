@@ -127,7 +127,7 @@ namespace MGE.Graphics
 			GFX.Draw(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
 		}
 
-		public static void DrawRectangle(Rect rect, Color color, float thickness = 1.0f)
+		public static void DrawRect(Rect rect, Color color, float thickness = 1.0f)
 		{
 			DrawLine(new Vector2(rect.x - thickness, rect.y - thickness), new Vector2(rect.right, rect.y - thickness), color, thickness); // Top
 			DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, rect.bottom + thickness), color, thickness); // Left

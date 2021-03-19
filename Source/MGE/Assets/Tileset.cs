@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[JsonObject(MemberSerialization.OptIn)]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public class Tileset
 	{
 		public Texture texture;
@@ -103,9 +103,9 @@ namespace MGE
 
 		public void GetTiles(ref Grid<RectInt?> map, Func<int, int, bool> isSolid)
 		{
-			for (int y = 0; y < map.size.y - 1; y++)
+			for (int y = 0; y < map.size.y; y++)
 			{
-				for (int x = 0; x < map.size.x - 1; x++)
+				for (int x = 0; x < map.size.x; x++)
 				{
 					if (isSolid.Invoke(x, y))
 					{

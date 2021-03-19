@@ -4,7 +4,7 @@ using MGE.FileIO;
 namespace MGE
 {
 	[System.Serializable]
-	public struct TestStruct : ISerializable
+	public struct TestStruct
 	{
 		public char someChar { get; set; }
 		public string someString { get; set; }
@@ -75,22 +75,6 @@ namespace MGE
 				this.someDoubleList = someDoubleList;
 				this.someDoubleDictionary = someDoubleDictionary;
 			}
-		}
-
-		public void OnBeforeSerilize()
-		{
-		}
-
-		public void OnAfterSerilize()
-		{
-		}
-
-		public void OnBeforeDeserilize()
-		{
-		}
-
-		public void OnAfterDeserilize()
-		{
 		}
 	}
 }

@@ -37,6 +37,7 @@ namespace MGE
 		// > Debuging
 		public static DebugMenu[] availableMenus = new DebugMenu[]
 		{
+			new DMenuTest(),
 			new DMenuHierarchy(),
 			new DMenuAssets(),
 			new DMenuInput(),
