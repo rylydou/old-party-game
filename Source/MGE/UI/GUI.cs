@@ -8,6 +8,8 @@ namespace MGE.UI
 {
 	public class GUI
 	{
+		public const float padding = 4;
+
 		static GUI _gui;
 		public static GUI gui
 		{
@@ -108,7 +110,7 @@ namespace MGE.UI
 
 		public bool Toggle(string text, Rect rect, ref bool state, Color? color)
 		{
-			if (ButtonClicked(state ? "[X]" : "[ ]", rect, color))
+			if (ButtonClicked((state ? "[X] " : "[ ] ") + text, rect, color))
 			{
 				state = !state;
 				return true;
@@ -118,50 +120,64 @@ namespace MGE.UI
 
 		public void TextFeild(ref TextFeildData data, Rect rect, TextFeildRule? rule = null)
 		{
-			data.cursorIndex = Math.Clamp(data.cursorIndex, 0, data.textBuilder.Length);
-
-			var text = string.Empty;
-
-			if (rule.HasValue && rule.Value.IsValid(Input.keyboardString))
-				text = Input.keyboardString;
-
-			foreach (var key in text)
+			if (data.isActive)
 			{
-				switch (key)
+				var text = string.Empty;
+
+				if (!rule.HasValue || rule.Value.IsValid(Input.keyboardString))
+					text = Input.keyboardString;
+
+				foreach (var key in text)
 				{
-					case '\b':
-						if (data.textBuilder.Length < 1) continue;
-						data.textBuilder.Remove(data.cursorIndex - 1, 1);
-						data.cursorIndex--;
-						break;
-					default:
-						data.textBuilder.Insert(data.cursorIndex, key);
-						data.cursorIndex++;
-						break;
+					switch (key)
+					{
+						case (char)0:
+							data.textBuilder.Clear();
+							break;
+						case '\b':
+							if (data.textBuilder.Length < 1) continue;
+							data.textBuilder.Remove(data.cursorIndex - 1, 1);
+							data.cursorIndex--;
+							break;
+						case '\n':
+							data.isActive = false;
+							break;
+						default:
+							data.textBuilder.Insert(data.cursorIndex, key);
+							data.cursorIndex++;
+							break;
+					}
+
+					data.lastTimeTyped = Time.unscaledTime;
 				}
 
-				data.lastTimeTyped = Time.unscaledTime;
+				if (Input.GetButtonPress(Inputs.Left))
+				{
+					data.cursorIndex--;
+					data.lastTimeTyped = Time.unscaledTime;
+				}
+				else if (Input.GetButtonPress(Inputs.Right))
+				{
+					data.cursorIndex++;
+					data.lastTimeTyped = Time.unscaledTime;
+				}
+
+				data.cursorIndex = Math.Clamp(data.cursorIndex, 0, data.textBuilder.Length);
+
+				float alpha = 1f;
+
+				if (Time.unscaledTime - Math.Ceil(data.lastTimeTyped) > 1f)
+					alpha = 1 - Math.Tan(Time.time * 4f);
+
+				Image(new Rect(padding + rect.position.x + data.cursorIndex * Config.defualtFont.charPaddingSize.x, rect.position.y, 2, rect.height), Colors.accent.ChangeAlpha(alpha));
 			}
 
-			if (Input.GetButtonPress(Inputs.Left))
-			{
-				data.cursorIndex--;
-				data.lastTimeTyped = Time.unscaledTime;
-			}
-			else if (Input.GetButtonPress(Inputs.Right))
-			{
-				data.cursorIndex++;
-				data.lastTimeTyped = Time.unscaledTime;
-			}
+			Text(data.text, new Rect(rect.position.x + padding, rect.position.y, rect.width - padding * 2, rect.height), Color.white);
 
-			Text(data.text.ToString(), rect, Color.white);
+			Rect(rect, data.isActive ? Colors.accent : Color.black);
 
-			float alpha = 1f;
-
-			if (Time.unscaledTime - Math.Ceil(data.lastTimeTyped) > 1f)
-				alpha = 1 - Math.Tan(Time.time * 4f);
-
-			Image(new Rect(rect.position.x + data.cursorIndex * Config.defualtFont.charPaddingSize.x, rect.position.y, 2, rect.height), Colors.accent.ChangeAlpha(alpha));
+			if (ButtonClicked(string.Empty, rect))
+				data.isActive = !data.isActive;
 		}
 
 		public void AddElement(GUIElement element)

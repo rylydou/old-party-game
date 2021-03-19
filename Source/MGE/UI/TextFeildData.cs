@@ -2,14 +2,17 @@ using System.Text;
 
 namespace MGE.UI
 {
+	[System.Serializable]
 	public struct TextFeildData
 	{
-		public int cursorIndex;
-		public bool isSelecting;
-		public int selectionStart;
-		public int selectionEnd;
+		[System.NonSerialized] public bool isActive;
 
-		public float lastTimeTyped;
+		[System.NonSerialized] public int cursorIndex;
+		[System.NonSerialized] public bool isSelecting;
+		[System.NonSerialized] public int selectionStart;
+		[System.NonSerialized] public int selectionEnd;
+
+		[System.NonSerialized] public float lastTimeTyped;
 
 		StringBuilder _textBuilder;
 		public StringBuilder textBuilder
@@ -23,5 +26,17 @@ namespace MGE.UI
 			set => _textBuilder = value;
 		}
 		public string text { get => textBuilder.ToString(); }
+
+		public TextFeildData(string text)
+		{
+			isActive = false;
+			cursorIndex = text.Length;
+			isSelecting = false;
+			selectionStart = 0;
+			selectionEnd = 0;
+			lastTimeTyped = 0;
+
+			_textBuilder = new StringBuilder(text);
+		}
 	}
 }

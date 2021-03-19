@@ -6,13 +6,13 @@ namespace MGE.StageSystem.Layers
 	[System.Serializable]
 	public class AutoLayer : StageLayer
 	{
-		public int refIntGrid = -1;
+		public int refIntGrid = 0;
 		public bool isRefIntGridValid
 		{
 			get => refIntGrid >= 0 && refIntGrid < stage.layers.Count && stage.layers[refIntGrid] is IntLayer;
 		}
 
-		public int refIntGridIndex = -1;
+		public int refIntGridIndex = 1;
 		public bool isRefIntGridIndexValid
 		{
 			get => isRefIntGridValid && refIntGridIndex >= 0 && refIntGridIndex < (stage.layers[refIntGrid] as IntLayer).colors.Count;
@@ -23,18 +23,19 @@ namespace MGE.StageSystem.Layers
 			get => isRefIntGridValid && isRefIntGridIndexValid ? stage.layers[refIntGrid] as IntLayer : null;
 		}
 
-		public Tileset tileset;
+		public TextFeildData tilesetPathData = new TextFeildData("Sprites/Tilesets/Grass");
+		[System.NonSerialized] public Tileset tileset;
 
 		public Grid<RectInt?> tiles;
 
-		protected override void OnInit()
+		protected override void Editor_Init()
 		{
 			name = "Auto Layer";
 
-			tileset = Assets.GetAsset<Tileset>("Sprites/Tilesets/Grass");
+			ReloadTileset(false);
 		}
 
-		public override void Update(ref GUI gui)
+		public override void Editor_Update(ref GUI gui)
 		{
 			using (var layout = new StackLayout(new Vector2(0, offset), itemSize, false))
 			{
@@ -57,7 +58,8 @@ namespace MGE.StageSystem.Layers
 					gui.ColoredButton(
 					$"Color: {refIntGridIndex}",
 					new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize)),
-					isRefIntGridIndexValid ? intGrid.colors[refIntGridIndex] : Colors.error
+					isRefIntGridIndexValid ? intGrid.colors[refIntGridIndex] : Color.clear,
+					isRefIntGridIndexValid ? intGrid.colors[refIntGridIndex].readableColor : Colors.error
 				))
 				{
 					case PointerInteraction.LClick:
@@ -67,10 +69,15 @@ namespace MGE.StageSystem.Layers
 						refIntGridIndex++;
 						break;
 				}
+
+				gui.TextFeild(ref tilesetPathData, new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize)));
+
+				if (gui.ButtonClicked("Reload Tileset", layout.newElement.y))
+					ReloadTileset(true);
 			}
 		}
 
-		public override void Draw(Vector2 pan, float zoom)
+		public override void Editor_Draw(Vector2 pan, float zoom)
 		{
 			if (!isRefIntGridValid || !isRefIntGridIndexValid) return;
 
@@ -79,6 +86,11 @@ namespace MGE.StageSystem.Layers
 			tileset.GetTiles(ref tiles, (x, y) => intGrid.tiles.Get(x, y) == refIntGridIndex);
 
 			tileset.DrawTiles(in tiles, pan, zoom * stage.tileSize, Color.white);
+		}
+
+		public void ReloadTileset(bool isFromUser)
+		{
+			tileset = Assets.GetAsset<Tileset>(tilesetPathData.text);
 		}
 	}
 }

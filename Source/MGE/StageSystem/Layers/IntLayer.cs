@@ -12,9 +12,9 @@ namespace MGE.StageSystem.Layers
 		public Grid<ushort> tiles;
 		public List<Color> colors;
 
-		[NonSerialized] public ushort colorIndex = 0;
+		[NonSerialized] public ushort selectedColor = 0;
 
-		protected override void OnInit()
+		protected override void Editor_Init()
 		{
 			name = "Int Grid";
 
@@ -22,7 +22,7 @@ namespace MGE.StageSystem.Layers
 			colors = new List<Color>() { Color.clear, Color.red, Color.green, Color.blue };
 		}
 
-		public override void Update(ref GUI gui)
+		public override void Editor_Update(ref GUI gui)
 		{
 			using (var layout = new StackLayout(new Vector2(0, offset), itemSize, false))
 			{
@@ -32,10 +32,10 @@ namespace MGE.StageSystem.Layers
 				{
 					var rect = new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize));
 
-					switch (gui.ColoredButton(index.ToString(), rect, color, null, index == colorIndex))
+					switch (gui.ColoredButton(index.ToString(), rect, color, null, index == selectedColor))
 					{
 						case PointerInteraction.LClick:
-							colorIndex = index;
+							selectedColor = index;
 							break;
 						case PointerInteraction.MClick:
 							colorToRemove = index;
@@ -66,7 +66,7 @@ namespace MGE.StageSystem.Layers
 			}
 		}
 
-		public override void Draw(Vector2 pan, float zoom)
+		public override void Editor_Draw(Vector2 pan, float zoom)
 		{
 			tiles.For((x, y, tile) =>
 			{

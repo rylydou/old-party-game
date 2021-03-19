@@ -107,6 +107,11 @@ namespace MGE.Components
 			{
 				isolateActiveLayer = !isolateActiveLayer;
 			}
+			// > Help
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.F1))
+			{
+				Menuing.OpenMenu(new DMenuEditorCheatsheet());
+			}
 
 			if (Input.GetButtonPress(Inputs.MouseMiddle))
 			{
@@ -151,7 +156,7 @@ namespace MGE.Components
 				{
 					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
 					{
-						intLayer.tiles[gridMousePos] = intLayer.colorIndex;
+						intLayer.tiles[gridMousePos] = intLayer.selectedColor;
 					}
 					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
 					{
@@ -195,13 +200,13 @@ namespace MGE.Components
 						layerIndex--;
 				}
 
-				if (mainGUI.ButtonClicked("Add Lew Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
+				if (mainGUI.ButtonClicked("Add New Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
 				{
 					Menuing.OpenMenu(new DMenuNewLayer(), Input.windowMousePosition);
 				}
 			}
 
-			layer.Update(ref inspectorGUI);
+			layer.Editor_Update(ref inspectorGUI);
 		}
 
 		public override void Draw()
@@ -216,14 +221,14 @@ namespace MGE.Components
 
 				if (isolateActiveLayer)
 				{
-					layer.Draw(pan, zoom);
+					layer.Editor_Draw(pan, zoom);
 				}
 				else
 				{
 					foreach (var layer in stage.layers)
 					{
 						if (layer.isVisible)
-							layer.Draw(pan, zoom);
+							layer.Editor_Draw(pan, zoom);
 					}
 				}
 			}
@@ -233,7 +238,7 @@ namespace MGE.Components
 			if (inspectorGUI.elements.Count < 2)
 			{
 				inspectorGUI.Text("(No properties to edit)", new Rect(0, 0, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.textDark, 1, TextAlignment.Center);
-				inspectorGUI.Text("Today is a sad day indeed", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
+				inspectorGUI.Text("Today is a sad day indeed :(", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
 			}
 
 			inspectorGUI.Draw();

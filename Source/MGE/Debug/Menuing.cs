@@ -108,7 +108,7 @@ namespace MGE.Debug
 		public static void OpenMenu(DebugMenu menu, Vector2? position = null)
 		{
 			if (!position.HasValue)
-				position = new Vector2(DebugMenu.allSize, DebugMenu.allSize * 2);
+				position = (Vector2)Window.windowedSize / 2 - menu.size / 2;
 
 			menu.position = position.Value;
 

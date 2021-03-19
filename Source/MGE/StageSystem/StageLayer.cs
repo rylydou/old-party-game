@@ -23,13 +23,16 @@ namespace MGE.StageSystem
 
 		public void Init()
 		{
-			OnInit();
+			Editor_Init();
 		}
 
-		protected abstract void OnInit();
+		protected abstract void Editor_Init();
+		public virtual void Editor_Update(ref GUI gui) { }
+		public virtual void Editor_Draw(Vector2 pan, float zoom) { }
 
-		public virtual void Update(ref GUI gui) { }
-		public virtual void Draw(Vector2 pan, float zoom) { }
+		protected virtual void Game_Init() { }
+		public virtual void Game_Update() { }
+		public virtual void Game_Draw() { }
 
 		protected Vector2 Scale(Vector2 vector) => CEditor.Scale(vector);
 		protected Rect Scale(Rect rect) => CEditor.Scale(rect);

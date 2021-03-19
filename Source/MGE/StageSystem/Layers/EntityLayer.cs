@@ -8,7 +8,7 @@ namespace MGE.StageSystem.Layers
 	{
 		public List<Entity> entities;
 
-		protected override void OnInit()
+		protected override void Editor_Init()
 		{
 			name = "Entity Layer";
 
