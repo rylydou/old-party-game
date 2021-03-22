@@ -186,7 +186,7 @@ namespace MGE.Components
 				}
 			}
 
-			using (var layout = new StackLayout(new Vector2Int(0, 16), 32, false))
+			using (var layout = new StackLayout(new Vector2Int(0, 8), 32, false))
 			{
 				var index = 0;
 				var layerToRemove = -1;

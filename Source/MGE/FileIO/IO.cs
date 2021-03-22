@@ -2,6 +2,10 @@ using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters;
+using System.Reflection;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MGE.FileIO
 {
@@ -38,7 +42,7 @@ namespace MGE.FileIO
 				bf.Serialize(fs, obj);
 			}
 
-			if (obj is ISerializable sa) sa.OnBeforeSerilize();
+			if (obj is ISerializable sa) sa.OnAfterSerilize();
 		}
 
 		public static T Load<T>(string path)
@@ -80,6 +84,27 @@ namespace MGE.FileIO
 		#endregion
 
 		#region Utils
+		public static FieldInfo[] GetAllFields(Type type, int maxDepth = 8)
+		{
+			var fields = new List<FieldInfo>();
+			GetFields(ref fields, type, maxDepth, 0);
+			return fields.ToArray();
+		}
+
+		public static void GetFields(ref List<FieldInfo> fields, Type type, int maxDepth = 8, int depth = 0)
+		{
+			var fieldsToAdd = type.GetFields(BindingFlags.GetField | BindingFlags.Public | BindingFlags.NonPublic);
+
+			foreach (var field in fieldsToAdd)
+				fields.Add(field);
+
+			foreach (var field in fields)
+				GetFields(ref fields, field.GetType(), maxDepth, depth);
+
+			if (depth++ > maxDepth)
+				return;
+		}
+
 		public static string ParsePath(string path, bool full = false)
 		{
 			ParsePath(ref path, full);

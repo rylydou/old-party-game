@@ -7,9 +7,26 @@ namespace MGE.FileIO
 	public class Folder : IDisposable
 	{
 		#region Static
-
-		#region Methods
-		#endregion
+		static Folder _root;
+		public static Folder root
+		{
+			get
+			{
+				if (_root == null)
+					_root = new Folder(App.dataPath);
+				return _root;
+			}
+		}
+		static Folder _assets;
+		public static Folder assets
+		{
+			get
+			{
+				if (_assets == null)
+					_assets = new Folder(IO.ParsePath("//", true));
+				return _assets;
+			}
+		}
 
 		#endregion
 
@@ -127,7 +144,7 @@ namespace MGE.FileIO
 
 		public string GetRelitivePath(string path)
 		{
-			return IO.CleanPath(path).Replace(IO.CleanPath(_path) + '/', "");
+			return IO.CleanPath(path).Replace(IO.CleanPath(_path) + '/', string.Empty);
 		}
 		#endregion
 

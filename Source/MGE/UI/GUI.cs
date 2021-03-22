@@ -75,7 +75,7 @@ namespace MGE.UI
 			AddElement(new GUIText(text) { rect = rect, color = color, scale = scale, alignment = alignment });
 		}
 
-		public PointerInteraction ColoredButton(string text, Rect rect, Color bgColor, Color? textColor = null, bool highlight = false)
+		public PointerInteraction ColoredButton(string text, Rect rect, Color bgColor, Color? textColor = null, bool highlight = false, TextAlignment alignment = TextAlignment.Center)
 		{
 			if (!textColor.HasValue)
 				textColor = Math.Approximately(bgColor.a, 0) ? Colors.text : bgColor.readableColor;
@@ -94,19 +94,22 @@ namespace MGE.UI
 			if (highlight)
 				Image(new Rect(rect.center - new Vector2(rect.height / 2), new Vector2(rect.height)), bgColor.inverted.opaque);
 
-			Text(text, rect, highlight ? textColor.Value.inverted : textColor.Value, 1, TextAlignment.Center);
+			Text(text, rect, highlight ? textColor.Value.inverted : textColor.Value, 1, alignment);
 
 			return interaction;
 		}
 
-		public PointerInteraction Button(string text, Rect rect, Color? color = null) => ColoredButton(text, rect, Color.clear, color);
+		public PointerInteraction Button(string text, Rect rect, Color? color = null, TextAlignment alignment = TextAlignment.Center) =>
+			ColoredButton(text, rect, Color.clear, color, false, alignment);
 
-		public PointerInteraction Button(string text, float position, float size = 32, Color? color = null) => Button(text, new Rect(0, position, rect.width, size), color);
+		public PointerInteraction Button(string text, float position, float size = 32, Color? color = null, TextAlignment alignment = TextAlignment.Center) =>
+			Button(text, new Rect(0, position, rect.width, size), color, alignment);
 
-		public bool ButtonClicked(string text, Rect rect, Color? color = null) =>
+		public bool ButtonClicked(string text, Rect rect, Color? color = null, TextAlignment alignment = TextAlignment.Center) =>
 			Button(text, rect, color) == PointerInteraction.LClick;
 
-		public bool ButtonClicked(string text, float position, float size = 32, Color? color = null) => ButtonClicked(text, new Rect(0, position, rect.width, size), color);
+		public bool ButtonClicked(string text, float position, float size = 32, Color? color = null, TextAlignment alignment = TextAlignment.Center) =>
+			ButtonClicked(text, new Rect(0, position, rect.width, size), color, alignment);
 
 		public bool Toggle(string text, Rect rect, ref bool state, Color? color = null)
 		{

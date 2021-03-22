@@ -1,4 +1,8 @@
 using System.Collections.Generic;
+using System.IO;
+using MGE.Debug;
+using MGE.Debug.Menus;
+using MGE.FileIO;
 using MGE.UI;
 using MGE.UI.Layouts;
 
@@ -24,7 +28,7 @@ namespace MGE.StageSystem.Layers
 			get => isRefIntGridValid && isRefIntGridIndexValid ? stage.layers[refIntGrid] as IntLayer : null;
 		}
 
-		public TextFeildData tilesetPathData = new TextFeildData("Sprites/Tilesets/Basic");
+		public string tilesetPath = "Sprites/Tilesets/Basic";
 		[System.NonSerialized] public Tileset tileset;
 
 		public Grid<RectInt?> tiles;
@@ -78,10 +82,19 @@ namespace MGE.StageSystem.Layers
 						break;
 				}
 
-				gui.TextFeild(ref tilesetPathData, new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize)));
-
-				if (gui.ButtonClicked("Reload Tileset", layout.newElement.y))
-					ReloadTileset(true);
+				if (gui.ButtonClicked(tilesetPath, new Rect(layout.newElement, gui.rect.width, layout.currentSize)))
+				{
+					Menuing.OpenMenu(new DMenuFileSelect(
+						"Select a Tileset",
+						new FileInfo(IO.ParsePath("//" + tilesetPath, true)).Directory.FullName + "/",
+						(x) =>
+						{
+							tilesetPath = Folder.assets.GetRelitivePath(x).Replace(".tileset.psd", string.Empty);
+							ReloadTileset(true);
+						},
+						"*.tileset.psd"
+					));
+				}
 			}
 		}
 
@@ -98,7 +111,7 @@ namespace MGE.StageSystem.Layers
 
 		public void ReloadTileset(bool isFromUser)
 		{
-			tileset = Assets.GetAsset<Tileset>(tilesetPathData.text);
+			tileset = Assets.GetAsset<Tileset>(tilesetPath);
 		}
 	}
 }
