@@ -31,34 +31,50 @@ namespace MGE.FileIO
 		#region Saving & Loading
 		public static void Save(string path, object obj)
 		{
+			if (obj is ISerializable sb) sb.OnBeforeSerilize();
+
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
 			{
 				bf.Serialize(fs, obj);
 			}
+
+			if (obj is ISerializable sa) sa.OnBeforeSerilize();
 		}
 
 		public static T Load<T>(string path)
 		{
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{
-				return (T)bf.Deserialize(fs);
+				var obj = (T)bf.Deserialize(fs);
+
+				if (obj is ISerializable da) da.OnAfterDeserilize();
+
+				return obj;
 			}
 		}
 
 		public static void SaveJson(string path, object obj)
 		{
+			if (obj is ISerializable sb) sb.OnBeforeSerilize();
+
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
 			{
 				var text = Serializer.SerializeJson(obj);
 				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length);
 			}
+
+			if (obj is ISerializable sa) sa.OnBeforeSerilize();
 		}
 
 		public static T LoadJson<T>(string path)
 		{
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{
-				return Serializer.DeserializeJson<T>(File.ReadAllText(IO.ParsePath(path)));
+				var obj = Serializer.DeserializeJson<T>(File.ReadAllText(IO.ParsePath(path)));
+
+				if (obj is ISerializable da) da.OnAfterDeserilize();
+
+				return obj;
 			}
 		}
 		#endregion

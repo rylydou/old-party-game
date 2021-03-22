@@ -119,7 +119,7 @@ namespace GAME.Components
 							new Color(0, 0.1f)
 						);
 					}
-					Config.defualtFont.DrawText(chunk.Key.ToString(), (Vector2)chunk.Key * chunkSize * tileSize + tileSize / 2, new Color(0, 0, 1, 0.5f), 0.25f);
+					Config.font.DrawText(chunk.Key.ToString(), (Vector2)chunk.Key * chunkSize * tileSize + tileSize / 2, new Color(0, 0, 1, 0.5f), 0.25f);
 				}
 			}
 		}

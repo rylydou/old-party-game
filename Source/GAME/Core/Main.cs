@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using GAME.Components;
-using GAME.Components.UI;
 using MGE;
 using MGE.Components;
 using MGE.ECS;
@@ -65,6 +62,8 @@ namespace GAME
 		protected override void Update(GameTime gameTime)
 		{
 			engine.Update(gameTime);
+			var color = new MGE.Color(Math.Abs(Math.Sin(Time.unscaledTime)), Math.Abs(Math.Sin(Time.unscaledTime + Math.pi / 3)), Math.Abs(Math.Sin(Time.unscaledTime + Math.pi / 3 * 2)));
+			SceneManager.activeScene.screenClearColor = color;
 			base.Update(gameTime);
 		}
 

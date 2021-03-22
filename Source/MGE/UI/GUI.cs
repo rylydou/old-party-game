@@ -108,7 +108,7 @@ namespace MGE.UI
 
 		public bool ButtonClicked(string text, float position, float size = 32, Color? color = null) => ButtonClicked(text, new Rect(0, position, rect.width, size), color);
 
-		public bool Toggle(string text, Rect rect, ref bool state, Color? color)
+		public bool Toggle(string text, Rect rect, ref bool state, Color? color = null)
 		{
 			if (ButtonClicked((state ? "[X] " : "[ ] ") + text, rect, color))
 			{
@@ -118,22 +118,42 @@ namespace MGE.UI
 			return false;
 		}
 
-		public void TextFeild(ref TextFeildData data, Rect rect, TextFeildRule? rule = null)
+		public void TextFeild(ref TextFeildData data, Rect rect)
 		{
+			if (ButtonClicked(string.Empty, rect))
+				data.isActive = !data.isActive;
+
 			if (data.isActive)
 			{
 				var text = string.Empty;
 
-				if (!rule.HasValue || rule.Value.IsValid(Input.keyboardString))
-					text = Input.keyboardString;
+				text = Input.keyboardString;
 
-				foreach (var key in text)
+			// I know, I know
+			UpdateInput:
+
+				foreach (var letter in text)
 				{
-					switch (key)
+					switch (letter)
 					{
-						case (char)0:
+						case (char)1:
 							data.textBuilder.Clear();
 							break;
+						case (char)3:
+							var sb = new StringBuilder();
+
+							for (int i = data.selectionStart; i < data.selectionEnd; i++)
+								sb.Append(data.textBuilder[i]);
+
+							System.Windows.Forms.Clipboard.SetText(sb.ToString(), System.Windows.Forms.TextDataFormat.Text);
+							break;
+						case (char)13:
+							goto case '\n';
+						case (char)22:
+							text = System.Windows.Forms.Clipboard.GetText(System.Windows.Forms.TextDataFormat.Text);
+							goto UpdateInput;
+						case (char)27:
+							goto case '\n';
 						case '\b':
 							if (data.textBuilder.Length < 1) continue;
 							data.textBuilder.Remove(data.cursorIndex - 1, 1);
@@ -141,43 +161,45 @@ namespace MGE.UI
 							break;
 						case '\n':
 							data.isActive = false;
-							break;
+							return;
 						default:
-							data.textBuilder.Insert(data.cursorIndex, key);
+							data.textBuilder.Insert(data.cursorIndex, letter);
 							data.cursorIndex++;
 							break;
 					}
 
-					data.lastTimeTyped = Time.unscaledTime;
+					// Logger.Log((int)letter);
+
+					data.Typed();
 				}
 
 				if (Input.GetButtonPress(Inputs.Left))
 				{
 					data.cursorIndex--;
-					data.lastTimeTyped = Time.unscaledTime;
+
+					data.Typed();
 				}
 				else if (Input.GetButtonPress(Inputs.Right))
 				{
 					data.cursorIndex++;
-					data.lastTimeTyped = Time.unscaledTime;
+
+					data.Typed();
 				}
 
 				data.cursorIndex = Math.Clamp(data.cursorIndex, 0, data.textBuilder.Length);
 
 				float alpha = 1f;
 
-				if (Time.unscaledTime - Math.Ceil(data.lastTimeTyped) > 1f)
-					alpha = 1 - Math.Tan(Time.time * 4f);
+				if (Time.unscaledTime - data.lastTimeTyped > 0.25f)
+					alpha = 1 - Math.Tan(data.blinkOffset + Time.unscaledTime * 4f);
 
-				Image(new Rect(padding + rect.position.x + data.cursorIndex * Config.defualtFont.charPaddingSize.x, rect.position.y, 2, rect.height), Colors.accent.ChangeAlpha(alpha));
+				Image(new Rect(padding + rect.position.x + data.cursorIndex * Config.font.charPaddingSize.x, rect.position.y, -2, rect.height), Colors.accent.ChangeAlpha(alpha));
 			}
 
-			Text(data.text, new Rect(rect.position.x + padding, rect.position.y, rect.width - padding * 2, rect.height), Color.white);
+			Text(data.text, new Rect(rect.position.x + padding, rect.position.y, rect.width - padding * 2, rect.height), Color.white, 1);
 
-			Rect(rect, data.isActive ? Colors.accent : Color.black);
-
-			if (ButtonClicked(string.Empty, rect))
-				data.isActive = !data.isActive;
+			if (data.isActive)
+				Rect(rect, Colors.accent.ChangeAlpha(Math.Abs(Math.Sin(Time.unscaledTime * 2)) + 0.5f));
 		}
 
 		public void AddElement(GUIElement element)

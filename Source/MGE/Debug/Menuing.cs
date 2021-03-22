@@ -71,7 +71,7 @@ namespace MGE.Debug
 				{
 					var text = $"[{menu.name}]";
 
-					var width = Config.defualtFont.Measure(text, 1).x;
+					var width = Config.font.Measure(text, 1).x;
 
 					gui.Text(text, new Rect(offsetIncerment, 0, width, menuMenuSize), Colors.text);
 

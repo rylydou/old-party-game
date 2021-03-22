@@ -15,7 +15,7 @@ namespace MGE.UI.Elements
 
 		public override void Draw()
 		{
-			Config.defualtFont.DrawText(text, rect, color, scale, alignment);
+			Config.font.DrawText(text, rect, color, scale, alignment);
 		}
 	}
 }

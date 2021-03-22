@@ -10,7 +10,7 @@ namespace MGE.Debug
 	{
 		public static bool enabled = true;
 
-		static Font font { get => Config.defualtFont; }
+		static Font font { get => Config.font; }
 
 		static long lastMem = int.MaxValue;
 

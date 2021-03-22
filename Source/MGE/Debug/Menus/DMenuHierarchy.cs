@@ -61,7 +61,6 @@ namespace MGE.Debug.Menus
 
 					rect = new Rect(0, i * allSize, size.x, allSize);
 
-
 					switch (gui.Button("| " + (entity.destroyed ? "§Error§" : "") + GetStatus(entity.enabled, entity.visible) + entity.GetType().Name, rect))
 					{
 						case PointerInteraction.LClick:

@@ -23,9 +23,12 @@ namespace MGE.Components
 			get => stage.layers[layerIndex];
 			set => stage.layers[layerIndex] = value;
 		}
+		public int oldLayerIndex = -1;
 
 		Vector2 pan = Vector2.zero;
 		float zoom = 1.0f;
+		Vector2 targetPan = Vector2.zero;
+		float targetZoom = 1.0f;
 
 		bool mouseInBounds = false;
 		Vector2Int gridMousePos = Vector2Int.zero;
@@ -37,9 +40,10 @@ namespace MGE.Components
 		Vector2 panStartPos = Vector2.zero;
 
 		bool isolateActiveLayer = false;
+		bool enableGrid = false;
 
 		GUI inspectorGUI;
-		GUI mainGUI;
+		GUI layersGUI;
 
 		public override void Init()
 		{
@@ -48,10 +52,10 @@ namespace MGE.Components
 
 		public override void Update()
 		{
-			mainGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
+			layersGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
 			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 5, 0, 64 * 5, Window.windowedSize.y), true);
 
-			mainGUI.Image(new Rect(Vector2.zero, mainGUI.rect.size), Colors.transBG);
+			layersGUI.Image(new Rect(Vector2.zero, layersGUI.rect.size), Colors.transBG);
 
 			inspectorGUI.Image(new Rect(Vector2.zero, inspectorGUI.rect.size), Colors.transBG);
 
@@ -107,6 +111,11 @@ namespace MGE.Components
 			{
 				isolateActiveLayer = !isolateActiveLayer;
 			}
+			// > Toggle enableGrid
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.G))
+			{
+				enableGrid = !enableGrid;
+			}
 			// > Help
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.F1))
 			{
@@ -115,43 +124,55 @@ namespace MGE.Components
 
 			if (Input.GetButtonPress(Inputs.MouseMiddle))
 			{
-				panStartPos = pan;
+				panStartPos = targetPan;
 				panMouseStartPos = Input.windowMousePosition;
 			}
 			else if (Input.GetButton(Inputs.MouseMiddle))
 			{
-				pan = panStartPos + Input.windowMousePosition - panMouseStartPos;
+				targetPan = panStartPos + Input.windowMousePosition - panMouseStartPos;
 			}
 			else
 			{
 				var zoomDelta = 0.0f;
 
 				if (Input.scroll > 0)
-					zoomDelta = zoom / 2 * (int)Input.scroll;
+					zoomDelta = targetZoom / 2 * (int)Input.scroll;
 				else
-					zoomDelta = zoom * (int)Input.scroll;
+					zoomDelta = targetZoom * (int)Input.scroll;
 
-				var oldZoom = zoom;
+				var oldZoom = targetZoom;
 
-				zoom = Math.Clamp(zoom - zoomDelta, 1.0f / stage.tileSize, stage.tileSize * 2);
+				targetZoom = Math.Clamp(targetZoom - zoomDelta, 1.0f / stage.tileSize, stage.tileSize / 2);
 
-				var zoomChange = oldZoom - zoom;
+				var zoomChange = oldZoom - targetZoom;
 
-				pan = pan + (Input.windowMousePosition - pan) * (1.0f / oldZoom * zoomChange);
+				targetPan = targetPan + (Input.windowMousePosition - targetPan) * (1.0f / oldZoom * zoomChange);
 			}
+
+			pan = Vector2.Lerp(pan, targetPan, 25 * Time.unscaledDeltaTime);
+			zoom = Math.Lerp(zoom, targetZoom, 25 * Time.unscaledDeltaTime);
+
+			if ((pan - targetPan).sqrMagnitude < 0.0125f * 0.0125f)
+				pan = targetPan;
+
+			if (Math.Abs(zoom - targetZoom) < 0.0125f * 0.0125f)
+				zoom = targetZoom;
 
 			var mousePos = Input.windowMousePosition;
 
-			gridMousePos = (Input.windowMousePosition - pan) / (zoom * stage.tileSize);
+			var localMousePos = (Input.windowMousePosition - targetPan);
+
+			gridMousePos = localMousePos / (targetZoom * stage.tileSize);
 			mouseInBounds =
-				mousePos.x > mainGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
+				mousePos.x > layersGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
 				mousePos.y > 0 && mousePos.y < Window.windowedSize.y &&
 				gridMousePos.x >= 0 && gridMousePos.x < stage.size.x &&
-				gridMousePos.y >= 0 && gridMousePos.y < stage.size.y;
+				gridMousePos.y >= 0 && gridMousePos.y < stage.size.y &&
+				localMousePos.x > 0 &&
+				localMousePos.y > 0;
 
 			if (mouseInBounds)
 			{
-
 				if (layer is IntLayer intLayer)
 				{
 					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
@@ -172,15 +193,18 @@ namespace MGE.Components
 
 				foreach (var layer in stage.layers)
 				{
-					var rect = new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize));
+					var rect = new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize));
 
 					if (index == layerIndex)
-						mainGUI.Image(rect, Colors.highlight);
+						layersGUI.Image(rect, Colors.highlight);
 
-					switch (mainGUI.Button(layer.name, rect, layer.isVisible ? Colors.text : Colors.textDark))
+					switch (layersGUI.Button(layer.name, rect, layer.isVisible ? Colors.text : Colors.textDark))
 					{
 						case PointerInteraction.LClick:
-							layerIndex = index;
+							if (index == layerIndex)
+								Menuing.OpenMenu(new DMenuTextInput("Enter Layer Name...", layer.name, (x) => layer.name = x));
+							else
+								layerIndex = index;
 							break;
 						case PointerInteraction.RClick:
 							layer.isVisible = !layer.isVisible;
@@ -200,13 +224,15 @@ namespace MGE.Components
 						layerIndex--;
 				}
 
-				if (mainGUI.ButtonClicked("Add New Layer...", new Rect(layout.newElement, new Vector2(mainGUI.rect.width, layout.currentSize))))
+				if (layersGUI.ButtonClicked("Add New Layer...", new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize))))
 				{
 					Menuing.OpenMenu(new DMenuNewLayer(), Input.windowMousePosition);
 				}
 			}
 
 			layer.Editor_Update(ref inspectorGUI);
+
+			oldLayerIndex = layerIndex;
 		}
 
 		public override void Draw()
@@ -215,9 +241,9 @@ namespace MGE.Components
 			{
 				GFX.DrawBox(new Rect(0, 0, Window.windowedSize.x, Window.windowedSize.y), Colors.black);
 				GFX.DrawBox(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), Colors.darkGray);
-				GFX.DrawRect(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), Colors.accent, 2);
+				GFX.DrawRect(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), mouseInBounds ? Colors.gray : Colors.lightGray, Math.Clamp(stage.tileSize / 2 * zoom, 1, float.PositiveInfinity));
 
-				Config.defualtFont.DrawText($"{stage.size} | {gridMousePos}", new Vector2(0, -(Config.defualtFont.charSize.y + 4) * zoom) + pan, Colors.gray, zoom);
+				Config.font.DrawText(stage.size.ToString(), new Vector2(0, -(Config.font.charSize.y + stage.tileSize) * zoom) + pan, Colors.gray, zoom);
 
 				if (isolateActiveLayer)
 				{
@@ -231,9 +257,38 @@ namespace MGE.Components
 							layer.Editor_Draw(pan, zoom);
 					}
 				}
+
+				if (enableGrid)
+				{
+					var color = Colors.accent.ChangeAlpha(0.15f);
+
+					for (int y = 1; y < stage.size.y; y++)
+						GFX.DrawLine(Scale(new Vector2(0, y)), Scale(new Vector2(stage.size.x, y)), color, 1f);
+
+					for (int x = 1; x < stage.size.x; x++)
+						GFX.DrawLine(Scale(new Vector2(x, 0)), Scale(new Vector2(x, stage.size.y)), color, 1f);
+
+					if (mouseInBounds)
+					{
+						color = Colors.accent.ChangeAlpha(0.25f);
+
+						GFX.DrawLine(Scale(new Vector2(gridMousePos.x + 0.5f, 0)), Scale(new Vector2(gridMousePos.x + 0.5f, stage.size.y)), color, 2f);
+						GFX.DrawLine(Scale(new Vector2(0, gridMousePos.y + 0.5f)), Scale(new Vector2(stage.size.x, gridMousePos.y + 0.5f)), color, 2f);
+					}
+				}
+
+				if (mouseInBounds)
+				{
+					var rect = Scale(new Rect(gridMousePos, Vector2Int.one));
+					GFX.DrawBox(rect, Colors.accent.ChangeAlpha(Math.Abs(Math.Sin(Time.time)) * 0.15f));
+					GFX.DrawRect(rect, Colors.accent.ChangeAlpha(0.5f), Math.Clamp(zoom * 0.5f, 1, float.PositiveInfinity));
+
+					if (enableGrid)
+						Config.font.DrawText(gridMousePos.ToString(), Input.windowMousePosition + new Vector2(26, -32), Colors.accent);
+				}
 			}
 
-			mainGUI.Draw();
+			layersGUI.Draw();
 
 			if (inspectorGUI.elements.Count < 2)
 			{

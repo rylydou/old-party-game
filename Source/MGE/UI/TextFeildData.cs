@@ -13,6 +13,7 @@ namespace MGE.UI
 		[System.NonSerialized] public int selectionEnd;
 
 		[System.NonSerialized] public float lastTimeTyped;
+		[System.NonSerialized] public float blinkOffset;
 
 		StringBuilder _textBuilder;
 		public StringBuilder textBuilder
@@ -35,8 +36,15 @@ namespace MGE.UI
 			selectionStart = 0;
 			selectionEnd = 0;
 			lastTimeTyped = 0;
+			blinkOffset = 0;
 
 			_textBuilder = new StringBuilder(text);
+		}
+
+		public void Typed()
+		{
+			lastTimeTyped = Time.unscaledTime;
+			blinkOffset = Math.Round(Time.unscaledTime) - Time.unscaledTime;
 		}
 	}
 }

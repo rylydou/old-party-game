@@ -86,7 +86,7 @@ namespace MGE
 				Pointer.mode = PointerMode.Texture;
 				Pointer.hotspot = new Vector2(0);
 				Pointer.size = new Vector2(16);
-				Pointer.color = Color.red;
+				Pointer.color = Colors.accent;
 				Pointer.shadowColor = new Color(0.0f, 0.1f);
 				Pointer.shadowOffset = new Vector2(2);
 			}

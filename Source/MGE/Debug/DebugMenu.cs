@@ -6,7 +6,7 @@ namespace MGE.Debug
 {
 	public abstract class DebugMenu
 	{
-		public const int allSize = 28;
+		public const int allSize = 32;
 
 		public const int barSize = allSize;
 
@@ -36,7 +36,7 @@ namespace MGE.Debug
 
 		public virtual void Init()
 		{
-			title = name;
+			if (string.IsNullOrEmpty(title)) title = name;
 			gui = new GUI(new Rect(position, size), false);
 		}
 
@@ -53,15 +53,15 @@ namespace MGE.Debug
 				}
 				else if (Input.GetButtonPress(Inputs.MouseRight))
 				{
-					if (size == (Vector2)Window.windowedSize)
+					if (Math.Abs(size.y - Window.windowedSize.y) - 32 < 2)
 					{
-						position = new Vector2(allSize, allSize * 2);
 						size = new Vector2(allSize * 12, allSize * 12);
+						position = new Vector2(Input.windowMousePosition.x - size.x / 2, barSize * 2);
 					}
 					else
 					{
-						position = new Vector2(0, allSize);
-						size = new Vector2(Window.windowedSize.x, Window.windowedSize.y - allSize);
+						position = new Vector2(0, barSize);
+						size = new Vector2(Window.windowedSize.x, Window.windowedSize.y - barSize);
 					}
 				}
 				else if (Input.GetButtonPress(Inputs.MouseMiddle))

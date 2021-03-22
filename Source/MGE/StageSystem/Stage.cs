@@ -4,7 +4,7 @@ using MGE.StageSystem.Layers;
 namespace MGE.StageSystem
 {
 	[System.Serializable]
-	public class Stage
+	public class Stage : ISerializable
 	{
 		public float tileSize = 16;
 
@@ -21,6 +21,18 @@ namespace MGE.StageSystem
 			layer.stage = this;
 			layer.Init();
 			layers.Add(layer);
+		}
+
+		public void OnBeforeSerilize() { }
+
+		public void OnAfterSerilize() { }
+
+		public void OnAfterDeserilize()
+		{
+			foreach (var layer in layers)
+			{
+				layer.OnDeserilize();
+			}
 		}
 	}
 }

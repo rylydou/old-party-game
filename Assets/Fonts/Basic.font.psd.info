@@ -4,11 +4,11 @@
 	"spIndicator": "§",
 	"charSize": {
 		"x": 10,
-		"y": 16
+		"y": 17
 	},
 	"charPaddingSize": {
 		"x": 12,
-		"y": 18
+		"y": 16
 	},
 	"spChars": [
 		"Null",

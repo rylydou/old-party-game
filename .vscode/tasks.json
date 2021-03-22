@@ -28,8 +28,12 @@
 			"args": [
 				"publish",
 				"${workspaceFolder}/MGE.csproj",
-				"/property:GenerateFullPaths=true",
-				"/consoleloggerparameters:NoSummary"
+				"/p:GenerateFullPaths=true",
+				"/p:PublishSingleFile=true",
+				"/p:PublishTrimmed=false",
+				"/p:PublishReadyToRun=true",
+				"/consoleloggerparameters:NoSummary",
+				"-r win-x64"
 			],
 			"problemMatcher": "$msCompile"
 		},

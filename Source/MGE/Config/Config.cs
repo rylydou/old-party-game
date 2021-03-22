@@ -66,7 +66,7 @@ namespace MGE
 
 		#region Config Utils
 		static Font _defualtFont;
-		public static Font defualtFont
+		public static Font font
 		{
 			get
 			{

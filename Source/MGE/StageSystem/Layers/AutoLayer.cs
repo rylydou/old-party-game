@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MGE.UI;
 using MGE.UI.Layouts;
 
@@ -23,14 +24,21 @@ namespace MGE.StageSystem.Layers
 			get => isRefIntGridValid && isRefIntGridIndexValid ? stage.layers[refIntGrid] as IntLayer : null;
 		}
 
-		public TextFeildData tilesetPathData = new TextFeildData("Sprites/Tilesets/Grass");
+		public TextFeildData tilesetPathData = new TextFeildData("Sprites/Tilesets/Basic");
 		[System.NonSerialized] public Tileset tileset;
 
 		public Grid<RectInt?> tiles;
 
-		protected override void Editor_Init()
+		protected override void Editor_Create()
 		{
 			name = "Auto Layer";
+
+			ReloadTileset(false);
+		}
+
+		public override void OnDeserilize()
+		{
+			base.OnDeserilize();
 
 			ReloadTileset(false);
 		}
@@ -79,7 +87,7 @@ namespace MGE.StageSystem.Layers
 
 		public override void Editor_Draw(Vector2 pan, float zoom)
 		{
-			if (!isRefIntGridValid || !isRefIntGridIndexValid) return;
+			if (!isRefIntGridValid || !isRefIntGridIndexValid || tileset == null) return;
 
 			tiles = new Grid<RectInt?>(stage.size);
 

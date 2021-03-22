@@ -41,6 +41,35 @@
 			"console": "internalConsole",
 			"stopAtEntry": false,
 			"justMyCode": true
+		},
+		{
+			"name": "Publish win-x64",
+			"presentation": {
+				"hidden": false,
+				"group": "Publish",
+				"order": 2
+			},
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "publish",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/MGE.dll",
+			"args": [],
+			"logging": {
+				"browserStdOut": true,
+				"elapsedTiming": true,
+				"engineLogging": true,
+				"exceptions": true,
+				"moduleLoad": true,
+				"processExit": true,
+				"programOutput": true,
+				"threadExit": true
+			},
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+			"console": "externalTerminal",
+			"stopAtEntry": false,
+			"justMyCode": false
 		}
 		// {
 		// 	"name": ".NET Core Attach",

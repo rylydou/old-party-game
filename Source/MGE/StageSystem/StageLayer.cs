@@ -23,10 +23,15 @@ namespace MGE.StageSystem
 
 		public void Init()
 		{
-			Editor_Init();
+			Editor_Create();
 		}
 
-		protected abstract void Editor_Init();
+		public virtual void OnDeserilize()
+		{
+			isVisible = true;
+		}
+
+		protected abstract void Editor_Create();
 		public virtual void Editor_Update(ref GUI gui) { }
 		public virtual void Editor_Draw(Vector2 pan, float zoom) { }
 
