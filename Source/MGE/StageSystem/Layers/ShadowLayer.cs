@@ -1,15 +1,14 @@
-using System.Collections.Generic;
-using System.IO;
+using System;
 using MGE.Debug;
 using MGE.Debug.Menus;
-using MGE.FileIO;
+using MGE.Graphics;
 using MGE.UI;
 using MGE.UI.Layouts;
 
 namespace MGE.StageSystem.Layers
 {
 	[System.Serializable]
-	public class AutoLayer : StageLayer
+	public class ShadowLayer : StageLayer
 	{
 		public int refIntGrid = 0;
 		public bool isRefIntGridValid
@@ -28,25 +27,19 @@ namespace MGE.StageSystem.Layers
 			get => isRefIntGridValid && isRefIntGridIndexValid ? stage.layers[refIntGrid] as IntLayer : null;
 		}
 
-		public string tilesetPath = "Sprites/Tilesets/Basic";
-		[System.NonSerialized] public Tileset tileset;
+		public Color color;
+		public bool useSmartDrawing;
 
-		public Grid<RectInt> tiles;
+		public bool[] shadowCache;
 
 		protected override void Editor_Create()
 		{
-			name = "Auto Layer";
+			name = "Shadow Layer";
 
-			tiles = new Grid<RectInt>(stage.size);
+			color = new Color(0, 0.25f);
+			useSmartDrawing = true;
 
-			ReloadTileset();
-		}
-
-		public override void OnDeserilize()
-		{
-			base.OnDeserilize();
-
-			ReloadTileset();
+			shadowCache = new bool[stage.size.sqrMagnitude];
 		}
 
 		public override void Editor_Update(ref GUI gui)
@@ -62,9 +55,11 @@ namespace MGE.StageSystem.Layers
 				{
 					case PointerInteraction.LClick:
 						refIntGrid--;
+						Reload();
 						break;
 					case PointerInteraction.RClick:
 						refIntGrid++;
+						Reload();
 						break;
 				}
 
@@ -78,50 +73,52 @@ namespace MGE.StageSystem.Layers
 				{
 					case PointerInteraction.LClick:
 						refIntGridIndex--;
+						Reload();
 						break;
 					case PointerInteraction.RClick:
 						refIntGridIndex++;
+						Reload();
 						break;
 				}
 
-				if (gui.ButtonClicked(tilesetPath, new Rect(layout.newElement, gui.rect.width, layout.currentSize)))
+				if (gui.ColoredButton("Color", new Rect(0, layout.newElement.y, gui.rect.width, layout.currentSize), color) == PointerInteraction.LClick)
 				{
-					Menuing.OpenMenu(new DMenuFileSelect(
-						"Select a Tileset",
-						new FileInfo(IO.ParsePath("//" + tilesetPath, true)).Directory.FullName + "/",
-						(x) =>
-						{
-							tilesetPath = Folder.assets.GetRelitivePath(x).Replace(".tileset.psd", string.Empty);
-							ReloadTileset();
-						},
-						"*.tileset.psd"
-					));
+					Menuing.OpenMenu(new DMenuTextInput("Enter Color Hex Code...", color.ToHex(), (x) => color = new Color(x), null, TextFeildRule.colorCode));
 				}
+
+				if (gui.Toggle("Use Smart Drawing?", new Rect(0, layout.newElement.y, gui.rect.width, layout.currentSize), ref useSmartDrawing))
+					Reload();
 			}
 		}
 
 		public override void Editor_Draw(Vector2 pan, float zoom)
 		{
-			if (!isRefIntGridValid || !isRefIntGridIndexValid || tileset == null) return;
+			if (!isRefIntGridValid || !isRefIntGridIndexValid) return;
 
 			if (intGrid.lastChanged == Time.unscaledTime)
-				GetNewTiles();
+			{
+				Reload();
+			}
 
-			tileset?.DrawTiles(in tiles, pan, zoom * stage.tileSize, Color.white);
+			for (int y = 0; y < stage.size.y; y++)
+			{
+				for (int x = 0; x < stage.size.x; x++)
+				{
+					if (shadowCache[y * stage.size.x + x])
+						GFX.DrawBox(Scale(new Rect(x - 0.125f, y + 0.125f, 1, 1)), color);
+				}
+			}
 		}
 
-		public void GetNewTiles()
+		public void Reload()
 		{
-			tiles = new Grid<RectInt>(stage.size);
-
-			if (intGrid is object)
-				tileset?.GetTiles(ref tiles, (x, y) => intGrid.tiles.Get(x, y) == refIntGridIndex);
-		}
-
-		public void ReloadTileset()
-		{
-			tileset = Assets.GetAsset<Tileset>(tilesetPath);
-			GetNewTiles();
+			intGrid.tiles.For((x, y, tile) =>
+				{
+					shadowCache[y * stage.size.x + x] =
+						useSmartDrawing ?
+							intGrid.tiles.Get(x, y) == refIntGridIndex && (intGrid.tiles.Get(x - 1, y) == 0 || intGrid.tiles.Get(x - 1, y + 1) == 0 || intGrid.tiles.Get(x, y + 1) == 0) :
+							intGrid.tiles.Get(x, y) == refIntGridIndex;
+				});
 		}
 	}
 }

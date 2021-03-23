@@ -24,6 +24,9 @@ namespace MGE
 			}
 			return rect;
 		}
+
+		static Rect _zero = new Rect(0, 0, 0, 0);
+		public static Rect zero { get => _zero; }
 		#endregion
 
 		#region Object

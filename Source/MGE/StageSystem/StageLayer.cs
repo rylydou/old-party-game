@@ -12,7 +12,7 @@ namespace MGE.StageSystem
 
 		public string name;
 
-		[NonSerialized] public bool isVisible = true;
+		public bool isVisible = true;
 
 		public Stage stage { get; internal set; }
 

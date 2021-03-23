@@ -18,42 +18,7 @@ namespace MGE
 
 		public Tileset() { }
 
-		public void Draw(Vector2 position, float scale, Vector2Int mapSize, Func<int, int, bool> isSolid, Color color)
-		{
-			for (int y = 0; y < mapSize.y; y++)
-			{
-				for (int x = 0; x < mapSize.x; x++)
-				{
-					if (isSolid.Invoke(x, y))
-					{
-						var connection = GetConnections(x, y, ref isSolid);
-						var tile = defualtTile;
-
-						if (!tiles.TryGetValue(connection, out tile))
-						{
-							Logger.LogWarning($"No tile that follows rule: {((TileConnection)connection)} {tile}");
-
-							DrawTile(
-								new RectInt(defualtTile.x, defualtTile.y, tileSize.x, tileSize.y),
-								new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
-								color
-							);
-							GFX.DrawBox(new Rect(position.x + x * scale, position.y + y * scale, scale, scale), Color.red.ChangeAlpha(0.25f));
-						}
-						else
-						{
-							DrawTile(
-								new RectInt(tile.x, tile.y, tileSize.x, tileSize.y),
-								new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
-								color
-							);
-						}
-					}
-				}
-			}
-		}
-
-		public void DrawTiles(in Grid<RectInt?> map, Vector2 position, float scale, Color color)
+		public void DrawTiles(in Grid<RectInt> map, Vector2 position, float scale, Color color)
 		{
 			for (int y = 0; y < map.size.y; y++)
 			{
@@ -61,19 +26,20 @@ namespace MGE
 				{
 					var tile = map[x, y];
 
-					if (tile.HasValue)
-						DrawTile(
-							new RectInt(tile.Value.x, tile.Value.y, tileSize.x, tileSize.y),
-							new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
-							color
-						);
+					if (tile == RectInt.zero) continue;
+
+					DrawTile(
+						new RectInt(tile.x, tile.y, tileSize.x, tileSize.y),
+						new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
+						color
+					);
 				}
 			}
 		}
 
-		public RectInt?[] GetTiles(Vector2Int mapSize, Func<int, int, bool> isSolid)
+		public RectInt[] GetTiles(Vector2Int mapSize, Func<int, int, bool> isSolid)
 		{
-			var tileRects = new List<RectInt?>();
+			var tileRects = new List<RectInt>();
 
 			for (int y = 0; y < mapSize.y; y++)
 			{
@@ -101,7 +67,7 @@ namespace MGE
 			return tileRects.ToArray();
 		}
 
-		public void GetTiles(ref Grid<RectInt?> map, Func<int, int, bool> isSolid)
+		public void GetTiles(ref Grid<RectInt> map, Func<int, int, bool> isSolid)
 		{
 			for (int y = 0; y < map.size.y; y++)
 			{

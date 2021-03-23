@@ -48,6 +48,7 @@ namespace MGE
 		{
 			typeof(IntLayer),
 			typeof(AutoLayer),
+			typeof(ShadowLayer),
 			typeof(EntityLayer),
 		};
 

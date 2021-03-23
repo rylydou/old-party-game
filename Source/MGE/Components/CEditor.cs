@@ -23,7 +23,6 @@ namespace MGE.Components
 			get => stage.layers[layerIndex];
 			set => stage.layers[layerIndex] = value;
 		}
-		public int oldLayerIndex = -1;
 
 		Vector2 pan = Vector2.zero;
 		float zoom = 1.0f;
@@ -31,6 +30,7 @@ namespace MGE.Components
 		float targetZoom = 1.0f;
 
 		bool mouseInBounds = false;
+		Vector2Int oldMousePos = Vector2Int.zero;
 		Vector2Int gridMousePos = Vector2Int.zero;
 
 		bool shift = false;
@@ -177,11 +177,15 @@ namespace MGE.Components
 				{
 					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
 					{
-						intLayer.tiles[gridMousePos] = intLayer.selectedColor;
+						foreach (var point in Util.LineToPointsInGrid(oldMousePos, gridMousePos))
+							intLayer.tiles.Set(point, intLayer.selectedColor);
+						intLayer.lastChanged = Time.unscaledTime;
 					}
 					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
 					{
-						intLayer.tiles[gridMousePos] = 0;
+						foreach (var point in Util.LineToPointsInGrid(oldMousePos, gridMousePos))
+							intLayer.tiles.Set(point, 0);
+						intLayer.lastChanged = Time.unscaledTime;
 					}
 				}
 			}
@@ -232,7 +236,7 @@ namespace MGE.Components
 
 			layer.Editor_Update(ref inspectorGUI);
 
-			oldLayerIndex = layerIndex;
+			oldMousePos = gridMousePos;
 		}
 
 		public override void Draw()
@@ -270,17 +274,19 @@ namespace MGE.Components
 
 					if (mouseInBounds)
 					{
-						color = Colors.accent.ChangeAlpha(0.25f);
+						color = Colors.accent.ChangeAlpha(1f / 3f);
 
-						GFX.DrawLine(Scale(new Vector2(gridMousePos.x + 0.5f, 0)), Scale(new Vector2(gridMousePos.x + 0.5f, stage.size.y)), color, 2f);
-						GFX.DrawLine(Scale(new Vector2(0, gridMousePos.y + 0.5f)), Scale(new Vector2(stage.size.x, gridMousePos.y + 0.5f)), color, 2f);
+						var size = 2f;
+
+						GFX.DrawLine(Scale(new Vector2(gridMousePos.x + 0.5f, 0)) + size / 2, Scale(new Vector2(gridMousePos.x + 0.5f, stage.size.y)) + size / 2, color, size);
+						GFX.DrawLine(Scale(new Vector2(0, gridMousePos.y + 0.5f)) - size / 2, Scale(new Vector2(stage.size.x, gridMousePos.y + 0.5f)) - size / 2, color, size);
 					}
 				}
 
 				if (mouseInBounds)
 				{
 					var rect = Scale(new Rect(gridMousePos, Vector2Int.one));
-					GFX.DrawBox(rect, Colors.accent.ChangeAlpha(Math.Abs(Math.Sin(Time.time)) * 0.15f));
+					GFX.DrawBox(rect, Colors.accent.ChangeAlpha(Math.Abs(Math.Sin(Time.time * 1.5f)) * 0.15f));
 					GFX.DrawRect(rect, Colors.accent.ChangeAlpha(0.5f), Math.Clamp(zoom * 0.5f, 1, float.PositiveInfinity));
 
 					if (enableGrid)
@@ -304,13 +310,17 @@ namespace MGE.Components
 
 		public void Save()
 		{
+			Logger.Log("Saving...");
 			IO.Save(App.exePath + "/Assets/Stages/test.stage", stage);
 			Logger.Log("Saved!");
 		}
 
 		public void Load()
 		{
+			Logger.Log("Loading...");
+			// Logger.Log(IO.Load<string>(App.exePath + "/Assets/Stages/test.stage"));
 			stage = IO.Load<Stage>(App.exePath + "/Assets/Stages/test.stage");
+			// IO.SaveJson(App.exePath + "/Assets/Stages/test.stage", IO.Load<TestStruct>(App.exePath + "/Assets/Stages/test.stage"));
 			Logger.Log("Loaded!");
 		}
 	}

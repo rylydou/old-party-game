@@ -17,6 +17,7 @@ namespace MGE.StageSystem.Layers
 		public List<Color> colors;
 
 		[NonSerialized] public ushort selectedColor = 0;
+		[NonSerialized] public float lastChanged = -1;
 
 		protected override void Editor_Create()
 		{
@@ -30,13 +31,13 @@ namespace MGE.StageSystem.Layers
 		{
 			using (var layout = new StackLayout(new Vector2(0, offset), itemSize, false))
 			{
-				gui.Toggle("Show In Game?", new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize)), ref showInGame);
+				gui.Toggle("Show In Game?", new Rect(layout.newElement, gui.rect.width, layout.currentSize), ref showInGame);
 
 				ushort index = 0;
 				var colorToRemove = -1;
 				foreach (var color in colors)
 				{
-					var rect = new Rect(layout.newElement, new Vector2(gui.rect.width, layout.currentSize));
+					var rect = new Rect(layout.newElement, gui.rect.width, layout.currentSize);
 
 					switch (gui.ColoredButton(index.ToString(), rect, color, null, index == selectedColor))
 					{

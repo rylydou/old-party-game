@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace MGE
 {
-	[System.Serializable]
+	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
 	public struct RectInt
 	{
 		#region Static
@@ -24,46 +24,48 @@ namespace MGE
 			}
 			return rect;
 		}
+
+		static RectInt _zero = new RectInt(0, 0, 0, 0);
+		public static RectInt zero { get => _zero; }
 		#endregion
 
 		#region Object
 
 		#region Varibles
-		[JsonIgnore] int _xMin;
-		[JsonIgnore] int _yMin;
-		[JsonIgnore] int _width;
-		[JsonIgnore] int _height;
+		int _xMin;
+		int _yMin;
+		int _width;
+		int _height;
 		#endregion
 
 		#region Properties
-		public int x { get { return _xMin; } set { _xMin = value; } }
-		public int y { get { return _yMin; } set { _yMin = value; } }
-		public int width { get => _width; set => _width = value; }
-		public int height { get => _height; set => _height = value; }
+		[JsonProperty] public int x { get { return _xMin; } set { _xMin = value; } }
+		[JsonProperty] public int y { get { return _yMin; } set { _yMin = value; } }
+		[JsonProperty] public int width { get => _width; set => _width = value; }
+		[JsonProperty] public int height { get => _height; set => _height = value; }
 
-		[JsonIgnore]
 		public Vector2Int position
 		{
 			get => new Vector2Int(_xMin, _yMin);
 			set { _xMin = value.x; _yMin = value.y; }
 		}
 
-		[JsonIgnore] public Vector2 center { get => new Vector2(x + _width / 2f, y + _height / 2f); }
+		public Vector2 center { get => new Vector2(x + _width / 2f, y + _height / 2f); }
 
-		[JsonIgnore] public Vector2Int min { get => new Vector2Int(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
-		[JsonIgnore] public Vector2Int max { get => new Vector2Int(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
+		public Vector2Int min { get => new Vector2Int(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
+		public Vector2Int max { get => new Vector2Int(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
 
-		[JsonIgnore] public Vector2Int size { get { return new Vector2Int(_width, _height); } set { _width = value.x; _height = value.y; } }
+		public Vector2Int size { get { return new Vector2Int(_width, _height); } set { _width = value.x; _height = value.y; } }
 
-		[JsonIgnore] public int xMin { get => _xMin; set { int oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
-		[JsonIgnore] public int yMin { get => _yMin; set { int oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
-		[JsonIgnore] public int xMax { get => _width + _xMin; set { _width = value - _xMin; } }
-		[JsonIgnore] public int yMax { get => _height + _yMin; set { _height = value - _yMin; } }
+		public int xMin { get => _xMin; set { int oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
+		public int yMin { get => _yMin; set { int oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
+		public int xMax { get => _width + _xMin; set { _width = value - _xMin; } }
+		public int yMax { get => _height + _yMin; set { _height = value - _yMin; } }
 
-		[JsonIgnore] public int left { get => xMin; }
-		[JsonIgnore] public int right { get => xMax; }
-		[JsonIgnore] public int top { get => yMin; }
-		[JsonIgnore] public int bottom { get => yMax; }
+		public int left { get => xMin; }
+		public int right { get => xMax; }
+		public int top { get => yMin; }
+		public int bottom { get => yMax; }
 		#endregion
 
 		#region Contructors
@@ -74,7 +76,6 @@ namespace MGE
 			this._width = size.x;
 			this._height = size.y;
 		}
-
 
 		public RectInt(Vector2Int position, int width, int height)
 		{
@@ -91,7 +92,6 @@ namespace MGE
 			this._width = size.x;
 			this._height = size.y;
 		}
-
 
 		public RectInt(int x, int y, int width, int height)
 		{

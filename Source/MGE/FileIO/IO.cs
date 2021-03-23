@@ -6,11 +6,23 @@ using System.Reflection;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using BinarySerialization;
 
 namespace MGE.FileIO
 {
 	public static class IO
 	{
+		static BinarySerializer _bs;
+		public static BinarySerializer bs
+		{
+			get
+			{
+				if (_bs == null)
+					_bs = new BinarySerializer();
+				return _bs;
+			}
+		}
+
 		static BinaryFormatter _bf;
 		public static BinaryFormatter bf
 		{
@@ -37,8 +49,9 @@ namespace MGE.FileIO
 		{
 			if (obj is ISerializable sb) sb.OnBeforeSerilize();
 
-			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
+			using (var fs = File.Open(IO.ParsePath(path), FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
 			{
+				// bs.Serialize(fs, obj);
 				bf.Serialize(fs, obj);
 			}
 
@@ -50,6 +63,8 @@ namespace MGE.FileIO
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{
 				var obj = (T)bf.Deserialize(fs);
+
+				// var obj = bs.Deserialize<T>(fs);
 
 				if (obj is ISerializable da) da.OnAfterDeserilize();
 
