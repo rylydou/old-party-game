@@ -42,6 +42,8 @@ namespace MGE.Components
 		bool isolateActiveLayer = false;
 		bool enableGrid = false;
 
+		string path = App.exePath + "/Assets/Stages/test.stage";
+
 		GUI inspectorGUI;
 		GUI layersGUI;
 
@@ -310,18 +312,28 @@ namespace MGE.Components
 
 		public void Save()
 		{
-			Logger.Log("Saving...");
-			IO.Save(App.exePath + "/Assets/Stages/test.stage", stage);
-			Logger.Log("Saved!");
+			try
+			{
+				using (Timmer.Start("Stage Saving to {path}"))
+					IO.Save(path, stage);
+			}
+			catch (System.Exception e)
+			{
+				Logger.MSGBox("Error When Saving!", e.Message, System.Windows.Forms.MessageBoxIcon.Error);
+			}
 		}
 
 		public void Load()
 		{
-			Logger.Log("Loading...");
-			// Logger.Log(IO.Load<string>(App.exePath + "/Assets/Stages/test.stage"));
-			stage = IO.Load<Stage>(App.exePath + "/Assets/Stages/test.stage");
-			// IO.SaveJson(App.exePath + "/Assets/Stages/test.stage", IO.Load<TestStruct>(App.exePath + "/Assets/Stages/test.stage"));
-			Logger.Log("Loaded!");
+			try
+			{
+				using (Timmer.Start($"Stage Loading from {path}"))
+					stage = IO.Load<Stage>(path);
+			}
+			catch (System.Exception e)
+			{
+				Logger.MSGBox("Error When Loading!", e.Message, System.Windows.Forms.MessageBoxIcon.Error);
+			}
 		}
 	}
 }

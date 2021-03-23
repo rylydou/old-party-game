@@ -2,7 +2,6 @@ using System.Text;
 using System.IO;
 using MGE.UI.Layouts;
 using System;
-using MGE.FileIO;
 
 namespace MGE.Debug.Menus
 {

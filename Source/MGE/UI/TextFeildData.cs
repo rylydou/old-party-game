@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MGE.UI
@@ -5,17 +7,17 @@ namespace MGE.UI
 	[System.Serializable]
 	public struct TextFeildData
 	{
-		[System.NonSerialized] public bool isActive;
+		[NonSerialized] public bool isActive;
 
-		[System.NonSerialized] public int cursorIndex;
-		[System.NonSerialized] public bool isSelecting;
-		[System.NonSerialized] public int selectionStart;
-		[System.NonSerialized] public int selectionEnd;
+		[NonSerialized] public int cursorIndex;
+		[NonSerialized] public bool isSelecting;
+		[NonSerialized] public int selectionStart;
+		[NonSerialized] public int selectionEnd;
 
-		[System.NonSerialized] public float lastTimeTyped;
-		[System.NonSerialized] public float blinkOffset;
+		[NonSerialized] public float lastTimeTyped;
+		[NonSerialized] public float blinkOffset;
 
-		StringBuilder _textBuilder;
+		[NonSerialized] StringBuilder _textBuilder;
 		public StringBuilder textBuilder
 		{
 			get
@@ -26,6 +28,7 @@ namespace MGE.UI
 			}
 			set => _textBuilder = value;
 		}
+		string _text;
 		public string text { get => textBuilder.ToString(); }
 
 		public TextFeildData(string text)
@@ -39,12 +42,26 @@ namespace MGE.UI
 			blinkOffset = 0;
 
 			_textBuilder = new StringBuilder(text);
+
+			_text = string.Empty;
 		}
 
 		public void Typed()
 		{
 			lastTimeTyped = Time.unscaledTime;
 			blinkOffset = Math.Round(Time.unscaledTime) - Time.unscaledTime;
+		}
+
+		[OnSerializing]
+		public void OnSerializing()
+		{
+			_text = text;
+		}
+
+		[OnDeserialized]
+		public void OnDeserialized()
+		{
+			textBuilder = new StringBuilder(_text);
 		}
 	}
 }

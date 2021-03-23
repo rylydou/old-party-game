@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MGE
 {
@@ -41,11 +39,14 @@ namespace MGE
 			return text;
 		}
 
-		public static List<Vector2Int> LineToPointsInGrid(Vector2 start, Vector2 end)
+		public static Vector2Int[] LineToPointsInGrid(Vector2 start, Vector2 end)
 		{
 			var points = new List<Vector2Int>();
 
-			Vector2 t = start;
+			if ((Vector2Int)start == (Vector2Int)end)
+				return new Vector2Int[] { end };
+
+			var t = start;
 			var frac = 1 / Math.Sqrt(Math.Pow(end.x - start.x, 2) + Math.Pow(end.y - start.y, 2));
 			var ctr = 0.0f;
 
@@ -56,7 +57,7 @@ namespace MGE
 				points.Add(t);
 			}
 
-			return points;
+			return points.ToArray();
 		}
 
 		public static int GetHashCode(object obj)

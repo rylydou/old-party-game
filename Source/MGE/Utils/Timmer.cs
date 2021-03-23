@@ -6,7 +6,7 @@ namespace MGE
 {
 	public class Timmer : IDisposable
 	{
-		public static Timmer Create(string name = "Timmer") => new Timmer(name);
+		public static Timmer Start(string name = "Timmer") => new Timmer(name);
 
 		public readonly string name;
 
@@ -24,13 +24,14 @@ namespace MGE
 
 		public Timmer(string name = "Timmer")
 		{
+			Logger.Log($"⏱ Starting {name}...");
 			this.name = name;
 			this.startTime = DateTime.Now;
 		}
 
 		public void Stop() => stopTime = DateTime.Now;
 
-		public void LogTime() => Logger.Log($"⏰ {name} Timmer: {elapsedTime.ToString(@"s\.ffff")}s");
+		public void LogTime() => Logger.Log($"⏱ {name} Timmer: {elapsedTime.ToString(@"s\.ffff")}s");
 
 		public void Dispose() => LogTime();
 	}

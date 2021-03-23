@@ -103,7 +103,7 @@ namespace MGE.ECS
 
 		public void CleanUp()
 		{
-			using (var timmer = Timmer.Create("Screen Cleanup"))
+			using (var timmer = Timmer.Start("Screen Cleanup"))
 			{
 				OnCleanUp();
 				DoneCleaningUp();

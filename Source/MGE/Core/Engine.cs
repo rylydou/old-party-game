@@ -30,9 +30,7 @@ namespace MGE
 			if (game == null)
 				throw new Exception("Game cannot be null!");
 
-			Logger.Log("Constructing...");
-
-			using (Timmer.Create("Constructing"))
+			using (Timmer.Start("Constructing"))
 			{
 				_current = this;
 				_game = game;
@@ -63,9 +61,7 @@ namespace MGE
 
 		public void Initialize()
 		{
-			Logger.Log("Initializing...");
-
-			using (Timmer.Create("Initialize"))
+			using (Timmer.Start("Initialize"))
 			{
 				// graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
 				graphics.SynchronizeWithVerticalRetrace = true;
@@ -94,9 +90,7 @@ namespace MGE
 
 		public void LoadContent()
 		{
-			Logger.Log("Loading Content...");
-
-			using (Timmer.Create("Load Content"))
+			using (Timmer.Start("Load Content"))
 			{
 				sb = new SpriteBatch(game.GraphicsDevice);
 

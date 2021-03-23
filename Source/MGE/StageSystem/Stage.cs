@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using MGE.StageSystem.Layers;
+using System.Runtime.Serialization;
 
 namespace MGE.StageSystem
 {
 	[System.Serializable]
-	public class Stage : ISerializable
+	public class Stage
 	{
 		public float tileSize = 16;
 
@@ -23,11 +24,8 @@ namespace MGE.StageSystem
 			layers.Add(layer);
 		}
 
-		public void OnBeforeSerilize() { }
-
-		public void OnAfterSerilize() { }
-
-		public void OnAfterDeserilize()
+		[OnDeserialized]
+		public void OnDeserialized()
 		{
 			foreach (var layer in layers)
 			{

@@ -1,6 +1,6 @@
 using System.IO;
 using System;
-using System.Diagnostics.Tracing;
+using System.Windows.Forms;
 
 namespace MGE
 {
@@ -76,6 +76,18 @@ namespace MGE
 		public static void WriteToLogRaw(string text)
 		{
 			// log.WriteLine(text);
+		}
+
+		public static DialogResult MSGBox(
+			string title,
+			string text,
+			MessageBoxIcon icon = MessageBoxIcon.None,
+			MessageBoxButtons buttons = MessageBoxButtons.OK,
+			MessageBoxDefaultButton buttonDefualt = MessageBoxDefaultButton.Button1,
+			bool showHelpButton = false
+		)
+		{
+			return MessageBox.Show(text, title, buttons, icon, buttonDefualt, MessageBoxOptions.DefaultDesktopOnly, showHelpButton);
 		}
 	}
 }
