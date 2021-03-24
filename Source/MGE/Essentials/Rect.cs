@@ -8,6 +8,13 @@ namespace MGE
 	public struct Rect
 	{
 		#region Static
+
+		#region Constants
+		static Rect _zero = new Rect(0, 0, 0, 0);
+		public static Rect zero { get => _zero; }
+		#endregion
+
+		#region Methods
 		static Rect OrderMinMax(Rect rect)
 		{
 			if (rect.xMin > rect.xMax)
@@ -25,8 +32,8 @@ namespace MGE
 			return rect;
 		}
 
-		static Rect _zero = new Rect(0, 0, 0, 0);
-		public static Rect zero { get => _zero; }
+		#endregion
+
 		#endregion
 
 		#region Object
@@ -39,8 +46,8 @@ namespace MGE
 		#endregion
 
 		#region Properties
-		[JsonProperty] public float x { get { return _xMin; } set { _xMin = value; } }
-		[JsonProperty] public float y { get { return _yMin; } set { _yMin = value; } }
+		[JsonProperty] public float x { get => _xMin; set => _xMin = value; }
+		[JsonProperty] public float y { get => _yMin; set => _yMin = value; }
 		[JsonProperty] public float width { get => _width; set => _width = value; }
 		[JsonProperty] public float height { get => _height; set => _height = value; }
 
@@ -49,6 +56,7 @@ namespace MGE
 			get => new Vector2(_xMin, _yMin);
 			set { _xMin = value.x; _yMin = value.y; }
 		}
+		public Vector2 size { get => new Vector2(_width, _height); set { _width = value.x; _height = value.y; } }
 
 		public Vector2 center
 		{
@@ -59,17 +67,19 @@ namespace MGE
 		public Vector2 min { get => new Vector2(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
 		public Vector2 max { get => new Vector2(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
 
-		public Vector2 size { get { return new Vector2(_width, _height); } set { _width = value.x; _height = value.y; } }
+		public float xMin { get => _xMin; set { var oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
+		public float left { get => xMin; set => xMin = left; }
+		public float yMin { get => _yMin; set { var oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
+		public float top { get => yMin; set => yMin = top; }
+		public float xMax { get => _width + _xMin; set => _width = value - _xMin; }
+		public float right { get => xMax; set => xMax = right; }
+		public float yMax { get => _height + _yMin; set => _height = value - _yMin; }
+		public float bottom { get => yMax; set => yMax = bottom; }
 
-		public float xMin { get => _xMin; set { float oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
-		public float yMin { get => _yMin; set { float oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
-		public float xMax { get => _width + _xMin; set { _width = value - _xMin; } }
-		public float yMax { get => _height + _yMin; set { _height = value - _yMin; } }
-
-		public float left { get => xMin; }
-		public float right { get => xMax; }
-		public float top { get => yMin; }
-		public float bottom { get => yMax; }
+		public Vector2 topLeft { get => new Vector2(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
+		public Vector2 topRight { get => new Vector2(xMax, yMin); set { xMax = value.x; yMin = value.y; } }
+		public Vector2 bottomLeft { get => new Vector2(xMin, yMax); set { xMin = value.x; yMax = value.y; } }
+		public Vector2 bottomRight { get => new Vector2(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
 		#endregion
 
 		#region Contructors

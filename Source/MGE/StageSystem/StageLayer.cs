@@ -9,7 +9,7 @@ namespace MGE.StageSystem
 		public const float itemSize = 32;
 		public const float offset = 8;
 
-		public string name;
+		public string name = string.Empty;
 
 		public bool isVisible = true;
 

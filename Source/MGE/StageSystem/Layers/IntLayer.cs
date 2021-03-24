@@ -24,7 +24,7 @@ namespace MGE.StageSystem.Layers
 			name = "Int Grid";
 
 			tiles = new Grid<ushort>(stage.size.x, stage.size.y);
-			colors = new List<Color>() { Color.clear, Color.red, Color.green, Color.blue };
+			colors = new List<Color>() { Color.clear, new Color("#22BB22"), new Color("#556"), new Color("#22A") };
 		}
 
 		public override void Editor_Update(ref GUI gui)

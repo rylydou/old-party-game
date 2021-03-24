@@ -53,7 +53,7 @@ namespace MGE.UI
 		}
 
 		[OnSerializing]
-		public void OnSerializing()
+		public void OnSerializing(StreamingContext context)
 		{
 			_text = text;
 		}
