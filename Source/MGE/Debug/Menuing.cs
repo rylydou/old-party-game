@@ -70,20 +70,11 @@ namespace MGE.Debug
 				foreach (var menu in Config.availableMenus)
 				{
 					var text = $"[{menu.name}]";
-
 					var width = Config.font.Measure(text, 1).x;
-
-					gui.Text(text, new Rect(offsetIncerment, 0, width, menuMenuSize), Colors.text);
-
 					var rect = new Rect(offsetIncerment - (float)menuMenuItemOffset / 2, 0, width + menuMenuItemOffset, menuMenuSize);
 
-					if (gui.MouseInside(rect))
-					{
-						gui.Image(rect, Colors.highlight);
-
-						if (Input.GetButtonPress(Inputs.MouseLeft))
-							OpenMenu((DebugMenu)Activator.CreateInstance(menu.GetType()));
-					}
+					if (gui.ButtonClicked(text, rect))
+						OpenMenu((DebugMenu)Activator.CreateInstance(menu.GetType()));
 
 					offsetIncerment += width + menuMenuItemOffset;
 				}

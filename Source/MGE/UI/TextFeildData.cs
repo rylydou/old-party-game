@@ -59,7 +59,7 @@ namespace MGE.UI
 		}
 
 		[OnDeserialized]
-		public void OnDeserialized()
+		public void OnDeserialized(StreamingContext context)
 		{
 			textBuilder = new StringBuilder(_text);
 		}

@@ -116,7 +116,8 @@ namespace MGE.StageSystem.Layers
 				{
 					shadowCache[y * stage.size.x + x] =
 						useSmartDrawing ?
-							intGrid.tiles.Get(x, y) == refIntGridIndex && (intGrid.tiles.Get(x - 1, y) == 0 || intGrid.tiles.Get(x - 1, y + 1) == 0 || intGrid.tiles.Get(x, y + 1) == 0) :
+							intGrid.tiles.Get(x, y) == refIntGridIndex &&
+								(intGrid.tiles.Get(x - 1, y) != refIntGridIndex || intGrid.tiles.Get(x - 1, y + 1) != refIntGridIndex || intGrid.tiles.Get(x, y + 1) != refIntGridIndex) :
 							intGrid.tiles.Get(x, y) == refIntGridIndex;
 				});
 		}

@@ -4,25 +4,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters;
 using System.Reflection;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using BinarySerialization;
 
 namespace MGE.FileIO
 {
 	public static class IO
 	{
-		static BinarySerializer _bs;
-		public static BinarySerializer bs
-		{
-			get
-			{
-				if (_bs == null)
-					_bs = new BinarySerializer();
-				return _bs;
-			}
-		}
-
 		static BinaryFormatter _bf;
 		public static BinaryFormatter bf
 		{
@@ -47,15 +34,10 @@ namespace MGE.FileIO
 		#region Saving & Loading
 		public static void Save(string path, object obj)
 		{
-			if (obj is ISerializable sb) sb.OnBeforeSerilize();
-
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
 			{
-				// bs.Serialize(fs, obj);
 				bf.Serialize(fs, obj);
 			}
-
-			if (obj is ISerializable sa) sa.OnAfterSerilize();
 		}
 
 		public static T Load<T>(string path)
@@ -64,25 +46,17 @@ namespace MGE.FileIO
 			{
 				var obj = (T)bf.Deserialize(fs);
 
-				// var obj = bs.Deserialize<T>(fs);
-
-				if (obj is ISerializable da) da.OnAfterDeserilize();
-
 				return obj;
 			}
 		}
 
 		public static void SaveJson(string path, object obj)
 		{
-			if (obj is ISerializable sb) sb.OnBeforeSerilize();
-
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
 			{
 				var text = Serializer.SerializeJson(obj);
 				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length);
 			}
-
-			if (obj is ISerializable sa) sa.OnBeforeSerilize();
 		}
 
 		public static T LoadJson<T>(string path)
@@ -90,8 +64,6 @@ namespace MGE.FileIO
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{
 				var obj = Serializer.DeserializeJson<T>(File.ReadAllText(IO.ParsePath(path)));
-
-				if (obj is ISerializable da) da.OnAfterDeserilize();
 
 				return obj;
 			}

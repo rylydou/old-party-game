@@ -1,20 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
-		<PublishReadyToRun>false</PublishReadyToRun>
-		<TieredCompilation>false</TieredCompilation>
-		<!-- <PublishSingleFile>true</PublishSingleFile>
-		<PublishTrimmed>false</PublishTrimmed> -->
 		<UseWindowsForms>true</UseWindowsForms>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+
+		<NoLogo>true</NoLogo>
+
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<PlatformTarget>x64</PlatformTarget>
+		<TieredCompilation>false</TieredCompilation>
+
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DefineConstants>Indev</DefineConstants>
+
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <PublishSingleFile>true</PublishSingleFile> -->
+		<!-- <PublishTrimmed>false</PublishTrimmed> -->
+		<!-- <DocumentationFile>Docs/main.xml</DocumentationFile> -->
 	</PropertyGroup>
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
-	<!-- <ItemGroup>
-		<TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
-	</ItemGroup> -->
 	<ItemGroup>
 		<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

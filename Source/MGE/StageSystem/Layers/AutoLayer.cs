@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.Serialization;
 using MGE.Debug;
 using MGE.Debug.Menus;
 using MGE.FileIO;
@@ -41,10 +42,9 @@ namespace MGE.StageSystem.Layers
 			ReloadTileset();
 		}
 
-		public override void OnDeserilize()
+		[OnDeserialized]
+		public void OnDeserialized(StreamingContext context)
 		{
-			base.OnDeserilize();
-
 			ReloadTileset();
 		}
 

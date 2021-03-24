@@ -23,14 +23,5 @@ namespace MGE.StageSystem
 			layer.Init();
 			layers.Add(layer);
 		}
-
-		[OnDeserialized]
-		public void OnDeserialized()
-		{
-			foreach (var layer in layers)
-			{
-				layer.OnDeserilize();
-			}
-		}
 	}
 }
