@@ -23,7 +23,7 @@ namespace MGE.StageSystem.Layers
 		{
 			name = "Int Grid";
 
-			tiles = new Grid<byte>(level.size.x, level.size.y);
+			tiles = new Grid<byte>(level.world.levelSize.x, level.world.levelSize.y);
 			colors = new List<Color>() { Color.clear, new Color("#22BB22"), new Color("#556"), new Color("#22A") };
 		}
 

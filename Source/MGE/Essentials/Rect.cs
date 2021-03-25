@@ -83,6 +83,14 @@ namespace MGE
 		#endregion
 
 		#region Contructors
+		public Rect(Vector2 size)
+		{
+			this._xMin = 0;
+			this._yMin = 0;
+			this._width = size.x;
+			this._height = size.y;
+		}
+
 		public Rect(Vector2 position, Vector2 size)
 		{
 			this._xMin = position.x;

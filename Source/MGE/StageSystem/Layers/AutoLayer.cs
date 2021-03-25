@@ -37,7 +37,7 @@ namespace MGE.StageSystem.Layers
 		{
 			name = "Auto Layer";
 
-			tiles = new Grid<RectInt>(level.size);
+			tiles = new Grid<RectInt>(level.world.levelSize);
 
 			Reload();
 		}
@@ -111,7 +111,7 @@ namespace MGE.StageSystem.Layers
 
 		public void GetNewTiles()
 		{
-			tiles = new Grid<RectInt>(level.size);
+			tiles = new Grid<RectInt>(level.world.levelSize);
 
 			if (intGrid is object)
 				tileset?.GetTiles(ref tiles, (x, y) => intGrid.tiles.Get(x, y) == refIntGridIndex);

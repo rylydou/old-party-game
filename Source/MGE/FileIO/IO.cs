@@ -16,7 +16,7 @@ namespace MGE.FileIO
 			get
 			{
 				if (_bf == null)
-					_bf = new BinaryFormatter() { AssemblyFormat = FormatterAssemblyStyle.Simple, TypeFormat = FormatterTypeStyle.TypesWhenNeeded, FilterLevel = TypeFilterLevel.Full };
+					_bf = new BinaryFormatter();
 				return _bf;
 			}
 		}
@@ -24,6 +24,12 @@ namespace MGE.FileIO
 		public static string basePath { get; } = App.exePath + "/";
 
 		#region File
+		public static FileInfo GetFileInfo(string path)
+		{
+			path = basePath + path;
+			return new FileInfo(path);
+		}
+
 		public static FileStream FileOpen(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.Read)
 		{
 			path = basePath + path;
@@ -54,6 +60,7 @@ namespace MGE.FileIO
 
 		public static void FileDelete(string path)
 		{
+			path = basePath + path;
 			File.Delete(path);
 		}
 
@@ -81,19 +88,54 @@ namespace MGE.FileIO
 
 		public static string FileGetName(string path)
 		{
+			path = basePath + path;
 			return new FileInfo(path).Name;
 		}
 
 		public static string FileGetParent(string path)
 		{
+			path = basePath + path;
 			return CleanPath(new FileInfo(path).Directory.FullName);
 		}
 		#endregion
 
 		#region Folder
+		public static bool FolderExists(string path)
+		{
+			path = basePath + path;
+			return Directory.Exists(path);
+		}
+
+		public static DirectoryInfo FolderCreate(string path)
+		{
+			path = basePath + path;
+			return Directory.CreateDirectory(path);
+		}
+
+		public static DirectoryInfo FolderGetInfo(string path)
+		{
+			path = basePath + path;
+			return new DirectoryInfo(path);
+		}
+
 		public static string FolderGetParent(string path)
 		{
+			path = basePath + path;
 			return CleanPath(new DirectoryInfo(path).Parent.FullName);
+		}
+
+		public static string[] FolderGetFolders(string path)
+		{
+			path = basePath + path;
+
+			var folders = Directory.GetDirectories(path);
+
+			for (int i = 0; i < folders.Length; i++)
+			{
+				folders[i] = CleanPath(folders[i]).Replace(basePath, string.Empty);
+			}
+
+			return folders;
 		}
 		#endregion
 
@@ -199,6 +241,18 @@ namespace MGE.FileIO
 		public static void CleanPath(ref string path)
 		{
 			path = path.Replace('\\', '/');
+		}
+
+		public static string FixPath(string path)
+		{
+			FixPath(path);
+			return path;
+		}
+
+		public static void FixPath(ref string path)
+		{
+			CleanPath(ref path);
+			path = path.Replace(basePath, string.Empty);
 		}
 
 		public static string GetFullExt(string file)

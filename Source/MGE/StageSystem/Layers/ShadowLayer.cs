@@ -39,7 +39,7 @@ namespace MGE.StageSystem.Layers
 			color = new Color(0, 0.25f);
 			useSmartDrawing = true;
 
-			shadowCache = new bool[level.size.sqrMagnitude];
+			shadowCache = new bool[level.world.levelSize.sqrMagnitude];
 		}
 
 		public override void Editor_Update(ref GUI gui)
@@ -100,11 +100,11 @@ namespace MGE.StageSystem.Layers
 				Reload();
 			}
 
-			for (int y = 0; y < level.size.y; y++)
+			for (int y = 0; y < level.world.levelSize.y; y++)
 			{
-				for (int x = 0; x < level.size.x; x++)
+				for (int x = 0; x < level.world.levelSize.x; x++)
 				{
-					if (shadowCache[y * level.size.x + x])
+					if (shadowCache[y * level.world.levelSize.x + x])
 						GFX.DrawBox(Scale(new Rect(x - 0.125f, y + 0.125f, 1, 1)), color);
 				}
 			}
@@ -114,7 +114,7 @@ namespace MGE.StageSystem.Layers
 		{
 			intGrid.tiles.For((x, y, tile) =>
 			{
-				shadowCache[y * level.size.x + x] =
+				shadowCache[y * level.world.levelSize.x + x] =
 					useSmartDrawing ?
 						intGrid.tiles.Get(x, y) == refIntGridIndex &&
 							(intGrid.tiles.Get(x - 1, y) != refIntGridIndex || intGrid.tiles.Get(x - 1, y + 1) != refIntGridIndex || intGrid.tiles.Get(x, y + 1) != refIntGridIndex) :

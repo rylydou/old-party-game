@@ -57,18 +57,30 @@ namespace MGE
 
 		public Vector2Int size { get { return new Vector2Int(_width, _height); } set { _width = value.x; _height = value.y; } }
 
-		public int xMin { get => _xMin; set { int oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
-		public int yMin { get => _yMin; set { int oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
-		public int xMax { get => _width + _xMin; set { _width = value - _xMin; } }
-		public int yMax { get => _height + _yMin; set { _height = value - _yMin; } }
+		public int xMin { get => _xMin; set { var oldxmax = xMax; _yMin = value; _width = oldxmax - _xMin; } }
+		public int left { get => xMin; set => xMin = left; }
+		public int yMin { get => _yMin; set { var oldymax = yMax; _yMin = value; _height = oldymax - _yMin; } }
+		public int top { get => yMin; set => yMin = top; }
+		public int xMax { get => _width + _xMin; set => _width = value - _xMin; }
+		public int right { get => xMax; set => xMax = right; }
+		public int yMax { get => _height + _yMin; set => _height = value - _yMin; }
+		public int bottom { get => yMax; set => yMax = bottom; }
 
-		public int left { get => xMin; }
-		public int right { get => xMax; }
-		public int top { get => yMin; }
-		public int bottom { get => yMax; }
+		public Vector2Int topLeft { get => new Vector2Int(xMin, yMin); set { xMin = value.x; yMin = value.y; } }
+		public Vector2Int topRight { get => new Vector2Int(xMax, yMin); set { xMax = value.x; yMin = value.y; } }
+		public Vector2Int bottomLeft { get => new Vector2Int(xMin, yMax); set { xMin = value.x; yMax = value.y; } }
+		public Vector2Int bottomRight { get => new Vector2Int(xMax, yMax); set { xMax = value.x; yMax = value.y; } }
 		#endregion
 
 		#region Contructors
+		public RectInt(Vector2Int size)
+		{
+			this._xMin = 0;
+			this._yMin = 0;
+			this._width = size.x;
+			this._height = size.y;
+		}
+
 		public RectInt(Vector2Int position, Vector2Int size)
 		{
 			this._xMin = position.x;

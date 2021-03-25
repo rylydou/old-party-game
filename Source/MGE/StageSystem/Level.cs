@@ -9,48 +9,31 @@ namespace MGE.StageSystem
 	[System.Serializable]
 	public class Level
 	{
+		public string name;
+
 		public float tileSize;
 
-		public Vector2Int size;
 		public List<LevelLayer> layers;
-
-		public Dictionary<string, Color> tags;
 
 		public Vector2Int position { get; internal set; }
 		public World world { get; internal set; }
 
 		public Level()
 		{
-			tileSize = 16;
+			this.name = $"Level {position}";
+			this.tileSize = 16;
+			this.layers = new List<LevelLayer>();
 
-			size = new Vector2Int(64);
-
-			layers = new List<LevelLayer>();
 			AddLayer(new IntLayer());
-
-			tags = new Dictionary<string, Color>();
-			AddTag("Collidable", Color.green);
 		}
 
 		public void AddLayer(LevelLayer layer)
 		{
 			layer.level = this;
+
 			layer.Init();
 			layers.Add(layer);
 		}
-
-		public bool AddTag(string name, Color color)
-		{
-			if (!tags.ContainsKey(name))
-			{
-				tags.Add(name, color);
-				return true;
-			}
-			return false;
-		}
-
-		public KeyValuePair<string, Color> GetTag(int index) => tags.ElementAt(index);
-		public Color GetTag(string name) => tags.TryGetValue(name, Colors.error);
 
 		public void Log(string message)
 		{

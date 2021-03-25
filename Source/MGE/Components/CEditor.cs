@@ -15,13 +15,17 @@ namespace MGE.Components
 	{
 		public static CEditor current { get; private set; }
 
-		public Level stage = new Level();
+		public EditorState state = EditorState.World;
+
+		public World world = new World();
+
+		public Level level = null;
 
 		public int layerIndex = 0;
 		public LevelLayer layer
 		{
-			get => stage.layers[layerIndex];
-			set => stage.layers[layerIndex] = value;
+			get => level.layers[layerIndex];
+			set => level.layers[layerIndex] = value;
 		}
 
 		Vector2 pan = Vector2.zero;
@@ -42,7 +46,7 @@ namespace MGE.Components
 		bool isolateActiveLayer = false;
 		bool enableGrid = false;
 
-		string path = App.exePath + "/Assets/Stages/test.stage";
+		string path = App.exePath + "//Stages/world.world";
 
 		GUI inspectorGUI;
 		GUI layersGUI;
@@ -51,6 +55,8 @@ namespace MGE.Components
 		public override void Init()
 		{
 			current = this;
+
+			world = new World(new Vector2Int(16), new Vector2Int(32));
 		}
 
 		public override void Update()
@@ -70,11 +76,11 @@ namespace MGE.Components
 			// > Copy Active Layer
 			if (shift && !ctrl && alt && Input.GetButtonPress(Inputs.Up))
 			{
-				stage.layers.Insert(layerIndex, layer);
+				level.layers.Insert(layerIndex, layer);
 			}
 			else if (shift && !ctrl && alt && Input.GetButtonPress(Inputs.Down))
 			{
-				stage.layers.Insert(layerIndex + 1, layer);
+				level.layers.Insert(layerIndex + 1, layer);
 				layerIndex++;
 			}
 			// > Move Layer
@@ -82,15 +88,15 @@ namespace MGE.Components
 			{
 				if (layerIndex > 0)
 				{
-					stage.layers.Move(layerIndex, layerIndex - 1);
+					level.layers.Move(layerIndex, layerIndex - 1);
 					layerIndex--;
 				}
 			}
 			else if (!shift && !ctrl && alt && Input.GetButtonPress(Inputs.Down))
 			{
-				if (layerIndex < stage.layers.Count - 1)
+				if (layerIndex < level.layers.Count - 1)
 				{
-					stage.layers.Move(layerIndex, layerIndex + 1);
+					level.layers.Move(layerIndex, layerIndex + 1);
 					layerIndex++;
 				}
 			}
@@ -107,7 +113,7 @@ namespace MGE.Components
 			}
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Down))
 			{
-				if (layerIndex < stage.layers.Count - 1)
+				if (layerIndex < level.layers.Count - 1)
 					layerIndex++;
 			}
 			// > Toggle isolateActiveLayer
@@ -146,7 +152,7 @@ namespace MGE.Components
 
 				var oldZoom = targetZoom;
 
-				targetZoom = Math.Clamp(targetZoom - zoomDelta, 1.0f / stage.tileSize, stage.tileSize / 2);
+				targetZoom = Math.Clamp(targetZoom - zoomDelta, 1.0f / level.tileSize, level.tileSize / 2);
 
 				var zoomChange = oldZoom - targetZoom;
 
@@ -166,12 +172,12 @@ namespace MGE.Components
 
 			var localMousePos = (Input.windowMousePosition - targetPan);
 
-			gridMousePos = localMousePos / (targetZoom * stage.tileSize);
+			gridMousePos = localMousePos / (targetZoom * level.tileSize);
 			mouseInBounds =
 				mousePos.x > layersGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
 				mousePos.y > 0 && mousePos.y < Window.windowedSize.y &&
-				gridMousePos.x >= 0 && gridMousePos.x < stage.size.x &&
-				gridMousePos.y >= 0 && gridMousePos.y < stage.size.y &&
+				gridMousePos.x >= 0 && gridMousePos.x < world.levelSize.x &&
+				gridMousePos.y >= 0 && gridMousePos.y < world.levelSize.y &&
 				localMousePos.x > 0 &&
 				localMousePos.y > 0;
 
@@ -199,7 +205,7 @@ namespace MGE.Components
 				var index = 0;
 				var layerToRemove = -1;
 
-				foreach (var layer in stage.layers)
+				foreach (var layer in level.layers)
 				{
 					var rect = new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize));
 
@@ -227,7 +233,7 @@ namespace MGE.Components
 
 				if (layerToRemove > 0)
 				{
-					stage.layers.RemoveAt(layerToRemove);
+					level.layers.RemoveAt(layerToRemove);
 					if (layerIndex >= layerToRemove)
 						layerIndex--;
 				}
@@ -248,10 +254,10 @@ namespace MGE.Components
 			using (new DrawBatch(transform: null))
 			{
 				GFX.DrawBox(new Rect(0, 0, Window.windowedSize.x, Window.windowedSize.y), Colors.black);
-				GFX.DrawBox(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), Colors.darkGray);
-				GFX.DrawRect(Scale(new Rect(0, 0, stage.size.x, stage.size.y)), mouseInBounds ? Colors.gray : Colors.lightGray, Math.Clamp(stage.tileSize / 2 * zoom, 1, float.PositiveInfinity));
+				GFX.DrawBox(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), Colors.darkGray);
+				GFX.DrawRect(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), mouseInBounds ? Colors.gray : Colors.lightGray, Math.Clamp(level.tileSize / 2 * zoom, 1, float.PositiveInfinity));
 
-				Config.font.DrawText(stage.size.ToString(), new Vector2(0, -(Config.font.charSize.y + stage.tileSize) * zoom) + pan, Colors.gray, zoom);
+				Config.font.DrawText(world.levelSize.ToString(), new Vector2(0, -(Config.font.charSize.y + level.tileSize) * zoom) + pan, Colors.gray, zoom);
 
 				if (isolateActiveLayer)
 				{
@@ -259,7 +265,7 @@ namespace MGE.Components
 				}
 				else
 				{
-					foreach (var layer in stage.layers)
+					foreach (var layer in level.layers)
 					{
 						if (layer.isVisible)
 							layer.Editor_Draw(pan, zoom);
@@ -270,11 +276,11 @@ namespace MGE.Components
 				{
 					var color = Colors.accent.ChangeAlpha(0.15f);
 
-					for (int y = 1; y < stage.size.y; y++)
-						GFX.DrawLine(Scale(new Vector2(0, y)), Scale(new Vector2(stage.size.x, y)), color, 1f);
+					for (int y = 1; y < world.levelSize.y; y++)
+						GFX.DrawLine(Scale(new Vector2(0, y)), Scale(new Vector2(world.levelSize.x, y)), color, 1f);
 
-					for (int x = 1; x < stage.size.x; x++)
-						GFX.DrawLine(Scale(new Vector2(x, 0)), Scale(new Vector2(x, stage.size.y)), color, 1f);
+					for (int x = 1; x < world.levelSize.x; x++)
+						GFX.DrawLine(Scale(new Vector2(x, 0)), Scale(new Vector2(x, world.levelSize.y)), color, 1f);
 
 					if (mouseInBounds)
 					{
@@ -282,8 +288,8 @@ namespace MGE.Components
 
 						var size = 2f;
 
-						GFX.DrawLine(Scale(new Vector2(gridMousePos.x + 0.5f, 0)) + size / 2, Scale(new Vector2(gridMousePos.x + 0.5f, stage.size.y)) + size / 2, color, size);
-						GFX.DrawLine(Scale(new Vector2(0, gridMousePos.y + 0.5f)) - size / 2, Scale(new Vector2(stage.size.x, gridMousePos.y + 0.5f)) - size / 2, color, size);
+						GFX.DrawLine(Scale(new Vector2(gridMousePos.x + 0.5f, 0)) + size / 2, Scale(new Vector2(gridMousePos.x + 0.5f, world.levelSize.y)) + size / 2, color, size);
+						GFX.DrawLine(Scale(new Vector2(0, gridMousePos.y + 0.5f)) - size / 2, Scale(new Vector2(world.levelSize.x, gridMousePos.y + 0.5f)) - size / 2, color, size);
 					}
 				}
 
@@ -311,15 +317,15 @@ namespace MGE.Components
 			mainGUI.Draw();
 		}
 
-		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * current.stage.tileSize;
-		public static Rect Scale(Rect rect) => new Rect(Scale(rect.position), rect.size * current.zoom * current.stage.tileSize);
+		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * current.level.tileSize;
+		public static Rect Scale(Rect rect) => new Rect(Scale(rect.position), rect.size * current.zoom * current.level.tileSize);
 
 		public void Save()
 		{
 			try
 			{
 				using (Timmer.Start("Stage Saving to {path}"))
-					IO.Save(path, stage);
+					IO.Save(path, level);
 			}
 			catch (System.Exception e)
 			{
@@ -332,7 +338,7 @@ namespace MGE.Components
 			try
 			{
 				using (Timmer.Start($"Stage Loading from {path}"))
-					stage = IO.Load<Level>(path);
+					level = IO.Load<Level>(path);
 			}
 			catch (System.Exception e)
 			{
