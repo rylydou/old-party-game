@@ -9,23 +9,23 @@ using MGE.UI.Layouts;
 namespace MGE.StageSystem.Layers
 {
 	[System.Serializable]
-	public class AutoLayer : StageLayer
+	public class AutoLayer : LevelLayer
 	{
 		public int refIntGrid = 0;
 		public bool isRefIntGridValid
 		{
-			get => refIntGrid >= 0 && refIntGrid < stage.layers.Count && stage.layers[refIntGrid] is IntLayer;
+			get => refIntGrid >= 0 && refIntGrid < level.layers.Count && level.layers[refIntGrid] is IntLayer;
 		}
 
 		public int refIntGridIndex = 1;
 		public bool isRefIntGridIndexValid
 		{
-			get => isRefIntGridValid && refIntGridIndex >= 0 && refIntGridIndex < (stage.layers[refIntGrid] as IntLayer).colors.Count;
+			get => isRefIntGridValid && refIntGridIndex >= 0 && refIntGridIndex < (level.layers[refIntGrid] as IntLayer).colors.Count;
 		}
 
 		public IntLayer intGrid
 		{
-			get => isRefIntGridValid && isRefIntGridIndexValid ? stage.layers[refIntGrid] as IntLayer : null;
+			get => isRefIntGridValid && isRefIntGridIndexValid ? level.layers[refIntGrid] as IntLayer : null;
 		}
 
 		public string tilesetPath = "Sprites/Tilesets/Basic";
@@ -37,15 +37,15 @@ namespace MGE.StageSystem.Layers
 		{
 			name = "Auto Layer";
 
-			tiles = new Grid<RectInt>(stage.size);
+			tiles = new Grid<RectInt>(level.size);
 
-			ReloadTileset();
+			Reload();
 		}
 
 		[OnDeserialized]
 		public void OnDeserialized(StreamingContext context)
 		{
-			ReloadTileset();
+			Reload();
 		}
 
 		public override void Editor_Update(ref GUI gui)
@@ -91,7 +91,7 @@ namespace MGE.StageSystem.Layers
 						(x) =>
 						{
 							tilesetPath = Folder.assets.GetRelitivePath(x).Replace(".tileset.psd", string.Empty);
-							ReloadTileset();
+							Reload();
 						},
 						"*.tileset.psd"
 					));
@@ -106,21 +106,23 @@ namespace MGE.StageSystem.Layers
 			if (intGrid.lastChanged == Time.unscaledTime)
 				GetNewTiles();
 
-			tileset?.DrawTiles(in tiles, pan, zoom * stage.tileSize, Color.white);
+			tileset?.DrawTiles(in tiles, pan, zoom * level.tileSize, Color.white);
 		}
 
 		public void GetNewTiles()
 		{
-			tiles = new Grid<RectInt>(stage.size);
+			tiles = new Grid<RectInt>(level.size);
 
 			if (intGrid is object)
 				tileset?.GetTiles(ref tiles, (x, y) => intGrid.tiles.Get(x, y) == refIntGridIndex);
 		}
 
-		public void ReloadTileset()
+		public void Reload()
 		{
 			tileset = Assets.GetAsset<Tileset>(tilesetPath);
 			GetNewTiles();
+
+			Log("Reloaded");
 		}
 	}
 }

@@ -24,14 +24,14 @@ namespace MGE
 
 		public Timmer(string name = "Timmer")
 		{
-			Logger.Log($"⏱ Starting {name}...");
+			Logger.Log($"⏳ Starting {name}...");
 			this.name = name;
 			this.startTime = DateTime.Now;
 		}
 
 		public void Stop() => stopTime = DateTime.Now;
 
-		public void LogTime() => Logger.Log($"⏱ {name} Timmer: {elapsedTime.ToString(@"s\.ffff")}s");
+		public void LogTime() => Logger.Log($"⌛ {name} Timmer: {elapsedTime.ToString(@"s\.ffff")}s");
 
 		public void Dispose() => LogTime();
 	}

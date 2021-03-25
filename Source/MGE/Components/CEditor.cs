@@ -15,10 +15,10 @@ namespace MGE.Components
 	{
 		public static CEditor current { get; private set; }
 
-		public Stage stage = new Stage();
+		public Level stage = new Level();
 
 		public int layerIndex = 0;
-		public StageLayer layer
+		public LevelLayer layer
 		{
 			get => stage.layers[layerIndex];
 			set => stage.layers[layerIndex] = value;
@@ -46,6 +46,7 @@ namespace MGE.Components
 
 		GUI inspectorGUI;
 		GUI layersGUI;
+		GUI mainGUI;
 
 		public override void Init()
 		{
@@ -56,6 +57,7 @@ namespace MGE.Components
 		{
 			layersGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
 			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 5, 0, 64 * 5, Window.windowedSize.y), true);
+			mainGUI = new GUI(new Rect(0, 0, Window.windowedSize), true);
 
 			layersGUI.Image(new Rect(Vector2.zero, layersGUI.rect.size), Colors.transBG);
 
@@ -305,6 +307,8 @@ namespace MGE.Components
 			}
 
 			inspectorGUI.Draw();
+
+			mainGUI.Draw();
 		}
 
 		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * current.stage.tileSize;
@@ -328,12 +332,27 @@ namespace MGE.Components
 			try
 			{
 				using (Timmer.Start($"Stage Loading from {path}"))
-					stage = IO.Load<Stage>(path);
+					stage = IO.Load<Level>(path);
 			}
 			catch (System.Exception e)
 			{
 				Logger.MSGBox("Error When Loading!", e.Message, System.Windows.Forms.MessageBoxIcon.Error);
 			}
+		}
+
+		public void Log(string message)
+		{
+			Logger.Log(message);
+		}
+
+		public void LogWarning(string message)
+		{
+			Logger.LogWarning(message);
+		}
+
+		public void LogError(string message)
+		{
+			Logger.Log(message);
 		}
 	}
 }

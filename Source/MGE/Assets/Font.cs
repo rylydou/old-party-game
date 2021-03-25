@@ -88,7 +88,7 @@ namespace MGE
 			drawIndex++;
 		}
 
-		public Vector2 Measure(string text, float scale)
+		public Vector2 Measure(string text, float scale = 1)
 		{
 			return new Vector2(text.Length * charPaddingSize.x * scale, charPaddingSize.y * scale);
 		}

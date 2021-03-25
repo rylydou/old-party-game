@@ -8,23 +8,23 @@ using MGE.UI.Layouts;
 namespace MGE.StageSystem.Layers
 {
 	[System.Serializable]
-	public class ShadowLayer : StageLayer
+	public class ShadowLayer : LevelLayer
 	{
 		public int refIntGrid = 0;
 		public bool isRefIntGridValid
 		{
-			get => refIntGrid >= 0 && refIntGrid < stage.layers.Count && stage.layers[refIntGrid] is IntLayer;
+			get => refIntGrid >= 0 && refIntGrid < level.layers.Count && level.layers[refIntGrid] is IntLayer;
 		}
 
 		public int refIntGridIndex = 1;
 		public bool isRefIntGridIndexValid
 		{
-			get => isRefIntGridValid && refIntGridIndex >= 0 && refIntGridIndex < (stage.layers[refIntGrid] as IntLayer).colors.Count;
+			get => isRefIntGridValid && refIntGridIndex >= 0 && refIntGridIndex < (level.layers[refIntGrid] as IntLayer).colors.Count;
 		}
 
 		public IntLayer intGrid
 		{
-			get => isRefIntGridValid && isRefIntGridIndexValid ? stage.layers[refIntGrid] as IntLayer : null;
+			get => isRefIntGridValid && isRefIntGridIndexValid ? level.layers[refIntGrid] as IntLayer : null;
 		}
 
 		public Color color;
@@ -39,7 +39,7 @@ namespace MGE.StageSystem.Layers
 			color = new Color(0, 0.25f);
 			useSmartDrawing = true;
 
-			shadowCache = new bool[stage.size.sqrMagnitude];
+			shadowCache = new bool[level.size.sqrMagnitude];
 		}
 
 		public override void Editor_Update(ref GUI gui)
@@ -100,11 +100,11 @@ namespace MGE.StageSystem.Layers
 				Reload();
 			}
 
-			for (int y = 0; y < stage.size.y; y++)
+			for (int y = 0; y < level.size.y; y++)
 			{
-				for (int x = 0; x < stage.size.x; x++)
+				for (int x = 0; x < level.size.x; x++)
 				{
-					if (shadowCache[y * stage.size.x + x])
+					if (shadowCache[y * level.size.x + x])
 						GFX.DrawBox(Scale(new Rect(x - 0.125f, y + 0.125f, 1, 1)), color);
 				}
 			}
@@ -113,13 +113,15 @@ namespace MGE.StageSystem.Layers
 		public void Reload()
 		{
 			intGrid.tiles.For((x, y, tile) =>
-				{
-					shadowCache[y * stage.size.x + x] =
-						useSmartDrawing ?
-							intGrid.tiles.Get(x, y) == refIntGridIndex &&
-								(intGrid.tiles.Get(x - 1, y) != refIntGridIndex || intGrid.tiles.Get(x - 1, y + 1) != refIntGridIndex || intGrid.tiles.Get(x, y + 1) != refIntGridIndex) :
-							intGrid.tiles.Get(x, y) == refIntGridIndex;
-				});
+			{
+				shadowCache[y * level.size.x + x] =
+					useSmartDrawing ?
+						intGrid.tiles.Get(x, y) == refIntGridIndex &&
+							(intGrid.tiles.Get(x - 1, y) != refIntGridIndex || intGrid.tiles.Get(x - 1, y + 1) != refIntGridIndex || intGrid.tiles.Get(x, y + 1) != refIntGridIndex) :
+						intGrid.tiles.Get(x, y) == refIntGridIndex;
+			});
+
+			Log("Reloaded");
 		}
 	}
 }

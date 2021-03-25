@@ -124,6 +124,9 @@ namespace MGE
 			}
 		}
 
+		public bool IsInBounds(Vector2Int position) =>
+			IsInBounds(position.x, position.y);
+
 		public bool IsInBounds(int x, int y) =>
 			x >= 0 && x < width && y >= 0 && y < height;
 

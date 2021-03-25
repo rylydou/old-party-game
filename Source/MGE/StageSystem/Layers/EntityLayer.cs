@@ -4,7 +4,7 @@ using MGE.ECS;
 namespace MGE.StageSystem.Layers
 {
 	[System.Serializable]
-	public class EntityLayer : StageLayer
+	public class EntityLayer : LevelLayer
 	{
 		public List<Entity> entities;
 

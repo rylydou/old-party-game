@@ -21,27 +21,99 @@ namespace MGE.FileIO
 			}
 		}
 
-		public static string GetInfoFileText(string file)
+		public static string basePath { get; } = App.exePath + "/";
+
+		#region File
+		public static FileStream FileOpen(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.Read)
 		{
-			return File.ReadAllText(file + Config.infoFileExt);
+			path = basePath + path;
+			return File.Open(path, mode, access, share);
 		}
 
-		public static string[] GetInfoFileLines(string file)
+		public static FileStream FileOpenRead(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.Read, FileShare share = FileShare.Read)
 		{
-			return File.ReadAllLines(file + Config.infoFileExt);
+			return FileOpen(path, mode, access, share);
 		}
+
+		public static FileStream FileOpenWrite(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.Read)
+		{
+			return FileOpen(path, mode, access, share);
+		}
+
+		public static FileStream FileCreate(string path)
+		{
+			path = basePath + path;
+			return File.Create(path);
+		}
+
+		public static FileStream FileCreate(string path, int bufferSize, FileOptions options = FileOptions.None)
+		{
+			path = basePath + path;
+			return File.Create(path, bufferSize, options);
+		}
+
+		public static void FileDelete(string path)
+		{
+			File.Delete(path);
+		}
+
+		public static bool FileExists(string path)
+		{
+			path = basePath + path;
+			return File.Exists(path);
+		}
+
+		public static void FileMove(string from, string to, bool overwrite = true)
+		{
+			from = basePath + from;
+			to = basePath + to;
+
+			File.Move(from, to, overwrite);
+		}
+
+		public static void FileCopy(string from, string to, bool overwrite = true)
+		{
+			from = basePath + from;
+			to = basePath + to;
+
+			File.Copy(from, to, overwrite);
+		}
+
+		public static string FileGetName(string path)
+		{
+			return new FileInfo(path).Name;
+		}
+
+		public static string FileGetParent(string path)
+		{
+			return CleanPath(new FileInfo(path).Directory.FullName);
+		}
+		#endregion
+
+		#region Folder
+		public static string FolderGetParent(string path)
+		{
+			return CleanPath(new DirectoryInfo(path).Parent.FullName);
+		}
+		#endregion
 
 		#region Saving & Loading
-		public static void Save(string path, object obj)
+		public static void Save(string path, object obj, bool isFullPath = true)
 		{
+			if (!isFullPath)
+				path = basePath + path;
+
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
 			{
 				bf.Serialize(fs, obj);
 			}
 		}
 
-		public static T Load<T>(string path)
+		public static T Load<T>(string path, bool isFullPath = true)
 		{
+			if (!isFullPath)
+				path = basePath + path;
+
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
 			{
 				var obj = (T)bf.Deserialize(fs);
