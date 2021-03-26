@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using MGE.StageSystem.Layers;
 using MGE.Components;
 
 namespace MGE.StageSystem
@@ -16,11 +15,10 @@ namespace MGE.StageSystem
 
 		public Level()
 		{
-			this.name = $"Level {position}";
 			this.layers = new List<LevelLayer>();
 		}
 
-		public void AddLayer(LevelLayer layer)
+		public void LayerAdd(LevelLayer layer)
 		{
 			layer.level = this;
 

@@ -55,20 +55,21 @@ namespace MGE.Components
 		{
 			current = this;
 
-			world = new World(new Vector2Int(16), new Vector2Int(16), 16);
-			world.path = path;
-			world.Reload();
+			world = World.FromFile(path);
 
-			level = world.LevelCreateNew(new Vector2Int(0, 0));
-			// level = world.LevelCreateNew(new Vector2Int(1, 1));
-			// level = world.LevelCreateNew(new Vector2Int(5, 3));
+			if (world is null)
+			{
+				world = new World(new Vector2Int(16), new Vector2Int(16), 16);
+				world.path = path;
+				world.Reload();
+			}
 		}
 
 		public override void Update()
 		{
 			hierarchyGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
 			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 5, 0, 64 * 5, Window.windowedSize.y), true);
-			mainGUI = new GUI(new Rect(0, 0, Window.windowedSize), true);
+			mainGUI = new GUI(new Rect(0, 0, Window.windowedSize), Input.windowMousePosition.x > hierarchyGUI.rect.width && Input.windowMousePosition.x < Window.windowedSize.x - inspectorGUI.rect.width);
 
 			hierarchyGUI.Image(new Rect(Vector2.zero, hierarchyGUI.rect.size), Colors.transBG);
 
@@ -135,6 +136,11 @@ namespace MGE.Components
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.F1))
 			{
 				Menuing.OpenMenu(new DMenuEditorCheatsheet());
+			}
+			// > Back
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Escape))
+			{
+				state = EditorState.World;
 			}
 
 			if (Input.GetButtonPress(Inputs.MouseMiddle))
@@ -211,48 +217,82 @@ namespace MGE.Components
 					break;
 			}
 
+			mainGUI.Draw();
+
 			hierarchyGUI.Draw();
 
 			if (inspectorGUI.elements.Count < 2)
 			{
 				inspectorGUI.Text("(No properties to edit)", new Rect(0, 0, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.textDark, 1, TextAlignment.Center);
-				inspectorGUI.Text("Today is a sad day indeed :(", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
+				inspectorGUI.Text("This is very sad...", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
 			}
 
 			inspectorGUI.Draw();
-
-			mainGUI.Draw();
 		}
 
 		public void World_Update()
 		{
+			var levelSize = (Vector2)world.levelSize * world.tileSize * zoom;
 
-		}
-
-		public void World_Draw()
-		{
-			using (new DrawBatch(transform: null))
+			world.availableLevels.For((x, y, state) =>
 			{
-				var levelSize = (Vector2)world.levelSize * world.tileSize * zoom;
+				var color = Colors.black;
+				var isLoaded = world.LevelIsLoaded(new Vector2Int(x, y));
+				var pos = new Vector2Int(x, y);
 
-				world.availableLevels.For((x, y, state) =>
+				if (isLoaded)
+					color = Colors.lightGray;
+				else if (state)
+					color = Colors.gray;
+
+				switch (mainGUI.ColoredButton(
+					world.LevelGet(pos)?.name,
+					new Rect(pan + levelSize * (Vector2)pos, levelSize),
+					color,
+					scale: zoom < 0.25f ? 0 : zoom.Clamp(0.25f, 4f)
+				))
 				{
-					GFX.DrawBox(new Rect(pan + levelSize * new Vector2(x, y), levelSize), state ? Colors.lightGray : Colors.gray);
-				});
+					case PointerInteraction.LClick:
+						if (isLoaded)
+						{
+							level = world.LevelGet(pos);
+							this.state = EditorState.Level;
+						}
+						else if (state)
+						{
+							world.LevelLoad(pos);
+						}
+						else
+						{
+							world.LevelCreate(pos);
+						}
+						break;
+					case PointerInteraction.RClick:
+						if (isLoaded)
+						{
+							world.LevelUnload(pos, true);
+						}
+						else
+						{
+							world.LevelDelete(pos);
+						}
+						break;
+				}
 
-				GFX.DrawRect(new Rect(pan, levelSize * (Vector2)world.size), Colors.accent, 8);
+				// GFX.DrawRect(new Rect(pan, levelSize * (Vector2)world.size), Colors.accent, 8);
+			});
 
-				var color = Colors.accent.ChangeAlpha(0.15f);
+			var color = Colors.accent.ChangeAlpha(0.25f);
+			var lineSize = Math.Clamp(8 * zoom, 1, 2);
 
-				float lineSize = Math.Clamp(8 * zoom, 1, 8);
+			for (int y = 1; y < world.size.y; y++)
+				mainGUI.Image(new Rect(pan.x, pan.y + y * world.levelSize.y * world.tileSize * zoom - lineSize / 2, world.size.x * world.levelSize.x * world.tileSize * zoom, lineSize), color);
 
-				for (int y = 1; y < world.size.y; y++)
-					GFX.DrawBox(new Rect(pan.x, pan.y + y * world.levelSize.y * world.tileSize * zoom - lineSize / 2, world.size.x * world.levelSize.x * world.tileSize * zoom, lineSize), color);
-
-				for (int x = 1; x < world.size.x; x++)
-					GFX.DrawBox(new Rect(pan.x + x * world.levelSize.x * world.tileSize * zoom - lineSize / 2, pan.y, lineSize, world.size.y * world.levelSize.y * world.tileSize * zoom), color);
-			}
+			for (int x = 1; x < world.size.x; x++)
+				mainGUI.Image(new Rect(pan.x + x * world.levelSize.x * world.tileSize * zoom - lineSize / 2, pan.y, lineSize, world.size.y * world.levelSize.y * world.tileSize * zoom), color);
 		}
+
+		public void World_Draw() { }
 
 		public void Level_Update()
 		{
@@ -326,7 +366,7 @@ namespace MGE.Components
 		{
 			using (new DrawBatch(transform: null))
 			{
-				GFX.DrawBox(new Rect(0, 0, Window.windowedSize.x, Window.windowedSize.y), Colors.black);
+				// GFX.DrawBox(new Rect(0, 0, Window.windowedSize.x, Window.windowedSize.y), Colors.black);
 				GFX.DrawBox(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), Colors.darkGray);
 				GFX.DrawRect(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), mouseInBounds ? Colors.gray : Colors.lightGray, Math.Clamp(world.tileSize / 2 * zoom, 1, float.PositiveInfinity));
 
@@ -389,7 +429,7 @@ namespace MGE.Components
 			{
 				using (Timmer.Start($"Saving World to {path}"))
 				{
-					world.SaveAllLevels();
+					world.LevelSaveAll();
 					IO.Save(path, world);
 				}
 			}

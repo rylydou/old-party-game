@@ -1,5 +1,6 @@
 using MGE.FileIO;
 using MGE.StageSystem.Layers;
+using System;
 
 namespace MGE.StageSystem
 {
@@ -12,6 +13,7 @@ namespace MGE.StageSystem
 
 		[System.NonSerialized] public Grid<Level> loadedLevels;
 		[System.NonSerialized] public Grid<bool> availableLevels;
+		[System.NonSerialized] public Grid<Texture> levelThumbnails;
 
 		[System.NonSerialized] public string path;
 		public string levelsPath { get => path + " Levels/"; }
@@ -48,46 +50,59 @@ namespace MGE.StageSystem
 			this.tileSize = tileSize;
 		}
 
-		public bool IsLevelInBounds(Vector2Int position)
+		public bool LevelIsInBounds(Vector2Int position)
 		{
 			return availableLevels.IsInBounds(position);
 		}
 
-		public bool IsLevelAvailable(Vector2Int position)
+		public bool LevelIsAvailable(Vector2Int position)
 		{
 			return availableLevels.Get(position);
 		}
 
-		public bool IsLevelLoaded(Vector2Int position)
+		public bool LevelIsLoaded(Vector2Int position)
 		{
 			return loadedLevels.Get(position) is object;
 		}
 
-		public Level LevelCreateNew(Vector2Int position)
+		public Level LevelCreate(Vector2Int position)
 		{
-			if (!IsLevelInBounds(position)) return null;
+			if (!LevelIsInBounds(position)) return null;
 
 			var level = new Level();
 
 			level.world = this;
+			level.name = $"Level {position}";
 
 			loadedLevels[position] = level;
 
-			level.AddLayer(new IntLayer());
+			level.LayerAdd(new IntLayer());
 
 			availableLevels[position] = true;
 
 			return level;
 		}
 
-		public Level GetLevel(Vector2Int position)
+		public bool LevelDelete(Vector2Int position)
+		{
+			if (LevelIsAvailable(position))
+			{
+				LevelUnload(position);
+				availableLevels[position] = false;
+				IO.FileDelete(LevelGetPath(position));
+				return true;
+			}
+			return false;
+		}
+
+		public Level LevelGet(Vector2Int position)
 		{
 			return loadedLevels.Get(position);
 		}
 
-		public bool SetLevel(Level level, Vector2Int position)
+		public bool LevelSet(Level level, Vector2Int position)
 		{
-			if (!IsLevelLoaded(position)) return false;
+			if (!LevelIsLoaded(position)) return false;
 
 			level.world = this;
 			level.position = position;
@@ -96,63 +111,64 @@ namespace MGE.StageSystem
 
 			availableLevels[position] = true;
 
-			return SaveLevel(position);
+			return LevelSave(position);
 		}
 
-		public bool SaveLevel(Vector2Int position)
+		public bool LevelSave(Vector2Int position)
 		{
-			if (!IsLevelLoaded(position)) return false;
+			if (!LevelIsLoaded(position)) return false;
 
-			IO.Save(GetLevelPath(position), GetLevel(position), false);
+			IO.Save(LevelGetPath(position), LevelGet(position), false);
 
 			return true;
 		}
 
-		public bool LoadLevel(Vector2Int position)
+		public bool LevelLoad(Vector2Int position)
 		{
-			if (!IsLevelAvailable(position)) return false;
+			if (!LevelIsAvailable(position)) return false;
 
-			loadedLevels[position] = IO.Load<Level>(GetLevelPath(position), false);
+			loadedLevels[position] = IO.Load<Level>(LevelGetPath(position), false);
 			availableLevels[position] = true;
 
 			return true;
 		}
 
-		public bool UnloadLevel(Vector2Int position, bool save = false)
+		public bool LevelUnload(Vector2Int position, bool save = false)
 		{
-			if (!IsLevelLoaded(position)) return false;
+			if (!LevelIsLoaded(position)) return false;
 
 			if (save)
-				SaveLevel(position);
+				LevelSave(position);
 
 			loadedLevels[position] = null;
 
 			return true;
 		}
 
-		public void UnloadAllLevels(bool save = false)
+		public void LevelUnloadAll(bool save = false)
 		{
 			if (save)
-				loadedLevels.For((x, y) => SaveLevel(new Vector2Int(x, y)));
+				loadedLevels.For((x, y) => LevelSave(new Vector2Int(x, y)));
 
 			loadedLevels = new Grid<Level>(size, null);
 		}
 
-		public void SaveAllLevels()
+		public void LevelSaveAll()
 		{
-			availableLevels.For((x, y) => SaveLevel(new Vector2Int(x, y)));
+			availableLevels.For((x, y) => LevelSave(new Vector2Int(x, y)));
 		}
 
-		public void LoadAllLevels()
+		public void LevelLoadAll()
 		{
 			ScanForLevels();
-			availableLevels.For((x, y) => LoadLevel(new Vector2Int(x, y)));
+			availableLevels.For((x, y) => LevelLoad(new Vector2Int(x, y)));
 		}
 
 		public void Reload()
 		{
 			loadedLevels = new Grid<Level>(size, null);
 			availableLevels = new Grid<bool>(size, false);
+			levelThumbnails = new Grid<Texture>(size, null);
 
 			ScanForLevels();
 		}
@@ -162,11 +178,11 @@ namespace MGE.StageSystem
 			IO.FolderCreate(levelsPath);
 
 			availableLevels.For((x, y, state) =>
-					availableLevels[x, y] = IO.FileExists(GetLevelPath(new Vector2Int(x, y)))
+					availableLevels[x, y] = IO.FileExists(LevelGetPath(new Vector2Int(x, y)))
 				);
 		}
 
-		public string GetLevelPath(Vector2Int position)
+		public string LevelGetPath(Vector2Int position)
 		{
 			return $"{levelsPath}{position.x} {position.y}.level";
 		}

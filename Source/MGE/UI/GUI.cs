@@ -75,7 +75,7 @@ namespace MGE.UI
 			AddElement(new GUIText(text) { rect = rect, color = color, scale = scale, alignment = alignment });
 		}
 
-		public PointerInteraction ColoredButton(string text, Rect rect, Color bgColor, Color? textColor = null, bool highlight = false, TextAlignment alignment = TextAlignment.Center)
+		public PointerInteraction ColoredButton(string text, Rect rect, Color bgColor, Color? textColor = null, bool highlight = false, float scale = 1, TextAlignment alignment = TextAlignment.Center)
 		{
 			if (!textColor.HasValue)
 				textColor = Math.Approximately(bgColor.a, 0) ? Colors.text : bgColor.readableColor;
@@ -94,13 +94,13 @@ namespace MGE.UI
 			if (highlight)
 				Image(new Rect(rect.center - new Vector2(rect.height / 2), new Vector2(rect.height)), bgColor.inverted.opaque);
 
-			Text(text, rect, highlight ? textColor.Value.inverted : textColor.Value, 1, alignment);
+			Text(text, rect, highlight ? textColor.Value.inverted : textColor.Value, scale, alignment);
 
 			return interaction;
 		}
 
 		public PointerInteraction Button(string text, Rect rect, Color? color = null, TextAlignment alignment = TextAlignment.Center) =>
-			ColoredButton(text, rect, Color.clear, color, false, alignment);
+			ColoredButton(text, rect, Color.clear, color, false, alignment: alignment);
 
 		public PointerInteraction Button(string text, float position, float size = 32, Color? color = null, TextAlignment alignment = TextAlignment.Center) =>
 			Button(text, new Rect(0, position, rect.width, size), color, alignment);

@@ -26,6 +26,8 @@ namespace MGE
 
 		public void DrawText(string text, Rect rect, Color color, float scale = 1.0f, TextAlignment alignment = TextAlignment.Left)
 		{
+			if (text == null) text = string.Empty;
+
 			var drawIndex = 0;
 			var isSp = false;
 			var spName = new StringBuilder();
@@ -90,6 +92,7 @@ namespace MGE
 
 		public Vector2 Measure(string text, float scale = 1)
 		{
+			if (text == null) text = string.Empty;
 			return new Vector2(text.Length * charPaddingSize.x * scale, charPaddingSize.y * scale);
 		}
 	}

@@ -20,7 +20,7 @@ namespace MGE.Debug.Menus
 					var text = layer.ToString();
 					if (gui.ButtonClicked(text.Substring(text.LastIndexOf('.') + 1), new Rect(layout.newElement, new Vector2(size.x, layout.currentSize))))
 					{
-						CEditor.current.level.AddLayer((LevelLayer)Activator.CreateInstance(layer));
+						CEditor.current.level.LayerAdd((LevelLayer)Activator.CreateInstance(layer));
 						Close();
 					}
 				}
