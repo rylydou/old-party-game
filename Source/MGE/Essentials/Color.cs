@@ -62,6 +62,15 @@ namespace MGE
 				a.a + (b.a - a.a) * t
 			);
 		}
+
+		public static Color AnimColor(float speed = 1)
+		{
+			return new Color(
+				Math.Abs(Math.Sin(Time.unscaledTime * speed)),
+				Math.Abs(Math.Sin((Time.unscaledTime + Math.pi / 3) * speed)),
+				Math.Abs(Math.Sin((Time.unscaledTime + Math.pi / 3 * 2) * speed))
+			);
+		}
 		#endregion
 
 		#endregion

@@ -50,6 +50,11 @@ namespace GAME
 				)
 			);
 
+			SceneManager.activeScene.clearScreen = false;
+#if Indev
+			SceneManager.activeScene.clearScreen = true;
+#endif
+
 			base.LoadContent();
 		}
 
@@ -62,8 +67,7 @@ namespace GAME
 		protected override void Update(GameTime gameTime)
 		{
 			engine.Update(gameTime);
-			var color = new MGE.Color(Math.Abs(Math.Sin(Time.unscaledTime)), Math.Abs(Math.Sin(Time.unscaledTime + Math.pi / 3)), Math.Abs(Math.Sin(Time.unscaledTime + Math.pi / 3 * 2)));
-			SceneManager.activeScene.screenClearColor = color;
+			SceneManager.activeScene.screenClearColor = MGE.Color.AnimColor(0.75f);
 			base.Update(gameTime);
 		}
 

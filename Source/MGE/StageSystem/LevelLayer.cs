@@ -36,7 +36,6 @@ namespace MGE.StageSystem
 		protected Vector2 Scale(Vector2 vector) => CEditor.Scale(vector);
 		protected Rect Scale(Rect rect) => CEditor.Scale(rect);
 
-
 		protected void Log(string message)
 		{
 			level.Log(message);

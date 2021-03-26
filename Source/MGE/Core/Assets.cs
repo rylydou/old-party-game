@@ -58,12 +58,12 @@ namespace MGE
 					{
 						if (preloadedAssets.ContainsKey(file.Key))
 						{
-							Logger.Log($"Replacing: {file.Key}");
+							Logger.Log($": {file.Key}");
 							preloadedAssets[file.Key] = asset;
 						}
 						else
 						{
-							Logger.Log($"Adding: {file.Key}");
+							Logger.Log($"+ {file.Key}");
 							preloadedAssets.Add(file.Key, asset);
 						}
 					}

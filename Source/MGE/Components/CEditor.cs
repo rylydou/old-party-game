@@ -18,7 +18,6 @@ namespace MGE.Components
 		public EditorState state = EditorState.World;
 
 		public World world = new World();
-
 		public Level level = null;
 
 		public int layerIndex = 0;
@@ -29,8 +28,8 @@ namespace MGE.Components
 		}
 
 		Vector2 pan = Vector2.zero;
-		float zoom = 1.0f;
 		Vector2 targetPan = Vector2.zero;
+		float zoom = 1.0f;
 		float targetZoom = 1.0f;
 
 		bool mouseInBounds = false;
@@ -46,26 +45,32 @@ namespace MGE.Components
 		bool isolateActiveLayer = false;
 		bool enableGrid = false;
 
-		string path = App.exePath + "//Stages/world.world";
+		string path = "/Assets/Stages/world.world";
 
 		GUI inspectorGUI;
-		GUI layersGUI;
+		GUI hierarchyGUI;
 		GUI mainGUI;
 
 		public override void Init()
 		{
 			current = this;
 
-			world = new World(new Vector2Int(16), new Vector2Int(32));
+			world = new World(new Vector2Int(16), new Vector2Int(16), 16);
+			world.path = path;
+			world.Reload();
+
+			level = world.LevelCreateNew(new Vector2Int(0, 0));
+			// level = world.LevelCreateNew(new Vector2Int(1, 1));
+			// level = world.LevelCreateNew(new Vector2Int(5, 3));
 		}
 
 		public override void Update()
 		{
-			layersGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
+			hierarchyGUI = new GUI(new Rect(0, 0, 64 * 4, Window.windowedSize.y), true);
 			inspectorGUI = new GUI(new Rect(Window.windowedSize.x - 64 * 5, 0, 64 * 5, Window.windowedSize.y), true);
 			mainGUI = new GUI(new Rect(0, 0, Window.windowedSize), true);
 
-			layersGUI.Image(new Rect(Vector2.zero, layersGUI.rect.size), Colors.transBG);
+			hierarchyGUI.Image(new Rect(Vector2.zero, hierarchyGUI.rect.size), Colors.transBG);
 
 			inspectorGUI.Image(new Rect(Vector2.zero, inspectorGUI.rect.size), Colors.transBG);
 
@@ -152,7 +157,7 @@ namespace MGE.Components
 
 				var oldZoom = targetZoom;
 
-				targetZoom = Math.Clamp(targetZoom - zoomDelta, 1.0f / level.tileSize, level.tileSize / 2);
+				targetZoom = Math.Clamp(targetZoom - zoomDelta, 1.0f / world.tileSize, world.tileSize / 2);
 
 				var zoomChange = oldZoom - targetZoom;
 
@@ -172,15 +177,85 @@ namespace MGE.Components
 
 			var localMousePos = (Input.windowMousePosition - targetPan);
 
-			gridMousePos = localMousePos / (targetZoom * level.tileSize);
+			gridMousePos = localMousePos / (targetZoom * world.tileSize);
 			mouseInBounds =
-				mousePos.x > layersGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
+				mousePos.x > hierarchyGUI.rect.width && mousePos.x < Window.windowedSize.x - inspectorGUI.rect.width &&
 				mousePos.y > 0 && mousePos.y < Window.windowedSize.y &&
 				gridMousePos.x >= 0 && gridMousePos.x < world.levelSize.x &&
 				gridMousePos.y >= 0 && gridMousePos.y < world.levelSize.y &&
 				localMousePos.x > 0 &&
 				localMousePos.y > 0;
 
+			switch (state)
+			{
+				case EditorState.World:
+					World_Update();
+					break;
+				case EditorState.Level:
+					Level_Update();
+					break;
+			}
+
+			oldMousePos = gridMousePos;
+		}
+
+		public override void Draw()
+		{
+			switch (state)
+			{
+				case EditorState.World:
+					World_Draw();
+					break;
+				case EditorState.Level:
+					Level_Draw();
+					break;
+			}
+
+			hierarchyGUI.Draw();
+
+			if (inspectorGUI.elements.Count < 2)
+			{
+				inspectorGUI.Text("(No properties to edit)", new Rect(0, 0, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.textDark, 1, TextAlignment.Center);
+				inspectorGUI.Text("Today is a sad day indeed :(", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
+			}
+
+			inspectorGUI.Draw();
+
+			mainGUI.Draw();
+		}
+
+		public void World_Update()
+		{
+
+		}
+
+		public void World_Draw()
+		{
+			using (new DrawBatch(transform: null))
+			{
+				var levelSize = (Vector2)world.levelSize * world.tileSize * zoom;
+
+				world.availableLevels.For((x, y, state) =>
+				{
+					GFX.DrawBox(new Rect(pan + levelSize * new Vector2(x, y), levelSize), state ? Colors.lightGray : Colors.gray);
+				});
+
+				GFX.DrawRect(new Rect(pan, levelSize * (Vector2)world.size), Colors.accent, 8);
+
+				var color = Colors.accent.ChangeAlpha(0.15f);
+
+				float lineSize = Math.Clamp(8 * zoom, 1, 8);
+
+				for (int y = 1; y < world.size.y; y++)
+					GFX.DrawBox(new Rect(pan.x, pan.y + y * world.levelSize.y * world.tileSize * zoom - lineSize / 2, world.size.x * world.levelSize.x * world.tileSize * zoom, lineSize), color);
+
+				for (int x = 1; x < world.size.x; x++)
+					GFX.DrawBox(new Rect(pan.x + x * world.levelSize.x * world.tileSize * zoom - lineSize / 2, pan.y, lineSize, world.size.y * world.levelSize.y * world.tileSize * zoom), color);
+			}
+		}
+
+		public void Level_Update()
+		{
 			if (mouseInBounds)
 			{
 				if (layer is IntLayer intLayer)
@@ -207,12 +282,12 @@ namespace MGE.Components
 
 				foreach (var layer in level.layers)
 				{
-					var rect = new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize));
+					var rect = new Rect(layout.newElement, new Vector2(hierarchyGUI.rect.width, layout.currentSize));
 
 					if (index == layerIndex)
-						layersGUI.Image(rect, Colors.highlight);
+						hierarchyGUI.Image(rect, Colors.highlight);
 
-					switch (layersGUI.Button(layer.name, rect, layer.isVisible ? Colors.text : Colors.textDark))
+					switch (hierarchyGUI.Button(layer.name, rect, layer.isVisible ? Colors.text : Colors.textDark))
 					{
 						case PointerInteraction.LClick:
 							if (index == layerIndex)
@@ -238,26 +313,24 @@ namespace MGE.Components
 						layerIndex--;
 				}
 
-				if (layersGUI.ButtonClicked("Add New Layer...", new Rect(layout.newElement, new Vector2(layersGUI.rect.width, layout.currentSize))))
+				if (hierarchyGUI.ButtonClicked("Add New Layer...", new Rect(layout.newElement, new Vector2(hierarchyGUI.rect.width, layout.currentSize))))
 				{
 					Menuing.OpenMenu(new DMenuNewLayer(), Input.windowMousePosition);
 				}
 			}
 
 			layer.Editor_Update(ref inspectorGUI);
-
-			oldMousePos = gridMousePos;
 		}
 
-		public override void Draw()
+		public void Level_Draw()
 		{
 			using (new DrawBatch(transform: null))
 			{
 				GFX.DrawBox(new Rect(0, 0, Window.windowedSize.x, Window.windowedSize.y), Colors.black);
 				GFX.DrawBox(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), Colors.darkGray);
-				GFX.DrawRect(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), mouseInBounds ? Colors.gray : Colors.lightGray, Math.Clamp(level.tileSize / 2 * zoom, 1, float.PositiveInfinity));
+				GFX.DrawRect(Scale(new Rect(0, 0, world.levelSize.x, world.levelSize.y)), mouseInBounds ? Colors.gray : Colors.lightGray, Math.Clamp(world.tileSize / 2 * zoom, 1, float.PositiveInfinity));
 
-				Config.font.DrawText(world.levelSize.ToString(), new Vector2(0, -(Config.font.charSize.y + level.tileSize) * zoom) + pan, Colors.gray, zoom);
+				Config.font.DrawText(world.levelSize.ToString(), new Vector2(0, -(Config.font.charSize.y + world.tileSize) * zoom) + pan, Colors.gray, zoom);
 
 				if (isolateActiveLayer)
 				{
@@ -276,11 +349,13 @@ namespace MGE.Components
 				{
 					var color = Colors.accent.ChangeAlpha(0.15f);
 
+					const float lineSize = 1;
+
 					for (int y = 1; y < world.levelSize.y; y++)
-						GFX.DrawLine(Scale(new Vector2(0, y)), Scale(new Vector2(world.levelSize.x, y)), color, 1f);
+						GFX.DrawBox(new Rect(pan.x, pan.y + y * world.tileSize * zoom - lineSize / 2, world.levelSize.x * world.tileSize * zoom, lineSize), color);
 
 					for (int x = 1; x < world.levelSize.x; x++)
-						GFX.DrawLine(Scale(new Vector2(x, 0)), Scale(new Vector2(x, world.levelSize.y)), color, 1f);
+						GFX.DrawBox(new Rect(pan.x + x * world.tileSize * zoom - lineSize / 2, pan.y, lineSize, world.levelSize.y * world.tileSize * zoom), color);
 
 					if (mouseInBounds)
 					{
@@ -303,29 +378,20 @@ namespace MGE.Components
 						Config.font.DrawText(gridMousePos.ToString(), Input.windowMousePosition + new Vector2(26, -32), Colors.accent);
 				}
 			}
-
-			layersGUI.Draw();
-
-			if (inspectorGUI.elements.Count < 2)
-			{
-				inspectorGUI.Text("(No properties to edit)", new Rect(0, 0, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.textDark, 1, TextAlignment.Center);
-				inspectorGUI.Text("Today is a sad day indeed :(", new Rect(0, 24, inspectorGUI.rect.width, inspectorGUI.rect.height), Colors.text.ChangeAlpha(0.15f), 0.75f, TextAlignment.Center);
-			}
-
-			inspectorGUI.Draw();
-
-			mainGUI.Draw();
 		}
 
-		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * current.level.tileSize;
-		public static Rect Scale(Rect rect) => new Rect(Scale(rect.position), rect.size * current.zoom * current.level.tileSize);
+		public static Vector2 Scale(Vector2 vector) => current.pan + vector * current.zoom * current.world.tileSize;
+		public static Rect Scale(Rect rect) => new Rect(Scale(rect.position), rect.size * current.zoom * current.world.tileSize);
 
 		public void Save()
 		{
 			try
 			{
-				using (Timmer.Start("Stage Saving to {path}"))
-					IO.Save(path, level);
+				using (Timmer.Start($"Saving World to {path}"))
+				{
+					world.SaveAllLevels();
+					IO.Save(path, world);
+				}
 			}
 			catch (System.Exception e)
 			{
@@ -337,8 +403,10 @@ namespace MGE.Components
 		{
 			try
 			{
-				using (Timmer.Start($"Stage Loading from {path}"))
-					level = IO.Load<Level>(path);
+				using (Timmer.Start($"Loading World from {path}"))
+				{
+					world = IO.Load<World>(path);
+				}
 			}
 			catch (System.Exception e)
 			{

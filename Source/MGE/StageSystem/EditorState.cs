@@ -1,6 +1,6 @@
 namespace MGE.StageSystem
 {
-	public enum EitorState
+	public enum EditorState
 	{
 		World,
 		Level

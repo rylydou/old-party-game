@@ -106,7 +106,7 @@ namespace MGE.StageSystem.Layers
 			if (intGrid.lastChanged == Time.unscaledTime)
 				GetNewTiles();
 
-			tileset?.DrawTiles(in tiles, pan, zoom * level.tileSize, Color.white);
+			tileset?.DrawTiles(in tiles, pan, zoom * level.world.tileSize, Color.white);
 		}
 
 		public void GetNewTiles()

@@ -93,7 +93,7 @@ namespace MGE.StageSystem.Layers
 
 			tiles.For((x, y, tile) =>
 			{
-				GFX.DrawBox(new Rect(x * level.tileSize, y * level.tileSize, level.tileSize, level.tileSize), colors[tile]);
+				GFX.DrawBox(new Rect(x * level.world.tileSize, y * level.world.tileSize, level.world.tileSize, level.world.tileSize), colors[tile]);
 			});
 		}
 	}

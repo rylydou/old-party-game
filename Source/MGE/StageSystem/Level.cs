@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using MGE.StageSystem.Layers;
 using MGE.Components;
@@ -11,8 +9,6 @@ namespace MGE.StageSystem
 	{
 		public string name;
 
-		public float tileSize;
-
 		public List<LevelLayer> layers;
 
 		public Vector2Int position { get; internal set; }
@@ -21,10 +17,7 @@ namespace MGE.StageSystem
 		public Level()
 		{
 			this.name = $"Level {position}";
-			this.tileSize = 16;
 			this.layers = new List<LevelLayer>();
-
-			AddLayer(new IntLayer());
 		}
 
 		public void AddLayer(LevelLayer layer)
