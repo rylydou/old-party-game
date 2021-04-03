@@ -22,7 +22,7 @@ namespace MGE.StageSystem
 		{
 			try
 			{
-				var world = IO.Load<World>(path, false);
+				var world = IO.Load<World>(path);
 
 				world.path = path;
 				world.Reload();

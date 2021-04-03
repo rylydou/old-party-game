@@ -207,6 +207,11 @@ namespace MGE.Components
 
 		public override void Draw()
 		{
+			using (new DrawBatch())
+			{
+				GFX.DrawBox(new Rect(0, 0, Window.windowedSize), Color.black);
+			}
+
 			switch (state)
 			{
 				case EditorState.World:
@@ -431,6 +436,7 @@ namespace MGE.Components
 				{
 					world.LevelSaveAll();
 					IO.Save(path, world);
+					world.ScanForLevels();
 				}
 			}
 			catch (System.Exception e)
