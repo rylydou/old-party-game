@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Graphics
 {
-	public class GFX
+	public static class GFX
 	{
 		public static GraphicsDevice graphicsDevice { get => Engine.game.GraphicsDevice; }
 		public static GraphicsDeviceManager graphics { get => Engine.current.graphics; }
@@ -13,31 +13,49 @@ namespace MGE.Graphics
 		public static ulong drawCalls { get; internal set; }
 
 		#region Normal Drawing
-		public static void Draw(Texture texture, Vector2 position, Color color)
+		public static void Draw(Texture texture, Vector2 position, Color? color = null)
+		{
+			if (!color.HasValue) color = Color.white;
+
+			// DrawDirect(texture, position, color.Value);
+
+			DrawDirect(texture, (position * Config.pixelsPerUnit).rounded, color.Value);
+		}
+
+		public static void Draw(Texture texture, Rect source, Vector2 position, Color? color = null)
+		{
+			if (!color.HasValue) color = Color.white;
+
+			// DrawDirect(texture, position, color.Value);
+
+			DrawDirect(texture, source, new Rect((position * Config.pixelsPerUnit).rounded, source.size), color.Value);
+		}
+
+		public static void DrawDirect(Texture texture, Vector2 position, Color color)
 		{
 			sb.Draw(texture != null ? texture : pixel, position, color);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, Rect rect, Color color)
+		public static void DrawDirect(Texture texture, Rect destination, Color color)
 		{
-			sb.Draw(texture != null ? texture : pixel, rect, color);
+			sb.Draw(texture != null ? texture : pixel, destination, color);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, RectInt source, Rect destination, Color color)
+		public static void DrawDirect(Texture texture, RectInt source, Rect destination, Color color)
 		{
 			sb.Draw(texture != null ? texture : pixel, destination, source, color);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, Vector2 position, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+		public static void DrawDirect(Texture texture, Vector2 position, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
 		{
 			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
 			drawCalls++;
 		}
 
-		public static void Draw(Texture texture, Rect destinationRectangle, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
+		public static void DrawDirect(Texture texture, Rect destinationRectangle, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
 		{
 			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
 			drawCalls++;
@@ -124,7 +142,7 @@ namespace MGE.Graphics
 
 		public static void DrawBox(Rect rect, Color color, float angle = 0.0f)
 		{
-			GFX.Draw(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
+			GFX.DrawDirect(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
 		}
 
 		public static void DrawRect(Rect rect, Color color, float thickness = 1.0f)
@@ -164,7 +182,7 @@ namespace MGE.Graphics
 
 		public static void DrawPoint(Vector2 position, Color color)
 		{
-			GFX.Draw(pixel, position, color);
+			GFX.DrawDirect(pixel, position, color);
 		}
 		#endregion
 	}

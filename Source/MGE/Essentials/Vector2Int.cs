@@ -88,7 +88,6 @@ namespace MGE
 
 		public int max { get => Math.Max(x, y); }
 		public int min { get => Math.Min(x, y); }
-
 		#endregion
 
 		#region Constructors

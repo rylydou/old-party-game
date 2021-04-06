@@ -18,7 +18,6 @@ namespace MGE
 		}
 
 		public static RNG rng { get; private set; } = new RNG(_seed);
-		public static Perlin perlin { get; private set; } = new Perlin(_seed);
 
 		public static bool Bool() => rng.Next(2) == 0 ? false : true;
 		public static bool Bool(float chance) => Float() < chance;
@@ -75,7 +74,5 @@ namespace MGE
 
 			return items[entries[Random.Int(0, entries.Count - 1)]];
 		}
-
-		public static double Noise(double x, double y, double z) => perlin.Noise(x, y, z);
 	}
 }

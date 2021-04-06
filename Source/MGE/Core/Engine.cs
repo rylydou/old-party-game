@@ -140,7 +140,19 @@ namespace MGE
 		{
 			GFX.drawCalls = 0;
 
-			SceneManager.Draw();
+			using (var rt = new RenderTarget2D(game.GraphicsDevice, Window.gameRenderSize.x, Window.gameRenderSize.y))
+			{
+				game.GraphicsDevice.SetRenderTarget(rt);
+
+				SceneManager.Draw();
+
+				game.GraphicsDevice.SetRenderTarget(null);
+
+				using (new DrawBatch(transform: null))
+				{
+					sb.Draw(rt, new Rect(0, 0, Window.windowedSize), Color.white);
+				}
+			}
 
 			SceneManager.DrawUI();
 
@@ -148,7 +160,7 @@ namespace MGE
 
 			Menuing.Draw();
 
-			// Terminal.Draw();
+			Terminal.Draw();
 
 			Pointer.Draw();
 		}

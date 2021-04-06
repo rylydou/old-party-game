@@ -1,75 +1,95 @@
-// using MGE;
-// using MGE.ECS;
-// using MGE.InputSystem;
-// using MGE.Graphics;
-// using MGE.Physics;
-// using MGE.Components;
+using MGE;
+using MGE.ECS;
+using MGE.Graphics;
+using MGE.Physics;
+using MGE.Components;
 
-// namespace GAME.Components
-// {
-// 	public class CPlayer : Component
-// 	{
-// 		public float maxSpeed = 0.75f;
-// 		public float acceleration = 12.0f;
-// 		public float friction = 1.0f - 0.1f;
+namespace GAME.Components
+{
+	public class CPlayer : Component
+	{
+		public float maxSpeed = 0.1f;
+		public float acceleration = 1000.0f;
+		public float friction = 0.67f;
 
-// 		public float jumpVel = 1.5f;
+		public float jumpVel = 0.2f;
 
-// 		public float groundedRem = 0.20f;
-// 		public float jumpRem = 0.15f;
+		public float groundedRem = 0.20f;
+		public float jumpRem = 0.15f;
 
-// 		float groundedMem;
-// 		float jumpMem;
+		public float interactionDist = 1;
 
-// 		CRigidbody rb;
-// 		Texture body;
+		CCrate interactable;
+		float groundedMem = -1;
+		float jumpMem = -1;
 
-// 		public override void Init()
-// 		{
-// 			body = Assets.GetAsset<Texture>("Sprites/Player");
+		PlayerControls controls;
 
-// 			rb = entity.GetComponent<CRigidbody>();
-// 			rb.raycaster = entity.layer.FindEntityByComponent<CWorld>().GetComponent<CWorld>();
+		CRigidbody rb;
+		Texture body;
 
-// 			rb.position = new Vector2(64);
-// 		}
+		public override void Init()
+		{
+			body = Assets.GetAsset<Texture>("Sprites/Player");
 
-// 		public override void Update()
-// 		{
-// 			var moveInput = ((Input.GetButton(Inputs.D) ? 1.0f : 0.0f) - (Input.GetButton(Inputs.A) ? 1.0f : 0.0f));
+			rb = entity.GetComponent<CRigidbody>();
 
-// 			rb.velocity.x = rb.velocity.x * friction;
+			rb.raycaster = CStage.current;
 
-// 			rb.velocity.x += moveInput * acceleration * Time.deltaTime;
+			rb.position = new Vector2(2);
 
-// 			rb.velocity.x = Math.Clamp(rb.velocity.x, -maxSpeed, maxSpeed);
+			controls = new PlayerControls();
+		}
 
-// 			groundedMem -= Time.deltaTime;
-// 			if (RaycastHit.WithinDistance(rb.raycaster.Raycast(rb.position + new Vector2(rb.size.x / 2, rb.size.y), Vector2.up), 2f))
-// 				groundedMem = groundedRem;
+		public override void Update()
+		{
+			controls.Update();
 
-// 			jumpMem -= Time.deltaTime;
-// 			if (Input.GetButtonPress(Inputs.Space))
-// 				jumpMem = jumpRem;
+			rb.velocity.x = rb.velocity.x * friction;
 
-// 			if (groundedMem > 0f && jumpMem > 0f)
-// 			{
-// 				groundedMem = -1f;
-// 				jumpMem = -1f;
-// 				rb.velocity.y = -jumpVel;
-// 			}
+			rb.velocity.x += controls.move * acceleration * Time.deltaTime;
 
-// 			Camera.main.zoom -= Input.scroll * Camera.main.zoom * Time.deltaTime * 4;
+			rb.velocity.x = Math.Clamp(rb.velocity.x, -maxSpeed, maxSpeed);
 
-// 			Camera.main.position = entity.position + rb.size - (Vector2)Window.gameSize / (2 * (Camera.main.zoom * Camera.main.zoom));
-// 		}
+			groundedMem -= Time.deltaTime;
+			if (RaycastHit.WithinDistance(rb.raycaster.Raycast(rb.position + new Vector2(rb.size.x / 2, rb.size.y), Vector2.up), 2f))
+				groundedMem = groundedRem;
 
-// 		public override void Draw()
-// 		{
-// 			using (new DrawBatch())
-// 			{
-// 				GFX.Draw(body, entity.position, Color.white);
-// 			}
-// 		}
-// 	}
-// }
+			jumpMem -= Time.deltaTime;
+			if (controls.jump)
+				jumpMem = jumpRem;
+
+			if (groundedMem > 0f && jumpMem > 0f)
+			{
+				groundedMem = -1f;
+				jumpMem = -1f;
+				rb.velocity.y = -jumpVel;
+			}
+
+			interactable = null;
+			var currentDistSqr = interactionDist * interactionDist;
+
+			foreach (var entity in entity.layer.entities)
+			{
+				var crate = entity.GetComponent<CCrate>();
+
+				if (crate is object)
+				{
+					var dist = Vector2.DistanceSqr(this.entity.position, crate.entity.position);
+
+					if (dist < currentDistSqr)
+					{
+						currentDistSqr = dist;
+						interactable = crate;
+					}
+				}
+			}
+		}
+
+		public override void Draw()
+		{
+			GFX.Draw(body, entity.position, Color.white);
+			if (interactable is object) GFX.DrawRect(new Rect(interactable.entity.position, 16, 16), Color.red);
+		}
+	}
+}

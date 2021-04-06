@@ -1,19 +1,16 @@
+using GAME.Components;
 using MGE;
 using MGE.Components;
 using MGE.ECS;
-using Microsoft.Xna.Framework;
+
+using XNA_Game = Microsoft.Xna.Framework.Game;
+using XNA_GameTime = Microsoft.Xna.Framework.GameTime;
 
 namespace GAME
 {
-	public class Main : Game
+	public class Main : XNA_Game
 	{
 		public static Main current { get; private set; }
-
-		public int health = 2;
-		public int extraHealth = 1;
-		public int maxHealth = 3;
-
-		public Item[] inv = new Item[10];
 
 		public Engine engine;
 
@@ -38,15 +35,16 @@ namespace GAME
 				new Scene(
 					new Layer(
 						false,
-						// new Entity(new CBackground()),
-						// new Entity(new CRigidbody(), new CPlayer()),
-						// new Entity(new CWorld()),
-						new Entity(new CEditor())
-					)/* ,
+						new Entity(new CBackground())
+					),
 					new Layer(
-						true,
-						new Entity(new CUIHUD())
-					) */
+						false,
+						new Entity(new CStage()),
+						new Entity(new CRigidbody(), new CCrate()),
+						new Entity(new CRigidbody(), new CCrate()),
+						new Entity(new CRigidbody(), new CCrate()),
+						new Entity(new CRigidbody(), new CPlayer())
+					)
 				)
 			);
 
@@ -64,14 +62,16 @@ namespace GAME
 			base.UnloadContent();
 		}
 
-		protected override void Update(GameTime gameTime)
+		protected override void Update(XNA_GameTime gameTime)
 		{
 			engine.Update(gameTime);
+#if Indev
 			SceneManager.activeScene.screenClearColor = MGE.Color.AnimColor(0.75f);
+#endif
 			base.Update(gameTime);
 		}
 
-		protected override void Draw(GameTime gameTime)
+		protected override void Draw(XNA_GameTime gameTime)
 		{
 			engine.Draw(gameTime);
 			base.Draw(gameTime);

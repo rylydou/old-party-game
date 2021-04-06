@@ -81,7 +81,7 @@ namespace MGE
 
 		public void DrawChar(int charPos, bool isSp, Vector2 startingPos, ref int drawIndex, float scale, Color color)
 		{
-			GFX.Draw(
+			GFX.DrawDirect(
 				texture,
 				new Rect(charPos * charSize.x, isSp ? charSize.y : 0, charSize.x, charSize.y),
 				new Rect(startingPos.x + charPaddingSize.x * drawIndex * scale, startingPos.y, charSize.x * scale, charSize.y * scale),

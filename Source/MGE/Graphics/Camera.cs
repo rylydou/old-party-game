@@ -46,11 +46,11 @@ namespace MGE.Graphics
 			{
 				_transform =
 					Matrix.CreateTranslation(new Vector3(-_position.x, -_position.y, 0.0f)) *
-					Matrix.CreateTranslation(new Vector3(-(float)GFX.graphicsDevice.Viewport.Width / 2, -(float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
+					// Matrix.CreateTranslation(new Vector3(-(float)GFX.graphicsDevice.Viewport.Width / 2, -(float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
 					Matrix.CreateRotationZ(rotation) *
-					// Matrix.CreateScale(zoom) *
-					Matrix.CreateTranslation(new Vector3((float)GFX.graphicsDevice.Viewport.Width / 2, (float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
-					Matrix.CreateScale(scaleUpFactor.x, scaleUpFactor.y, 1f);
+					Matrix.CreateScale(zoom);
+				// Matrix.CreateTranslation(new Vector3((float)GFX.graphicsDevice.Viewport.Width / 2, (float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
+				// Matrix.CreateScale(scaleUpFactor.x, scaleUpFactor.y, 1f);
 
 				_isDirty = false;
 			}

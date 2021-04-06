@@ -4,7 +4,7 @@ namespace MGE.Physics
 {
 	public static class Physics
 	{
-		public static Vector2 gravity = new Vector2(0.0f, 3.0f);
+		public static Vector2 gravity = new Vector2(0.0f, 0.5f);
 		public static float friction = 1.0f / 3.0f;
 
 		/// <summary> Speed: Slow, 3 Sqrts </summary>

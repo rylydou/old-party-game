@@ -181,6 +181,10 @@ namespace MGE
 
 		public float max { get => Math.Max(x, y); }
 		public float min { get => Math.Min(x, y); }
+
+		public Vector2Int floored { get => this; }
+		public Vector2Int rounded { get => new Vector2Int(Math.RoundToInt(x), Math.RoundToInt(y)); }
+		public Vector2Int ceiled { get => new Vector2Int(Math.CeilToInt(x), Math.CeilToInt(y)); }
 		#endregion
 
 		#region Constructors

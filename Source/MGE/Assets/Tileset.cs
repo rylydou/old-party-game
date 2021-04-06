@@ -18,7 +18,7 @@ namespace MGE
 
 		public Tileset() { }
 
-		public void DrawTiles(in Grid<RectInt> map, Vector2 position, float scale, Color color)
+		public void DrawTiles(in Grid<RectInt> map, Vector2 position, Color color)
 		{
 			for (int y = 0; y < map.size.y; y++)
 			{
@@ -30,7 +30,7 @@ namespace MGE
 
 					DrawTile(
 						new RectInt(tile.x, tile.y, tileSize.x, tileSize.y),
-						new Rect(position.x + x * scale, position.y + y * scale, scale, scale),
+						new Vector2(position.x + x, position.y + y),
 						color
 					);
 				}
@@ -93,9 +93,9 @@ namespace MGE
 			}
 		}
 
-		public void DrawTile(RectInt source, Rect destination, Color color)
+		public void DrawTile(RectInt source, Vector2 position, Color color)
 		{
-			GFX.Draw(texture, source, destination, color);
+			GFX.Draw(texture, source, position, color);
 		}
 
 		public TileConnection GetConnections(int x, int y, ref Func<int, int, bool> isSolid)

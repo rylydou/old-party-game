@@ -1,4 +1,5 @@
 using System;
+using MGE.Graphics;
 
 namespace MGE.ECS
 {
@@ -160,31 +161,37 @@ namespace MGE.ECS
 
 		public void Draw()
 		{
-			foreach (var entity in entities)
+			using (new DrawBatch(transform: null))
 			{
-				if (!entity.visible) continue;
-				if (entity.destroyed)
+				foreach (var entity in entities)
 				{
-					entities.Remove(entity);
-					continue;
-				}
+					if (!entity.visible) continue;
+					if (entity.destroyed)
+					{
+						entities.Remove(entity);
+						continue;
+					}
 
-				entity.Draw();
+					entity.Draw();
+				}
 			}
 		}
 
 		public void DrawUI()
 		{
-			foreach (var entity in entities)
+			using (new DrawBatch(transform: null))
 			{
-				if (!entity.visible) continue;
-				if (entity.destroyed)
+				foreach (var entity in entities)
 				{
-					entities.Remove(entity);
-					continue;
-				}
+					if (!entity.visible) continue;
+					if (entity.destroyed)
+					{
+						entities.Remove(entity);
+						continue;
+					}
 
-				entity.Draw();
+					entity.Draw();
+				}
 			}
 		}
 

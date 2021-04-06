@@ -1,5 +1,4 @@
 using MGE.ECS;
-using MGE.InputSystem;
 using MGE.Physics;
 
 namespace MGE.Components
@@ -10,7 +9,7 @@ namespace MGE.Components
 
 		public ICanRaycast raycaster;
 
-		Vector2 _size = new Vector2(6);
+		Vector2 _size = new Vector2(1);
 		public Vector2 size
 		{
 			get => _size;
@@ -31,7 +30,7 @@ namespace MGE.Components
 
 		public Vector2 velocity = Vector2.zero;
 
-		public float skinWidth = 1;
+		public float skinWidth = 0.1f;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -46,6 +45,17 @@ namespace MGE.Components
 
 		public Vector2 raySpacing { get; private set; } = Vector2.zero;
 
+		public CRigidbody() { }
+		public CRigidbody(Vector2 size)
+		{
+			this.size = size;
+		}
+		public CRigidbody(Vector2 position, Vector2 size)
+		{
+			this.position = position;
+			this.size = size;
+		}
+
 		public override void Init()
 		{
 			CalcRaySpacing();
@@ -53,6 +63,12 @@ namespace MGE.Components
 
 		public override void FixedUpdate()
 		{
+			if (raycaster is null)
+			{
+				Logger.LogWarning("Rigidbody has no raycaster!");
+				return;
+			}
+
 			velocity += Physics.Physics.gravity * Time.deltaTime;
 
 			var direction = velocity.sign;
@@ -94,12 +110,6 @@ namespace MGE.Components
 
 		public override void Update()
 		{
-			if (Input.GetButtonPress(Inputs.MouseMiddle))
-			{
-				position = Input.cameraMousePosition;
-				velocity = Vector2.zero;
-			}
-
 			entity.position = position;
 		}
 
