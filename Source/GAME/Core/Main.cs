@@ -49,7 +49,7 @@ namespace GAME
 			);
 
 			SceneManager.activeScene.clearScreen = false;
-#if Indev
+#if INDEV
 			SceneManager.activeScene.clearScreen = true;
 #endif
 
@@ -65,7 +65,7 @@ namespace GAME
 		protected override void Update(XNA_GameTime gameTime)
 		{
 			engine.Update(gameTime);
-#if Indev
+#if INDEV
 			SceneManager.activeScene.screenClearColor = MGE.Color.AnimColor(0.75f);
 #endif
 			base.Update(gameTime);

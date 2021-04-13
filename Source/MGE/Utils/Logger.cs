@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace MGE
 {
-	public struct Logger
+	public static class Logger
 	{
 		const string logPath = @"\Logs\";
 
@@ -56,12 +56,22 @@ namespace MGE
 				throw new Exception(text);
 		}
 
+		internal static void LogGameLoopError(object source, Exception exception)
+		{
+			WriteToLog($"{source} - {exception.Message}");
+
+#if INDEV
+			if (exception.Message.StartsWith('!'))
+				throw exception;
+#endif
+		}
+
 		public static void ClearLog()
 		{
 			Console.Clear();
 
-			WriteToLogRaw("");
-			WriteToLogRaw("");
+			WriteToLogRaw(string.Empty);
+			WriteToLogRaw(string.Empty);
 		}
 
 		public static void WriteToLog(string text)
@@ -70,12 +80,14 @@ namespace MGE
 
 			WriteToLogRaw($"[ {DateTime.Now.ToString(@"hh\:mm\:ss\.fff")} ]");
 			WriteToLogRaw("> " + text);
-			WriteToLogRaw("");
+			WriteToLogRaw(string.Empty);
 		}
 
 		public static void WriteToLogRaw(string text)
 		{
-			// log.WriteLine(text);
+#if INDEV
+			log.WriteLine(text);
+#endif
 		}
 
 		public static DialogResult MSGBox(

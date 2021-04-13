@@ -15,16 +15,14 @@ namespace MGE
 		public static string saveDataPath = @"%LocalAppData%/MGE/MGEGame/";
 
 		// > Graphics
-		public static readonly bool pixelPerfect = true;
 		public static readonly int pixelsPerUnit = 16;
-		public static readonly Vector2Int gameSize = new Vector2Int(16 * 2, 8 * 2);
+		public static readonly Vector2Int sceneSize = new Vector2Int(16 * 2, 8 * 2);
 		public static readonly Vector2Int gameRenderSize = new Vector2Int(320 * 2, 180 * 2);
 
 		// >> Windowing
 		public static readonly bool allowWindowResizing = true;
 		public static readonly Vector2 aspectRatio = new Vector2(16.0f, 9.0f);
 		public static readonly Vector2Int defaultWindowSize = new Vector2Int(1280, 720);
-		public static readonly int minWindowHorizontalSize = 1920 / 4;
 
 		// > Asset Management
 		public static readonly Dictionary<Type, string> typeToExtention = new Dictionary<Type, string>()

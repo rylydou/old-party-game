@@ -4,7 +4,6 @@ namespace MGE
 	{
 		public static int Abs(this int value) => Math.Abs(value);
 		public static int Sign(this int value) => Math.Sign(value);
-		public static int Sign0(this int value) => Math.Sign0(value);
 
 		public static float Clamp(this int value, float max) => Math.Clamp(value, 0, max);
 		public static float Clamp(this int value, float min, float max) => Math.Clamp(value, min, max);

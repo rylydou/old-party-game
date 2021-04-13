@@ -27,8 +27,8 @@ namespace MGE
 		public static float Tan(float value) => Mathf.Tan(value);
 		public static float Asin(float value) => Mathf.Asin(value);
 		public static float Acos(float value) => Mathf.Acos(value);
-		public static float Atan(float value) => Mathf.Atan(value);
-		public static float Atan2(float y, float x) => Mathf.Atan2(y, x);
+		public static float Atan1(float value) => Mathf.Atan(value);
+		public static float Atan(float y, float x) => Mathf.Atan2(y, x);
 		public static float Sqrt(float value) => Mathf.Sqrt(value);
 		public static float Abs(float value) => Mathf.Abs(value);
 		public static int Abs(int value) => (int)Mathf.Abs(value);
@@ -48,10 +48,8 @@ namespace MGE
 		public static int CeilToInt(float value) => (int)Mathf.Ceiling(value);
 		public static int FloorToInt(float value) => (int)Mathf.Floor(value);
 		public static int RoundToInt(float value) => (int)Mathf.Round(value);
-		public static float Sign(float value) => value >= 0.0f ? 1.0f : -1.0f;
-		public static float Sign0(float value) => value == 0.0f ? 0.0f : value >= 0.0f ? 1.0f : -1.0f;
-		public static int Sign(int value) => value >= 0 ? 1 : -1;
-		public static int Sign0(int value) => value == 0 ? 0 : value >= 0 ? 1 : -1;
+		public static float Sign(float value) => value == 0.0f ? 0.0f : value >= 0.0f ? 1.0f : -1.0f;
+		public static int Sign(int value) => value == 0 ? 0 : value >= 0 ? 1 : -1;
 		#endregion
 
 		#region Min Maxes

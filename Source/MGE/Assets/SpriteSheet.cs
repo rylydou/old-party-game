@@ -21,7 +21,7 @@ namespace MGE
 
 		public void Draw(string name, Rect rect, Color color)
 		{
-			GFX.DrawDirect(texture, regions[name], rect, color);
+			GFX.Draw(texture, regions[name], rect, color);
 		}
 	}
 }

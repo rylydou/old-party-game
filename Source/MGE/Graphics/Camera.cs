@@ -16,8 +16,8 @@ namespace MGE.Graphics
 		protected float _zoom;
 		public float zoom { get => _zoom; set { _zoom = value; if (_zoom < 0.1f) _zoom = 0.1f; _isDirty = true; } }
 
-		public Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.gameSize) * (zoom * zoom); }
-		public Vector2 scaleDownFactor { get => ((Vector2)Window.gameSize / (Vector2)Window.renderSize) / (zoom * zoom); }
+		public Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.gameSize); }
+		public Vector2 scaleDownFactor { get => ((Vector2)Window.gameSize / (Vector2)Window.renderSize); }
 
 		protected Matrix _transform;
 
@@ -46,11 +46,8 @@ namespace MGE.Graphics
 			{
 				_transform =
 					Matrix.CreateTranslation(new Vector3(-_position.x, -_position.y, 0.0f)) *
-					// Matrix.CreateTranslation(new Vector3(-(float)GFX.graphicsDevice.Viewport.Width / 2, -(float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
 					Matrix.CreateRotationZ(rotation) *
 					Matrix.CreateScale(zoom);
-				// Matrix.CreateTranslation(new Vector3((float)GFX.graphicsDevice.Viewport.Width / 2, (float)GFX.graphicsDevice.Viewport.Height / 2, 0)) *
-				// Matrix.CreateScale(scaleUpFactor.x, scaleUpFactor.y, 1f);
 
 				_isDirty = false;
 			}
@@ -60,12 +57,12 @@ namespace MGE.Graphics
 
 		public Vector2 WinToCam(Vector2 position)
 		{
-			return position * scaleDownFactor + this.position;
+			return position * scaleUpFactor / GFX.pixelsPerUnit + this.position;
 		}
 
 		public Vector2 CamToWin(Vector2 position)
 		{
-			return position * scaleUpFactor + this.position;
+			return position / GFX.pixelsPerUnit + this.position;
 		}
 	}
 }

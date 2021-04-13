@@ -1,0 +1,10 @@
+{
+	"game": "Game Name",
+	"name": "Example Resource Pack",
+	"version": "1.0.0.0",
+	"author": "Your Name",
+	"description": "An example resource pack, very cool.",
+	"warning": "VERY EPIC!!!",
+	"origin": "https://url/on/where/to/update/this/pack/or/where/this/pack/came/from/or/where/to/get/help/on/this/pack",
+	"compatible": ["0.0.1.x", "0.0.4.2", "-", "0.0.4.4", "0.0.5.0-winx86", "+", "*"]
+}

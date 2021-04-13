@@ -21,7 +21,7 @@ namespace GAME.Components
 
 			tileset = Assets.GetAsset<Tileset>("Tilesets/Grass");
 
-			mapSize = (Vector2)Window.gameSize + 2;
+			mapSize = (Vector2)Window.gameRenderSize / Config.pixelsPerUnit;
 
 			map = new Grid<byte>(mapSize, 1);
 			tiles = new Grid<RectInt>(mapSize, RectInt.zero);
@@ -35,13 +35,15 @@ namespace GAME.Components
 
 			map.For((x, y) =>
 			{
-				return (byte)(x == 0 || y == 0 || x == mapSize.x - 1 || y == mapSize.y - 1 ? 1 : (noise.GetNoise(x * 8, 0).Abs() + 0.25f < (float)y / mapSize.y ? 1 : 0));
+				return (byte)(x == 0 || y == 0 || x == mapSize.x - 1 || y == mapSize.y - 1 ? 1 : (noise.GetNoise(x * 8, 0).Abs() * 1.5f + 0.25f < (float)y / mapSize.y ? 1 : 0));
 			});
 		}
 
 		public override void Draw()
 		{
 			tileset.GetTiles(ref tiles, (x, y) => map.Get(x, y) != 0);
+
+			tileset.DrawTiles(in tiles, entity.position + new Vector2(0.1f, 0.1f), new Color(0, 0.1f));
 			tileset.DrawTiles(in tiles, entity.position, Color.white);
 		}
 

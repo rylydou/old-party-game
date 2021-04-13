@@ -9,7 +9,7 @@ namespace MGE.Components
 
 		public ICanRaycast raycaster;
 
-		Vector2 _size = new Vector2(1);
+		Vector2 _size = new Vector2(0.8f, 1.0f);
 		public Vector2 size
 		{
 			get => _size;
@@ -46,10 +46,12 @@ namespace MGE.Components
 		public Vector2 raySpacing { get; private set; } = Vector2.zero;
 
 		public CRigidbody() { }
+
 		public CRigidbody(Vector2 size)
 		{
 			this.size = size;
 		}
+
 		public CRigidbody(Vector2 position, Vector2 size)
 		{
 			this.position = position;
@@ -115,7 +117,7 @@ namespace MGE.Components
 
 		public void CalcRaySpacing()
 		{
-			effectiveSize = size - skinWidth;
+			effectiveSize = size - skinWidth * 2;
 			raySpacing = effectiveSize / (Vector2)raycastsCount;
 		}
 	}

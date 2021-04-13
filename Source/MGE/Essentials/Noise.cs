@@ -209,8 +209,14 @@ namespace MGE
 		/// <remarks> Default: 1.0 </remarks>
 		public float domainWarpAmp { get => _domainWarpAmp; set => _domainWarpAmp = value; }
 
-		/// <summary> Create new FastNoise object with optional seed </summary>
-		public Noise(int seed = 5318008)
+		/// <summary> Create new FastNoise object </summary>
+		public Noise()
+		{
+			this.seed = System.Environment.TickCount;
+		}
+
+		/// <summary> Create new FastNoise object with a seed </summary>
+		public Noise(int seed)
 		{
 			this.seed = seed;
 		}

@@ -40,12 +40,12 @@ namespace MGE
 			{
 				using (new DrawBatch(transform: null))
 				{
-					GFX.DrawDirect(
+					GFX.Draw(
 						Pointer.texture,
 						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size),
 						Pointer.shadowColor);
 
-					GFX.DrawDirect(
+					GFX.Draw(
 						Pointer.texture,
 						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size),
 						Pointer.color);

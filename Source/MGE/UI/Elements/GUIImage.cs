@@ -13,7 +13,7 @@ namespace MGE.UI.Elements
 
 		public override void Draw()
 		{
-			GFX.DrawDirect(texture, rect, color);
+			GFX.Draw(texture, rect, color);
 		}
 	}
 }

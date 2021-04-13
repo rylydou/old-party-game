@@ -15,5 +15,10 @@ namespace MGE.ECS
 		public virtual void Update() { }
 		public virtual void Draw() { }
 		public virtual void Destroy() { }
+
+		protected virtual void Log(string message)
+		{
+			Logger.Log($"{this.ToString()} - {message}");
+		}
 	}
 }

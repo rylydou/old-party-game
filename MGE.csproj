@@ -11,7 +11,7 @@
 		<TieredCompilation>false</TieredCompilation>
 
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<DefineConstants>Indev</DefineConstants>
+		<DefineConstants>INDEV</DefineConstants>
 
 		<!-- <Nullable>enable</Nullable> -->
 		<!-- <PublishSingleFile>true</PublishSingleFile> -->

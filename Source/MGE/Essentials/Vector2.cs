@@ -31,6 +31,11 @@ namespace MGE
 		#endregion
 
 		#region Methods
+		public static Vector2 FromAngle(float angle)
+		{
+			return new Vector2(Math.Cos(angle), Math.Sin(angle));
+		}
+
 		public static Vector2 Lerp(Vector2 current, Vector2 target, float time)
 		{
 			time = Math.Clamp01(time);
@@ -50,14 +55,14 @@ namespace MGE
 
 		public static Vector2 MoveTowards(Vector2 from, Vector2 to, float maxDistanceDelta)
 		{
-			float toVector_x = to.x - from.x;
-			float toVector_y = to.y - from.y;
+			var toVector_x = to.x - from.x;
+			var toVector_y = to.y - from.y;
 
-			float sqDist = toVector_x * toVector_x + toVector_y * toVector_y;
+			var sqDist = toVector_x * toVector_x + toVector_y * toVector_y;
 
 			if (sqDist == 0 || (maxDistanceDelta >= 0.0f && sqDist <= maxDistanceDelta * maxDistanceDelta)) return to;
 
-			float dist = Math.Sqrt(sqDist);
+			var dist = Math.Sqrt(sqDist);
 
 			return new Vector2
 			(
@@ -68,7 +73,7 @@ namespace MGE
 
 		public static Vector2 Reflect(Vector2 inDirection, Vector2 inNormal)
 		{
-			float factor = -2F * Dot(inNormal, inDirection);
+			var factor = -2f * Dot(inNormal, inDirection);
 			return new Vector2(factor * inNormal.x + inDirection.x, factor * inNormal.y + inDirection.y);
 		}
 
@@ -78,18 +83,18 @@ namespace MGE
 
 		public static float Angle(Vector2 from, Vector2 to)
 		{
-			float denominator = Math.Sqrt(from.sqrMagnitude * to.sqrMagnitude);
+			var denominator = Math.Sqrt(from.sqrMagnitude * to.sqrMagnitude);
 			if (denominator < epsilonNormalSqrt)
 				return 0.0f;
 
-			float dot = Math.Clamp(Dot(from, to) / denominator, -1.0f, 1.0f);
+			var dot = Math.Clamp(Dot(from, to) / denominator, -1.0f, 1.0f);
 			return Math.Acos(dot) * Math.rad2Deg;
 		}
 
 		public static float SignedAngle(Vector2 from, Vector2 to)
 		{
-			float unsignedAngle = Angle(from, to);
-			float sign = Math.Sign(from.x * to.y - from.y * to.x);
+			var unsignedAngle = Angle(from, to);
+			var sign = Math.Sign(from.x * to.y - from.y * to.x);
 			return unsignedAngle * sign;
 		}
 
@@ -112,21 +117,21 @@ namespace MGE
 
 		public static Vector2 ClampMagnitude(Vector2 vector, float maxLength)
 		{
-			float sqrMagnitude = vector.sqrMagnitude;
+			var sqrMagnitude = vector.sqrMagnitude;
 			if (sqrMagnitude > maxLength * maxLength)
 			{
-				float mag = Math.Sqrt(sqrMagnitude);
+				var mag = Math.Sqrt(sqrMagnitude);
 
-				float normalized_x = vector.x / mag;
-				float normalized_y = vector.y / mag;
+				var normalized_x = vector.x / mag;
+				var normalized_y = vector.y / mag;
 				return new Vector2(normalized_x * maxLength, normalized_y * maxLength);
 			}
 			return vector;
 		}
 
-		public static Vector2 Min(Vector2 a, Vector2 b) { return new Vector2(Math.Min(a.x, b.x), Math.Min(a.y, b.y)); }
+		public static Vector2 Min(Vector2 a, Vector2 b) => new Vector2(Math.Min(a.x, b.x), Math.Min(a.y, b.y));
 
-		public static Vector2 Max(Vector2 a, Vector2 b) { return new Vector2(Math.Max(a.x, b.x), Math.Max(a.y, b.y)); }
+		public static Vector2 Max(Vector2 a, Vector2 b) => new Vector2(Math.Max(a.x, b.x), Math.Max(a.y, b.y));
 		#endregion
 
 		#endregion
@@ -166,12 +171,12 @@ namespace MGE
 		{
 			get
 			{
-				Vector2 vector = new Vector2(x, y);
+				var vector = new Vector2(x, y);
 				vector.Normalize();
 				return vector;
 			}
 		}
-		public Vector2 sign { get => new Vector2(Math.Sign0(x), Math.Sign0(y)); }
+		public Vector2 sign { get => new Vector2(Math.Sign(x), Math.Sign(y)); }
 
 		public Vector2 isolateX { get => new Vector2(x, 0.0f); }
 		public Vector2 isolateY { get => new Vector2(0.0f, y); }

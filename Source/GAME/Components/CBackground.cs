@@ -15,7 +15,7 @@ namespace GAME.Components
 
 		public override void Draw()
 		{
-			GFX.DrawDirect(background, new Rect(0, 0, Window.gameRenderSize), Color.white);
+			GFX.Draw(background, new Rect(0, 0, Window.gameRenderSize), Color.white);
 		}
 	}
 }

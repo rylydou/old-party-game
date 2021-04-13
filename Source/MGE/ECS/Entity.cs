@@ -11,11 +11,13 @@ namespace MGE.ECS
 
 		public bool destroyed { get; protected set; } = false;
 
+		public List<string> tags = new List<string>();
+
 		public Dictionary<Type, Component> components = new Dictionary<Type, Component>();
 
-		public Vector2 position;
-		public float roation;
-		public Vector2 scale;
+		public Vector2 position = Vector2.zero;
+		public float roation = 0.0f;
+		public Vector2 scale = Vector2.one;
 
 		int priority = 0;
 
@@ -50,6 +52,46 @@ namespace MGE.ECS
 					}
 		}
 
+		public virtual bool HasTag(string tag)
+		{
+			return tags.Contains(tag);
+		}
+
+		public virtual bool AddTag(string tag)
+		{
+			if (HasTag(tag)) return false;
+
+			tags.Add(tag);
+			return true;
+		}
+
+		public virtual bool RemoveTag(string tag)
+		{
+			if (!HasTag(tag)) return false;
+
+			tags.Remove(tag);
+			return true;
+		}
+
+		public virtual bool RemoveAllTags()
+		{
+			if (tags.Count < 1) return false;
+
+			tags.Clear();
+			tags.TrimExcess();
+			return true;
+		}
+
+		public virtual bool ChangeTag(string tag, string newTag)
+		{
+			if (!HasTag(tag)) return false;
+			if (HasTag(newTag)) return false;
+
+			tags.Remove(tag);
+			tags.Add(newTag);
+			return true;
+		}
+
 		public virtual T AddComponent<T>(T component) where T : Component
 		{
 			if (component.entity != null)
@@ -79,6 +121,15 @@ namespace MGE.ECS
 		{
 			if (components.ContainsKey(typeof(T)))
 				return (T)components[typeof(T)];
+			return null;
+		}
+
+		public T GetSimilarComponent<T>() where T : class
+		{
+			foreach (var component in components.Values)
+			{
+				if (component is T c) return c;
+			}
 			return null;
 		}
 

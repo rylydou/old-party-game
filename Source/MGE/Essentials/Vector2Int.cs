@@ -81,7 +81,7 @@ namespace MGE
 		#endregion
 
 		#region Properties
-		public Vector2Int sign { get => new Vector2Int(Math.Sign0(x), Math.Sign0(y)); }
+		public Vector2Int sign { get => new Vector2Int(Math.Sign(x), Math.Sign(y)); }
 
 		public int sqrMagnitude { get => x * x + y * y; }
 		public float magnitude { get => Math.Sqrt(sqrMagnitude); }

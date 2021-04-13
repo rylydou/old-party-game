@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MGE.Graphics;
 
 namespace MGE.ECS
@@ -30,19 +31,30 @@ namespace MGE.ECS
 			if (entities != null)
 			{
 				foreach (var entity in entities)
-					AddEntity(entity);
+					AddEntityNoInit(entity);
 			}
 
 			this.isUI = isUI;
 		}
 
 		#region Entity Management
+		internal void AddEntityNoInit(Entity entity)
+		{
+			if (entity.layer != null)
+				throw new Exception("Entity aready has an owner!");
+
+			entity._layer = this;
+
+			entities.Add(entity);
+		}
+
 		public void AddEntity(Entity entity)
 		{
 			if (entity.layer != null)
 				throw new Exception("Entity aready has an owner!");
 
 			entity._layer = this;
+			entity.Init();
 
 			entities.Add(entity);
 		}
@@ -68,7 +80,7 @@ namespace MGE.ECS
 			return false;
 		}
 
-		public T FindEntity<T>() where T : Entity
+		public T GetEntity<T>() where T : Entity
 		{
 			for (var i = 0; i < entities.Count; i++)
 			{
@@ -78,16 +90,27 @@ namespace MGE.ECS
 			return null;
 		}
 
-		public Entity FindEntityByComponent<T>() where T : Component
+		public Entity GetEntityWithComponent<T>() where T : Component
 		{
 			for (var i = 0; i < entities.Count; i += 1)
 			{
 				if (entities[i].HasComponent<T>())
-				{
 					return entities[i];
-				}
 			}
 			return null;
+		}
+
+		public Entity[] GetEntitysWithTag(string tag)
+		{
+			var entitiesWithTag = new List<Entity>();
+
+			foreach (var entity in entities)
+			{
+				if (entity.HasTag(tag))
+					entitiesWithTag.Add(entity);
+			}
+
+			return entitiesWithTag.ToArray();
 		}
 
 		internal void CleanupEntityList()
@@ -161,7 +184,7 @@ namespace MGE.ECS
 
 		public void Draw()
 		{
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch())
 			{
 				foreach (var entity in entities)
 				{

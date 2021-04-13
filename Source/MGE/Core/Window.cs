@@ -12,7 +12,7 @@ namespace MGE
 		Fullscreen
 	}
 
-	public class Window
+	public static class Window
 	{
 		public static GameWindow gameWindow { get => Engine.game.Window; }
 
@@ -59,8 +59,8 @@ namespace MGE
 		public static float aspectRatio { get => (float)(aspectRatioFrac.y / aspectRatioFrac.x); }
 
 		public static Vector2Int renderSize;
-		public static Vector2Int gameSize = Config.gameSize;
-		// public static Vector2Int gameRenderSize = Config.gameSize * Config.pixelsPerUnit;
+
+		public static Vector2Int gameSize = Config.sceneSize;
 		public static Vector2Int gameRenderSize = Config.gameRenderSize;
 
 		public static Action onResize = () => { };
@@ -102,8 +102,8 @@ namespace MGE
 		{
 			if (windowMode != WindowMode.Windowed) return;
 
-			int horizontalSize = Math.Clamp(GFX.graphics.PreferredBackBufferWidth, Config.minWindowHorizontalSize, int.MaxValue);
-			Vector2Int size = new Vector2Int(horizontalSize, (int)(horizontalSize * aspectRatio));
+			var horizontalSize = Math.Clamp(GFX.graphics.PreferredBackBufferWidth, gameRenderSize.x, int.MaxValue);
+			var size = new Vector2Int(horizontalSize, (int)(horizontalSize * aspectRatio));
 
 			GFX.graphics.PreferredBackBufferWidth = size.x;
 			GFX.graphics.PreferredBackBufferHeight = size.y;

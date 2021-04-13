@@ -140,6 +140,8 @@ namespace MGE
 		{
 			GFX.drawCalls = 0;
 
+			GFX.SetupToDrawGame();
+
 			using (var rt = new RenderTarget2D(game.GraphicsDevice, Window.gameRenderSize.x, Window.gameRenderSize.y))
 			{
 				game.GraphicsDevice.SetRenderTarget(rt);
@@ -153,6 +155,8 @@ namespace MGE
 					sb.Draw(rt, new Rect(0, 0, Window.windowedSize), Color.white);
 				}
 			}
+
+			GFX.SetupToDrawUI();
 
 			SceneManager.DrawUI();
 

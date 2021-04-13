@@ -12,57 +12,9 @@ namespace MGE.Graphics
 
 		public static ulong drawCalls { get; internal set; }
 
-		#region Normal Drawing
-		public static void Draw(Texture texture, Vector2 position, Color? color = null)
-		{
-			if (!color.HasValue) color = Color.white;
+		public static int pixelsPerUnit { get => Config.pixelsPerUnit; }
+		public static int currentPixelsPerUnit { get; internal set; } = 16;
 
-			// DrawDirect(texture, position, color.Value);
-
-			DrawDirect(texture, (position * Config.pixelsPerUnit).rounded, color.Value);
-		}
-
-		public static void Draw(Texture texture, Rect source, Vector2 position, Color? color = null)
-		{
-			if (!color.HasValue) color = Color.white;
-
-			// DrawDirect(texture, position, color.Value);
-
-			DrawDirect(texture, source, new Rect((position * Config.pixelsPerUnit).rounded, source.size), color.Value);
-		}
-
-		public static void DrawDirect(Texture texture, Vector2 position, Color color)
-		{
-			sb.Draw(texture != null ? texture : pixel, position, color);
-			drawCalls++;
-		}
-
-		public static void DrawDirect(Texture texture, Rect destination, Color color)
-		{
-			sb.Draw(texture != null ? texture : pixel, destination, color);
-			drawCalls++;
-		}
-
-		public static void DrawDirect(Texture texture, RectInt source, Rect destination, Color color)
-		{
-			sb.Draw(texture != null ? texture : pixel, destination, source, color);
-			drawCalls++;
-		}
-
-		public static void DrawDirect(Texture texture, Vector2 position, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
-		{
-			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
-			drawCalls++;
-		}
-
-		public static void DrawDirect(Texture texture, Rect destinationRectangle, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth)
-		{
-			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
-			drawCalls++;
-		}
-		#endregion
-
-		#region Primitive Drawing
 		static readonly Dictionary<int, List<Vector2>> circleCache = new Dictionary<int, List<Vector2>>();
 
 		static Texture _pixel;
@@ -78,6 +30,59 @@ namespace MGE.Graphics
 
 				return _pixel;
 			}
+		}
+
+		public static void Draw(Texture texture, Rect source, Vector2 position, Color? color = null)
+		{
+			if (!color.HasValue) color = Color.white;
+
+			sb.Draw(texture != null ? texture : pixel, new Rect((position * currentPixelsPerUnit).rounded, source.size), source, color.Value);
+		}
+
+		public static void Draw(Texture texture, Vector2 position, Color? color = null)
+		{
+			if (!color.HasValue) color = Color.white;
+
+			sb.Draw(texture != null ? texture : pixel, (position * currentPixelsPerUnit).rounded, color.Value);
+			drawCalls++;
+		}
+
+		public static void Draw(Texture texture, Rect destination, Color? color = null, float rotation = 0, Vector2 origin = default)
+		{
+			if (!color.HasValue) color = Color.white;
+
+			sb.Draw(texture != null ? texture : pixel, new Rect((destination.position * currentPixelsPerUnit).rounded, (destination.size * currentPixelsPerUnit).rounded), null, color.Value, rotation, origin, SpriteEffects.None, 0);
+			drawCalls++;
+		}
+
+		public static void Draw(Texture texture, RectInt source, Rect destination, Color? color = null, float rotation = 0, Vector2 origin = default)
+		{
+			if (!color.HasValue) color = Color.white;
+
+			sb.Draw(texture != null ? texture : pixel, new Rect((destination.position * currentPixelsPerUnit).rounded, (destination.size * currentPixelsPerUnit).rounded), source, color.Value, rotation, origin, SpriteEffects.None, 0);
+			drawCalls++;
+		}
+
+		public static void DrawDirect(Texture texture, Vector2 position, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects = SpriteEffects.None, float layerDepth = 0)
+		{
+			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+			drawCalls++;
+		}
+
+		public static void DrawDirect(Texture texture, Rect destinationRectangle, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects = SpriteEffects.None, float layerDepth = 0)
+		{
+			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
+			drawCalls++;
+		}
+
+		public static void SetupToDrawGame()
+		{
+			currentPixelsPerUnit = pixelsPerUnit;
+		}
+
+		public static void SetupToDrawUI()
+		{
+			currentPixelsPerUnit = 1;
 		}
 
 		static List<Vector2> CreateArc(float radius, int sides, float startingAngle, float radians)
@@ -142,7 +147,7 @@ namespace MGE.Graphics
 
 		public static void DrawBox(Rect rect, Color color, float angle = 0.0f)
 		{
-			GFX.DrawDirect(pixel, rect, null, color, angle, Vector2.zero, SpriteEffects.None, 0);
+			Draw(pixel, rect, color, angle);
 		}
 
 		public static void DrawRect(Rect rect, Color color, float thickness = 1.0f)
@@ -157,14 +162,14 @@ namespace MGE.Graphics
 		{
 			var distance = (float)Vector2.Distance(from, to);
 
-			var angle = (float)Math.Atan2(to.y - from.y, to.x - from.x);
+			var angle = (float)Math.Atan(to.y - from.y, to.x - from.x);
 
 			DrawLine(from, distance, color, angle, thickness);
 		}
 
 		public static void DrawLine(Vector2 position, float length, Color color, float angle = 0.0f, float thickness = 1.0f)
 		{
-			sb.Draw(pixel, position, null, color, angle, Vector2.zero, new Vector2(length, thickness), SpriteEffects.None, 0);
+			sb.Draw(pixel, position * currentPixelsPerUnit, null, color, angle, Vector2.zero, new Vector2(length, thickness) * currentPixelsPerUnit, SpriteEffects.None, 0);
 		}
 
 		public static void DrawPoints(Vector2 position, List<Vector2> points, Color color, float thickness = 1.0f)
@@ -182,8 +187,7 @@ namespace MGE.Graphics
 
 		public static void DrawPoint(Vector2 position, Color color)
 		{
-			GFX.DrawDirect(pixel, position, color);
+			Draw(pixel, position, color);
 		}
-		#endregion
 	}
 }
