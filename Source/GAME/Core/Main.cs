@@ -1,4 +1,5 @@
 using GAME.Components;
+using GAME.Components.Items;
 using MGE;
 using MGE.Components;
 using MGE.ECS;

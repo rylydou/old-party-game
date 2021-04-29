@@ -1,3 +1,5 @@
+using MGE.Graphics;
+
 namespace MGE.ECS
 {
 	[System.Serializable]
@@ -15,6 +17,11 @@ namespace MGE.ECS
 		public virtual void Update() { }
 		public virtual void Draw() { }
 		public virtual void Destroy() { }
+
+		public virtual void Draw(Texture texture, Vector2 position = default, Color? color = null)
+		{
+			GFX.Draw(texture, entity.position + position, color);
+		}
 
 		protected virtual void Log(string message)
 		{

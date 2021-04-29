@@ -1,3 +1,4 @@
+using GAME.Components;
 using MGE.ECS;
 
 namespace GAME
@@ -11,6 +12,6 @@ namespace GAME
 			entity.AddTag("Interactable");
 		}
 
-		public abstract void Interact(Entity player);
+		public abstract void Interact(CPlayer player);
 	}
 }
