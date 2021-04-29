@@ -16,8 +16,32 @@ namespace MGE.ECS
 		public Dictionary<Type, Component> components = new Dictionary<Type, Component>();
 
 		public Vector2 position = Vector2.zero;
-		public float roation = 0.0f;
+		float _roation = 0.0f;
+		public float roation
+		{
+			get => _roation;
+			set
+			{
+				_roation = value;
+				rotationDirty = true;
+			}
+		}
 		public Vector2 scale = Vector2.one;
+
+		public bool rotationDirty { get; protected set; } = false;
+		Vector2 _roationVector = Vector2.right;
+		public Vector2 roationVector
+		{
+			get
+			{
+				if (rotationDirty)
+				{
+					rotationDirty = false;
+					_roationVector = Vector2.FromAngle(roation);
+				}
+				return _roationVector;
+			}
+		}
 
 		int priority = 0;
 

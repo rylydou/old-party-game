@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MGE;
 using MGE.Components;
 
@@ -19,11 +18,12 @@ namespace GAME.Components
 {
 	public abstract class CItem : CInteractable
 	{
-		public ItemType type = ItemType.Weapon;
+		public abstract ItemType type { get; }
+
 		public ItemState state = ItemState.Dropped;
 
 		public Texture currentSprite = null;
-		public CPlayer heldBy = null;
+		public CPlayer player = null;
 
 		public Texture sprite;
 
@@ -46,22 +46,29 @@ namespace GAME.Components
 
 		public virtual void Pickup(CPlayer player)
 		{
-			heldBy = player;
+			entity.RemoveTag("Interactable");
 			state = ItemState.Held;
+
+			this.player = player;
+			player.Pickup(this);
 		}
 
 		public virtual void Use() { }
 
 		public virtual void Drop()
 		{
-			heldBy = null;
+			entity.AddTag("Interactable");
 			state = ItemState.Dropped;
+
+			player = null;
 		}
 
 		public virtual void Throw()
 		{
-			heldBy = null;
+			entity.AddTag("Interactable");
 			state = ItemState.Dropped;
+
+			player = null;
 		}
 
 		public override void Draw()
@@ -98,6 +105,13 @@ namespace GAME.Components
 					}
 				}
 			}
+		}
+
+		public override void Update()
+		{
+			base.Update();
+
+			entity.position = player.entity.position;
 		}
 	}
 }

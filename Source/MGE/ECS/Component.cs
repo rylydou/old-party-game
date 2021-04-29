@@ -23,9 +23,19 @@ namespace MGE.ECS
 			GFX.Draw(texture, entity.position + position, color);
 		}
 
-		protected virtual void Log(string message)
+		protected virtual void Log(object message)
 		{
 			Logger.Log($"{this.ToString()} - {message}");
+		}
+
+		protected virtual void LogWarning(object message)
+		{
+			Logger.LogWarning($"{this.ToString()} - {message}");
+		}
+
+		protected virtual void LogError(object message)
+		{
+			Logger.LogError($"{this.ToString()} - {message}");
 		}
 	}
 }

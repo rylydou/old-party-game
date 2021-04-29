@@ -20,14 +20,15 @@ namespace GAME.Components
 
 		public float interactionDist = 1;
 
+		public CItem item = null;
 		CInteractable interactable = null;
 		float groundedMem = -1;
 		float jumpMem = -1;
 
-		PlayerControls controls;
+		PlayerControls controls = null;
 
-		CRigidbody rb;
-		Texture body;
+		CRigidbody rb = null;
+		Texture body = null;
 
 		public override void Init()
 		{
@@ -89,7 +90,15 @@ namespace GAME.Components
 
 			if (Input.GetButtonPress(Inputs.E))
 			{
-				interactable?.Interact(entity);
+				if (item is null)
+					interactable?.Interact(this);
+				else
+					item.Use();
+			}
+
+			if (Input.GetButtonPress(Inputs.Q))
+			{
+				item?.Drop();
 			}
 		}
 
@@ -102,6 +111,11 @@ namespace GAME.Components
 			GFX.Draw(body, entity.position + new Vector2(0.1f, 0.1f), new Color(0, 0.1f));
 			GFX.Draw(body, entity.position);
 			if (interactable is object) GFX.DrawRect(new Rect(interactable.entity.position, 1, 1), Color.red, 0.1f);
+		}
+
+		public void Pickup(CItem item)
+		{
+			this.item = item;
 		}
 	}
 }

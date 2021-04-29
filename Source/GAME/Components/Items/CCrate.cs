@@ -6,6 +6,8 @@ namespace GAME.Components.Items
 {
 	public class CCrate : CItem
 	{
+		public override ItemType type => ItemType.Item;
+
 		public CItem item;
 
 		CRigidbody rb;
@@ -25,7 +27,7 @@ namespace GAME.Components.Items
 
 		public override void Pickup(CPlayer player)
 		{
-			entity.layer.AddEntity(new Entity(new CRigidbody(), new CCrate()));
+			entity.layer.AddEntity(new Entity(new CRigidbody(), (CItem)System.Activator.CreateInstance(item.GetType())));
 			entity.Destroy();
 		}
 	}
