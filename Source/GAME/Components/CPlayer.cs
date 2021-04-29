@@ -100,7 +100,7 @@ namespace GAME.Components
 			GFX.DrawCircle(Input.cameraMousePosition, 0.5f, Color.black, 0.25f);
 
 			GFX.Draw(body, entity.position + new Vector2(0.1f, 0.1f), new Color(0, 0.1f));
-			GFX.Draw(body, entity.position, Color.white);
+			GFX.Draw(body, entity.position);
 			if (interactable is object) GFX.DrawRect(new Rect(interactable.entity.position, 1, 1), Color.red, 0.1f);
 		}
 	}

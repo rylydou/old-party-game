@@ -85,7 +85,7 @@ namespace MGE
 
 		public static void WriteToLogRaw(string text)
 		{
-#if INDEV
+#if !INDEV
 			log.WriteLine(text);
 #endif
 		}

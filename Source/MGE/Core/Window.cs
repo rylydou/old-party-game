@@ -60,7 +60,7 @@ namespace MGE
 
 		public static Vector2Int renderSize;
 
-		public static Vector2Int gameSize = Config.sceneSize;
+		public static Vector2Int sceneSize = Config.sceneSize;
 		public static Vector2Int gameRenderSize = Config.gameRenderSize;
 
 		public static Action onResize = () => { };

@@ -16,8 +16,8 @@ namespace MGE.Graphics
 		protected float _zoom;
 		public float zoom { get => _zoom; set { _zoom = value; if (_zoom < 0.1f) _zoom = 0.1f; _isDirty = true; } }
 
-		public Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.gameSize); }
-		public Vector2 scaleDownFactor { get => ((Vector2)Window.gameSize / (Vector2)Window.renderSize); }
+		public Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.sceneSize); }
+		public Vector2 scaleDownFactor { get => ((Vector2)Window.sceneSize / (Vector2)Window.renderSize); }
 
 		protected Matrix _transform;
 

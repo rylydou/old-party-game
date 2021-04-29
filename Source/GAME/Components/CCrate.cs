@@ -19,7 +19,7 @@ namespace GAME.Components
 
 			rb = entity.GetComponent<CRigidbody>();
 
-			rb.position = new Vector2(Random.Int(1, Window.gameSize.x - 1), 1);
+			rb.position = new Vector2(Random.Int(1, Window.sceneSize.x - 1), 1);
 
 			rb.raycaster = CStage.current;
 		}

@@ -156,7 +156,14 @@ namespace MGE.ECS
 			{
 				if (!component.enabled) continue;
 
-				component.Init();
+				try
+				{
+					component.Init();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
+				}
 				component.inited = true;
 			}
 		}
@@ -167,7 +174,14 @@ namespace MGE.ECS
 			{
 				if (!component.enabled) continue;
 
-				component.FixedUpdate();
+				try
+				{
+					component.FixedUpdate();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
+				}
 			}
 		}
 
@@ -177,7 +191,14 @@ namespace MGE.ECS
 			{
 				if (!component.enabled) continue;
 
-				component.Update();
+				try
+				{
+					component.Update();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
+				}
 			}
 		}
 
@@ -187,7 +208,14 @@ namespace MGE.ECS
 			{
 				if (!component.visible) continue;
 
-				component.Draw();
+				try
+				{
+					component.Draw();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
+				}
 			}
 		}
 
@@ -209,7 +237,16 @@ namespace MGE.ECS
 			if (enabled)
 			{
 				foreach (var component in components.Values)
-					component.Destroy();
+				{
+					try
+					{
+						component.Destroy();
+					}
+					catch (System.Exception e)
+					{
+						Logger.LogGameLoopError(component, e);
+					}
+				}
 			}
 		}
 		#endregion
