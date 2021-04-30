@@ -3,7 +3,7 @@ using MGE.ECS;
 
 namespace GAME.Components.Items
 {
-	public class CShotgun : CItem
+	public class CShotgun : CUsable
 	{
 		public override ItemType type => ItemType.Weapon;
 

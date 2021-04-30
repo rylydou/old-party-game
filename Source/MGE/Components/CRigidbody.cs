@@ -60,6 +60,8 @@ namespace MGE.Components
 
 		public override void Init()
 		{
+			base.Init();
+
 			if (raycaster is null) raycaster = entity.layer.raycaster;
 
 			position = entity.position;
@@ -69,6 +71,8 @@ namespace MGE.Components
 
 		public override void FixedUpdate()
 		{
+			base.FixedUpdate();
+
 			if (raycaster is null)
 			{
 				Logger.LogWarning("Rigidbody has no raycaster!");
@@ -116,6 +120,8 @@ namespace MGE.Components
 
 		public override void Update()
 		{
+			base.Update();
+
 			entity.position = position;
 		}
 

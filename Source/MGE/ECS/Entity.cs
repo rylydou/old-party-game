@@ -202,14 +202,14 @@ namespace MGE.ECS
 			{
 				if (!component.enabled) continue;
 
-				try
-				{
-					component.FixedUpdate();
-				}
-				catch (System.Exception e)
-				{
-					Logger.LogGameLoopError(component, e);
-				}
+				// try
+				// {
+				component.FixedUpdate();
+				// }
+				// catch (System.Exception e)
+				// {
+				// Logger.LogGameLoopError(component, e);
+				// }
 			}
 		}
 

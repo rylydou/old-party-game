@@ -102,7 +102,7 @@ namespace MGE.ECS
 			return null;
 		}
 
-		public Entity[] GetEntitysWithTag(string tag)
+		public Entity[] GetEntitiesWithTag(string tag)
 		{
 			var entitiesWithTag = new List<Entity>();
 
@@ -225,6 +225,84 @@ namespace MGE.ECS
 			foreach (var entity in entities)
 				if (!entity.destroyed)
 					entity.Destroy();
+		}
+		#endregion
+
+		#region Physics
+		public Entity GetNearestEntity(Vector2 position, string tag = null)
+		{
+			var nearestDistSqr = float.PositiveInfinity;
+			Entity nearestEntity = null;
+
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+
+			foreach (var entity in entitiesToSearch)
+			{
+				var distSqr = Vector2.DistanceSqr(position, entity.position);
+
+				if (distSqr < nearestDistSqr)
+				{
+					nearestDistSqr = distSqr;
+					nearestEntity = entity;
+				}
+			}
+
+			return nearestEntity;
+		}
+
+		public Entity GetNearestEntity(Vector2 position, float radius, string tag = null)
+		{
+			radius = radius * radius;
+
+			Entity nearestEntity = null;
+
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+			Logger.Log(entitiesToSearch.Length);
+
+			foreach (var entity in entitiesToSearch)
+			{
+				var distSqr = Vector2.DistanceSqr(position, entity.position);
+
+				if (distSqr < radius)
+				{
+					radius = distSqr;
+					nearestEntity = entity;
+				}
+			}
+
+			return nearestEntity;
+		}
+
+		public Entity[] GetEntities(Rect rect, string tag = null)
+		{
+			var foundEntities = new List<Entity>();
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+
+			foreach (var entity in entitiesToSearch)
+			{
+				if (rect.Contains(entity.position))
+					foundEntities.Add(entity);
+			}
+
+			return foundEntities.ToArray();
+		}
+
+		public Entity[] GetEntities(Vector2 position, float radius, string tag = null)
+		{
+			radius = radius * radius;
+
+			var foundEntities = new List<Entity>();
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+
+			foreach (var entity in entitiesToSearch)
+			{
+				var distSqr = Vector2.DistanceSqr(position, entity.position);
+
+				if (distSqr < radius)
+					foundEntities.Add(entity);
+			}
+
+			return foundEntities.ToArray();
 		}
 		#endregion
 	}

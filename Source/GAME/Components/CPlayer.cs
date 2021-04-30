@@ -9,23 +9,25 @@ namespace GAME.Components
 {
 	public class CPlayer : Component
 	{
-		public float maxSpeed = 0.1f;
-		public float acceleration = 1000.0f;
-		public float friction = 0.67f;
+		public float moveSpeed = 8f;
+		public float crouchSpeed = 6f;
 
-		public float jumpVel = 0.215f;
+		public float jumpMinVel = 0.3f;
+		public float jumpMaxVel = 0.4f;
 
 		public float groundedRem = 0.20f;
 		public float jumpRem = 0.15f;
 
-		public float interactionDist = 1;
+		public float interactionDist = 1.0f;
 
-		public CItem item = null;
-		CInteractable interactable = null;
+		CItem item = null;
+		CItem nearestItem = null;
 		float groundedMem = -1;
 		float jumpMem = -1;
 
 		PlayerControls controls = null;
+		bool jump = false;
+		bool use = false;
 
 		CRigidbody rb = null;
 		Texture body = null;
@@ -45,61 +47,59 @@ namespace GAME.Components
 			controls = new PlayerControls();
 		}
 
-		public override void Update()
+		public override void FixedUpdate()
 		{
-			base.Update();
+			base.FixedUpdate();
 
 			controls.Update();
 
-			rb.velocity.x = rb.velocity.x * friction;
+			rb.velocity.x = controls.move * (controls.crouch ? crouchSpeed : moveSpeed) * Time.fixedDeltaTime;
 
-			rb.velocity.x += controls.move * acceleration * Time.deltaTime;
-
-			rb.velocity.x = Math.Clamp(rb.velocity.x, -maxSpeed, maxSpeed);
-
-			groundedMem -= Time.deltaTime;
+			groundedMem -= Time.fixedDeltaTime;
 			if (RaycastHit.WithinDistance(rb.raycaster.Raycast(rb.position + new Vector2(rb.size.x / 2, rb.size.y), Vector2.up), rb.skinWidth))
 				groundedMem = groundedRem;
 
-			jumpMem -= Time.deltaTime;
-			if (controls.jump)
+			jumpMem -= Time.fixedDeltaTime;
+
+			if (jump)
 				jumpMem = jumpRem;
+			jump = false;
 
 			if (groundedMem > 0f && jumpMem > 0f)
 			{
 				groundedMem = -1f;
 				jumpMem = -1f;
-				rb.velocity.y = -jumpVel;
+				rb.velocity.y = -jumpMaxVel;
 			}
 
-			interactable = null;
-			var currentDistSqr = interactionDist * interactionDist;
+			nearestItem = entity.layer.GetNearestEntity(entity.position, 1f, "Pickupable")?.GetComponent<CItem>();
 
-			foreach (var entity in entity.layer.GetEntitysWithTag("Interactable"))
+			if (use)
 			{
-				var inter = entity.GetSimilarComponent<CInteractable>();
-
-				var dist = Vector2.DistanceSqr(this.entity.position, inter.entity.position);
-
-				if (dist < currentDistSqr)
+				if (controls.crouch)
 				{
-					currentDistSqr = dist;
-					interactable = inter;
+					if (item is null)
+						nearestItem?.Pickup(this);
+					else
+						item.Use();
+				}
+				else
+				{
+					if (item is null)
+						Log("Used Base Attack");
+					else
+						item.Drop();
 				}
 			}
+			use = false;
+		}
 
-			if (Input.GetButtonPress(Inputs.E))
-			{
-				if (item is null)
-					interactable?.Interact(this);
-				else
-					item?.Use();
-			}
+		public override void Update()
+		{
+			base.Update();
 
-			if (Input.GetButtonPress(Inputs.Q))
-			{
-				item?.Drop();
-			}
+			if (controls.jump) jump = true;
+			if (controls.use) use = true;
 		}
 
 		public override void Draw()
@@ -110,7 +110,12 @@ namespace GAME.Components
 
 			GFX.Draw(body, entity.position + new Vector2(0.1f, 0.1f), new Color(0, 0.1f));
 			GFX.Draw(body, entity.position);
-			if (interactable is object) GFX.DrawRect(new Rect(interactable.entity.position, 1, 1), Color.red, 0.1f);
+			if (nearestItem is object) GFX.DrawRect(new Rect(nearestItem.entity.position, 1, 1), Color.red, 0.1f);
+		}
+
+		public void Drop()
+		{
+			item?.Drop();
 		}
 
 		public void Pickup(CItem item)

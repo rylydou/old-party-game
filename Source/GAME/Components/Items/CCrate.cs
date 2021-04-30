@@ -20,7 +20,7 @@ namespace GAME.Components.Items
 
 			rb = entity.GetComponent<CRigidbody>();
 
-			rb.position = new Vector2(Random.Int(1, Window.sceneSize.x - 1), 1);
+			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
 
 			rb.raycaster = CStage.current;
 		}

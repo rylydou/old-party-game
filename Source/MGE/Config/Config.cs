@@ -14,6 +14,9 @@ namespace MGE
 		// C:/Users/{current-user}/AppData/Local/Company/Game/
 		public static string saveDataPath = @"%LocalAppData%/MGE/MGEGame/";
 
+		// > Game Loop
+		public static int tps = 30;
+
 		// > Graphics
 		public static readonly int pixelsPerUnit = 16;
 		public static readonly Vector2Int sceneSize = new Vector2Int(16 * 2, 8 * 2);
@@ -61,6 +64,7 @@ namespace MGE
 		////////////////////////////////////////////////////////////////////////////////
 
 		#region Config Utils
+		public static float timeBtwTicks { get => 1.0f / tps; }
 		static Font _defualtFont;
 		public static Font font
 		{

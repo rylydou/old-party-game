@@ -1,6 +1,7 @@
 using System.Linq;
 using MGE;
 using MGE.Components;
+using MGE.ECS;
 
 public enum ItemType
 {
@@ -13,11 +14,12 @@ public enum ItemState
 {
 	Dropped = 0,
 	Held = 1,
+	Thrown = 2
 }
 
 namespace GAME.Components
 {
-	public abstract class CItem : CInteractable
+	public abstract class CItem : Component
 	{
 		public abstract ItemType type { get; }
 
@@ -29,7 +31,6 @@ namespace GAME.Components
 		public Texture sprite;
 		public Sound pickupSound;
 		public Sound dropSound;
-		public Sound throwSound;
 
 		CRigidbody rb = null;
 
@@ -37,24 +38,20 @@ namespace GAME.Components
 		{
 			base.Init();
 
+			entity.AddTag("Pickupable");
+
 			sprite = GetAsset<Texture>("Sprite");
 			pickupSound = GetAsset<Sound>("Pickup");
 			dropSound = GetAsset<Sound>("Drop");
-			throwSound = GetAsset<Sound>("Throw");
 
 			currentSprite = sprite;
 
 			rb = entity.GetComponent<CRigidbody>();
 		}
 
-		public override void Interact(CPlayer player)
-		{
-			Pickup(player);
-		}
-
 		public virtual void Pickup(CPlayer player)
 		{
-			entity.RemoveTag("Interactable");
+			entity.RemoveTag("Pickupable");
 			state = ItemState.Held;
 
 			this.player = player;
@@ -67,24 +64,13 @@ namespace GAME.Components
 
 		public virtual void Drop()
 		{
-			entity.AddTag("Interactable");
+			entity.AddTag("Pickupable");
 			state = ItemState.Dropped;
 
 			player.Pickup(null);
 			player = null;
 
 			dropSound.Play(entity.position);
-		}
-
-		public virtual void Throw()
-		{
-			entity.AddTag("Interactable");
-			state = ItemState.Dropped;
-
-			player.Pickup(null);
-			player = null;
-
-			throwSound.Play(entity.position);
 		}
 
 		public override void Draw()
@@ -108,16 +94,17 @@ namespace GAME.Components
 				if (asset is null)
 				{
 					asset = Assets.GetAsset<T>($"Items/_Default/Error");
-					if (asset is null) throw new System.Exception($"Could not find error for {typeof(T)} at {path}");
+					if (asset is null) throw new System.Exception($"Could not find an error asset for {typeof(T)} at {path}");
+					else LogError($"Used error asset for {path}");
 				}
 			}
 
 			return asset;
 		}
 
-		public override void Update()
+		public override void FixedUpdate()
 		{
-			base.Update();
+			base.FixedUpdate();
 
 			if (player is object) rb.position = player.entity.position;
 		}

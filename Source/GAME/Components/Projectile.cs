@@ -9,12 +9,12 @@ namespace GAME.Components
 
 		public Texture sprite;
 
-		public override void Update()
+		public override void FixedUpdate()
 		{
 			base.Update();
 
 			entity.position += entity.roationVector * data.speed;
-			data.lifetime -= Time.deltaTime;
+			data.lifetime -= Time.fixedDeltaTime;
 
 			sprite = Assets.GetAsset<Texture>("Items/Shotgun/Projectile");
 

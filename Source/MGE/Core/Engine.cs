@@ -24,6 +24,7 @@ namespace MGE
 		public Camera camera;
 
 		float statsUpdateCooldown;
+		float timeSinceLastTick;
 
 		public Engine(Game game)
 		{
@@ -130,7 +131,12 @@ namespace MGE
 
 			GUI.Update();
 
-			SceneManager.FixedUpdate();
+			timeSinceLastTick += Time.deltaTime;
+			if (timeSinceLastTick > Config.timeBtwTicks)
+			{
+				SceneManager.FixedUpdate();
+				timeSinceLastTick = 0.0f;
+			}
 			SceneManager.Update();
 
 			Menuing.Update();

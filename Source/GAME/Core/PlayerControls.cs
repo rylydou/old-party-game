@@ -6,6 +6,8 @@ namespace GAME
 	{
 		public float move = 0;
 		public bool jump = false;
+		public bool crouch = false;
+		public bool use = false;
 
 		public override void Update()
 		{
@@ -13,6 +15,8 @@ namespace GAME
 			{
 				move = (Input.GetButton(Inputs.D) ? 1 : 0) - (Input.GetButton(Inputs.A) ? 1 : 0);
 				jump = Input.GetButtonPress(Inputs.Space);
+				crouch = Input.GetButton(Inputs.S);
+				use = Input.GetButtonPress(Inputs.E);
 			}
 		}
 	}
