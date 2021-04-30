@@ -5,7 +5,9 @@ namespace GAME.Components
 {
 	public class Projectile : Component
 	{
-		public ProjectileData data = new ProjectileData();
+		public ProjectileData data = new ProjectileData(default, 1.25f, 8f, 0.15f);
+
+		public Texture sprite;
 
 		public override void Update()
 		{
@@ -13,6 +15,8 @@ namespace GAME.Components
 
 			entity.position += entity.roationVector * data.speed;
 			data.lifetime -= Time.deltaTime;
+
+			sprite = Assets.GetAsset<Texture>("Items/Shotgun/Projectile");
 
 			if (data.lifetime < 0)
 				entity.Destroy();
@@ -22,7 +26,7 @@ namespace GAME.Components
 		{
 			base.Draw();
 
-			Draw(null, Vector2.zero, Color.red);
+			Draw(sprite, Vector2.zero, Color.red);
 		}
 	}
 }

@@ -27,8 +27,10 @@ namespace GAME.Components.Items
 
 		public override void Pickup(CPlayer player)
 		{
-			entity.layer.AddEntity(new Entity(new CRigidbody(), (CItem)System.Activator.CreateInstance(item.GetType())));
+			Spawn(new Entity(new CRigidbody(), item), entity.position);
 			entity.Destroy();
+
+			pickupSound.Play(entity.position, 0.1f);
 		}
 	}
 }

@@ -60,6 +60,10 @@ namespace MGE.Components
 
 		public override void Init()
 		{
+			if (raycaster is null) raycaster = entity.layer.raycaster;
+
+			position = entity.position;
+
 			CalcRaySpacing();
 		}
 

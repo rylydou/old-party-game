@@ -93,7 +93,7 @@ namespace GAME.Components
 				if (item is null)
 					interactable?.Interact(this);
 				else
-					item.Use();
+					item?.Use();
 			}
 
 			if (Input.GetButtonPress(Inputs.Q))

@@ -23,6 +23,12 @@ namespace MGE.ECS
 			GFX.Draw(texture, entity.position + position, color);
 		}
 
+		public virtual void Spawn(Entity entity, Vector2 position)
+		{
+			entity.position = position;
+			this.entity.layer.AddEntity(entity);
+		}
+
 		protected virtual void Log(object message)
 		{
 			Logger.Log($"{this.ToString()} - {message}");

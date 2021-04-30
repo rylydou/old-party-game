@@ -106,7 +106,7 @@ namespace MGE
 				case ".wav":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = SoundEffect.FromStream(fs);
+						asset = new Sound(SoundEffect.FromStream(fs));
 					}
 					break;
 				case ".font.psd":
@@ -160,8 +160,6 @@ namespace MGE
 
 			if (preloadedAssets.ContainsKey(path))
 				return preloadedAssets[path] as T;
-
-			Logger.LogError($"Can't find asset \"{path}\"!");
 			return null;
 		}
 
@@ -169,8 +167,6 @@ namespace MGE
 		{
 			if (unloadedAssets.ContainsKey(path))
 				return LoadAsset(unloadedAssets[path]) as T;
-
-			Logger.LogError($"Can't find asset \"{path}\"!");
 			return null;
 		}
 		#endregion

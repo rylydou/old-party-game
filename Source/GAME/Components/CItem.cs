@@ -1,3 +1,4 @@
+using System.Linq;
 using MGE;
 using MGE.Components;
 
@@ -26,6 +27,9 @@ namespace GAME.Components
 		public CPlayer player = null;
 
 		public Texture sprite;
+		public Sound pickupSound;
+		public Sound dropSound;
+		public Sound throwSound;
 
 		CRigidbody rb = null;
 
@@ -34,6 +38,10 @@ namespace GAME.Components
 			base.Init();
 
 			sprite = GetAsset<Texture>("Sprite");
+			pickupSound = GetAsset<Sound>("Pickup");
+			dropSound = GetAsset<Sound>("Drop");
+			throwSound = GetAsset<Sound>("Throw");
+
 			currentSprite = sprite;
 
 			rb = entity.GetComponent<CRigidbody>();
@@ -51,6 +59,8 @@ namespace GAME.Components
 
 			this.player = player;
 			player.Pickup(this);
+
+			pickupSound.Play(entity.position);
 		}
 
 		public virtual void Use() { }
@@ -60,7 +70,10 @@ namespace GAME.Components
 			entity.AddTag("Interactable");
 			state = ItemState.Dropped;
 
+			player.Pickup(null);
 			player = null;
+
+			dropSound.Play(entity.position);
 		}
 
 		public virtual void Throw()
@@ -68,7 +81,10 @@ namespace GAME.Components
 			entity.AddTag("Interactable");
 			state = ItemState.Dropped;
 
+			player.Pickup(null);
 			player = null;
+
+			throwSound.Play(entity.position);
 		}
 
 		public override void Draw()
@@ -76,42 +92,34 @@ namespace GAME.Components
 			base.Draw();
 
 			if (currentSprite is object)
-				Draw(currentSprite, entity.position);
+				Draw(currentSprite);
 		}
 
 		public T GetAsset<T>(string path) where T : class
 		{
-			try
+			T asset = null;
+
+			asset = Assets.GetAsset<T>($"Items/{GetType().ToString().Split('.').Last().Remove(0, 1)}/{path}");
+
+			if (asset is null)
 			{
-				return Assets.GetAsset<T>($"Items/{GetType().ToString().Remove(0, 1)}/{path}");
-			}
-			catch
-			{
-				try
+				asset = Assets.GetAsset<T>($"Items/_Default/{path}");
+
+				if (asset is null)
 				{
-					Log($"Used fallback for {path}");
-					return Assets.GetAsset<T>($"Items/_Default/{path}");
-				}
-				catch
-				{
-					try
-					{
-						Log($"Used error for {path}");
-						return Assets.GetAsset<T>($"Items/_Default/Error");
-					}
-					catch
-					{
-						throw new System.Exception($"Could not find error for {typeof(T)} at {path}");
-					}
+					asset = Assets.GetAsset<T>($"Items/_Default/Error");
+					if (asset is null) throw new System.Exception($"Could not find error for {typeof(T)} at {path}");
 				}
 			}
+
+			return asset;
 		}
 
 		public override void Update()
 		{
 			base.Update();
 
-			entity.position = player.entity.position;
+			if (player is object) rb.position = player.entity.position;
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace MGE
 			{typeof(Texture), ".psd"},
 			{typeof(SpriteSheet), ".spritesheet.psd"},
 			{typeof(Tileset), ".tileset.psd"},
-			{typeof(SoundEffect), ".wav"},
+			{typeof(Sound), ".wav"},
 			{typeof(Font), ".font.psd"},
 		};
 		public static readonly string infoFileExt = ".info";

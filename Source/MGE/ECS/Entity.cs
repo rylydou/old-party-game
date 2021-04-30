@@ -63,7 +63,9 @@ namespace MGE.ECS
 		public Entity(params Component[] components)
 		{
 			if (components != null)
+			{
 				foreach (var component in components)
+				{
 					if (component == null)
 						throw new Exception("Component is null");
 					else
@@ -74,6 +76,8 @@ namespace MGE.ECS
 						this.components.Add(component.GetType(), component);
 						component.entity = this;
 					}
+				}
+			}
 		}
 
 		public virtual bool HasTag(string tag)
@@ -215,14 +219,14 @@ namespace MGE.ECS
 			{
 				if (!component.enabled) continue;
 
-				try
-				{
-					component.Update();
-				}
-				catch (System.Exception e)
-				{
-					Logger.LogGameLoopError(component, e);
-				}
+				// try
+				// {
+				component.Update();
+				// }
+				// catch (System.Exception e)
+				// {
+				// 	Logger.LogGameLoopError(component, e);
+				// }
 			}
 		}
 

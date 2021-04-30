@@ -18,6 +18,7 @@ namespace GAME.Components
 		public override void Init()
 		{
 			current = this;
+			entity.layer.raycaster = this;
 
 			tileset = Assets.GetAsset<Tileset>("Tilesets/Grass");
 

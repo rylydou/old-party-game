@@ -61,8 +61,8 @@ namespace MGE
 			WriteToLog($"{source} - {exception.Message}");
 
 #if INDEV
-			if (exception.Message.StartsWith('!'))
-				throw exception;
+			// if (exception.Message.StartsWith('!'))
+			throw exception;
 #endif
 		}
 

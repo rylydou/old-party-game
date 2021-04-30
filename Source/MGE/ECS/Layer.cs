@@ -17,6 +17,8 @@ namespace MGE.ECS
 
 		public SafeList<Entity> entities = new SafeList<Entity>();
 
+		public ICanRaycast raycaster;
+
 		public Scene scene;
 
 		public Layer() { }
