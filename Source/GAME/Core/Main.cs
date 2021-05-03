@@ -18,11 +18,14 @@ namespace GAME
 
 		public Player[] players = new Player[]
 		{
-			new Player(0, "_Default"),
-			new Player(1, "Amogus"),
-			new Player(2, "Goose"),
-			new Player(3, "Robot"),
+			new Player(0, "Amogus"),
+			new Player(1, "Goose"),
+			// new Player(2, "Goose"),
+			// new Player(3, "Robot"),
 		};
+
+		public float roundTime = 60 * 3;
+		public float timeLeft;
 
 		public float timeBtwCrates = 10;
 		public float crateSpawnCooldown;
@@ -52,10 +55,7 @@ namespace GAME
 					),
 					new Layer(
 						false,
-						new Entity(new CStage()),
-						new Entity(new CRigidbody(), new CCrate()),
-						new Entity(new CRigidbody(), new CCrate()),
-						new Entity(new CRigidbody(), new CCrate())
+						new Entity(new CStage())
 					),
 					new Layer(
 						true,
@@ -63,6 +63,8 @@ namespace GAME
 					)
 				)
 			);
+
+			timeLeft = roundTime;
 
 			foreach (var player in players)
 			{
@@ -89,11 +91,31 @@ namespace GAME
 
 		protected override void Update(XNA_GameTime gameTime)
 		{
+			timeLeft -= Time.fixedDeltaTime;
+
 			crateSpawnCooldown -= Time.fixedDeltaTime;
 			if (crateSpawnCooldown < 0)
 			{
 				crateSpawnCooldown = timeBtwCrates;
 				SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), new CCrate()));
+			}
+
+			foreach (var player in players)
+			{
+				if (player is null) continue;
+
+				if (player.player.health < 1)
+				{
+					player.timeRespawing += Time.fixedDeltaTime;
+
+					if (player.timeRespawing > Player.timeToRespawn)
+					{
+						player.timeRespawing = 0;
+						player.player = new CPlayer(player);
+
+						SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), player.player));
+					}
+				}
 			}
 
 			engine.Update(gameTime);

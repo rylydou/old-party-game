@@ -41,6 +41,16 @@ namespace GAME
 				use = Input.GetButtonPress(Inputs.GamepadX, i) | Input.GetButtonPress(Inputs.GamepadY, i) | Input.GetButtonPress(Inputs.GamepadRT, i);
 				DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.GamepadLB, i);
 			}
+
+			// FIXME:
+			if (playerOneUsesKeyboard && index == 1)
+			{
+				move = (Input.GetButton(Inputs.Right) ? 1 : 0) - (Input.GetButton(Inputs.Left) ? 1 : 0);
+				crouch = Input.GetButton(Inputs.Down);
+				jump = Input.GetButtonPress(Inputs.Up);
+				jumpRelease = Input.GetButtonRelease(Inputs.Up);
+				use = Input.GetButtonPress(Inputs.RightControl);
+			}
 		}
 	}
 }

@@ -1,7 +1,6 @@
 using MGE;
 using MGE.Components;
 using MGE.ECS;
-using MGE.Graphics;
 
 namespace GAME.Components
 {
@@ -57,21 +56,11 @@ namespace GAME.Components
 				entity.Destroy();
 		}
 
-		public override void Draw()
-		{
-			base.Draw();
-
-			// if (health < maxHealth)
-			// {
-			// 	GFX.DrawBox(new Rect(entity.position.x, entity.position.y - 0.25f, 1, 0.1f), new Color(0, 0.25f));
-			// 	GFX.DrawBox(new Rect(entity.position.x, entity.position.y - 0.25f, (float)health / maxHealth, 0.1f), Color.red);
-			// }
-		}
-
 		public virtual void OnDamage(int damage, Vector2 knockback)
 		{
 			health -= damage;
-			rb.velocity = knockback;
+
+			if (rb is object) rb.velocity = knockback;
 
 			damageSound?.Play(entity.position);
 
