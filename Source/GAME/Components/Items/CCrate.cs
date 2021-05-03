@@ -6,31 +6,37 @@ namespace GAME.Components.Items
 {
 	public class CCrate : CItem
 	{
-		public override ItemType type => ItemType.Item;
+		public static System.Type[] lootTable = new System.Type[]
+		{
+			typeof(CShotgun),
+			typeof(CBananaGun),
+			typeof(CRock),
+		};
+
+		public override bool meleeOnly => false;
 
 		public CItem item;
 
-		CRigidbody rb;
-
 		public override void Init()
 		{
+			maxHealth = 30;
+
 			base.Init();
 
-			item = new CShotgun();
+			var itemType = lootTable.Random();
 
-			rb = entity.GetComponent<CRigidbody>();
+			item = (CItem)System.Activator.CreateInstance(itemType);
 
 			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
-
-			rb.raycaster = CStage.current;
 		}
 
-		public override void Pickup(CPlayer player)
+		public override void OnDeath()
 		{
-			Spawn(new Entity(new CRigidbody(), item), entity.position);
-			entity.Destroy();
+			var newRB = new CRigidbody();
+			newRB.velocity = rb.velocity;
+			Spawn(new Entity(newRB, item), entity.position);
 
-			pickupSound.Play(entity.position, 0.1f);
+			base.OnDeath();
 		}
 	}
 }

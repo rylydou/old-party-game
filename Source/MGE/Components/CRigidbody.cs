@@ -30,6 +30,8 @@ namespace MGE.Components
 
 		public Vector2 velocity = Vector2.zero;
 
+		public bool grounded = false;
+
 		public float skinWidth = 0.1f;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
@@ -116,6 +118,8 @@ namespace MGE.Components
 			}
 
 			position += velocity;
+
+			grounded = RaycastHit.WithinDistance(raycaster.Raycast(position + new Vector2(size.x / 2, size.y), Vector2.up), skinWidth);
 		}
 
 		public override void Update()

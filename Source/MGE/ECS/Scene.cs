@@ -84,9 +84,9 @@ namespace MGE.ECS
 			foreach (var layer in layers)
 			{
 				if (!layer.visible) continue;
+				if (layer.isUI) continue;
 
-				if (!layer.isUI)
-					layer.Draw();
+				layer.Draw();
 			}
 		}
 
@@ -109,6 +109,7 @@ namespace MGE.ECS
 				DoneCleaningUp();
 			}
 		}
+
 		protected virtual void OnCleanUp()
 		{
 			foreach (var layer in layers)
@@ -116,6 +117,7 @@ namespace MGE.ECS
 				layer.DestroyAllEntites();
 			}
 		}
+
 		protected virtual void DoneCleaningUp()
 		{
 			doneCleaningUp = true;

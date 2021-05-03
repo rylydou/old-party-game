@@ -21,10 +21,8 @@ namespace MGE
 
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch sb;
-		public Camera camera;
 
 		float statsUpdateCooldown;
-		float timeSinceLastTick;
 
 		public Engine(Game game)
 		{
@@ -52,11 +50,6 @@ namespace MGE
 
 				Pointer.mode = PointerMode.System;
 				Pointer.mouseCursor = MouseCursor.Wait;
-
-				// IntPtr hWnd = game.Window.Handle;
-				// System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
-				// System.Windows.Forms.Form form = ctrl.FindForm();
-				// form.TransparencyKey = Color.clear;
 			}
 		}
 
@@ -64,7 +57,6 @@ namespace MGE
 		{
 			using (Timmer.Start("Initialize"))
 			{
-				// graphics.SynchronizeWithVerticalRetrace = Args.HasFlag("--enable-v-sync");
 				graphics.SynchronizeWithVerticalRetrace = true;
 				game.IsFixedTimeStep = true;
 				graphics.ApplyChanges();
@@ -76,7 +68,7 @@ namespace MGE
 
 				OnResize();
 
-				camera = new Camera();
+				Camera.Init();
 
 				Input.GamepadInit();
 
@@ -131,12 +123,7 @@ namespace MGE
 
 			GUI.Update();
 
-			timeSinceLastTick += Time.deltaTime;
-			if (timeSinceLastTick > Config.timeBtwTicks)
-			{
-				SceneManager.FixedUpdate();
-				timeSinceLastTick = 0.0f;
-			}
+			SceneManager.FixedUpdate();
 			SceneManager.Update();
 
 			Menuing.Update();
@@ -170,7 +157,7 @@ namespace MGE
 
 			Menuing.Draw();
 
-			Terminal.Draw();
+			// Terminal.Draw();
 
 			Pointer.Draw();
 		}

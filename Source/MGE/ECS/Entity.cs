@@ -200,16 +200,16 @@ namespace MGE.ECS
 		{
 			foreach (var component in components.Values)
 			{
-				if (!component.enabled) continue;
+				if (!component.enabled || !component.inited) continue;
 
-				// try
-				// {
-				component.FixedUpdate();
-				// }
-				// catch (System.Exception e)
-				// {
-				// Logger.LogGameLoopError(component, e);
-				// }
+				try
+				{
+					component.FixedUpdate();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
+				}
 			}
 		}
 
@@ -217,16 +217,16 @@ namespace MGE.ECS
 		{
 			foreach (var component in components.Values)
 			{
-				if (!component.enabled) continue;
+				if (!component.enabled || !component.inited) continue;
 
-				// try
-				// {
-				component.Update();
-				// }
-				// catch (System.Exception e)
-				// {
-				// 	Logger.LogGameLoopError(component, e);
-				// }
+				try
+				{
+					component.Update();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
+				}
 			}
 		}
 
@@ -234,7 +234,7 @@ namespace MGE.ECS
 		{
 			foreach (var component in components.Values)
 			{
-				if (!component.visible) continue;
+				if (!component.visible || !component.inited) continue;
 
 				try
 				{
@@ -260,20 +260,15 @@ namespace MGE.ECS
 
 		protected virtual void OnDestroy()
 		{
-			destroyed = true;
-
-			if (enabled)
+			foreach (var component in components.Values)
 			{
-				foreach (var component in components.Values)
+				try
 				{
-					try
-					{
-						component.Destroy();
-					}
-					catch (System.Exception e)
-					{
-						Logger.LogGameLoopError(component, e);
-					}
+					component.Destroy();
+				}
+				catch (System.Exception e)
+				{
+					Logger.LogGameLoopError(component, e);
 				}
 			}
 		}

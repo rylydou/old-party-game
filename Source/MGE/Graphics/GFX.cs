@@ -39,11 +39,20 @@ namespace MGE.Graphics
 			sb.Draw(texture != null ? texture : pixel, new Rect((position * currentPixelsPerUnit).rounded, source.size), source, color.Value);
 		}
 
-		public static void Draw(Texture texture, Vector2 position, Color? color = null)
+		public static void Draw(Texture texture, Vector2 position, Color? color = null, bool flippedX = false, bool flippedY = false)
 		{
 			if (!color.HasValue) color = Color.white;
 
-			sb.Draw(texture != null ? texture : pixel, (position * currentPixelsPerUnit).rounded, color.Value);
+			sb.Draw(
+				texture is object ? texture : pixel,
+				(position * currentPixelsPerUnit).rounded, new Rect(0, 0, texture.size),
+				color.Value,
+				0,
+				Vector2.zero,
+				Vector2.one,
+				(flippedX ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flippedY ? SpriteEffects.FlipVertically : SpriteEffects.None),
+				0
+			);
 			drawCalls++;
 		}
 
@@ -133,24 +142,24 @@ namespace MGE.Graphics
 			return vectors;
 		}
 
-		public static void DrawArc(Vector2 center, float radius, int sides, float startingAngle, float radians, Color color, float thickness = 1.0f)
+		public static void DrawArc(Vector2 center, float radius, int sides, float startingAngle, float radians, Color? color = null, float thickness = 1.0f)
 		{
 			List<Vector2> arc = CreateArc(radius, sides, startingAngle, radians);
 
 			DrawPoints(center, arc, color, thickness);
 		}
 
-		public static void DrawCircle(Vector2 position, float radius, Color color, float thickness = 1.0f, int sides = 0)
+		public static void DrawCircle(Vector2 position, float radius, Color? color = null, float thickness = 1.0f, int sides = 0)
 		{
 			DrawPoints(position, CreateCircle(radius, sides), color, thickness);
 		}
 
-		public static void DrawBox(Rect rect, Color color, float angle = 0.0f)
+		public static void DrawBox(Rect rect, Color? color = null, float angle = 0.0f)
 		{
 			Draw(pixel, rect, color, angle);
 		}
 
-		public static void DrawRect(Rect rect, Color color, float thickness = 1.0f)
+		public static void DrawRect(Rect rect, Color? color = null, float thickness = 1.0f)
 		{
 			DrawLine(new Vector2(rect.x - thickness, rect.y - thickness), new Vector2(rect.right, rect.y - thickness), color, thickness); // Top
 			DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, rect.bottom + thickness), color, thickness); // Left
@@ -158,13 +167,15 @@ namespace MGE.Graphics
 			DrawLine(new Vector2(rect.right + thickness, rect.y - thickness), new Vector2(rect.right + thickness, rect.bottom + thickness), color, thickness); // Right
 		}
 
-		public static void DrawLine(Vector2 from, Vector2 to, Color color, float thickness = 1.0f)
+		public static void DrawLine(Vector2 from, Vector2 to, Color? color = null, float thickness = 1.0f)
 		{
+			if (!color.HasValue) color = Color.white;
+
 			var distance = (float)Vector2.Distance(from, to);
 
 			var angle = (float)Math.Atan(to.y - from.y, to.x - from.x);
 
-			DrawLine(from, distance, color, angle, thickness);
+			DrawLine(from, distance, color.Value, angle, thickness);
 		}
 
 		public static void DrawLine(Vector2 position, float length, Color color, float angle = 0.0f, float thickness = 1.0f)
@@ -172,12 +183,12 @@ namespace MGE.Graphics
 			sb.Draw(pixel, position * currentPixelsPerUnit, null, color, angle, Vector2.zero, new Vector2(length, thickness) * currentPixelsPerUnit, SpriteEffects.None, 0);
 		}
 
-		public static void DrawPoints(Vector2 position, List<Vector2> points, Color color, float thickness = 1.0f)
+		public static void DrawPoints(Vector2 position, List<Vector2> points, Color? color = null, float thickness = 1.0f)
 		{
 			DrawPoints(position, points.ToArray(), color, thickness);
 		}
 
-		public static void DrawPoints(Vector2 position, Vector2[] points, Color color, float thickness = 1.0f)
+		public static void DrawPoints(Vector2 position, Vector2[] points, Color? color = null, float thickness = 1.0f)
 		{
 			if (points.Length < 2) return;
 
@@ -185,7 +196,7 @@ namespace MGE.Graphics
 				DrawLine(points[i - 1] + position, points[i] + position, color, thickness);
 		}
 
-		public static void DrawPoint(Vector2 position, Color color)
+		public static void DrawPoint(Vector2 position, Color? color = null)
 		{
 			Draw(pixel, position, color);
 		}

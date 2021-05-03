@@ -58,11 +58,11 @@ namespace MGE
 
 		internal static void LogGameLoopError(object source, Exception exception)
 		{
-			WriteToLog($"{source} - {exception.Message}");
+			WriteToLog($"{source} - {exception}");
 
 #if INDEV
-			// if (exception.Message.StartsWith('!'))
-			throw exception;
+			if (exception.Message.StartsWith('!'))
+				throw exception;
 #endif
 		}
 

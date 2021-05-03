@@ -129,6 +129,8 @@ namespace MGE
 			return vector;
 		}
 
+		public static Vector2 GetDirection(Vector2 start, Vector2 end) => (start - end).normalized;
+
 		public static Vector2 Min(Vector2 a, Vector2 b) => new Vector2(Math.Min(a.x, b.x), Math.Min(a.y, b.y));
 
 		public static Vector2 Max(Vector2 a, Vector2 b) => new Vector2(Math.Max(a.x, b.x), Math.Max(a.y, b.y));
@@ -177,6 +179,7 @@ namespace MGE
 			}
 		}
 		public Vector2 sign { get => new Vector2(Math.Sign(x), Math.Sign(y)); }
+		public Vector2 abs { get => new Vector2(x.Abs(), y.Abs()); }
 
 		public Vector2 isolateX { get => new Vector2(x, 0.0f); }
 		public Vector2 isolateY { get => new Vector2(0.0f, y); }

@@ -43,7 +43,7 @@ namespace MGE.InputSystem
 
 		public static GamePadDeadZone gamepadDeadzoneType = GamePadDeadZone.Circular;
 
-		static int _maxGamepadCount = 2;
+		static int _maxGamepadCount = 4;
 		public static int maxGamepadCount
 		{
 			get => _maxGamepadCount;
@@ -77,7 +77,7 @@ namespace MGE.InputSystem
 			var mouseState = Mouse.GetState();
 
 			windowMousePosition = mouseState.Position;
-			cameraMousePosition = Camera.main.WinToCam(mouseState.Position);
+			cameraMousePosition = Camera.WinToCam(mouseState.Position);
 
 			mouseIsInWindow =
 			windowMousePosition.x >= 0 && windowMousePosition.x < Window.windowedSize.x &&

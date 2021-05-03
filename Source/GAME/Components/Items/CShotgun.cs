@@ -3,29 +3,28 @@ using MGE.ECS;
 
 namespace GAME.Components.Items
 {
-	public class CShotgun : CUsable
+	public class CShotgun : CWeapon
 	{
-		public override ItemType type => ItemType.Weapon;
+		public override int startingUses => 4;
+		public override float timeBtwAttacks => 0.4f;
 
-		Sound shootSound;
+		public ProjectileData projectileData = new ProjectileData(new Damage(10, 0.125f), 0.5f, 0.5f, 0.25f, 1);
 
-		public override void Init()
+		public override void Pickup(CPlayer player)
 		{
-			base.Init();
+			base.Pickup(player);
 
-			shootSound = GetAsset<Sound>("Shoot");
+			projectileData.damage.doneBy = player.entity;
 		}
 
-		public override void Use()
+		public override void Attack()
 		{
-			base.Use();
+			base.Attack();
 
-			for (int i = -1; i <= 1; i++)
-			{
-				Spawn(new Entity(new Projectile()), entity.position + new Vector2(0, i * 0.1f));
-			}
+			projectileData.damage.origin = player.entity.position;
 
-			shootSound.Play(entity.position, 0.1f);
+			for (int i = 0; i < 3; i++)
+				Spawn(new Entity(new CProjectile(projectileData, relitivePath)), entity.position, entity.scale.x < 0 ? -Math.pi + Random.Float(-0.1f, 0.1f) : 0 + Random.Float(-0.1f, 0.1f));
 		}
 	}
 }

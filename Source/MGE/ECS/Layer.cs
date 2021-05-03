@@ -15,7 +15,7 @@ namespace MGE.ECS
 
 		public int prioity = 0;
 
-		public SafeList<Entity> entities = new SafeList<Entity>();
+		public List<Entity> entities = new List<Entity>();
 
 		public ICanRaycast raycaster;
 
@@ -108,6 +108,8 @@ namespace MGE.ECS
 
 			foreach (var entity in entities)
 			{
+				if (!entity.enabled || entity.destroyed) continue;
+
 				if (entity.HasTag(tag))
 					entitiesWithTag.Add(entity);
 			}
@@ -117,7 +119,7 @@ namespace MGE.ECS
 
 		internal void CleanupEntityList()
 		{
-			foreach (var entity in entities)
+			foreach (var entity in entities.ToArray())
 			{
 				if (entity.destroyed)
 					entities.Remove(entity);
@@ -141,6 +143,20 @@ namespace MGE.ECS
 			entities.Remove(entity);
 			entities.Add(entity);
 		}
+
+		public Entity[] GetEntities()
+		{
+			var foundEntities = new List<Entity>();
+
+			foreach (var entity in entities)
+			{
+				if (!entity.enabled || entity.destroyed) continue;
+
+				foundEntities.Add(entity);
+			}
+
+			return foundEntities.ToArray();
+		}
 		#endregion
 
 		#region Updates
@@ -156,14 +172,9 @@ namespace MGE.ECS
 
 		public void FixedUpdate()
 		{
-			foreach (var entity in entities)
+			foreach (var entity in entities.ToArray())
 			{
-				if (!entity.enabled) continue;
-				if (entity.destroyed)
-				{
-					entities.Remove(entity);
-					continue;
-				}
+				if (!entity.enabled | entity.destroyed) continue;
 
 				entity.FixedUpdate();
 			}
@@ -171,14 +182,11 @@ namespace MGE.ECS
 
 		public void Update()
 		{
-			foreach (var entity in entities)
+			foreach (var entity in entities.ToArray())
 			{
 				if (!entity.enabled) continue;
 				if (entity.destroyed)
-				{
 					entities.Remove(entity);
-					continue;
-				}
 
 				entity.Update();
 			}
@@ -188,14 +196,9 @@ namespace MGE.ECS
 		{
 			using (new DrawBatch())
 			{
-				foreach (var entity in entities)
+				foreach (var entity in entities.ToArray())
 				{
-					if (!entity.visible) continue;
-					if (entity.destroyed)
-					{
-						entities.Remove(entity);
-						continue;
-					}
+					if (!entity.visible | entity.destroyed) continue;
 
 					entity.Draw();
 				}
@@ -206,14 +209,9 @@ namespace MGE.ECS
 		{
 			using (new DrawBatch(transform: null))
 			{
-				foreach (var entity in entities)
+				foreach (var entity in entities.ToArray())
 				{
-					if (!entity.visible) continue;
-					if (entity.destroyed)
-					{
-						entities.Remove(entity);
-						continue;
-					}
+					if (!entity.visible | entity.destroyed) continue;
 
 					entity.Draw();
 				}
@@ -223,8 +221,7 @@ namespace MGE.ECS
 		public void DestroyAllEntites()
 		{
 			foreach (var entity in entities)
-				if (!entity.destroyed)
-					entity.Destroy();
+				entity.Destroy();
 		}
 		#endregion
 
@@ -234,7 +231,7 @@ namespace MGE.ECS
 			var nearestDistSqr = float.PositiveInfinity;
 			Entity nearestEntity = null;
 
-			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? GetEntities() : GetEntitiesWithTag(tag);
 
 			foreach (var entity in entitiesToSearch)
 			{
@@ -256,8 +253,7 @@ namespace MGE.ECS
 
 			Entity nearestEntity = null;
 
-			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
-			Logger.Log(entitiesToSearch.Length);
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? GetEntities() : GetEntitiesWithTag(tag);
 
 			foreach (var entity in entitiesToSearch)
 			{
@@ -276,7 +272,7 @@ namespace MGE.ECS
 		public Entity[] GetEntities(Rect rect, string tag = null)
 		{
 			var foundEntities = new List<Entity>();
-			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? GetEntities() : GetEntitiesWithTag(tag);
 
 			foreach (var entity in entitiesToSearch)
 			{
@@ -292,7 +288,7 @@ namespace MGE.ECS
 			radius = radius * radius;
 
 			var foundEntities = new List<Entity>();
-			var entitiesToSearch = string.IsNullOrEmpty(tag) ? entities.ToArray() : GetEntitiesWithTag(tag);
+			var entitiesToSearch = string.IsNullOrEmpty(tag) ? GetEntities() : GetEntitiesWithTag(tag);
 
 			foreach (var entity in entitiesToSearch)
 			{

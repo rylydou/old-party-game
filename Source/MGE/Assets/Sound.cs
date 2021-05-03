@@ -1,31 +1,33 @@
+using MGE.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using Newtonsoft.Json;
 
 namespace MGE
 {
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Sound
 	{
-		public SoundEffect[] sounds;
-
-		public Range volume = new Range(0, 0);
-		public Range pitch = new Range(0, 0);
-		public Range pan = new Range(0, 0);
-
-		public Sound(params SoundEffect[] sounds)
+		public string path;
+		SoundEffect[] _sounds;
+		public SoundEffect[] sounds
 		{
-			this.sounds = sounds;
+			get
+			{
+				if (_sounds is null)
+					_sounds = Assets.GetAssets<SoundEffect>(path);
+				return _sounds;
+			}
 		}
 
-		public Sound(SoundEffect[] sounds, Range volume, Range pitch, Range pan)
-		{
-			this.sounds = sounds;
-			this.volume = volume;
-			this.pitch = pitch;
-			this.pan = pan;
-		}
+		[JsonProperty] public Range volume = new Range(-0.05f, 0.05f);
+		[JsonProperty] public Range pitch = new Range(-0.05f, 0.05f);
+		[JsonProperty] public Range pan = new Range(-0.05f, 0.05f);
 
-		public void Play(Vector2 position, float volume = 1.0f, float pitch = 0.0f)
+		public void Play(Vector2 position)
 		{
-			sounds.Random().Play(volume + this.volume.random, pitch + this.pitch.random, 0.0f + this.pan.random);
+			var pan = (position - Camera.position - (Vector2)Window.sceneSize / 2) / (Vector2)Window.sceneSize;
+
+			sounds.Random().Play(Math.Clamp(volume.random * (1.0f - pan.abs.sqrMagnitude / 1.5f), 0.0f, 1.0f), Math.Clamp(this.pitch.random - pan.y / 4, 0.0f, 1.0f), Math.Clamp(pan.x / 2 + this.pan.random, -1.0f, 1.0f));
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using GAME.Components;
 using GAME.Components.Items;
+using GAME.Types;
 using MGE;
 using MGE.Components;
 using MGE.ECS;
@@ -14,6 +15,17 @@ namespace GAME
 		public static Main current { get; private set; }
 
 		public Engine engine;
+
+		public Player[] players = new Player[]
+		{
+			new Player(0, "_Default"),
+			new Player(1, "Amogus"),
+			new Player(2, "Goose"),
+			new Player(3, "Robot"),
+		};
+
+		public float timeBtwCrates = 10;
+		public float crateSpawnCooldown;
 
 		public Main()
 		{
@@ -43,11 +55,23 @@ namespace GAME
 						new Entity(new CStage()),
 						new Entity(new CRigidbody(), new CCrate()),
 						new Entity(new CRigidbody(), new CCrate()),
-						new Entity(new CRigidbody(), new CCrate()),
-						new Entity(new CRigidbody(), new CPlayer())
+						new Entity(new CRigidbody(), new CCrate())
+					),
+					new Layer(
+						true,
+						new Entity(new CUI())
 					)
 				)
 			);
+
+			foreach (var player in players)
+			{
+				if (player is null) continue;
+
+				player.player = new CPlayer(player);
+
+				SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), player.player));
+			}
 
 			SceneManager.activeScene.clearScreen = false;
 #if INDEV
@@ -65,6 +89,13 @@ namespace GAME
 
 		protected override void Update(XNA_GameTime gameTime)
 		{
+			crateSpawnCooldown -= Time.fixedDeltaTime;
+			if (crateSpawnCooldown < 0)
+			{
+				crateSpawnCooldown = timeBtwCrates;
+				SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), new CCrate()));
+			}
+
 			engine.Update(gameTime);
 #if INDEV
 			SceneManager.activeScene.screenClearColor = MGE.Color.AnimColor(0.75f);

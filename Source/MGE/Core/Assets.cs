@@ -50,7 +50,7 @@ namespace MGE
 			{
 				if (Config.typeToExtention.ContainsValue(IO.GetFullExt(file.Value)))
 				{
-					object asset = LoadAsset(file.Value);
+					object asset = LoadAsset(file.Value, file.Key);
 
 					if (asset == null)
 						Logger.LogError($"Asset {file.Key} is null!");
@@ -71,13 +71,13 @@ namespace MGE
 			}
 		}
 
-		static object LoadAsset(string path)
+		static object LoadAsset(string path, string relitivePath)
 		{
 			object asset = null;
 
 			switch (IO.GetFullExt(path))
 			{
-				// > Image
+				// # Texture
 				case ".psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
@@ -102,13 +102,19 @@ namespace MGE
 						asset = info;
 					}
 					break;
-				// > Audio
+				// # Audio
 				case ".wav":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
-						asset = new Sound(SoundEffect.FromStream(fs));
+						asset = SoundEffect.FromStream(fs);
 					}
 					break;
+				case ".sound":
+					var sound = IO.LoadJson<Sound>(path);
+					sound.path = relitivePath.Replace(".sound", string.Empty);
+					asset = sound;
+					break;
+				// # Mics
 				case ".font.psd":
 					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
 					{
@@ -163,10 +169,26 @@ namespace MGE
 			return null;
 		}
 
+		public static T[] GetAssets<T>(string path) where T : class
+		{
+			var assets = new List<T>();
+
+			foreach (var asset in preloadedAssets)
+			{
+				if (asset.Key.StartsWith(path))
+				{
+					if (asset.Value is T a)
+						assets.Add(a);
+				}
+			}
+
+			return assets.ToArray();
+		}
+
 		public static T LoadAsset<T>(string path) where T : class
 		{
 			if (unloadedAssets.ContainsKey(path))
-				return LoadAsset(unloadedAssets[path]) as T;
+				return LoadAsset(unloadedAssets[path], path) as T;
 			return null;
 		}
 		#endregion

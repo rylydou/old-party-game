@@ -95,7 +95,7 @@ namespace MGE.FileIO
 		public static string FileGetParent(string path)
 		{
 			path = basePath + path;
-			return CleanPath(new FileInfo(path).Directory.FullName);
+			return CleanPath(new FileInfo(path).Directory.FullName).Replace(basePath, string.Empty);
 		}
 		#endregion
 
@@ -121,7 +121,7 @@ namespace MGE.FileIO
 		public static string FolderGetParent(string path)
 		{
 			path = basePath + path;
-			return CleanPath(new DirectoryInfo(path).Parent.FullName);
+			return CleanPath(new DirectoryInfo(path).Parent.FullName).Replace(basePath, string.Empty);
 		}
 
 		public static string[] FolderGetFolders(string path)

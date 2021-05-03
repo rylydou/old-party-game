@@ -20,12 +20,13 @@ namespace MGE.ECS
 
 		public virtual void Draw(Texture texture, Vector2 position = default, Color? color = null)
 		{
-			GFX.Draw(texture, entity.position + position, color);
+			GFX.Draw(texture, entity.position + position, color, entity.scale.x < 0, entity.scale.y < 0);
 		}
 
-		public virtual void Spawn(Entity entity, Vector2 position)
+		public virtual void Spawn(Entity entity, Vector2 position, float angle = 0)
 		{
 			entity.position = position;
+			entity.roation = angle;
 			this.entity.layer.AddEntity(entity);
 		}
 

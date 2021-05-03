@@ -1,14 +1,6 @@
 using System.Linq;
+using System.Text.RegularExpressions;
 using MGE;
-using MGE.Components;
-using MGE.ECS;
-
-public enum ItemType
-{
-	Item = 0,
-	Weapon = 1,
-	Wearable = 2,
-}
 
 public enum ItemState
 {
@@ -19,20 +11,23 @@ public enum ItemState
 
 namespace GAME.Components
 {
-	public abstract class CItem : Component
+	public abstract class CItem : CObject
 	{
-		public abstract ItemType type { get; }
+		public override string basePath { get => "Items"; }
+		public override string relitivePath
+		{
+			get => Regex.Replace(GetType().ToString().Split('.').Last().Remove(0, 1), @"\p{Lu}", c => " " + c.Value.ToUpperInvariant()).Remove(0, 1);
+		}
+		public override bool meleeOnly => true;
 
+		public Texture currentSprite;
+		public CPlayer player;
 		public ItemState state = ItemState.Dropped;
 
-		public Texture currentSprite = null;
-		public CPlayer player = null;
-
-		public Texture sprite;
-		public Sound pickupSound;
-		public Sound dropSound;
-
-		CRigidbody rb = null;
+		protected Texture sprite;
+		protected Sound pickupSound;
+		protected Sound dropSound;
+		protected Sound throwSound;
 
 		public override void Init()
 		{
@@ -43,10 +38,9 @@ namespace GAME.Components
 			sprite = GetAsset<Texture>("Sprite");
 			pickupSound = GetAsset<Sound>("Pickup");
 			dropSound = GetAsset<Sound>("Drop");
+			throwSound = GetAsset<Sound>("Throw");
 
 			currentSprite = sprite;
-
-			rb = entity.GetComponent<CRigidbody>();
 		}
 
 		public virtual void Pickup(CPlayer player)
@@ -55,58 +49,54 @@ namespace GAME.Components
 			state = ItemState.Held;
 
 			this.player = player;
-			player.Pickup(this);
 
-			pickupSound.Play(entity.position);
+			pickupSound?.Play(entity.position);
 		}
 
-		public virtual void Use() { }
+		public virtual void Use()
+		{
+			rb.velocity = new Vector2(0.25f * entity.scale.x, -0.1f);
+
+			player.Pickup(null);
+
+			throwSound?.Play(entity.position);
+		}
 
 		public virtual void Drop()
 		{
 			entity.AddTag("Pickupable");
+			SetVulnerable(true);
 			state = ItemState.Dropped;
 
-			player.Pickup(null);
 			player = null;
 
-			dropSound.Play(entity.position);
+			dropSound?.Play(entity.position);
 		}
 
 		public override void Draw()
 		{
 			base.Draw();
 
-			if (currentSprite is object)
-				Draw(currentSprite);
-		}
-
-		public T GetAsset<T>(string path) where T : class
-		{
-			T asset = null;
-
-			asset = Assets.GetAsset<T>($"Items/{GetType().ToString().Split('.').Last().Remove(0, 1)}/{path}");
-
-			if (asset is null)
-			{
-				asset = Assets.GetAsset<T>($"Items/_Default/{path}");
-
-				if (asset is null)
-				{
-					asset = Assets.GetAsset<T>($"Items/_Default/Error");
-					if (asset is null) throw new System.Exception($"Could not find an error asset for {typeof(T)} at {path}");
-					else LogError($"Used error asset for {path}");
-				}
-			}
-
-			return asset;
+			Draw(currentSprite);
 		}
 
 		public override void FixedUpdate()
 		{
 			base.FixedUpdate();
 
-			if (player is object) rb.position = player.entity.position;
+			if (player is object)
+			{
+				entity.scale = player.entity.scale;
+				rb.velocity = new Vector2(0.05f * entity.scale.x, -0.05f);
+				rb.position = player.entity.position + new Vector2(0.67f * entity.scale.x, -0.167f);
+			}
+		}
+
+		public override void OnDeath()
+		{
+			base.OnDeath();
+
+			player?.Pickup(null);
 		}
 	}
 }
