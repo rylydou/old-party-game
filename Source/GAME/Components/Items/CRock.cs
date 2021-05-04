@@ -40,9 +40,9 @@ namespace GAME.Components.Items
 
 					hitThing = true;
 
-					thing.GetSimilarComponent<CObject>()?.OnDamage(damage, rb.velocity * 2.0f);
+					thing.GetSimilarComponent<CObject>()?.OnDamage(damage, rb.velocity * 2.0f, lastPlayer);
 					thing.GetComponent<CPlayer>()?.Pickup(null);
-					OnDamage(34, rb.velocity);
+					OnDamage(34, rb.velocity, null);
 				}
 
 				if (hitThing)
@@ -54,12 +54,12 @@ namespace GAME.Components.Items
 			}
 		}
 
-		// public override void OnDamage(int damage, Vector2 knockback)
-		// {
-		// 	base.OnDamage(damage, knockback);
+		public override void OnDamage(int damage, Vector2 knockback, CPlayer source)
+		{
+			base.OnDamage(damage, knockback, source);
 
-		// 	lastPlayer = player;
-		// }
+			lastPlayer = source;
+		}
 
 		public override void Pickup(CPlayer player)
 		{

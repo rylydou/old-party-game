@@ -56,7 +56,7 @@ namespace GAME.Components
 				entity.Destroy();
 		}
 
-		public virtual void OnDamage(int damage, Vector2 knockback)
+		public virtual void OnDamage(int damage, Vector2 knockback, CPlayer source)
 		{
 			health -= damage;
 

@@ -10,6 +10,7 @@ namespace GAME
 		public bool jump = false;
 		public bool jumpRelease = false;
 		public bool use = false;
+		public bool pause = false;
 		public bool DEBUG_SPAWN_BOX = false;
 
 		public PlayerControls(int index)
@@ -19,27 +20,42 @@ namespace GAME
 
 		public override void Update()
 		{
-			var i = index - (playerOneUsesKeyboard ? 1 : 0);
-
-			if (playerOneUsesKeyboard && index == 0)
+			switch (index)
 			{
-				move = (Input.GetButton(Inputs.D) ? 1 : 0) - (Input.GetButton(Inputs.A) ? 1 : 0);
-				crouch = Input.GetButton(Inputs.S);
-				jump = Input.GetButtonPress(Inputs.Space);
-				jumpRelease = Input.GetButtonRelease(Inputs.Space);
-				use = Input.GetButtonPress(Inputs.E);
-				DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.D1);
-			}
-			else if (Input.GamepadConnected(i))
-			{
-				move = (Input.GetButton(Inputs.GamepadRight, i) ? 1 : 0) - (Input.GetButton(Inputs.GamepadLeft, i) ? 1 : 0);
-				if (Input.GetLeftStick(i).x.Abs() > 0.33f)
-					move = Input.GetLeftStick(i).x.Sign();
-				crouch = Input.GetLeftStick(i).y < -0.5f || Input.GetButton(Inputs.GamepadDown, i);
-				jump = Input.GetButtonPress(Inputs.GamepadA, i) | Input.GetButtonPress(Inputs.GamepadB, i);
-				jumpRelease = Input.GetButtonRelease(Inputs.GamepadA, i) | Input.GetButtonRelease(Inputs.GamepadB, i);
-				use = Input.GetButtonPress(Inputs.GamepadX, i) | Input.GetButtonPress(Inputs.GamepadY, i) | Input.GetButtonPress(Inputs.GamepadRT, i);
-				DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.GamepadLB, i);
+				case -1:
+					isConnected = true;
+					move = (Input.GetButton(Inputs.D) ? 1 : 0) - (Input.GetButton(Inputs.A) ? 1 : 0);
+					crouch = Input.GetButton(Inputs.S);
+					jump = Input.GetButtonPress(Inputs.Space) | Input.GetButtonPress(Inputs.W);
+					jumpRelease = Input.GetButtonRelease(Inputs.Space) | Input.GetButtonRelease(Inputs.W);
+					use = Input.GetButtonPress(Inputs.E);
+					pause = Input.GetButtonPress(Inputs.Escape);
+					DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.Tab);
+					break;
+				case -2:
+					isConnected = true;
+					move = (Input.GetButton(Inputs.Right) ? 1 : 0) - (Input.GetButton(Inputs.Left) ? 1 : 0);
+					crouch = Input.GetButton(Inputs.Down);
+					jump = Input.GetButtonPress(Inputs.Up);
+					jumpRelease = Input.GetButtonRelease(Inputs.Up);
+					use = Input.GetButtonPress(Inputs.RightControl) | Input.GetButtonPress(Inputs.RightShift) | Input.GetButtonPress(Inputs.RightAlt);
+					break;
+				default:
+					if (Input.GamepadConnected(index))
+					{
+						isConnected = true;
+						move = (Input.GetButton(Inputs.GamepadRight, index) ? 1 : 0) - (Input.GetButton(Inputs.GamepadLeft, index) ? 1 : 0);
+						if (Input.GetLeftStick(index).x.Abs() > 0.33f)
+							move = Input.GetLeftStick(index).x.Sign();
+						crouch = Input.GetLeftStick(index).y < -0.5f || Input.GetButton(Inputs.GamepadDown, index);
+						jump = Input.GetButtonPress(Inputs.GamepadA, index) | Input.GetButtonPress(Inputs.GamepadB, index);
+						jumpRelease = Input.GetButtonRelease(Inputs.GamepadA, index) | Input.GetButtonRelease(Inputs.GamepadB, index);
+						use = Input.GetButtonPress(Inputs.GamepadX, index) | Input.GetButtonPress(Inputs.GamepadY, index) | Input.GetButtonPress(Inputs.GamepadRT, index);
+						pause = Input.GetButtonPress(Inputs.GamepadStart, index);
+					}
+					else
+						isConnected = false;
+					break;
 			}
 		}
 	}

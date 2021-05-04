@@ -5,7 +5,7 @@ namespace GAME.Types
 {
 	public class Player
 	{
-		public static float timeToRespawn = 5.0f;
+		public static float timeToRespawn = 3.0f;
 
 		public static Color[] colors = new Color[]
 		{
@@ -51,7 +51,7 @@ namespace GAME.Types
 
 		public float timeRespawing;
 
-		public Player(int index, string skin)
+		public Player(int index, string skin = "_Default")
 		{
 			this.index = index;
 			this.skin = skin;
