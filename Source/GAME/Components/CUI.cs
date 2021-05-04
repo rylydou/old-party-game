@@ -24,20 +24,39 @@ namespace GAME.Components
 					GFX.DrawLine(new Vector2(42 + 32 + offset, 42 + 32), 42, player.color, Math.pi2 - ((float)i / player.player.maxHealth * Math.pi2 + Math.piOver2), 3f);
 				}
 
+				GFX.DrawCircle(new Vector2(42 + 32 + 2 + offset, 42 + 32 + 2), 44, new Color(0, 0.25f), 5, 32);
+
 				GFX.DrawCircle(new Vector2(42 + 32 + offset, 42 + 32), 44, new Color(Math.Round(player.color.inverted.grayscale)), 5, 32);
 
 				var iconOffset = (float)(42 * 2 - 42) / 2 + 32;
 
-				GFX.Draw(player.icon, new Rect(iconOffset + offset, iconOffset, 42, 42));
+				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + offset + 2, iconOffset + 2, 42, 42), new Color(0, 0.25f));
+
+				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + offset, iconOffset, 42, 42));
+
+				var text = player.deaths.ToString();
+				var textSize = Config.font.Measure(text);
+				var textDeathsOffset = (96 - textSize.x) / 2 * 1.625f;
+
+				Config.font.DrawText(text, new Vector2(textDeathsOffset + offset + 2, 96), new Color(0, 0.25f));
+				Config.font.DrawText(text, new Vector2(textDeathsOffset + offset, 96 - 2), Color.red);
 
 				index++;
 			}
 
 			var time = System.TimeSpan.FromSeconds(Main.current.timeLeft).ToString(Main.current.timeLeft < 60 ? @"ss\.ff" : @"mm\:ss");
-			var size = Config.font.Measure(time, 1.5f);
+			var size = Config.font.Measure(time, 2);
+			var textOffset = (Window.renderSize.x - size.x) / 2;
 
-			Config.font.DrawText(time, new Vector2(Window.renderSize.x - size.x - 6, 10), new Color(0, 0.25f), 1.5f);
-			Config.font.DrawText(time, new Vector2(Window.renderSize.x - size.x - 8, 8), Main.current.timeLeft < 30 ? new Color(0.9f, 0.05f, 0.05f) : new Color(0.95f), 1.5f);
+			for (int y = -2; y <= 2; y++)
+			{
+				for (int x = -2; x <= 2; x++)
+				{
+					Config.font.DrawText(time, new Vector2(textOffset - 8 + x, 8 + y), new Color(0, 0.025f), 2);
+				}
+			}
+
+			Config.font.DrawText(time, new Vector2(textOffset - 8, 8), Main.current.timeLeft < 30 ? Color.red : Color.white, 2);
 		}
 	}
 }

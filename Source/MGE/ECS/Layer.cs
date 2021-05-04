@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MGE.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.ECS
 {

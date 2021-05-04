@@ -12,12 +12,12 @@ namespace GAME.Components
 		public Player player;
 
 		public float moveSpeed = 6.75f;
-		public float crouchSpeed = 2.67f;
+		public float crouchSpeed = 2.5f;
 
 		public override float frictionAir { get => 0.875f; }
 		public override float frictionGround { get => 0.6f; }
 
-		public float crouchFallVel = 0.25f;
+		public float crouchFallVel = 0.33f;
 		public float jumpMinVel = 0.2f;
 		public float jumpMaxVel = 0.275f;
 
@@ -28,6 +28,7 @@ namespace GAME.Components
 		CItem nearestItem;
 		float groundedMem = -1;
 		float jumpMem = -1;
+		float hitFlash = -1;
 
 		bool jump;
 		bool jumpRelease;
@@ -149,6 +150,8 @@ namespace GAME.Components
 		{
 			base.Update();
 
+			hitFlash -= Time.deltaTime;
+
 			if (player.controls.jump) jump = true;
 			if (player.controls.jumpRelease) jumpRelease = true;
 			if (player.controls.use) use = true;
@@ -159,7 +162,10 @@ namespace GAME.Components
 
 		public override void Draw()
 		{
-			Draw(player.controls.crouch ? texCrouching : texBody);
+			var offset = hitFlash > 0 ? Random.UnitVector() / 16 * 4 : Vector2.zero;
+
+			Draw(player.controls.crouch ? texCrouching : texBody, new Vector2(1f / 16) + offset, new Color(0, 0.25f));
+			Draw(player.controls.crouch ? texCrouching : texBody, offset, hitFlash > 0 ? Color.red : Color.white);
 
 			if (nearestItem is object && heldItem is null)
 			{
@@ -177,9 +183,17 @@ namespace GAME.Components
 			item?.Pickup(this);
 		}
 
+		public override void OnDamage(int damage, Vector2 knockback)
+		{
+			base.OnDamage(damage, knockback);
+			hitFlash = 0.1f;
+		}
+
 		public override void OnDeath()
 		{
 			base.OnDeath();
+
+			player.deaths++;
 
 			Pickup(null);
 		}

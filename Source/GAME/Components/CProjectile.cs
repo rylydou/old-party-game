@@ -33,7 +33,7 @@ namespace GAME.Components
 		{
 			base.FixedUpdate();
 
-			var things = entity.layer.GetEntities(entity.position + 0.5f, data.radius, "Ranged Vulnerable");
+			var things = entity.layer.GetEntities(entity.position, data.radius, "Ranged Vulnerable");
 
 			foreach (var thing in things)
 			{
@@ -41,7 +41,7 @@ namespace GAME.Components
 
 				thing.GetSimilarComponent<CObject>()?.OnDamage(data.damage.damage, -Vector2.GetDirection(data.damage.origin, entity.position) * data.damage.knockback + new Vector2(0, data.damage.knockback / 2));
 
-				if (Random.Bool(33)) hitSound?.Play(entity.position);
+				hitSound?.Play(entity.position);
 
 				data.hits--;
 
@@ -55,7 +55,7 @@ namespace GAME.Components
 			entity.position += entity.roationVector * data.speed;
 			data.lifetime -= Time.fixedDeltaTime;
 
-			if (data.lifetime < 0)
+			if (data.lifetime < 0 || entity.layer.raycaster.IsSolid(entity.position + 0.5f))
 				entity.Destroy();
 		}
 

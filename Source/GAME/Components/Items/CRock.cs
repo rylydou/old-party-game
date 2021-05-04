@@ -7,7 +7,7 @@ namespace GAME.Components.Items
 		public override float frictionAir => 0.98f;
 		public override float frictionGround => 0.5f;
 
-		public int damage = 20;
+		public int damage = 30;
 		public float timeBtwHits = 0.3f;
 
 		float cooldown;
@@ -32,7 +32,7 @@ namespace GAME.Components.Items
 			{
 				var hitThing = false;
 
-				var things = entity.layer.GetEntities(entity.position, 0.5f, "Ranged Vulnerable");
+				var things = entity.layer.GetEntities(entity.position + new Vector2(0.25f), 0.5f, "Ranged Vulnerable");
 
 				foreach (var thing in things)
 				{
@@ -41,6 +41,7 @@ namespace GAME.Components.Items
 					hitThing = true;
 
 					thing.GetSimilarComponent<CObject>()?.OnDamage(damage, rb.velocity * 2.0f);
+					thing.GetComponent<CPlayer>()?.Pickup(null);
 					OnDamage(34, rb.velocity);
 				}
 
@@ -51,11 +52,6 @@ namespace GAME.Components.Items
 					rb.velocity.y = -0.1f;
 				}
 			}
-		}
-
-		public override void Draw()
-		{
-			Draw(currentSprite, -rb.size / 2);
 		}
 
 		// public override void OnDamage(int damage, Vector2 knockback)

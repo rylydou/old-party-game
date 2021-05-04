@@ -9,11 +9,11 @@ namespace GAME.Types
 
 		public static Color[] colors = new Color[]
 		{
-			new Color("#f6511d"),
-			new Color("#00a6ed"),
-			new Color("#7fb800"),
-			new Color("#ffb400"),
-			new Color("#0d2c54"),
+			new Color("#F73"),
+			new Color("#0AE"),
+			new Color("#7b0"),
+			new Color("#fb0"),
+			new Color("#025"),
 		};
 
 		public int index;
@@ -28,6 +28,16 @@ namespace GAME.Types
 				if (_icon is null)
 					_icon = Assets.GetAsset<Texture>($"Players/{skin}/Icon");
 				return _icon;
+			}
+		}
+		Texture _iconDead;
+		public Texture iconDead
+		{
+			get
+			{
+				if (_iconDead is null)
+					_iconDead = Assets.GetAsset<Texture>($"Players/{skin}/Icon Dead");
+				return _iconDead;
 			}
 		}
 

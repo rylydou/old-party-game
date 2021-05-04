@@ -36,7 +36,8 @@ namespace GAME.Components
 
 			map.For((x, y) =>
 			{
-				return (byte)(x == 0 || y == 0 || x == mapSize.x - 1 || y == mapSize.y - 1 ? 1 : (noise.GetNoise(x * 8, 0).Abs() * 1.5f + 0.25f < (float)y / mapSize.y ? 1 : 0));
+				var pos = new Vector2(x, y) / (Vector2)mapSize;
+				return (byte)(x == 0 || y == 0 || x == mapSize.x - 1 || y == mapSize.y - 1 ? 1 : (noise.GetNoise(x * 8, 0).Abs() * 1.25f + 0.33f < pos.y ? 1 : 0));
 			});
 		}
 
@@ -60,6 +61,11 @@ namespace GAME.Components
 			}
 
 			return hit;
+		}
+
+		public bool IsSolid(Vector2 position)
+		{
+			return map[(Vector2Int)position] != 0;
 		}
 	}
 }

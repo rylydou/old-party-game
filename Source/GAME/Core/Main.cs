@@ -18,8 +18,8 @@ namespace GAME
 
 		public Player[] players = new Player[]
 		{
-			new Player(0, "Amogus"),
-			new Player(1, "Goose"),
+			new Player(0, "_Default"),
+			new Player(1, "Amogus"),
 			// new Player(2, "Goose"),
 			// new Player(3, "Robot"),
 		};
@@ -27,7 +27,7 @@ namespace GAME
 		public float roundTime = 60 * 3;
 		public float timeLeft;
 
-		public float timeBtwCrates = 10;
+		public float timeBtwCrates = 6;
 		public float crateSpawnCooldown;
 
 		public Main()

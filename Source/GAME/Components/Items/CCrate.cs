@@ -11,6 +11,7 @@ namespace GAME.Components.Items
 			typeof(CShotgun),
 			typeof(CBananaGun),
 			typeof(CRock),
+			typeof(CHamburger),
 		};
 
 		public override bool meleeOnly => false;

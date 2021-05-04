@@ -40,6 +40,7 @@ namespace MGE
 
 				GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 
+				game.IsFixedTimeStep = true;
 				game.InactiveSleepTime = TimeSpan.Zero;
 				game.Window.Title = Config.gameName;
 				game.Window.AllowUserResizing = Config.allowWindowResizing;
@@ -58,7 +59,7 @@ namespace MGE
 			using (Timmer.Start("Initialize"))
 			{
 				graphics.SynchronizeWithVerticalRetrace = true;
-				game.IsFixedTimeStep = true;
+				graphics.PreferMultiSampling = true;
 				graphics.ApplyChanges();
 
 				MGE.Window.aspectRatioFrac = Config.aspectRatio;

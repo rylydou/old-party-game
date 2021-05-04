@@ -52,6 +52,7 @@ namespace GAME.Components
 		{
 			entity.RemoveTag("Pickupable");
 			state = ItemState.Held;
+			entity.visible = true;
 
 			this.player = player;
 
@@ -62,7 +63,7 @@ namespace GAME.Components
 
 		public virtual void Use()
 		{
-			rb.velocity = new Vector2(0.25f * entity.scale.x, -0.1f);
+			rb.velocity = new Vector2(0.3f * entity.scale.x, -0.075f);
 
 			player.Pickup(null);
 

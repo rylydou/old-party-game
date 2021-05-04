@@ -19,6 +19,8 @@ namespace GAME
 
 		public override void Update()
 		{
+			var i = index - (playerOneUsesKeyboard ? 1 : 0);
+
 			if (playerOneUsesKeyboard && index == 0)
 			{
 				move = (Input.GetButton(Inputs.D) ? 1 : 0) - (Input.GetButton(Inputs.A) ? 1 : 0);
@@ -28,10 +30,8 @@ namespace GAME
 				use = Input.GetButtonPress(Inputs.E);
 				DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.D1);
 			}
-			else if (Input.GamepadConnected(index))
+			else if (Input.GamepadConnected(i))
 			{
-				var i = index - (playerOneUsesKeyboard ? 1 : 0);
-
 				move = (Input.GetButton(Inputs.GamepadRight, i) ? 1 : 0) - (Input.GetButton(Inputs.GamepadLeft, i) ? 1 : 0);
 				if (Input.GetLeftStick(i).x.Abs() > 0.33f)
 					move = Input.GetLeftStick(i).x.Sign();
@@ -40,16 +40,6 @@ namespace GAME
 				jumpRelease = Input.GetButtonRelease(Inputs.GamepadA, i) | Input.GetButtonRelease(Inputs.GamepadB, i);
 				use = Input.GetButtonPress(Inputs.GamepadX, i) | Input.GetButtonPress(Inputs.GamepadY, i) | Input.GetButtonPress(Inputs.GamepadRT, i);
 				DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.GamepadLB, i);
-			}
-
-			// FIXME:
-			if (playerOneUsesKeyboard && index == 1)
-			{
-				move = (Input.GetButton(Inputs.Right) ? 1 : 0) - (Input.GetButton(Inputs.Left) ? 1 : 0);
-				crouch = Input.GetButton(Inputs.Down);
-				jump = Input.GetButtonPress(Inputs.Up);
-				jumpRelease = Input.GetButtonRelease(Inputs.Up);
-				use = Input.GetButtonPress(Inputs.RightControl);
 			}
 		}
 	}

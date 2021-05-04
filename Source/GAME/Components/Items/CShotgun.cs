@@ -8,7 +8,7 @@ namespace GAME.Components.Items
 		public override int startingUses => 4;
 		public override float timeBtwAttacks => 0.4f;
 
-		public ProjectileData projectileData = new ProjectileData(new Damage(10, 0.125f), 0.5f, 0.5f, 0.25f, 1);
+		public ProjectileData projectileData = new ProjectileData(new Damage(15, 0.125f), 0.5f, 0.5f, 0.25f, 1);
 
 		public override void Pickup(CPlayer player)
 		{
