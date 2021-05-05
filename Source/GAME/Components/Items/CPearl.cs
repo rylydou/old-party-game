@@ -20,12 +20,10 @@ namespace GAME.Components.Items
 
 		public override void FixedUpdate()
 		{
-			base.FixedUpdate();
-
-			if (rb.grounded && state == ItemState.Dropped && owner is object)
-			{
+			if (rb.grounded && state == ItemState.Thrown && owner is object)
 				Death();
-			}
+
+			base.FixedUpdate();
 		}
 
 		public override void Damage(int damage, Vector2 knockback, CPlayer source)

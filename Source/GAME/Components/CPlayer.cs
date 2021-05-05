@@ -35,19 +35,16 @@ namespace GAME.Components
 		float lastHealthStayTime = -1;
 		public float lastHealth = 100;
 
-		bool jump;
-		bool jumpRelease;
-		bool use;
+		bool inputJump;
+		bool inputJumpRelease;
+		bool inputUse;
+		bool inputDie;
 
 		Texture texBody;
 		// TODO: Add Animations
 		Texture texCrouching;
 		Texture texHand;
 		Texture texArrow;
-		Sound jumpSound;
-		Sound landSound;
-		Sound punchSwingSound;
-		Sound punchHitSound;
 
 		public CPlayer(Player player)
 		{
@@ -62,10 +59,6 @@ namespace GAME.Components
 			texCrouching = GetAsset<Texture>("Crouching");
 			texHand = GetAsset<Texture>("Hand");
 			texArrow = GetAsset<Texture>("Arrow");
-			jumpSound = GetAsset<Sound>("Jump");
-			landSound = GetAsset<Sound>("Land");
-			punchSwingSound = GetAsset<Sound>("Punch Swing");
-			punchHitSound = GetAsset<Sound>("Punch Hit");
 
 			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
 		}
@@ -74,7 +67,10 @@ namespace GAME.Components
 		{
 			base.FixedUpdate();
 
-			extraVelocity = Vector2.ClampMagnitude(extraVelocity, moveSpeed * 4);
+			if (entity.layer.raycaster.IsSolid(rb.position + 0.5f))
+				Damage(1, Vector2.zero, null);
+
+			extraVelocity = Vector2.ClampMagnitude(extraVelocity, moveSpeed * 2);
 
 			extraVelocity.x *= rb.grounded ? extraFrictionGround : extraFrictionAir;
 			if (extraVelocity.y > 0) extraVelocity.y = Math.MoveTowards(extraVelocity.y, 0, MGE.Physics.Physics.gravity.y * Time.fixedDeltaTime);
@@ -92,22 +88,22 @@ namespace GAME.Components
 
 			jumpMem -= Time.fixedDeltaTime;
 
-			if (jump)
+			if (inputJump)
 				jumpMem = jumpRem;
-			jump = false;
+			inputJump = false;
 
 			if (groundedMem > 0f && jumpMem > 0f)
 			{
 				groundedMem = -1f;
 				jumpMem = -1f;
 				rb.velocity.y = player.controls.crouch ? -jumpMinVel : -jumpMaxVel;
-				jumpSound?.Play(entity.position);
+				PlaySound("Jump");
 			}
 
-			if (jumpRelease)
+			if (inputJumpRelease)
 				if (rb.velocity.y < -jumpMinVel)
 					rb.velocity.y = -jumpMinVel;
-			jumpRelease = false;
+			inputJumpRelease = false;
 
 			if (player.controls.move.Abs() > 0.1f)
 				entity.scale.x = player.controls.move.Sign();
@@ -117,7 +113,7 @@ namespace GAME.Components
 
 			nearestItem = entity.layer.GetNearestEntity(entity.position, 1.25f, "Pickupable")?.GetSimilarComponent<CItem>();
 
-			if (use)
+			if (inputUse)
 			{
 				if (player.controls.crouch)
 				{
@@ -144,16 +140,20 @@ namespace GAME.Components
 							}
 						}
 
-						punchSwingSound?.Play(entity.position);
+						PlaySound("Punch Swing");
 
 						if (hitThing)
-							punchHitSound?.Play(entity.position);
+							PlaySound("Punch Hit");
 					}
 					else
 						heldItem.Use();
 				}
 			}
-			use = false;
+			inputUse = false;
+
+			if (inputDie)
+				Death();
+			inputDie = false;
 		}
 
 		public override void Update()
@@ -168,12 +168,10 @@ namespace GAME.Components
 
 			player.controls.Update();
 
-			// if (hitFlash > 0)
-			// 	Camera.position = Random.UnitVector() * 1;
-
-			if (player.controls.jump) jump = true;
-			if (player.controls.jumpRelease) jumpRelease = true;
-			if (player.controls.use) use = true;
+			if (player.controls.jump) inputJump = true;
+			if (player.controls.jumpRelease) inputJumpRelease = true;
+			if (player.controls.use) inputUse = true;
+			if (player.controls.die) inputDie = true;
 
 			if (player.controls.DEBUG_SPAWN_BOX)
 				Spawn(new MGE.ECS.Entity(new MGE.Components.CRigidbody(), new Items.CCrate()), Vector2.zero);
@@ -221,7 +219,7 @@ namespace GAME.Components
 				Death();
 			}
 
-			damageSound?.Play(entity.position);
+			PlaySound("Damage");
 		}
 
 		public override void Death()

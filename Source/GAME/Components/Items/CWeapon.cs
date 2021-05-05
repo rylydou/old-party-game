@@ -10,15 +10,11 @@ namespace GAME.Components
 		public int uses;
 		public float cooldown;
 
-		protected Sound attackSound;
-
 		public override void Init()
 		{
 			base.Init();
 
 			uses = startingUses;
-
-			attackSound = GetAsset<Sound>("Attack");
 		}
 
 		public override void FixedUpdate()
@@ -62,7 +58,7 @@ namespace GAME.Components
 
 		public virtual void Attack()
 		{
-			attackSound?.Play(entity.position);
+			PlaySound("Attack");
 		}
 	}
 }

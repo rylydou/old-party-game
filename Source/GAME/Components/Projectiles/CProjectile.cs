@@ -2,31 +2,24 @@ using MGE;
 
 namespace GAME.Components
 {
-	public class CProjectile : CObject
+	public class CProjectile : CChildObject
 	{
-		public string basePathOfParent = string.Empty;
-
-		public override string basePath => $"Items/{basePathOfParent}";
-		public override string relitivePath => "Projectile";
 		public override bool meleeOnly => true;
 
 		public ProjectileData data;
 
-		public Texture texSprite;
-		public Sound hitSound;
-
-		public CProjectile(ProjectileData data, string basePath)
+		public Projectile(ProjectileData data, string basePath) : base(basePath)
 		{
 			this.data = data;
-			this.basePathOfParent = basePath;
 		}
+
+		public Texture texSprite;
 
 		public override void Init()
 		{
 			base.Init();
 
 			texSprite = GetAsset<Texture>("Sprite");
-			hitSound = GetAsset<Sound>("Hit");
 		}
 
 		public override void FixedUpdate()
@@ -41,7 +34,7 @@ namespace GAME.Components
 
 				thing.GetSimilarComponent<CObject>()?.Damage(data.damage.damage, -Vector2.GetDirection(data.damage.origin, entity.position) * data.damage.knockback + new Vector2(0, data.damage.knockback / 2), data.damage.doneBy.GetComponent<CPlayer>());
 
-				hitSound?.Play(entity.position);
+				PlaySound("Hit");
 
 				data.hits--;
 

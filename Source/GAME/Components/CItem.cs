@@ -22,16 +22,13 @@ namespace GAME.Components
 		}
 		public override bool meleeOnly => true;
 
-		public Texture currentSprite;
 		public CPlayer player;
 		public ItemState state = ItemState.Dropped;
 		public float timeAlive;
 
+		protected Texture currentSprite;
+
 		protected Texture sprite;
-		protected Sound pickupSound;
-		protected Sound dropSound;
-		protected Sound throwSound;
-		protected Sound despawnSound;
 
 		public override void Init()
 		{
@@ -40,12 +37,37 @@ namespace GAME.Components
 			entity.AddTag("Pickupable");
 
 			sprite = GetAsset<Texture>("Sprite");
-			pickupSound = GetAsset<Sound>("Pickup");
-			dropSound = GetAsset<Sound>("Drop");
-			throwSound = GetAsset<Sound>("Throw");
-			despawnSound = GetAsset<Sound>("Despawn");
 
 			currentSprite = sprite;
+		}
+
+		public override void FixedUpdate()
+		{
+			base.FixedUpdate();
+
+			if (rb.grounded && state == ItemState.Thrown)
+				state = ItemState.Dropped;
+
+
+			if (player is object)
+			{
+				entity.scale = player.entity.scale;
+				rb.velocity = new Vector2(0.05f * entity.scale.x, -0.05f);
+				rb.position = player.entity.position + new Vector2(0.67f * entity.scale.x, -0.167f);
+			}
+			else
+			{
+				timeAlive += Time.fixedDeltaTime;
+
+				if (timeAlive > timeToDespawn - 5)
+					entity.visible = !entity.visible;
+
+				if (timeAlive > timeToDespawn)
+				{
+					entity.Destroy();
+					PlaySound("Despawn");
+				}
+			}
 		}
 
 		public virtual void Pickup(CPlayer player)
@@ -58,7 +80,7 @@ namespace GAME.Components
 
 			timeAlive = Math.Clamp(timeAlive - 10, 0, float.PositiveInfinity);
 
-			pickupSound?.Play(entity.position);
+			PlaySound("Pickup");
 		}
 
 		public virtual void Use()
@@ -67,7 +89,9 @@ namespace GAME.Components
 
 			player.Pickup(null);
 
-			throwSound?.Play(entity.position);
+			state = ItemState.Thrown;
+
+			PlaySound("Throw");
 		}
 
 		public virtual void Drop()
@@ -78,7 +102,7 @@ namespace GAME.Components
 
 			player = null;
 
-			dropSound?.Play(entity.position);
+			PlaySound("Drop");
 		}
 
 		public override void Draw()
@@ -86,29 +110,6 @@ namespace GAME.Components
 			base.Draw();
 
 			Draw(currentSprite);
-		}
-
-		public override void FixedUpdate()
-		{
-			base.FixedUpdate();
-
-			if (player is object)
-			{
-				entity.scale = player.entity.scale;
-				rb.velocity = new Vector2(0.05f * entity.scale.x, -0.05f);
-				rb.position = player.entity.position + new Vector2(0.67f * entity.scale.x, -0.167f);
-			}
-			else
-			{
-				timeAlive += Time.fixedDeltaTime;
-				if (timeAlive > timeToDespawn - 5)
-					entity.visible = !entity.visible;
-				if (timeAlive > timeToDespawn)
-				{
-					despawnSound?.Play(entity.position);
-					entity.Destroy();
-				}
-			}
 		}
 
 		public override void Death()

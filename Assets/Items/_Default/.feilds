@@ -1,0 +1,8 @@
+{
+	"feilds": {
+		"size": "0.8, 0.8",
+		"health": "100",
+		"frictionGround": "14.0",
+		"frictionAir": "4.0"
+	}
+}

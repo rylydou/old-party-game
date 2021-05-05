@@ -36,13 +36,14 @@ namespace GAME.Components.Items
 
 				foreach (var thing in things)
 				{
-					if (thing == entity || thing == lastPlayer.entity) continue;
-
+					if (this is null || thing == entity || lastPlayer is null || thing == lastPlayer.entity) continue;
 					hitThing = true;
 
 					thing.GetSimilarComponent<CObject>()?.Damage(damage, rb.velocity * 2.0f, lastPlayer);
 					thing.GetComponent<CPlayer>()?.Pickup(null);
-					Damage(34, rb.velocity, null);
+					Damage(30, rb.velocity, null);
+
+					PlaySound("Hit");
 				}
 
 				if (hitThing)

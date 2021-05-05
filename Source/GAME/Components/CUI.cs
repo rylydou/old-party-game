@@ -38,8 +38,7 @@ namespace GAME.Components
 				var iconOffset = padding + (float)(42 * 2 - 42) / 2 + new Vector2(offset, 0);
 
 				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + 2, 42, 42), new Color(0, 0.25f));
-
-				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset, 42, 42));
+				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset, 42, 42), player.controls.isConnected ? Color.white : Color.gray);
 
 				var killsText = player.kills.ToString();
 				var killsTextSize = Config.font.Measure(killsText);

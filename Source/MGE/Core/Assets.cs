@@ -124,6 +124,9 @@ namespace MGE
 						asset = info;
 					}
 					break;
+				case ".feilds":
+					asset = IO.LoadJson<Feilds>(path);
+					break;
 				default:
 					Logger.LogWarning($"Cannot read file {path}");
 					break;

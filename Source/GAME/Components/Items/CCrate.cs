@@ -13,6 +13,7 @@ namespace GAME.Components.Items
 			typeof(CRock),
 			typeof(CHamburger),
 			typeof(CPearl),
+			typeof(CFishingrod),
 		};
 
 		public override bool meleeOnly => false;

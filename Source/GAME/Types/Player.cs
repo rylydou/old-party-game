@@ -19,7 +19,16 @@ namespace GAME.Types
 		public int index;
 		string _skin;
 		public string skin { get => _skin; set { _skin = value; _icon = null; } }
-		public Color color { get => colors[Math.Clamp(Main.current.players.FindIndex(x => x == this), colors.Length)]; }
+		Color? _color;
+		public Color color
+		{
+			get
+			{
+				if (!_color.HasValue)
+					_color = colors[Math.Clamp(Main.current.players.FindIndex(x => x == this), colors.Length)];
+				return _color.Value;
+			}
+		}
 		Texture _icon;
 		public Texture icon
 		{

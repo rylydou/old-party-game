@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MGE;
 using MGE.Components;
 using MGE.ECS;
@@ -8,21 +9,21 @@ namespace GAME.Components
 	{
 		const float despawnDist = 64;
 
+		public Feilds feilds;
+
 		public abstract string basePath { get; }
 		public abstract string relitivePath { get; }
-		public virtual bool loadStandardAssets { get; } = true;
 		public virtual bool meleeOnly { get; } = false;
 
-		public virtual float frictionAir { get; } = 4f;
 		public virtual float frictionGround { get; } = 14f;
+		public virtual float frictionAir { get; } = 4f;
 
 		public int health = int.MinValue;
 		public int maxHealth = 100;
 
 		public CRigidbody rb;
 
-		protected Sound damageSound;
-		protected Sound deathSound;
+		Dictionary<string, Sound> sounds = new Dictionary<string, Sound>();
 
 		public override void Init()
 		{
@@ -30,11 +31,7 @@ namespace GAME.Components
 
 			health = maxHealth;
 
-			if (loadStandardAssets)
-			{
-				damageSound = GetAsset<Sound>("Damage");
-				deathSound = GetAsset<Sound>("Death");
-			}
+			feilds = GetAsset<Feilds>("");
 
 			rb = entity.GetComponent<CRigidbody>();
 
@@ -62,7 +59,7 @@ namespace GAME.Components
 
 			if (rb is object) rb.velocity = knockback;
 
-			damageSound?.Play(entity.position);
+			PlaySound("Damage");
 
 			if (health < 1)
 				Death();
@@ -70,7 +67,7 @@ namespace GAME.Components
 
 		public virtual void Death()
 		{
-			deathSound?.Play(entity.position);
+			PlaySound("Death");
 
 			entity.Destroy();
 		}
@@ -100,6 +97,14 @@ namespace GAME.Components
 				asset = Assets.GetAsset<T>($"{basePath}/_Default/{path}");
 
 			return asset;
+		}
+
+		protected void PlaySound(string name)
+		{
+			Sound sound;
+			if (!sounds.TryGetValue(name, out sound))
+				sound = GetAsset<Sound>(name);
+			sound?.Play(entity.position);
 		}
 	}
 }
