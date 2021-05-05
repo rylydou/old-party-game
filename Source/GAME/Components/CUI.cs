@@ -17,6 +17,8 @@ namespace GAME.Components
 			{
 				if (player is null) continue;
 
+				var padding = new Vector2(16);
+
 				var offset = index * 96;
 
 				var healthFill =
@@ -27,24 +29,23 @@ namespace GAME.Components
 
 				for (int i = 0; i < healthFill; i++)
 				{
-					GFX.DrawLine(new Vector2(42 + 32 + offset, 42 + 32), 42, i > healthChangeColorAt ? Color.white : player.color, Math.pi2 - ((float)i / player.player.maxHealth * Math.pi2 + Math.piOver2), 3f);
+					GFX.DrawLine(new Vector2(42 + offset, 42) + padding, 42, i > healthChangeColorAt ? Color.white : player.color, Math.pi2 - ((float)i / player.player.maxHealth * Math.pi2 + Math.piOver2), 3f);
 				}
 
-				GFX.DrawCircle(new Vector2(42 + 32 + 2 + offset, 42 + 32 + 2), 44, new Color(0, 0.25f), 5, 32);
-				GFX.DrawCircle(new Vector2(42 + 32 + offset, 42 + 32), 44, new Color(Math.Round(player.color.inverted.grayscale)), 5, 32);
+				GFX.DrawCircle(new Vector2(42 + 2 + offset, 42 + 2) + padding, 44, new Color(0, 0.25f), 5, 32);
+				GFX.DrawCircle(new Vector2(42 + offset, 42) + padding, 44, new Color(Math.Round(player.color.inverted.grayscale)), 5, 32);
 
-				var iconOffset = (float)(42 * 2 - 42) / 2 + 32;
+				var iconOffset = padding + (float)(42 * 2 - 42) / 2 + new Vector2(offset, 0);
 
-				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + offset + 2, iconOffset + 2, 42, 42), new Color(0, 0.25f));
+				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + 2, 42, 42), new Color(0, 0.25f));
 
-				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + offset, iconOffset, 42, 42));
+				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset, 42, 42));
 
 				var killsText = player.kills.ToString();
 				var killsTextSize = Config.font.Measure(killsText);
-				var killsTextOffset = (42 * 2 - killsTextSize.x) / 2 + 32;
+				var killsTextOffset = (42 * 2 - killsTextSize.x) / 2 + padding.x;
 
-				Config.font.DrawText(killsText, new Vector2(killsTextOffset + offset, 96 + 2), Color.red);
-				Config.font.DrawText(killsText, new Vector2(killsTextOffset + offset, 96), Color.white);
+				Config.font.DrawText(killsText, new Vector2(killsTextOffset + offset, padding.y + 42 * 1.9f), Color.white);
 
 				index++;
 			}
@@ -55,9 +56,9 @@ namespace GAME.Components
 			var timeTextSize = Config.font.Measure(timeText, 2);
 			var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
 
-			for (int y = -2; y <= 2; y++)
-				for (int x = -2; x <= 2; x++)
-					Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.025f), 2);
+			for (int y = -4; y <= 4; y++)
+				for (int x = -4; x <= 4; x++)
+					Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.0125f), 2);
 
 			Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), Main.current.timeLeft < 30 ? Color.red : Color.white, 2);
 		}

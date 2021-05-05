@@ -111,9 +111,9 @@ namespace GAME.Components
 			}
 		}
 
-		public override void OnDeath()
+		public override void Death()
 		{
-			base.OnDeath();
+			base.Death();
 
 			player?.Pickup(null);
 		}

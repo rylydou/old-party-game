@@ -14,9 +14,9 @@ namespace GAME.Components
 		public float moveSpeed = 6.75f;
 		public float crouchSpeed = 2.5f;
 
-		public override float frictionAir { get => 0.875f; }
-		public override float frictionGround { get => 0.6f; }
-		public float extraFrictionAir { get => 0.875f; }
+		public override float frictionAir { get => 4f; }
+		public override float frictionGround { get => 22f; }
+		public float extraFrictionAir { get => 0.75f; }
 		public float extraFrictionGround { get => 0.6f; }
 
 		public float crouchFallVel = 0.33f;
@@ -48,7 +48,6 @@ namespace GAME.Components
 		Sound landSound;
 		Sound punchSwingSound;
 		Sound punchHitSound;
-		Sound jumpShortSound;
 
 		public CPlayer(Player player)
 		{
@@ -67,7 +66,6 @@ namespace GAME.Components
 			landSound = GetAsset<Sound>("Land");
 			punchSwingSound = GetAsset<Sound>("Punch Swing");
 			punchHitSound = GetAsset<Sound>("Punch Hit");
-			jumpShortSound = GetAsset<Sound>("Jump Short");
 
 			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
 		}
@@ -75,6 +73,8 @@ namespace GAME.Components
 		public override void FixedUpdate()
 		{
 			base.FixedUpdate();
+
+			extraVelocity = Vector2.ClampMagnitude(extraVelocity, moveSpeed * 4);
 
 			extraVelocity.x *= rb.grounded ? extraFrictionGround : extraFrictionAir;
 			if (extraVelocity.y > 0) extraVelocity.y = Math.MoveTowards(extraVelocity.y, 0, MGE.Physics.Physics.gravity.y * Time.fixedDeltaTime);
@@ -105,13 +105,8 @@ namespace GAME.Components
 			}
 
 			if (jumpRelease)
-			{
 				if (rb.velocity.y < -jumpMinVel)
-				{
 					rb.velocity.y = -jumpMinVel;
-					jumpShortSound?.Play(entity.position);
-				}
-			}
 			jumpRelease = false;
 
 			if (player.controls.move.Abs() > 0.1f)
@@ -144,7 +139,7 @@ namespace GAME.Components
 
 							if (thingComp is object && thing.GetComponent<CPlayer>() != this)
 							{
-								thingComp.OnDamage(10, new Vector2(entity.scale.x * 0.1f, -0.1f), this);
+								thingComp.Damage(10, new Vector2(entity.scale.x * 0.1f, -0.1f), this);
 								hitThing = true;
 							}
 						}
@@ -172,6 +167,9 @@ namespace GAME.Components
 				lastHealth = Math.MoveTowards(lastHealth, health, maxHealth * 2 * Time.deltaTime);
 
 			player.controls.Update();
+
+			// if (hitFlash > 0)
+			// 	Camera.position = Random.UnitVector() * 1;
 
 			if (player.controls.jump) jump = true;
 			if (player.controls.jumpRelease) jumpRelease = true;
@@ -205,7 +203,7 @@ namespace GAME.Components
 			item?.Pickup(this);
 		}
 
-		public override void OnDamage(int damage, Vector2 knockback, CPlayer source)
+		public override void Damage(int damage, Vector2 knockback, CPlayer source)
 		{
 			health -= damage;
 			extraVelocity += knockback;
@@ -215,16 +213,20 @@ namespace GAME.Components
 
 			if (health < 1)
 			{
-				if (source is object) source.player.kills++;
-				OnDeath();
+				if (source is object)
+				{
+					source.player.kills++;
+					source.health = Math.Clamp(source.health + 25, 100);
+				}
+				Death();
 			}
 
 			damageSound?.Play(entity.position);
 		}
 
-		public override void OnDeath()
+		public override void Death()
 		{
-			base.OnDeath();
+			base.Death();
 
 			player.deaths++;
 

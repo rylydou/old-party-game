@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GAME.Components;
 using GAME.Components.Items;
 using GAME.Types;
@@ -16,10 +17,10 @@ namespace GAME
 
 		public Engine engine;
 
-		public Player[] players = new Player[]
+		public List<Player> players = new List<Player>
 		{
-			new Player(-2, "_Default"),
-			new Player(-1, "Amogus"),
+			new Player(-1, "_Default"),
+			new Player(0, "Amogus"),
 			// new Player(0, "Goose"),
 			// new Player(1, "Robot"),
 		};

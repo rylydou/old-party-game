@@ -55,7 +55,7 @@ namespace GAME.Components
 			if (uses < 1)
 			{
 				player.Pickup(null);
-				OnDeath();
+				Death();
 				return;
 			}
 		}

@@ -32,13 +32,13 @@ namespace GAME.Components.Items
 			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
 		}
 
-		public override void OnDeath()
+		public override void Death()
 		{
 			var newRB = new CRigidbody();
 			newRB.velocity = rb.velocity;
 			Spawn(new Entity(newRB, item), entity.position);
 
-			base.OnDeath();
+			base.Death();
 		}
 	}
 }

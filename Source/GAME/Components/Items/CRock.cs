@@ -4,8 +4,8 @@ namespace GAME.Components.Items
 {
 	public class CRock : CItem
 	{
-		public override float frictionAir => 0.98f;
 		public override float frictionGround => 0.5f;
+		public override float frictionAir => 0.0f;
 
 		public int damage = 30;
 		public float timeBtwHits = 0.3f;
@@ -40,9 +40,9 @@ namespace GAME.Components.Items
 
 					hitThing = true;
 
-					thing.GetSimilarComponent<CObject>()?.OnDamage(damage, rb.velocity * 2.0f, lastPlayer);
+					thing.GetSimilarComponent<CObject>()?.Damage(damage, rb.velocity * 2.0f, lastPlayer);
 					thing.GetComponent<CPlayer>()?.Pickup(null);
-					OnDamage(34, rb.velocity, null);
+					Damage(34, rb.velocity, null);
 				}
 
 				if (hitThing)
@@ -54,9 +54,9 @@ namespace GAME.Components.Items
 			}
 		}
 
-		public override void OnDamage(int damage, Vector2 knockback, CPlayer source)
+		public override void Damage(int damage, Vector2 knockback, CPlayer source)
 		{
-			base.OnDamage(damage, knockback, source);
+			base.Damage(damage, knockback, source);
 
 			lastPlayer = source;
 		}

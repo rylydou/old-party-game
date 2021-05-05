@@ -39,7 +39,7 @@ namespace GAME.Components
 			{
 				if (thing == data.damage.doneBy) continue;
 
-				thing.GetSimilarComponent<CObject>()?.OnDamage(data.damage.damage, -Vector2.GetDirection(data.damage.origin, entity.position) * data.damage.knockback + new Vector2(0, data.damage.knockback / 2), data.damage.doneBy.GetComponent<CPlayer>());
+				thing.GetSimilarComponent<CObject>()?.Damage(data.damage.damage, -Vector2.GetDirection(data.damage.origin, entity.position) * data.damage.knockback + new Vector2(0, data.damage.knockback / 2), data.damage.doneBy.GetComponent<CPlayer>());
 
 				hitSound?.Play(entity.position);
 

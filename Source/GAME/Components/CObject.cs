@@ -13,8 +13,8 @@ namespace GAME.Components
 		public virtual bool loadStandardAssets { get; } = true;
 		public virtual bool meleeOnly { get; } = false;
 
-		public virtual float frictionAir { get; } = 0.95f;
-		public virtual float frictionGround { get; } = 0.700f;
+		public virtual float frictionAir { get; } = 4f;
+		public virtual float frictionGround { get; } = 14f;
 
 		public int health = int.MinValue;
 		public int maxHealth = 100;
@@ -45,7 +45,7 @@ namespace GAME.Components
 		{
 			base.FixedUpdate();
 
-			if (rb is object) rb.velocity.x *= rb.grounded ? frictionGround : frictionAir;
+			if (rb is object) rb.velocity.x *= rb.grounded ? (1 - frictionGround * Time.fixedDeltaTime) : (1 - frictionAir * Time.fixedDeltaTime);
 		}
 
 		public override void Update()
@@ -56,7 +56,7 @@ namespace GAME.Components
 				entity.Destroy();
 		}
 
-		public virtual void OnDamage(int damage, Vector2 knockback, CPlayer source)
+		public virtual void Damage(int damage, Vector2 knockback, CPlayer source)
 		{
 			health -= damage;
 
@@ -65,10 +65,10 @@ namespace GAME.Components
 			damageSound?.Play(entity.position);
 
 			if (health < 1)
-				OnDeath();
+				Death();
 		}
 
-		public virtual void OnDeath()
+		public virtual void Death()
 		{
 			deathSound?.Play(entity.position);
 
