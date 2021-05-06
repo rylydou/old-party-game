@@ -152,7 +152,7 @@ namespace GAME.Components
 			inputUse = false;
 
 			if (inputDie)
-				Death();
+				Damage(int.MinValue, Vector2.zero, null);
 			inputDie = false;
 		}
 

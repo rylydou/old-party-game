@@ -29,7 +29,7 @@ namespace GAME
 					crouch = Input.GetButton(Inputs.S);
 					jump = Input.GetButtonPress(Inputs.W);
 					jumpRelease = Input.GetButtonRelease(Inputs.W);
-					use = Input.GetButtonPress(Inputs.Space);
+					use = Input.GetButtonPress(Inputs.Space) | Input.GetButtonPress(Inputs.E);
 					pause = Input.GetButtonPress(Inputs.Escape);
 					die = Input.GetButtonPress(Inputs.G);
 					DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.Tab);
@@ -55,7 +55,8 @@ namespace GAME
 						jumpRelease = Input.GetButtonRelease(Inputs.GamepadA, index) | Input.GetButtonRelease(Inputs.GamepadB, index);
 						use = Input.GetButtonPress(Inputs.GamepadX, index) | Input.GetButtonPress(Inputs.GamepadY, index) | Input.GetButtonPress(Inputs.GamepadRT, index);
 						pause = Input.GetButtonPress(Inputs.GamepadStart, index);
-						die = Input.GetButtonPress(Inputs.GamepadSelect, index);
+						die = Input.GetButtonPress(Inputs.GamepadSelect, index) | Input.GetButtonPress(Inputs.GamepadRS, index);
+						DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.GamepadLB, index);
 					}
 					else
 						isConnected = false;

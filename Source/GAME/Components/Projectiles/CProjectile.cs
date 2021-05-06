@@ -8,7 +8,7 @@ namespace GAME.Components
 
 		public ProjectileData data;
 
-		public Projectile(ProjectileData data, string basePath) : base(basePath)
+		public CProjectile(ProjectileData data, string basePath) : base(basePath)
 		{
 			this.data = data;
 		}
@@ -45,7 +45,8 @@ namespace GAME.Components
 				}
 			}
 
-			entity.position += entity.roationVector * data.speed;
+			Move();
+
 			data.lifetime -= Time.fixedDeltaTime;
 
 			if (data.lifetime < 0 || entity.layer.raycaster.IsSolid(entity.position + 0.5f))
@@ -57,6 +58,11 @@ namespace GAME.Components
 			base.Draw();
 
 			Draw(texSprite);
+		}
+
+		public virtual void Move()
+		{
+			entity.position += entity.roationVector * data.speed;
 		}
 	}
 }

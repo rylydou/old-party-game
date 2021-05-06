@@ -11,7 +11,7 @@ namespace GAME.Components.Items
 
 		public override void Init()
 		{
-			maxHealth = 11;
+			maxHealth = 30;
 
 			base.Init();
 
@@ -32,7 +32,6 @@ namespace GAME.Components.Items
 				owner = source;
 
 			base.Damage(damage, knockback, source);
-
 		}
 
 		public override void Death()
