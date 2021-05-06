@@ -48,7 +48,6 @@ namespace GAME.Components
 			if (rb.grounded && state == ItemState.Thrown)
 				state = ItemState.Dropped;
 
-
 			if (player is object)
 			{
 				entity.scale = player.entity.scale;
@@ -109,6 +108,14 @@ namespace GAME.Components
 		{
 			base.Draw();
 
+			if (state == ItemState.Thrown)
+			{
+				for (int y = -1; y <= 1; y++)
+					for (int x = -1; x <= 1; x++)
+						Draw(currentSprite, new Vector2(x, y) / 16, Color.red);
+			}
+
+			Draw(currentSprite, new Vector2(1f / 16), new Color(0, 0.25f));
 			Draw(currentSprite);
 		}
 

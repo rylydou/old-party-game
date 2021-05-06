@@ -6,7 +6,8 @@
 	"frictionGround": 14,
 	"frictionAir": 4,
 	"size": [
-		0.6,
-		0.6
-	]
+		0.5,
+		0.5
+	],
+	"enablePhysics": false
 }

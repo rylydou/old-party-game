@@ -14,10 +14,10 @@ namespace GAME.Components
 		public float moveSpeed = 6.75f;
 		public float crouchSpeed = 2.5f;
 
-		public override float frictionAir { get => 4f; }
 		public override float frictionGround { get => 22f; }
-		public float extraFrictionAir { get => 0.75f; }
+		public override float frictionAir { get => 4f; }
 		public float extraFrictionGround { get => 0.6f; }
+		public float extraFrictionAir { get => 0.75f; }
 
 		public float crouchFallVel = 0.33f;
 		public float jumpMinVel = 0.2f;
@@ -214,7 +214,7 @@ namespace GAME.Components
 				if (source is object)
 				{
 					source.player.kills++;
-					source.health = Math.Clamp(source.health + 25, 100);
+					source.health = Math.Clamp(source.health + 50, 100);
 				}
 				Death();
 			}

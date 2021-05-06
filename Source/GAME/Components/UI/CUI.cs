@@ -3,7 +3,7 @@ using MGE;
 using MGE.ECS;
 using MGE.Graphics;
 
-namespace GAME.Components
+namespace GAME.Components.UI
 {
 	public class CUI : Component
 	{

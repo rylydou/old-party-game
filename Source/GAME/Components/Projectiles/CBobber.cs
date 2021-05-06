@@ -11,7 +11,7 @@ namespace GAME.Components
 			base.Init();
 
 			rb.size = new Vector2(0.25f);
-			rb.velocity = new Vector2(0.4f * entity.roationVector.x, -0.075f);
+			rb.velocity = new Vector2(0.66f * entity.roationVector.x, -0.075f);
 		}
 
 		public override void Move() { }

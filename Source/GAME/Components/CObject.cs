@@ -9,8 +9,6 @@ namespace GAME.Components
 	{
 		const float despawnDist = 64;
 
-		public Feilds feilds;
-
 		public abstract string basePath { get; }
 		public abstract string relitivePath { get; }
 		public virtual bool meleeOnly { get; } = false;
@@ -23,6 +21,7 @@ namespace GAME.Components
 
 		public CRigidbody rb;
 
+		public Feilds feilds;
 		Dictionary<string, Sound> sounds = new Dictionary<string, Sound>();
 
 		public override void Init()
@@ -31,9 +30,9 @@ namespace GAME.Components
 
 			health = maxHealth;
 
-			feilds = GetAsset<Feilds>("");
-
 			rb = entity.GetComponent<CRigidbody>();
+
+			feilds = GetAsset<Feilds>("");
 
 			SetVulnerable(true);
 		}
@@ -92,10 +91,8 @@ namespace GAME.Components
 		public T GetAsset<T>(string path) where T : class
 		{
 			var asset = Assets.GetAsset<T>($"{basePath}/{relitivePath}/{path}");
-
 			if (asset is null)
 				asset = Assets.GetAsset<T>($"{basePath}/_Default/{path}");
-
 			return asset;
 		}
 

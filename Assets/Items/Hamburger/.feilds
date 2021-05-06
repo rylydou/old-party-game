@@ -1,12 +1,13 @@
 {
-	"health": 50,
+	"health": 30,
 	"meleeVulnerable": true,
-	"rangedVulnerable": false,
+	"rangedVulnerable": true,
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
 	"size": [
-		0.6,
-		0.6
-	]
+		0.5,
+		0.5
+	],
+	"restore": 50
 }

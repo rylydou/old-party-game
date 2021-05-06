@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GAME.Components;
 using GAME.Components.Items;
+using GAME.Components.UI;
 using GAME.Types;
 using MGE;
 using MGE.Components;
@@ -19,16 +20,16 @@ namespace GAME
 
 		public List<Player> players = new List<Player>
 		{
+			new Player(-1, "Amogus"),
+			new Player(0, "Robot"),
 			new Player(-2, "Goose"),
-			new Player(-1, "_Default"),
-			new Player(0, "Amogus"),
 			// new Player(1, "Robot"),
 		};
 
-		public float roundTime = 60 * 3;
+		public float roundTime = 60 * 5;
 		public float timeLeft;
 
-		public float timeBtwCrates = 6.0f;
+		public float timeBtwCrates = 4.5f;
 		public float crateSpawnCooldown;
 
 		public Main()
