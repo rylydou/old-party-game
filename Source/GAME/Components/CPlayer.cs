@@ -11,27 +11,42 @@ namespace GAME.Components
 
 		public Player player;
 
-		public float moveSpeed = 6.75f;
-		public float crouchSpeed = 2.5f;
+		public float moveSpeed;
+		public float crouchingMoveSpeed;
 
-		public float extraFrictionGround { get => 0.6f; }
-		public float extraFrictionAir { get => 0.75f; }
+		float jumpMinVel;
+		float jumpMaxVel;
 
-		public float crouchFallVel = 0.33f;
-		public float jumpMinVel = 0.2f;
-		public float jumpMaxVel = 0.275f;
+		float groundedRem;
+		float jumpRem;
 
-		public float groundedRem = 0.20f;
-		public float jumpRem = 0.15f;
+		float extraFrictionGround;
+		float extraFrictionAir;
+
+		float interactionRange;
+
+		Vector2 punchOffset;
+		float punchRadius;
+		float punchCooldown;
+		int punchDamage;
+		Vector2 punchKnockback;
+
+		int healthOnKill;
+
+		float flashTime;
+		float flashIntensity;
+
+		float lastHealthMem;
+		float lastHealthMaxDelta;
 
 		public CItem heldItem;
 		CItem nearestItem;
 		float groundedMem = -1;
 		float jumpMem = -1;
 		public float hitFlash = -1;
-		Vector2 extraVelocity;
-		float lastHealthStayTime = -1;
+		float extraVelocity;
 		public float lastHealth = 100;
+		float lastHealthStayTime = -1;
 
 		bool inputJump;
 		bool inputJumpRelease;
@@ -53,6 +68,34 @@ namespace GAME.Components
 		{
 			base.Init();
 
+			moveSpeed = @params.GetFloat("moveSpeed");
+			crouchingMoveSpeed = @params.GetFloat("crouchingMoveSpeed");
+
+			jumpMinVel = @params.GetFloat("jumpMinVelocity");
+			jumpMaxVel = @params.GetFloat("jumpMaxVelocity");
+
+			groundedRem = @params.GetFloat("groundedRem");
+			jumpRem = @params.GetFloat("jumpRem");
+
+			extraFrictionGround = @params.GetFloat("extraFrictionGround");
+			extraFrictionAir = @params.GetFloat("extraFrictionAir");
+
+			interactionRange = @params.GetFloat("interactionRange");
+
+			punchOffset = @params.GetVector2("punchOffset");
+			punchRadius = @params.GetFloat("punchRadius");
+			punchCooldown = @params.GetFloat("punchCooldown");
+			punchDamage = @params.GetInt("punchDamage");
+			punchKnockback = @params.GetVector2("punchKnockback");
+
+			healthOnKill = @params.GetInt("healthOnKill");
+
+			flashTime = @params.GetFloat("flashTime");
+			flashIntensity = @params.GetFloat("flashIntensity");
+
+			lastHealthMem = @params.GetFloat("lastHealthMem");
+			lastHealthMaxDelta = @params.GetFloat("lastHealthMaxDelta");
+
 			texBody = GetAsset<Texture>("Body");
 			texCrouching = GetAsset<Texture>("Crouching");
 			texHand = GetAsset<Texture>("Hand");
@@ -68,19 +111,16 @@ namespace GAME.Components
 			base.FixedUpdate();
 
 			if (entity.layer.raycaster.IsSolid(rb.position + 0.5f))
-				Damage(1, Vector2.zero, null);
+				Damage(5, Vector2.zero, null);
 
-			extraVelocity = Vector2.ClampMagnitude(extraVelocity, moveSpeed * 2);
+			extraVelocity = Math.Clamp(extraVelocity, moveSpeed * 2);
 
-			extraVelocity.x *= rb.grounded ? extraFrictionGround : extraFrictionAir;
-			if (extraVelocity.y > 0) extraVelocity.y = Math.MoveTowards(extraVelocity.y, 0, MGE.Physics.Physics.gravity.y * Time.fixedDeltaTime);
-			if (rb.velocity.y.Abs() < 0.1f) extraVelocity.y = 0;
+			extraVelocity *= (1 - (rb.grounded ? extraFrictionGround : extraFrictionAir)) * Time.fixedDeltaTime;
 
 			if (player.controls.move.Abs() > 0.1f)
-				rb.velocity.x = player.controls.move * (player.controls.crouch ? crouchSpeed : moveSpeed) * Time.fixedDeltaTime;
+				rb.velocity.x = player.controls.move * (player.controls.crouch ? crouchingMoveSpeed : moveSpeed) * Time.fixedDeltaTime;
 
-			rb.velocity.x += extraVelocity.x;
-			if (extraVelocity.y.Abs() > 0.1f) rb.velocity.y = extraVelocity.y;
+			rb.velocity.x += extraVelocity;
 
 			groundedMem -= Time.fixedDeltaTime;
 			if (rb.grounded)
@@ -97,6 +137,7 @@ namespace GAME.Components
 				groundedMem = -1f;
 				jumpMem = -1f;
 				rb.velocity.y = player.controls.crouch ? -jumpMinVel : -jumpMaxVel;
+
 				PlaySound("Jump");
 			}
 
@@ -108,10 +149,7 @@ namespace GAME.Components
 			if (player.controls.move.Abs() > 0.1f)
 				entity.scale.x = player.controls.move.Sign();
 
-			if (player.controls.crouch)
-				rb.velocity.y += crouchFallVel * Time.fixedDeltaTime;
-
-			nearestItem = entity.layer.GetNearestEntity(entity.position, 1.25f, "Pickupable")?.GetSimilarComponent<CItem>();
+			nearestItem = entity.layer.GetNearestEntity(entity.position, interactionRange, "Pickupable")?.GetSimilarComponent<CItem>();
 
 			if (inputUse)
 			{
@@ -126,17 +164,18 @@ namespace GAME.Components
 				{
 					if (heldItem is null)
 					{
-						var things = entity.layer.GetEntities(entity.position + new Vector2(0.5f * entity.scale.x, 0.0f), 0.9f, "Melee Vulnerable");
+						var things = entity.layer.GetEntities(entity.position + punchOffset * entity.scale, punchRadius, "Melee Vulnerable");
 						var hitThing = false;
 
 						foreach (var thing in things)
 						{
 							var thingComp = thing.GetSimilarComponent<CObject>();
 
-							if (thingComp is object && thing.GetComponent<CPlayer>() != this)
+							if (thingComp is object && thing != entity)
 							{
-								thingComp.Damage(10, new Vector2(entity.scale.x * 0.1f, -0.1f), this);
 								hitThing = true;
+
+								thingComp.Damage(punchDamage, punchKnockback * entity.scale, this);
 							}
 						}
 
@@ -153,8 +192,10 @@ namespace GAME.Components
 
 			if (inputDie)
 			{
-				if (player.kills > 0)
-					player.kills--;
+				for (int i = 0; i < 2; i++)
+					if (player.kills > 0)
+						player.kills--;
+
 				Damage(int.MinValue, Vector2.zero, null);
 			}
 			inputDie = false;
@@ -168,7 +209,7 @@ namespace GAME.Components
 			lastHealthStayTime -= Time.deltaTime;
 
 			if (lastHealthStayTime < 0)
-				lastHealth = Math.MoveTowards(lastHealth, health, maxHealth * 2 * Time.deltaTime);
+				lastHealth = Math.MoveTowards(lastHealth, health, lastHealthMaxDelta * Time.deltaTime);
 
 			player.controls.Update();
 
@@ -183,7 +224,7 @@ namespace GAME.Components
 
 		public override void Draw()
 		{
-			var offset = hitFlash > 0 ? Random.UnitVector() / 16 * 2 : Vector2.zero;
+			var offset = hitFlash > 0 ? Random.UnitVector() / 16 * flashIntensity : Vector2.zero;
 
 			Draw(player.controls.crouch ? texCrouching : texBody, new Vector2(1f / 16) + offset, new Color(0, 0.25f));
 			Draw(player.controls.crouch ? texCrouching : texBody, offset, !player.controls.isConnected ? Color.gray : hitFlash > 0 ? Color.red : Color.white);
@@ -208,18 +249,21 @@ namespace GAME.Components
 		public override void Damage(int damage, Vector2 knockback, CPlayer source)
 		{
 			health -= damage;
-			extraVelocity += knockback;
+			extraVelocity += knockback.x;
+			rb.velocity.y = knockback.y;
+			groundedMem = -1;
 
-			hitFlash = 0.1f;
-			lastHealthStayTime = 1f / 3;
+			hitFlash = flashTime;
+			lastHealthStayTime = lastHealthMem;
 
 			if (health < 1)
 			{
 				if (source is object)
 				{
 					source.player.kills++;
-					source.health = Math.Clamp(source.health + 50, 100);
+					source.health = Math.Clamp(source.health + healthOnKill, 100);
 				}
+
 				Death();
 			}
 

@@ -14,6 +14,8 @@ namespace GAME.Components
 	public abstract class CItem : CObject
 	{
 		const float timeToDespawn = 45;
+		const float timeRegainedWhenPickedUp = 10;
+		const float timeLeftToStartFlashing = 5;
 
 		protected override string basePath { get => "Items"; }
 		protected override string relitivePath
@@ -23,8 +25,8 @@ namespace GAME.Components
 
 		protected CPlayer player;
 		protected ItemState state = ItemState.Dropped;
-		protected float timeAlive;
 		protected Texture currentSprite;
+		protected float timeAlive;
 
 		protected Texture sprite;
 
@@ -56,7 +58,7 @@ namespace GAME.Components
 			{
 				timeAlive += Time.fixedDeltaTime;
 
-				if (timeAlive > timeToDespawn - 5)
+				if (timeAlive > timeToDespawn - timeLeftToStartFlashing)
 					entity.visible = !entity.visible;
 
 				if (timeAlive > timeToDespawn)
@@ -77,13 +79,14 @@ namespace GAME.Components
 
 		public virtual void Pickup(CPlayer player)
 		{
-			entity.RemoveTag("Pickupable");
-			state = ItemState.Held;
-			entity.visible = true;
-
 			this.player = player;
 
-			timeAlive = Math.Clamp(timeAlive - 10, 0, float.PositiveInfinity);
+			SetVulnerable(false);
+			state = ItemState.Held;
+
+			entity.visible = true;
+
+			timeAlive = Math.Clamp(timeAlive - timeRegainedWhenPickedUp, 0, float.PositiveInfinity);
 
 			PlaySound("Pickup");
 		}
@@ -101,13 +104,26 @@ namespace GAME.Components
 
 		public virtual void Drop()
 		{
-			entity.AddTag("Pickupable");
 			SetVulnerable(true);
 			state = ItemState.Dropped;
 
 			player = null;
 
 			PlaySound("Drop");
+		}
+
+		public override void SetVulnerable(bool vulnerable)
+		{
+			base.SetVulnerable(vulnerable);
+
+			if (vulnerable)
+			{
+				entity.AddTag("Pickupable");
+			}
+			else
+			{
+				entity.RemoveTag("Pickupable");
+			}
 		}
 
 		public override void Death()

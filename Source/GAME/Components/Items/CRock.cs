@@ -7,13 +7,6 @@ namespace GAME.Components.Items
 		float cooldown;
 		CPlayer lastPlayer;
 
-		public override void Init()
-		{
-			base.Init();
-
-			rb.size = new Vector2(0.5f);
-		}
-
 		public override void FixedUpdate()
 		{
 			base.FixedUpdate();

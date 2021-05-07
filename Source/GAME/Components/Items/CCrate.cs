@@ -21,8 +21,6 @@ namespace GAME.Components.Items
 
 		public override void Init()
 		{
-			maxHealth = 30;
-
 			base.Init();
 
 			var itemType = lootTable.Random();

@@ -6,15 +6,6 @@ namespace GAME.Components.Items
 	{
 		public CPlayer owner;
 
-		public override void Init()
-		{
-			maxHealth = 30;
-
-			base.Init();
-
-			rb.size = new Vector2(0.5f);
-		}
-
 		public override void FixedUpdate()
 		{
 			if (rb.grounded && state == ItemState.Thrown && owner is object)
@@ -37,9 +28,9 @@ namespace GAME.Components.Items
 
 			if (owner is object)
 			{
-				owner.rb.position = entity.position - rb.velocity.sign;
+				owner.rb.position = entity.position + rb.velocity.normalized * -@params.GetFloat("bumpBack");
 
-				owner.Damage(5, Vector2.zero, null);
+				owner.Damage(@params.GetInt("userDamage"), @params.GetVector2("userVelocity"), null);
 			}
 		}
 

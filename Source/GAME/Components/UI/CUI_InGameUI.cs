@@ -5,7 +5,7 @@ using MGE.Graphics;
 
 namespace GAME.Components.UI
 {
-	public class CUI : Component
+	public class CUI_InGameUI : Component
 	{
 		public override void Draw()
 		{
@@ -22,17 +22,17 @@ namespace GAME.Components.UI
 				var offset = index * 96;
 
 				var healthFill =
-					player.timeRespawing > 0 ? Math.RoundToInt(player.timeRespawing / Player.timeToRespawn * 100) :
+					player.timeRespawing > 0 ? Math.RoundToInt(player.timeRespawing / Player.timeToRespawn * player.player.maxHealth) :
 					Math.RoundToInt(player.player.lastHealth);
 
-				var healthChangeColorAt = player.timeRespawing > 0 ? 100 : player.player.health;
+				var healthChangeColorAt = player.timeRespawing > 0 ? player.player.maxHealth : player.player.health;
 
 				for (int i = 0; i < healthFill; i++)
 				{
 					GFX.DrawLine(new Vector2(42 + offset, 42) + padding, 42, i > healthChangeColorAt ? Color.white : player.color, Math.pi2 - ((float)i / player.player.maxHealth * Math.pi2 + Math.piOver2), 3f);
 				}
 
-				GFX.DrawCircle(new Vector2(42 + 2 + offset, 42 + 2) + padding, 44, new Color(0, 0.25f), 5, 32);
+				GFX.DrawCircle(new Vector2(42 + offset, 42) + 2 + padding, 44, new Color(0, 0.25f), 5, 32);
 				GFX.DrawCircle(new Vector2(42 + offset, 42) + padding, 44, new Color(Math.Round(player.color.inverted.grayscale)), 5, 32);
 
 				var iconOffset = padding + (float)(42 * 2 - 42) / 2 + new Vector2(offset, 0) + (player.player.hitFlash > 0 ? Random.UnitVector() * 8 : Vector2.zero);
@@ -64,7 +64,7 @@ namespace GAME.Components.UI
 				for (int x = -4; x <= 4; x++)
 					Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.0125f), 2);
 
-			Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), Main.current.timeLeft < 30 ? Color.red : Color.white, 2);
+			Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), Main.current.timeLeft < 30 ? new Color(Math.Sin(Time.time * Math.pi).Abs() * 0.5f + 0.5f, 0, 0) : Color.white, 2);
 		}
 	}
 }

@@ -7,11 +7,15 @@ namespace GAME.Components.Items
 	{
 		public CPlayer owner;
 
+		float range;
+		Vector2 offset;
+
 		public override void Init()
 		{
 			base.Init();
 
-			rb.size = new Vector2(0.5f);
+			range = @params.GetFloat("range");
+			offset = @params.GetVector2("tpOffset");
 		}
 
 		public override void FixedUpdate()
@@ -23,7 +27,8 @@ namespace GAME.Components.Items
 
 			if (state == ItemState.Thrown && owner is object)
 			{
-				var things = entity.layer.GetEntities(entity.position, 2.0f);
+				var things = entity.layer.GetEntities(entity.position, range);
+				var tpedThing = false;
 
 				foreach (var thing in things)
 				{
@@ -33,12 +38,24 @@ namespace GAME.Components.Items
 
 					if (thingRb is object)
 					{
-						thingRb.position = owner.rb.position;
+						tpedThing = true;
 
-						PlaySound("TP");
+						thingRb.position = owner.rb.position + offset * entity.scale;
 					}
 				}
+
+				if (tpedThing)
+				{
+					PlaySound("TP");
+				}
 			}
+		}
+
+		public override void Draw()
+		{
+			base.Draw();
+
+			MGE.Graphics.GFX.DrawCircle(entity.position, range, Color.violet, 1f / 16 * -4);
 		}
 
 		public override void Pickup(CPlayer player)

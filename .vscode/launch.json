@@ -30,7 +30,7 @@
 				"browserStdOut": false,
 				"elapsedTiming": false,
 				"engineLogging": false,
-				"exceptions": true,
+				"exceptions": false,
 				"moduleLoad": false,
 				"processExit": true,
 				"programOutput": true,

@@ -21,7 +21,7 @@ namespace GAME
 		public List<Player> players = new List<Player>
 		{
 			new Player(-1, "Amogus"),
-			new Player(0, "Robot"),
+			new Player(-2, "Robot"),
 			// new Player(-2, "Goose"),
 			// new Player(1, "Robot"),
 		};
@@ -61,7 +61,7 @@ namespace GAME
 					),
 					new Layer(
 						true,
-						new Entity(new CUI())
+						new Entity(new CUI_InGameUI())
 					)
 				)
 			);
