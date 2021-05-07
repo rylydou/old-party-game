@@ -1,0 +1,11 @@
+{
+	"tileSize": {
+		"x": 16,
+		"y": 16
+	},
+	"defualtTile": {
+		"x": 0,
+		"y": 16
+	},
+	"tiles": {}
+}

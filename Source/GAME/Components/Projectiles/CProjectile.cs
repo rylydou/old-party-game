@@ -4,13 +4,16 @@ namespace GAME.Components
 {
 	public class CProjectile : CChildObject
 	{
-		public override bool meleeOnly => true;
+		protected DamageInfo info;
 
-		public ProjectileData data;
+		protected float speed;
+		protected float lifetime;
+		protected int hits;
+		protected bool enablePhysics;
 
-		public CProjectile(ProjectileData data, string basePath) : base(basePath)
+		public CProjectile(DamageInfo info, string basePath) : base(basePath)
 		{
-			this.data = data;
+			this.info = info;
 		}
 
 		public Texture texSprite;
@@ -19,6 +22,16 @@ namespace GAME.Components
 		{
 			base.Init();
 
+			enablePhysics = @params.GetBool("enablePhysics");
+
+			lifetime = @params.GetFloat("lifetime");
+			hits = @params.GetInt("hits");
+
+			if (enablePhysics)
+				rb.velocity = @params.GetVector2("velocity") * entity.roationVector;
+			else
+				speed = @params.GetFloat("speed");
+
 			texSprite = GetAsset<Texture>("Sprite");
 		}
 
@@ -26,19 +39,19 @@ namespace GAME.Components
 		{
 			base.FixedUpdate();
 
-			var things = entity.layer.GetEntities(entity.position, data.radius, "Ranged Vulnerable");
+			var things = entity.layer.GetEntities(entity.position, @params.GetFloat("radius"), "Ranged Vulnerable");
 
 			foreach (var thing in things)
 			{
-				if (thing == data.damage.doneBy) continue;
+				if (thing == info.doneBy.entity) continue;
 
-				thing.GetSimilarComponent<CObject>()?.Damage(data.damage.damage, -Vector2.GetDirection(data.damage.origin, entity.position) * data.damage.knockback + new Vector2(0, data.damage.knockback / 2), data.damage.doneBy.GetComponent<CPlayer>());
+				thing.GetSimilarComponent<CObject>()?.Damage(@params.GetInt("damage"), -Vector2.GetDirection(info.origin, entity.position) * @params.GetFloat("knockback"), info.doneBy);
 
 				PlaySound("Hit");
 
-				data.hits--;
+				hits--;
 
-				if (data.hits < 1)
+				if (hits < 1)
 				{
 					entity.Destroy();
 					return;
@@ -47,9 +60,9 @@ namespace GAME.Components
 
 			Move();
 
-			data.lifetime -= Time.fixedDeltaTime;
+			lifetime -= Time.fixedDeltaTime;
 
-			if (data.lifetime < 0 || entity.layer.raycaster.IsSolid(entity.position + 0.5f))
+			if (lifetime < 0 || entity.layer.raycaster.IsSolid(entity.position + 0.5f))
 				entity.Destroy();
 		}
 
@@ -62,7 +75,8 @@ namespace GAME.Components
 
 		public virtual void Move()
 		{
-			entity.position += entity.roationVector * data.speed;
+			if (!enablePhysics)
+				entity.position += entity.roationVector * speed /* * Time.fixedDeltaTime */;
 		}
 	}
 }

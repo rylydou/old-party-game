@@ -124,8 +124,8 @@ namespace MGE
 						asset = info;
 					}
 					break;
-				case ".feilds":
-					asset = new Feilds(IO.LoadJson<Dictionary<string, object>>(path));
+				case ".params":
+					asset = new Params(IO.LoadJson<Dictionary<string, object>>(path));
 					break;
 				default:
 					Logger.LogWarning($"Cannot read file {path}");

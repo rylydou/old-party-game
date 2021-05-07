@@ -6,8 +6,12 @@
 	"frictionGround": 14,
 	"frictionAir": 4,
 	"size": [
-		0.5,
-		0.5
+		0.6,
+		0.6
 	],
-	"enablePhysics": false
+	"enablePhysics": false,
+	"uses": 1,
+	"attackCooldown": 0.1,
+	"spread": 0,
+	"projectiles": 1
 }

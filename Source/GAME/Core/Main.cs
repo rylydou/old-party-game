@@ -22,7 +22,7 @@ namespace GAME
 		{
 			new Player(-1, "Amogus"),
 			new Player(0, "Robot"),
-			new Player(-2, "Goose"),
+			// new Player(-2, "Goose"),
 			// new Player(1, "Robot"),
 		};
 

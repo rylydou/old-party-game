@@ -1,5 +1,5 @@
 {
-	"health": 30,
+	"health": 20,
 	"meleeVulnerable": true,
 	"rangedVulnerable": false,
 	"mass": 1,
@@ -9,5 +9,11 @@
 		0.5,
 		0.5
 	],
-	"enablePhysics": false
+	"enablePhysics": false,
+	"damage": 15,
+	"knockback": 0.125,
+	"speed": 0.5,
+	"radius": 0.5,
+	"lifetime": 0.25,
+	"hits": 1
 }

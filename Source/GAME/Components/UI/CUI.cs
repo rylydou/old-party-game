@@ -35,16 +35,21 @@ namespace GAME.Components.UI
 				GFX.DrawCircle(new Vector2(42 + 2 + offset, 42 + 2) + padding, 44, new Color(0, 0.25f), 5, 32);
 				GFX.DrawCircle(new Vector2(42 + offset, 42) + padding, 44, new Color(Math.Round(player.color.inverted.grayscale)), 5, 32);
 
-				var iconOffset = padding + (float)(42 * 2 - 42) / 2 + new Vector2(offset, 0);
+				var iconOffset = padding + (float)(42 * 2 - 42) / 2 + new Vector2(offset, 0) + (player.player.hitFlash > 0 ? Random.UnitVector() * 8 : Vector2.zero);
 
 				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + 2, 42, 42), new Color(0, 0.25f));
+
 				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset, 42, 42), player.controls.isConnected ? Color.white : Color.gray);
 
 				var killsText = player.kills.ToString();
 				var killsTextSize = Config.font.Measure(killsText);
 				var killsTextOffset = (42 * 2 - killsTextSize.x) / 2 + padding.x;
 
-				Config.font.DrawText(killsText, new Vector2(killsTextOffset + offset, padding.y + 42 * 1.9f), Color.white);
+				for (int y = -2; y <= 2; y++)
+					for (int x = -2; x <= 2; x++)
+						Config.font.DrawText(killsText, new Vector2(killsTextOffset + offset + x, padding.y + 42 * 1.5f + y), new Color(0, 0.0125f));
+
+				Config.font.DrawText(killsText, new Vector2(killsTextOffset + offset, padding.y + 42 * 1.5f), Color.white);
 
 				index++;
 			}

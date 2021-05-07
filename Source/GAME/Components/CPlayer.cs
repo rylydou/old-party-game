@@ -6,16 +6,14 @@ namespace GAME.Components
 {
 	public class CPlayer : CObject
 	{
-		public override string basePath => "Players";
-		public override string relitivePath => player.skin;
+		protected override string basePath => "Players";
+		protected override string relitivePath => player.skin;
 
 		public Player player;
 
 		public float moveSpeed = 6.75f;
 		public float crouchSpeed = 2.5f;
 
-		public override float frictionGround { get => 22f; }
-		public override float frictionAir { get => 4f; }
 		public float extraFrictionGround { get => 0.6f; }
 		public float extraFrictionAir { get => 0.75f; }
 
@@ -30,7 +28,7 @@ namespace GAME.Components
 		CItem nearestItem;
 		float groundedMem = -1;
 		float jumpMem = -1;
-		float hitFlash = -1;
+		public float hitFlash = -1;
 		Vector2 extraVelocity;
 		float lastHealthStayTime = -1;
 		public float lastHealth = 100;
@@ -61,6 +59,8 @@ namespace GAME.Components
 			texArrow = GetAsset<Texture>("Arrow");
 
 			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
+
+			PlaySound("Spawn");
 		}
 
 		public override void FixedUpdate()
@@ -152,7 +152,11 @@ namespace GAME.Components
 			inputUse = false;
 
 			if (inputDie)
+			{
+				if (player.kills > 0)
+					player.kills--;
 				Damage(int.MinValue, Vector2.zero, null);
+			}
 			inputDie = false;
 		}
 
@@ -226,6 +230,7 @@ namespace GAME.Components
 		{
 			base.Death();
 
+			hitFlash = -1;
 			player.deaths++;
 
 			Pickup(null);

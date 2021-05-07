@@ -9,30 +9,33 @@ namespace GAME.Components
 	{
 		const float despawnDist = 64;
 
-		public abstract string basePath { get; }
-		public abstract string relitivePath { get; }
-		public virtual bool meleeOnly { get; } = false;
+		protected Params @params;
 
-		public virtual float frictionGround { get; } = 14f;
-		public virtual float frictionAir { get; } = 4f;
+		protected abstract string basePath { get; }
+		protected abstract string relitivePath { get; }
 
-		public int health = int.MinValue;
-		public int maxHealth = 100;
+		public int health;
+		public int maxHealth;
 
 		public CRigidbody rb;
 
-		public Feilds feilds;
-		Dictionary<string, Sound> sounds = new Dictionary<string, Sound>();
+		protected Dictionary<string, Sound> sounds = new Dictionary<string, Sound>();
 
 		public override void Init()
 		{
 			base.Init();
 
+			@params = GetAsset<Params>(string.Empty);
+
+			maxHealth = @params.GetInt("health");
 			health = maxHealth;
 
 			rb = entity.GetComponent<CRigidbody>();
 
-			feilds = GetAsset<Feilds>("");
+			if (rb is object)
+			{
+				rb.size = @params.GetVector2("size");
+			}
 
 			SetVulnerable(true);
 		}
@@ -41,7 +44,7 @@ namespace GAME.Components
 		{
 			base.FixedUpdate();
 
-			if (rb is object) rb.velocity.x *= rb.grounded ? (1 - frictionGround * Time.fixedDeltaTime) : (1 - frictionAir * Time.fixedDeltaTime);
+			if (rb is object) rb.velocity.x *= rb.grounded ? (1 - @params.GetFloat("frictionGround") * Time.fixedDeltaTime) : (1 - @params.GetFloat("frictionAir") * Time.fixedDeltaTime);
 		}
 
 		public override void Update()
@@ -75,11 +78,8 @@ namespace GAME.Components
 		{
 			if (vulnerable)
 			{
-				entity.AddTag("Melee Vulnerable");
-				if (!meleeOnly)
-					entity.AddTag("Ranged Vulnerable");
-				else
-					entity.RemoveTag("Ranged Vulnerable");
+				if (@params.GetBool("meleeVulnerable")) entity.AddTag("Melee Vulnerable");
+				if (@params.GetBool("rangedVulnerable")) entity.AddTag("Ranged Vulnerable");
 			}
 			else
 			{
@@ -93,6 +93,9 @@ namespace GAME.Components
 			var asset = Assets.GetAsset<T>($"{basePath}/{relitivePath}/{path}");
 			if (asset is null)
 				asset = Assets.GetAsset<T>($"{basePath}/_Default/{path}");
+
+			if (asset is null) LogWarning("No asset found at " + $"{basePath}/{relitivePath}/{path}" + " | " + $"{basePath}/_Default/{path}");
+
 			return asset;
 		}
 

@@ -35,7 +35,7 @@ namespace MGE
 			{typeof(Microsoft.Xna.Framework.Audio.SoundEffect), ".wav"},
 			{typeof(Sound), ".sound"},
 			{typeof(Font), ".font.psd"},
-			{typeof(Feilds), ".feilds"},
+			{typeof(Params), ".params"},
 		};
 		public static readonly string infoFileExt = ".info";
 

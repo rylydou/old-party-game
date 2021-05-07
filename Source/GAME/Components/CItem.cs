@@ -13,19 +13,17 @@ namespace GAME.Components
 {
 	public abstract class CItem : CObject
 	{
-		public static float timeToDespawn = 45;
+		const float timeToDespawn = 45;
 
-		public override string basePath { get => "Items"; }
-		public override string relitivePath
+		protected override string basePath { get => "Items"; }
+		protected override string relitivePath
 		{
 			get => Regex.Replace(GetType().ToString().Split('.').Last().Remove(0, 1), @"\p{Lu}", c => " " + c.Value.ToUpperInvariant()).Remove(0, 1);
 		}
-		public override bool meleeOnly => true;
 
-		public CPlayer player;
-		public ItemState state = ItemState.Dropped;
-		public float timeAlive;
-
+		protected CPlayer player;
+		protected ItemState state = ItemState.Dropped;
+		protected float timeAlive;
 		protected Texture currentSprite;
 
 		protected Texture sprite;
@@ -69,6 +67,14 @@ namespace GAME.Components
 			}
 		}
 
+		public override void Draw()
+		{
+			base.Draw();
+
+			Draw(currentSprite, new Vector2(1f / 16), new Color(0, 0.25f));
+			Draw(currentSprite);
+		}
+
 		public virtual void Pickup(CPlayer player)
 		{
 			entity.RemoveTag("Pickupable");
@@ -102,21 +108,6 @@ namespace GAME.Components
 			player = null;
 
 			PlaySound("Drop");
-		}
-
-		public override void Draw()
-		{
-			base.Draw();
-
-			if (state == ItemState.Thrown)
-			{
-				for (int y = -1; y <= 1; y++)
-					for (int x = -1; x <= 1; x++)
-						Draw(currentSprite, new Vector2(x, y) / 16, Color.red);
-			}
-
-			Draw(currentSprite, new Vector2(1f / 16), new Color(0, 0.25f));
-			Draw(currentSprite);
 		}
 
 		public override void Death()

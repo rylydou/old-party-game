@@ -1,19 +1,17 @@
 using MGE;
+using MGE.Graphics;
 
 namespace GAME.Components
 {
 	public class CBobber : CProjectile
 	{
-		public CBobber(ProjectileData data, string basePath) : base(data, basePath) { }
+		public CBobber(DamageInfo info, string basePath) : base(info, basePath) { }
 
-		public override void Init()
+		public override void Draw()
 		{
-			base.Init();
+			base.Draw();
 
-			rb.size = new Vector2(0.25f);
-			rb.velocity = new Vector2(0.66f * entity.roationVector.x, -0.075f);
+			GFX.DrawLine(entity.position + 0.5f, info.doneBy.entity.position + 0.5f, new Color(0.8f), 1f / 16);
 		}
-
-		public override void Move() { }
 	}
 }

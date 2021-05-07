@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MGE
 {
 	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
-	public class Feilds
+	public class Params
 	{
 		[JsonProperty] public Dictionary<string, object> feilds;
 
-		public Feilds(Dictionary<string, object> feilds)
+		public Params(Dictionary<string, object> feilds)
 		{
 			this.feilds = feilds;
 		}
@@ -21,12 +22,12 @@ namespace MGE
 
 		public int GetInt(string key)
 		{
-			return (int)feilds[key];
+			return System.Convert.ToInt32(feilds[key]);
 		}
 
 		public float GetFloat(string key)
 		{
-			return (float)feilds[key];
+			return System.Convert.ToSingle(feilds[key]);
 		}
 
 		public string GetString(string key)
@@ -41,26 +42,26 @@ namespace MGE
 
 		public Vector2 GetVector2(string key)
 		{
-			var values = (float[])feilds[key];
-			return new Vector2(values[0], values[1]);
+			var values = (JArray)feilds[key];
+			return new Vector2((float)values[0], (float)values[1]);
 		}
 
 		public Vector2Int GetVector2Int(string key)
 		{
-			var values = (int[])feilds[key];
-			return new Vector2Int(values[0], values[1]);
+			var values = (JArray)feilds[key];
+			return new Vector2Int((int)values[0], (int)values[1]);
 		}
 
 		public Rect GetRect(string key)
 		{
-			var values = (float[])feilds[key];
-			return new Rect(values[0], values[1], values[2], values[3]);
+			var values = (JArray)feilds[key];
+			return new Rect((float)values[0], (float)values[1], (float)values[2], (float)values[3]);
 		}
 
 		public RectInt GetRectInt(string key)
 		{
-			var values = (int[])feilds[key];
-			return new RectInt(values[0], values[1], values[2], values[3]);
+			var values = (JArray)feilds[key];
+			return new RectInt((int)values[0], (int)values[1], (int)values[2], (int)values[3]);
 		}
 	}
 }

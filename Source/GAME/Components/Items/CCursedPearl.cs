@@ -5,9 +5,6 @@ namespace GAME.Components.Items
 {
 	public class CCursedPearl : CItem
 	{
-		public override bool meleeOnly => false;
-		public override float frictionAir => 0.0f;
-
 		public CPlayer owner;
 
 		public override void Init()

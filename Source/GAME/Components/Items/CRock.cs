@@ -4,12 +4,6 @@ namespace GAME.Components.Items
 {
 	public class CRock : CItem
 	{
-		public override float frictionGround => 0.5f;
-		public override float frictionAir => 0.0f;
-
-		public int damage = 30;
-		public float timeBtwHits = 0.3f;
-
 		float cooldown;
 		CPlayer lastPlayer;
 
@@ -32,25 +26,25 @@ namespace GAME.Components.Items
 			{
 				var hitThing = false;
 
-				var things = entity.layer.GetEntities(entity.position + new Vector2(0.25f), 0.5f, "Ranged Vulnerable");
+				var things = entity.layer.GetEntities(entity.position + new Vector2(0.25f), @params.GetFloat("range"), "Ranged Vulnerable");
 
 				foreach (var thing in things)
 				{
 					if (this is null || thing == entity || lastPlayer is null || thing == lastPlayer.entity) continue;
 					hitThing = true;
 
-					thing.GetSimilarComponent<CObject>()?.Damage(damage, rb.velocity * 2.0f, lastPlayer);
+					thing.GetSimilarComponent<CObject>()?.Damage(@params.GetInt("damage"), rb.velocity * @params.GetFloat("knockback"), lastPlayer);
 					thing.GetComponent<CPlayer>()?.Pickup(null);
-					Damage(30, rb.velocity, null);
+					Damage(@params.GetInt("selfDamageOnHit"), rb.velocity, null);
 
 					PlaySound("Hit");
 				}
 
 				if (hitThing)
 				{
-					cooldown = timeBtwHits;
-					rb.velocity.x *= -1;
-					rb.velocity.y = -0.1f;
+					cooldown = @params.GetFloat("hitCooldown");
+					rb.velocity.x *= @params.GetFloat("bouncebackX");
+					rb.velocity.y = @params.GetFloat("bouncebackY");
 				}
 			}
 		}

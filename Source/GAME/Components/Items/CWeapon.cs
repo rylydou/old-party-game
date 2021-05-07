@@ -4,17 +4,17 @@ namespace GAME.Components
 {
 	public abstract class CWeapon : CItem
 	{
-		public abstract int startingUses { get; }
-		public abstract float timeBtwAttacks { get; }
+		protected float attackCooldown;
 
-		public int uses;
-		public float cooldown;
+		protected int uses;
+		protected float cooldown;
 
 		public override void Init()
 		{
 			base.Init();
 
-			uses = startingUses;
+			uses = @params.GetInt("uses");
+			attackCooldown = @params.GetFloat("attackCooldown");
 		}
 
 		public override void FixedUpdate()
@@ -28,21 +28,21 @@ namespace GAME.Components
 		{
 			base.Draw();
 
-			Draw(currentSprite, Vector2.zero, Color.Lerp(Color.white, uses < 2 ? Color.red : Color.black, cooldown / timeBtwAttacks));
+			Draw(currentSprite, Vector2.zero, Color.Lerp(Color.white, uses < 2 ? Color.red : Color.black, cooldown / attackCooldown));
 		}
 
 		public override void Pickup(CPlayer player)
 		{
 			base.Pickup(player);
 
-			cooldown = timeBtwAttacks;
+			cooldown = @params.GetFloat("attackCooldown");
 		}
 
 		public override void Use()
 		{
 			if (cooldown > 0) return;
 
-			cooldown = timeBtwAttacks;
+			cooldown = @params.GetFloat("attackCooldown");
 
 			uses--;
 

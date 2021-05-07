@@ -9,14 +9,9 @@
 		0.6,
 		0.6
 	],
+	"enablePhysics": false,
 	"uses": 4,
-	"useTime": 0.4,
+	"attackCooldown": 0.4,
 	"projectiles": 3,
-	"spread": 0.1,
-	"projDamage": 15,
-	"projKnockback": 0.125,
-	"projSpeed": 0.5,
-	"projRadius": 0.5,
-	"projLifetime": 0.25,
-	"projHits": 1
+	"spread": 0.1
 }

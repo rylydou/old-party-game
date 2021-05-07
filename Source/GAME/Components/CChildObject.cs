@@ -5,8 +5,8 @@ namespace GAME.Components
 {
 	public abstract class CChildObject : CObject
 	{
-		public override string basePath => $"Items/{basePathOfParent}";
-		public override string relitivePath
+		protected override string basePath => $"Items/{basePathOfParent}";
+		protected override string relitivePath
 		{
 			get => Regex.Replace(GetType().ToString().Split('.').Last().Remove(0, 1), @"\p{Lu}", c => " " + c.Value.ToUpperInvariant()).Remove(0, 1);
 		}

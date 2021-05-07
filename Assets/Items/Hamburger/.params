@@ -1,7 +1,7 @@
 {
 	"health": 30,
 	"meleeVulnerable": true,
-	"rangedVulnerable": true,
+	"rangedVulnerable": false,
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
@@ -9,5 +9,5 @@
 		0.5,
 		0.5
 	],
-	"tpRange": 1
+	"restore": 50
 }

@@ -17,8 +17,6 @@ namespace GAME.Components.Items
 			typeof(CFishingRod),
 		};
 
-		public override bool meleeOnly => false;
-
 		public CItem item;
 
 		public override void Init()
