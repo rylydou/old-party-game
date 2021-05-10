@@ -7,7 +7,6 @@ using MGE.Graphics;
 using MGE.UI;
 using MGE.InputSystem;
 using MGE.ECS;
-using MGE.Debug;
 
 namespace MGE
 {
@@ -22,7 +21,12 @@ namespace MGE
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch sb;
 
-		float statsUpdateCooldown;
+		public Action onTick = () => { };
+
+		float timeSinceLastTick = 0.0f;
+		float statsUpdateCooldown = -1.0f;
+
+		bool shouldScreenshot = false;
 
 		public Engine(Game game)
 		{
@@ -40,7 +44,7 @@ namespace MGE
 
 				GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 
-				game.IsFixedTimeStep = true;
+				game.IsFixedTimeStep = false;
 				game.InactiveSleepTime = TimeSpan.Zero;
 				game.Window.Title = Config.gameName;
 				game.Window.AllowUserResizing = Config.allowWindowResizing;
@@ -58,8 +62,9 @@ namespace MGE
 		{
 			using (Timmer.Start("Initialize"))
 			{
-				graphics.SynchronizeWithVerticalRetrace = true;
+				graphics.SynchronizeWithVerticalRetrace = false;
 				graphics.PreferMultiSampling = true;
+				graphics.GraphicsProfile = GraphicsProfile.HiDef;
 				graphics.ApplyChanges();
 
 				MGE.Window.aspectRatioFrac = Config.aspectRatio;
@@ -91,6 +96,8 @@ namespace MGE
 				Assets.ReloadAssets();
 
 				Pointer.texture = Assets.GetAsset<Texture>("Sprites/Pointer");
+
+				Pointer.mouseCursor = MouseCursor.Arrow;
 			}
 		}
 
@@ -100,6 +107,11 @@ namespace MGE
 		{
 			Time.Update(gameTime);
 			Input.Update();
+
+			if (Input.GetButtonPress(Inputs.F2))
+			{
+				shouldScreenshot = true;
+			}
 
 			if (Input.GetButtonPress(Inputs.F11))
 			{
@@ -115,28 +127,36 @@ namespace MGE
 				MGE.Window.Apply();
 			}
 
+			statsUpdateCooldown -= Time.deltaTime;
 			if (statsUpdateCooldown < 0.0f)
 			{
 				statsUpdateCooldown = Config.timeBtwStatsUpdate;
 				Stats.Update();
 			}
-			statsUpdateCooldown -= (float)Time.deltaTime;
 
 			GUI.Update();
 
-			SceneManager.FixedUpdate();
+			GFX.SetupToDrawGame();
+
+			timeSinceLastTick += Time.deltaTime;
+			while (timeSinceLastTick > Config.timeBtwTicks)
+			{
+				Time.ticks++;
+				timeSinceLastTick -= Config.timeBtwTicks;
+				SceneManager.Tick();
+				onTick.Invoke();
+			}
 			SceneManager.Update();
 
-			Menuing.Update();
+			GFX.SetupToDrawUI();
 		}
 
 		public void Draw(GameTime gameTime)
 		{
+			GFX.SetupToDrawGame();
 			GFX.drawCalls = 0;
 
-			GFX.SetupToDrawGame();
-
-			using (var rt = new RenderTarget2D(game.GraphicsDevice, Window.gameRenderSize.x, Window.gameRenderSize.y))
+			using (var rt = new RenderTarget2D(game.GraphicsDevice, Window.gameRenderSize.x, Window.gameRenderSize.y, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.DiscardContents, false, 1))
 			{
 				game.GraphicsDevice.SetRenderTarget(rt);
 
@@ -144,10 +164,39 @@ namespace MGE
 
 				game.GraphicsDevice.SetRenderTarget(null);
 
-				using (new DrawBatch(transform: null))
+				using (new DrawBatch(transform: null, effect: Camera.postEffect, blend: BlendState.Opaque))
 				{
 					sb.Draw(rt, new Rect(0, 0, Window.windowedSize), Color.white);
 				}
+
+				if (shouldScreenshot)
+				{
+					var path = $"Screenshots/{DateTime.Now.ToString(@"yyyy-mm-dd hh-mm-ss")}.png";
+
+					try
+					{
+						using (var png = FileIO.IO.FileOpen(path))
+						{
+							rt.SaveAsPng(png, rt.Width, rt.Height);
+						}
+
+						Logger.Log("Screenshot saved!");
+					}
+					catch (System.Exception e)
+					{
+						try
+						{
+							Logger.LogWarning($"Could not save screenshot!\n{e}");
+
+							FileIO.IO.FileDelete(path);
+						}
+						catch
+						{
+							Logger.LogError($"Could not delete screenshot! It is most likely corrupted :(\n{e}");
+						}
+					}
+				}
+				shouldScreenshot = false;
 			}
 
 			GFX.SetupToDrawUI();
@@ -155,10 +204,6 @@ namespace MGE
 			SceneManager.DrawUI();
 
 			GUI.gui.Draw();
-
-			Menuing.Draw();
-
-			// Terminal.Draw();
 
 			Pointer.Draw();
 		}

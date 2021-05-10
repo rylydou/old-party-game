@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using MGE;
+using MGE.Graphics;
 
 public enum ItemState
 {
@@ -41,9 +42,9 @@ namespace GAME.Components
 			currentSprite = sprite;
 		}
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
-			base.FixedUpdate();
+			base.Tick();
 
 			if (rb.grounded && state == ItemState.Thrown)
 				state = ItemState.Dropped;
@@ -73,7 +74,7 @@ namespace GAME.Components
 		{
 			base.Draw();
 
-			Draw(currentSprite, new Vector2(1f / 16), new Color(0, 0.25f));
+			Draw(currentSprite, new Vector2(GFX.currentUnitsPerPixel), new Color(0, 0.25f));
 			Draw(currentSprite);
 		}
 

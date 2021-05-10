@@ -52,8 +52,6 @@ namespace MGE
 
 						if (!tiles.TryGetValue(connection, out tile))
 						{
-							Logger.LogWarning($"No tile that follows rule: {((TileConnection)connection)} {tile}");
-
 							tileRects.Add(new RectInt(defualtTile.x, defualtTile.y, tileSize.x, tileSize.y));
 						}
 						else
@@ -80,8 +78,6 @@ namespace MGE
 
 						if (!tiles.TryGetValue(connection, out tile))
 						{
-							Logger.LogWarning($"No tile that follows rule: {((TileConnection)connection)} {tile}");
-
 							map[x, y] = new RectInt(defualtTile.x, defualtTile.y, tileSize.x, tileSize.y);
 						}
 						else

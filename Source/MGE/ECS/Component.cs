@@ -13,7 +13,7 @@ namespace MGE.ECS
 		public bool inited = false;
 
 		public virtual void Init() { }
-		public virtual void FixedUpdate() { }
+		public virtual void Tick() { }
 		public virtual void Update() { }
 		public virtual void Draw() { }
 		public virtual void Destroy() { }

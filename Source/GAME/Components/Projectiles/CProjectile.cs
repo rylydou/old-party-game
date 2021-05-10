@@ -35,15 +35,15 @@ namespace GAME.Components
 			texSprite = GetAsset<Texture>("Sprite");
 		}
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
-			base.FixedUpdate();
+			base.Tick();
 
 			var things = entity.layer.GetEntities(entity.position, @params.GetFloat("radius"), "Ranged Vulnerable");
 
 			foreach (var thing in things)
 			{
-				if (thing == info.doneBy.entity) continue;
+				if (thing == entity || thing == info.doneBy.entity) continue;
 
 				thing.GetSimilarComponent<CObject>()?.Damage(@params.GetInt("damage"), -Vector2.GetDirection(info.origin, entity.position) * @params.GetFloat("knockback"), info.doneBy);
 

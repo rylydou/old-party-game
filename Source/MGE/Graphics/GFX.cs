@@ -14,6 +14,7 @@ namespace MGE.Graphics
 
 		public static int pixelsPerUnit { get => Config.pixelsPerUnit; }
 		public static int currentPixelsPerUnit { get; internal set; } = 16;
+		public static float currentUnitsPerPixel { get => 1f / currentPixelsPerUnit; }
 
 		static readonly Dictionary<int, List<Vector2>> circleCache = new Dictionary<int, List<Vector2>>();
 
@@ -36,7 +37,7 @@ namespace MGE.Graphics
 		{
 			if (!color.HasValue) color = Color.white;
 
-			sb.Draw(texture != null ? texture : pixel, new Rect((position * currentPixelsPerUnit).rounded, source.size), source, color.Value);
+			sb.Draw(texture.texture is object ? texture : pixel, new Rect((position * currentPixelsPerUnit).rounded, source.size), source, color.Value);
 		}
 
 		public static void Draw(Texture texture, Vector2 position, Color? color = null, bool flippedX = false, bool flippedY = false)
@@ -44,7 +45,7 @@ namespace MGE.Graphics
 			if (!color.HasValue) color = Color.white;
 
 			sb.Draw(
-				texture is object ? texture : pixel,
+				texture.texture is object ? texture : pixel,
 				(position * currentPixelsPerUnit).rounded, new Rect(0, 0, texture.size),
 				color.Value,
 				0,
@@ -60,7 +61,7 @@ namespace MGE.Graphics
 		{
 			if (!color.HasValue) color = Color.white;
 
-			sb.Draw(texture != null ? texture : pixel, new Rect((destination.position * currentPixelsPerUnit).rounded, (destination.size * currentPixelsPerUnit).rounded), null, color.Value, rotation, origin, SpriteEffects.None, 0);
+			sb.Draw(texture.texture is object ? texture : pixel, new Rect((destination.position * currentPixelsPerUnit).rounded, (destination.size * currentPixelsPerUnit).rounded), null, color.Value, rotation, origin, SpriteEffects.None, 0);
 			drawCalls++;
 		}
 
@@ -68,19 +69,19 @@ namespace MGE.Graphics
 		{
 			if (!color.HasValue) color = Color.white;
 
-			sb.Draw(texture != null ? texture : pixel, new Rect((destination.position * currentPixelsPerUnit).rounded, (destination.size * currentPixelsPerUnit).rounded), source, color.Value, rotation, origin, SpriteEffects.None, 0);
+			sb.Draw(texture.texture is object ? texture : pixel, new Rect((destination.position * currentPixelsPerUnit).rounded, (destination.size * currentPixelsPerUnit).rounded), source, color.Value, rotation, origin, SpriteEffects.None, 0);
 			drawCalls++;
 		}
 
 		public static void DrawDirect(Texture texture, Vector2 position, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects = SpriteEffects.None, float layerDepth = 0)
 		{
-			sb.Draw(texture != null ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+			sb.Draw(texture.texture is object ? texture : pixel, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
 			drawCalls++;
 		}
 
 		public static void DrawDirect(Texture texture, Rect destinationRectangle, RectInt? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects = SpriteEffects.None, float layerDepth = 0)
 		{
-			sb.Draw(texture != null ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
+			sb.Draw(texture.texture is object ? texture : pixel, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
 			drawCalls++;
 		}
 
@@ -161,10 +162,11 @@ namespace MGE.Graphics
 
 		public static void DrawRect(Rect rect, Color? color = null, float thickness = 1.0f)
 		{
-			DrawLine(new Vector2(rect.x - thickness, rect.y - thickness), new Vector2(rect.right, rect.y - thickness), color, thickness); // Top
-			DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, rect.bottom + thickness), color, thickness); // Left
-			DrawLine(new Vector2(rect.x, rect.bottom), new Vector2(rect.right, rect.bottom), color, thickness); // Bottom
-			DrawLine(new Vector2(rect.right + thickness, rect.y - thickness), new Vector2(rect.right + thickness, rect.bottom + thickness), color, thickness); // Right
+			var calcThickness = currentUnitsPerPixel * thickness;
+			DrawLine(new Vector2(rect.x - calcThickness, rect.y - calcThickness), new Vector2(rect.right, rect.y - calcThickness), color, thickness); // Top
+			DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, rect.bottom + calcThickness), color, calcThickness); // Left
+			DrawLine(new Vector2(rect.x, rect.bottom), new Vector2(rect.right, rect.bottom), color, calcThickness); // Bottom
+			DrawLine(new Vector2(rect.right + calcThickness, rect.y - calcThickness), new Vector2(rect.right + calcThickness, rect.bottom + calcThickness), color, thickness); // Right
 		}
 
 		public static void DrawLine(Vector2 from, Vector2 to, Color? color = null, float thickness = 1.0f)
@@ -180,6 +182,7 @@ namespace MGE.Graphics
 
 		public static void DrawLine(Vector2 position, float length, Color color, float angle = 0.0f, float thickness = 1.0f)
 		{
+			thickness = currentUnitsPerPixel * thickness;
 			sb.Draw(pixel, position * currentPixelsPerUnit, null, color, angle, Vector2.zero, new Vector2(length, thickness) * currentPixelsPerUnit, SpriteEffects.None, 0);
 		}
 

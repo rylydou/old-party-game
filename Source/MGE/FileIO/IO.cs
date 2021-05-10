@@ -32,8 +32,7 @@ namespace MGE.FileIO
 
 		public static FileStream FileOpen(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.Read)
 		{
-			path = basePath + path;
-			return File.Open(path, mode, access, share);
+			return File.Open(basePath + path, mode, access, share);
 		}
 
 		public static FileStream FileOpenRead(string path, FileMode mode = FileMode.OpenOrCreate, FileAccess access = FileAccess.Read, FileShare share = FileShare.Read)

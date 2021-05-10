@@ -18,7 +18,7 @@ namespace GAME.Components.Items
 			{
 				if (enablePhysics)
 				{
-					Spawn(new Entity(new CRigidbody(), new CProjectile(new DamageInfo(player), relitivePath)), entity.position, (entity.scale.x < 0 ? -Math.pi : 0) + Random.Float(-spread, spread));
+					Spawn(new Entity(new CRigidbody(), new CTrail(new Color(0.8f), 1, false), new CProjectile(new DamageInfo(player), relitivePath)), entity.position, (entity.scale.x < 0 ? -Math.pi : 0) + Random.Float(-spread, spread));
 				}
 				else
 				{

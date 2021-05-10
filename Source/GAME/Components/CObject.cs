@@ -40,11 +40,18 @@ namespace GAME.Components
 			SetVulnerable(true);
 		}
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
-			base.FixedUpdate();
+			base.Tick();
 
 			if (rb is object) rb.velocity.x *= rb.grounded ? (1 - @params.GetFloat("frictionGround") * Time.fixedDeltaTime) : (1 - @params.GetFloat("frictionAir") * Time.fixedDeltaTime);
+
+			if (entity.position.y > Window.sceneSize.y)
+			{
+				health = int.MinValue;
+				PlaySound("Fall");
+				Death();
+			}
 		}
 
 		public override void Update()

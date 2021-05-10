@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using MGE.FileIO;
+using MGE.Graphics;
 
 namespace MGE
 {
@@ -126,6 +127,9 @@ namespace MGE
 					break;
 				case ".params":
 					asset = new Params(IO.LoadJson<Dictionary<string, object>>(path));
+					break;
+				case ".mgfx":
+					asset = new Effect(GFX.graphicsDevice, File.ReadAllBytes(path));
 					break;
 				default:
 					Logger.LogWarning($"Cannot read file {path}");

@@ -12,8 +12,8 @@ namespace GAME.Components.Items
 			typeof(CBananaGun),
 			typeof(CRock),
 			typeof(CHamburger),
-			typeof(CPearl),
-			typeof(CCursedPearl),
+			// typeof(CPearl),
+			// typeof(CCursedPearl),
 			typeof(CFishingRod),
 		};
 
@@ -27,7 +27,7 @@ namespace GAME.Components.Items
 
 			item = (CItem)System.Activator.CreateInstance(itemType);
 
-			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
+			rb.position = new Vector2(Random.Float(4, Window.sceneSize.x - 4), -1);
 		}
 
 		public override void Death()

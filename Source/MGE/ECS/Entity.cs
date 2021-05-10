@@ -196,7 +196,7 @@ namespace MGE.ECS
 			}
 		}
 
-		public virtual void FixedUpdate()
+		public virtual void Tick()
 		{
 			foreach (var component in components.Values)
 			{
@@ -204,7 +204,7 @@ namespace MGE.ECS
 
 				try
 				{
-					component.FixedUpdate();
+					component.Tick();
 				}
 				catch (System.Exception e)
 				{

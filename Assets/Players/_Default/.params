@@ -5,33 +5,32 @@
 	"mass": 1,
 	"frictionGround": 22,
 	"frictionAir": 4,
-	"size": [0.8, 0.8],
+	"extraFrictionGround": 12,
+	"extraFrictionAir": 4,
+	"size": [0.9, 0.9],
 
-	"moveSpeed": 6.75,
-	"crouchingMoveSpeed": 2.33,
+	"moveSpeed": 7,
+	"crouchingMoveSpeed": 2.67,
 
-	"jumpMinVelocity": 0.2,
-	"jumpMaxVelocity": 0.275,
+	"jumpMinVelocity": 0.2125,
+	"jumpMaxVelocity": 0.267,
 
 	"groundedRem": 0.2,
 	"jumpRem": 0.15,
 
-	"extraFrictionGround": 0.01,
-	"extraFrictionAir": 0.005,
-
 	"interactionRange": 1.25,
 
-	"punchOffset": [0.75, 0],
+	"punchOffset": [0.33, 0],
 	"punchRadius": 0.9,
 	"punchCooldown": 0.175,
 	"punchDamage": 10,
-	"punchKnockback": [0.1, -0.1],
+	"punchKnockback": [0.1, -0.075],
 
 	"healthOnKill": 50,
 
-	"flashTime": 0.15,
+	"flashTime": 0.175,
 	"flashIntensity": 2,
 
-	"lastHealthMem": 0.33,
+	"lastHealthMem": 0.3,
 	"lastHealthMaxDelta": 250
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.Graphics
 {
@@ -13,8 +14,10 @@ namespace MGE.Graphics
 		static float _zoom = 1.0f;
 		public static float zoom { get => _zoom; set { _zoom = value; if (_zoom < 0.1f) _zoom = 0.1f; _isDirty = true; } }
 
-		public static Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.sceneSize); }
-		public static Vector2 scaleDownFactor { get => ((Vector2)Window.sceneSize / (Vector2)Window.renderSize); }
+		public static Vector2 scaleUpFactor { get => ((Vector2)Window.renderSize / (Vector2)Window.gameRenderSize); }
+		public static Vector2 scaleDownFactor { get => ((Vector2)Window.gameRenderSize / (Vector2)Window.renderSize); }
+
+		public static Effect postEffect;
 
 		static Matrix _transform;
 
@@ -45,12 +48,12 @@ namespace MGE.Graphics
 
 		public static Vector2 WinToCam(Vector2 position)
 		{
-			return position * scaleUpFactor / GFX.pixelsPerUnit + position;
+			return (position * scaleDownFactor + _position) / Config.pixelsPerUnit;
 		}
 
 		public static Vector2 CamToWin(Vector2 position)
 		{
-			return position / GFX.pixelsPerUnit + position;
+			return (position * scaleUpFactor - _position) * Config.pixelsPerUnit;
 		}
 	}
 }

@@ -7,6 +7,6 @@
 	"frictionAir": 0,
 	"size": [0.5, 0.5],
 	"userDamage": 5,
-	"bumpBack": 1.5,
+	"bumpBack": 2.5,
 	"userVelocity": [0, 0.05]
 }

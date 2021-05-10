@@ -1,12 +1,7 @@
-using System.Collections.Generic;
-using GAME.Components;
-using GAME.Components.Items;
-using GAME.Components.UI;
-using GAME.Types;
+using GAME.States;
 using MGE;
-using MGE.Components;
-using MGE.ECS;
-
+using MGE.Graphics;
+using MGE.FileIO;
 using XNA_Game = Microsoft.Xna.Framework.Game;
 using XNA_GameTime = Microsoft.Xna.Framework.GameTime;
 
@@ -18,19 +13,7 @@ namespace GAME
 
 		public Engine engine;
 
-		public List<Player> players = new List<Player>
-		{
-			new Player(-1, "Amogus"),
-			new Player(-2, "Robot"),
-			// new Player(-2, "Goose"),
-			// new Player(1, "Robot"),
-		};
-
-		public float roundTime = 60 * 5;
-		public float timeLeft;
-
-		public float timeBtwCrates = 4.5f;
-		public float crateSpawnCooldown;
+		public GameState state;
 
 		public Main()
 		{
@@ -42,95 +25,99 @@ namespace GAME
 		protected override void Initialize()
 		{
 			engine.Initialize();
+
+			engine.onTick += () => OnTick();
+
+			engine.LoadContent();
+
+			GameSettings.current = new GameSettings();
+
+			try
+			{
+				GameSettings.current.stage = IO.Load<Stage>($"Assets/Stages/Untitled Stage.stage", false);
+			}
+			catch (System.Exception)
+			{
+				GameSettings.current.stage = new Stage((Vector2)MGE.Window.sceneSize);
+
+				var noise = new Noise();
+				noise.noiseType = Noise.NoiseType.OpenSimplex2S;
+				noise.fractalType = Noise.FractalType.FBm;
+				noise.octaves = 8;
+				noise.gain = 0.5f;
+				noise.frequency = 0.001f;
+
+				GameSettings.current.stage.tiles.For((x, y) =>
+				{
+					var pos = new Vector2(x, y) / (Vector2)GameSettings.current.stage.tiles.size;
+
+					return
+						(byte)(x == 0 || y == 0 || x == GameSettings.current.stage.tiles.size.x - 1 || y == GameSettings.current.stage.tiles.size.y - 1 ? 3 :
+						(noise.GetNoise(x * 8, 0).Abs() * 1.25f + 0.33f < pos.y ? 2 : 0));
+				});
+			}
+
+			Pointer.mode = PointerMode.System;
+
+			Microsoft.Xna.Framework.Audio.SoundEffect.MasterVolume = 0.33f;
+
+			ChangeState(new StatePlaying());
+
 			base.Initialize();
 		}
 
 		protected override void LoadContent()
 		{
-			engine.LoadContent();
-
-			SceneManager.QueueScene(
-				new Scene(
-					new Layer(
-						false,
-						new Entity(new CBackground())
-					),
-					new Layer(
-						false,
-						new Entity(new CStage())
-					),
-					new Layer(
-						true,
-						new Entity(new CUI_InGameUI())
-					)
-				)
-			);
-
-			timeLeft = roundTime;
-
-			foreach (var player in players)
-			{
-				if (player is null) continue;
-
-				player.player = new CPlayer(player);
-
-				SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), player.player));
-			}
-
-			SceneManager.activeScene.clearScreen = false;
-#if INDEV
-			SceneManager.activeScene.clearScreen = true;
-#endif
-
 			base.LoadContent();
 		}
 
 		protected override void UnloadContent()
 		{
 			engine.UnloadContent();
+
 			base.UnloadContent();
+		}
+
+		public void OnTick()
+		{
+			state.Tick();
 		}
 
 		protected override void Update(XNA_GameTime gameTime)
 		{
-			timeLeft -= Time.fixedDeltaTime;
+			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Math.Round(Stats.memUsedAsMBs, 1)}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
 
-			crateSpawnCooldown -= Time.fixedDeltaTime;
-			if (crateSpawnCooldown < 0)
+			foreach (var controller in GameSettings.current.controllers.Values)
 			{
-				crateSpawnCooldown = timeBtwCrates;
-				SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), new CCrate()));
+				controller.Update();
 			}
 
-			foreach (var player in players)
-			{
-				if (player is null) continue;
-
-				if (player.player.health < 1)
-				{
-					player.timeRespawing += Time.fixedDeltaTime;
-
-					if (player.timeRespawing > Player.timeToRespawn)
-					{
-						player.timeRespawing = 0;
-						player.player = new CPlayer(player);
-
-						SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), player.player));
-					}
-				}
-			}
+			state.Update();
 
 			engine.Update(gameTime);
-#if INDEV
-			SceneManager.activeScene.screenClearColor = MGE.Color.AnimColor(0.75f);
-#endif
+
 			base.Update(gameTime);
 		}
 
 		protected override void Draw(XNA_GameTime gameTime)
 		{
 			engine.Draw(gameTime);
+
+			using (new DrawBatch(transform: null))
+				state.Draw();
+
 			base.Draw(gameTime);
+		}
+
+		public void ChangeState(GameState state)
+		{
+			this.state?.Exit();
+			this.state = null;
+
+			System.GC.Collect();
+
+			this.state = state;
+			this.state.Init();
 		}
 	}
 }

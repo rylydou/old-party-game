@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MGE.Debug;
-using MGE.Debug.Menus;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
@@ -36,17 +35,11 @@ namespace MGE
 			{typeof(Sound), ".sound"},
 			{typeof(Font), ".font.psd"},
 			{typeof(Params), ".params"},
+			{typeof(Effect), ".mgfx"},
 		};
 		public static readonly string infoFileExt = ".info";
 
 		// # Debuging
-		public static DebugMenu[] availableMenus = new DebugMenu[]
-		{
-			new DMenuTest(),
-			new DMenuHierarchy(),
-			new DMenuAssets(),
-			new DMenuInput(),
-		};
 
 		// # Editor
 

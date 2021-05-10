@@ -7,11 +7,11 @@ namespace GAME.Components.Items
 		float cooldown;
 		CPlayer lastPlayer;
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
-			base.FixedUpdate();
+			base.Tick();
 
-			cooldown -= Time.deltaTime;
+			cooldown -= Time.fixedDeltaTime;
 
 			if (lastPlayer is null || player is object || cooldown > 0) return;
 

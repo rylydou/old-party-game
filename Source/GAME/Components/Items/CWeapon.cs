@@ -17,9 +17,9 @@ namespace GAME.Components
 			attackCooldown = @params.GetFloat("attackCooldown");
 		}
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
-			base.FixedUpdate();
+			base.Tick();
 
 			cooldown -= Time.fixedDeltaTime;
 		}

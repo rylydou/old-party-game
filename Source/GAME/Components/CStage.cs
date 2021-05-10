@@ -1,5 +1,6 @@
 using MGE;
 using MGE.ECS;
+using MGE.Graphics;
 using MGE.Physics;
 
 namespace GAME.Components
@@ -8,52 +9,27 @@ namespace GAME.Components
 	{
 		public static CStage current { get; private set; }
 
-		public Vector2Int mapSize = Vector2Int.zero;
-
-		Grid<byte> map;
-		Grid<RectInt> tiles;
-
-		Tileset tileset;
+		Stage stage;
 
 		public override void Init()
 		{
 			current = this;
 			entity.layer.raycaster = this;
 
-			tileset = Assets.GetAsset<Tileset>("Tilesets/Grass");
-
-			mapSize = (Vector2)Window.gameRenderSize / Config.pixelsPerUnit;
-
-			map = new Grid<byte>(mapSize, 1);
-			tiles = new Grid<RectInt>(mapSize, RectInt.zero);
-
-			var noise = new Noise();
-			noise.noiseType = Noise.NoiseType.OpenSimplex2S;
-			noise.fractalType = Noise.FractalType.FBm;
-			noise.octaves = 8;
-			noise.gain = 0.5f;
-			noise.frequency = 0.001f;
-
-			map.For((x, y) =>
-			{
-				var pos = new Vector2(x, y) / (Vector2)mapSize;
-				return (byte)(x == 0 || y == 0 || x == mapSize.x - 1 || y == mapSize.y - 1 ? 1 : (noise.GetNoise(x * 8, 0).Abs() * 1.25f + 0.33f < pos.y ? 1 : 0));
-			});
+			stage = GameSettings.current.stage;
 		}
 
 		public override void Draw()
 		{
-			tileset.GetTiles(ref tiles, (x, y) => map.Get(x, y) != 0);
-
-			tileset.DrawTiles(in tiles, entity.position + new Vector2(0.1f, 0.1f), new Color(0, 0.1f));
-			tileset.DrawTiles(in tiles, entity.position, Color.white);
+			stage.Draw(new Vector2(GFX.currentUnitsPerPixel), new Color(0, 0.25f));
+			stage.Draw(Vector2.zero, Color.white);
 		}
 
 		public RaycastHit Raycast(Vector2 origin, Vector2 direction, int maxIterations = -1)
 		{
 			origin = (origin - entity.position);
 
-			var hit = Physics.RayVsGrid(origin, direction, (x, y) => map.Get(x, y) != 0, maxIterations);
+			var hit = Physics.RayVsGrid(origin, direction, (x, y) => stage.tiles.Get(x, y) != 0, maxIterations);
 
 			if (hit is object)
 			{
@@ -65,7 +41,7 @@ namespace GAME.Components
 
 		public bool IsSolid(Vector2 position)
 		{
-			return map[(Vector2Int)position] != 0;
+			return stage.tiles.Get(position) != 0;
 		}
 	}
 }

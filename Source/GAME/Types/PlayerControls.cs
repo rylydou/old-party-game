@@ -5,6 +5,10 @@ namespace GAME
 {
 	public class PlayerControls : Controls
 	{
+		public static float cursorSensitivity = 512;
+
+		public Vector2 cursorPos = Vector2.zero;
+
 		public float move = 0.0f;
 		public bool crouch = false;
 		public bool jump = false;
@@ -12,9 +16,8 @@ namespace GAME
 		public bool use = false;
 		public bool pause = false;
 		public bool die = false;
-		public bool DEBUG_SPAWN_BOX = false;
 
-		public PlayerControls(int index)
+		public PlayerControls(sbyte index)
 		{
 			this.index = index;
 		}
@@ -32,7 +35,10 @@ namespace GAME
 					use = Input.GetButtonPress(Inputs.Space) | Input.GetButtonPress(Inputs.E);
 					pause = Input.GetButtonPress(Inputs.Escape);
 					die = Input.GetButtonPress(Inputs.G);
-					DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.Tab);
+
+					cursorPos +=
+						new Vector2((Input.GetButton(Inputs.D) ? 1 : 0) - (Input.GetButton(Inputs.A) ? 1 : 0), (Input.GetButton(Inputs.S) ? 1 : 0) - (Input.GetButton(Inputs.W) ? 1 : 0)).normalized
+						* cursorSensitivity * Time.deltaTime;
 					break;
 				case -2:
 					isConnected = true;
@@ -42,6 +48,10 @@ namespace GAME
 					jumpRelease = Input.GetButtonRelease(Inputs.Up);
 					use = Input.GetButtonPress(Inputs.RightControl) | Input.GetButtonPress(Inputs.RightShift) | Input.GetButtonPress(Inputs.RightAlt);
 					die = Input.GetButtonPress(Inputs.Pipe);
+
+					cursorPos +=
+						new Vector2((Input.GetButton(Inputs.Right) ? 1 : 0) - (Input.GetButton(Inputs.Left) ? 1 : 0), (Input.GetButton(Inputs.Down) ? 1 : 0) - (Input.GetButton(Inputs.Up) ? 1 : 0)).normalized
+						* cursorSensitivity * Time.deltaTime;
 					break;
 				default:
 					if (Input.GamepadConnected(index))
@@ -56,12 +66,17 @@ namespace GAME
 						use = Input.GetButtonPress(Inputs.GamepadX, index) | Input.GetButtonPress(Inputs.GamepadY, index) | Input.GetButtonPress(Inputs.GamepadRT, index);
 						pause = Input.GetButtonPress(Inputs.GamepadStart, index);
 						die = Input.GetButtonPress(Inputs.GamepadSelect, index) | Input.GetButtonPress(Inputs.GamepadRS, index);
-						DEBUG_SPAWN_BOX = Input.GetButtonPress(Inputs.GamepadLB, index);
+
+						if (Input.GetLeftStick(index).sqrMagnitude > 0.25f * 0.25f)
+							cursorPos += Input.GetLeftStick(index).normalized * new Vector2(1, -1) * cursorSensitivity * Time.deltaTime;
 					}
 					else
 						isConnected = false;
 					break;
 			}
+
+			cursorPos.x = Math.Clamp(cursorPos.x, 0, Window.renderSize.x);
+			cursorPos.y = Math.Clamp(cursorPos.y, 0, Window.renderSize.y);
 		}
 	}
 }

@@ -182,7 +182,7 @@ namespace MGE
 
 		public override string ToString() => ToString(null);
 
-		public string ToString(string format) => ToString(format);
+		public string ToString(string format) => ToString(format, null);
 
 		public string ToString(string format, IFormatProvider formatProvider)
 		{

@@ -1,4 +1,3 @@
-using GAME.Types;
 using MGE;
 using MGE.ECS;
 using MGE.Graphics;
@@ -13,7 +12,7 @@ namespace GAME.Components.UI
 
 			var index = 0;
 
-			foreach (var player in Main.current.players)
+			foreach (var player in GameSettings.current.players)
 			{
 				if (player is null) continue;
 
@@ -54,17 +53,17 @@ namespace GAME.Components.UI
 				index++;
 			}
 
-			var timeText =
-				(Main.current.timeLeft < 0 ? "OVERTIME! " : "") +
-				System.TimeSpan.FromSeconds(Main.current.timeLeft.Abs()).ToString(Main.current.timeLeft.Abs() < 60 ? @"ss\.ff" : @"mm\:ss");
-			var timeTextSize = Config.font.Measure(timeText, 2);
-			var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
+			// var timeText =
+			// 	(GameSettings.current.timeLeft < 0 ? "OVERTIME! " : "") +
+			// 	System.TimeSpan.FromSeconds(Main.current.timeLeft.Abs()).ToString(GameSettings.current.timeLeft.Abs() < 60 ? @"ss\.ff" : @"mm\:ss");
+			// var timeTextSize = Config.font.Measure(timeText, 2);
+			// var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
 
-			for (int y = -4; y <= 4; y++)
-				for (int x = -4; x <= 4; x++)
-					Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.0125f), 2);
+			// for (int y = -4; y <= 4; y++)
+			// 	for (int x = -4; x <= 4; x++)
+			// 		Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.0125f), 2);
 
-			Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), Main.current.timeLeft < 30 ? new Color(Math.Sin(Time.time * Math.pi).Abs() * 0.5f + 0.5f, 0, 0) : Color.white, 2);
+			// Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), GameSettings.current.timeLeft < 30 ? new Color(Math.Sin(Time.time * Math.pi).Abs() * 0.5f + 0.5f, 0, 0) : Color.white, 2);
 		}
 	}
 }

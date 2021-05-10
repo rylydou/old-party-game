@@ -2,7 +2,7 @@ namespace MGE.InputSystem
 {
 	public abstract class Controls
 	{
-		public int index = 0;
+		public sbyte index = 0;
 		public bool isEnabled = true;
 		public bool isConnected = false;
 

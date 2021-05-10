@@ -6,12 +6,12 @@ namespace GAME.Components.Items
 	{
 		public CPlayer owner;
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
 			if (rb.grounded && state == ItemState.Thrown && owner is object)
 				Death();
 
-			base.FixedUpdate();
+			base.Tick();
 		}
 
 		public override void Damage(int damage, Vector2 knockback, CPlayer source)

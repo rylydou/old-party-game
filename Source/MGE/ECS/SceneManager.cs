@@ -58,7 +58,7 @@ namespace MGE.ECS
 			onSceneChanged.Invoke();
 		}
 
-		public static void FixedUpdate() => activeScene?.FixedUpdate();
+		public static void Tick() => activeScene?.Tick();
 		public static void Update() => activeScene?.Update();
 		public static void Draw() => activeScene?.Draw();
 		public static void DrawUI() => activeScene?.DrawUI();

@@ -9,7 +9,8 @@ namespace MGE
 		public static float time { get; private set; } = 0.0f;
 		public static float deltaTime { get; private set; } = 0.0f;
 
-		public static float fixedDeltaTime { get => deltaTime; }
+		public static ulong ticks { get; internal set; } = 0;
+		public static float fixedDeltaTime { get => Config.timeBtwTicks; }
 
 		public static float unscaledTime { get; private set; } = 0.0f;
 		public static float unscaledDeltaTime { get; private set; } = 0.0f;

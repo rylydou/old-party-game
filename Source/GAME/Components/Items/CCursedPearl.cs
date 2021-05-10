@@ -18,12 +18,12 @@ namespace GAME.Components.Items
 			offset = @params.GetVector2("tpOffset");
 		}
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
 			if (rb.grounded && state == ItemState.Thrown)
 				Death();
 
-			base.FixedUpdate();
+			base.Tick();
 
 			if (state == ItemState.Thrown && owner is object)
 			{
@@ -49,13 +49,6 @@ namespace GAME.Components.Items
 					PlaySound("TP");
 				}
 			}
-		}
-
-		public override void Draw()
-		{
-			base.Draw();
-
-			MGE.Graphics.GFX.DrawCircle(entity.position, range, Color.violet, 1f / 16 * -4);
 		}
 
 		public override void Pickup(CPlayer player)

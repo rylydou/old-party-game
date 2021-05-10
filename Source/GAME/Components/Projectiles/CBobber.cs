@@ -11,7 +11,7 @@ namespace GAME.Components
 		{
 			base.Draw();
 
-			GFX.DrawLine(entity.position + 0.5f, info.doneBy.entity.position + 0.5f, new Color(0.8f), 1f / 16);
+			GFX.DrawLine(entity.position + 0.5f, info.doneBy.entity.position + 0.5f, new Color(0.8f));
 		}
 	}
 }

@@ -5,15 +5,12 @@
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 0,
-	"size": [
-		0.5,
-		0.5
-	],
+	"size": [0.5, 0.5],
 	"range": 0.5,
-	"hitCooldown": 0.3,
+	"hitCooldown": 0.25,
 	"damage": 30,
 	"selfDamageOnHit": 30,
 	"knockback": 1.5,
-	"bouncebackX": 0.75,
+	"bouncebackX": -0.75,
 	"bouncebackY": -0.15
 }

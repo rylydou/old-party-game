@@ -1,4 +1,3 @@
-using GAME.Types;
 using MGE;
 using MGE.Graphics;
 
@@ -40,6 +39,7 @@ namespace GAME.Components
 		float lastHealthMaxDelta;
 
 		public CItem heldItem;
+		CPlayer lastHitBy;
 		CItem nearestItem;
 		float groundedMem = -1;
 		float jumpMem = -1;
@@ -101,24 +101,23 @@ namespace GAME.Components
 			texHand = GetAsset<Texture>("Hand");
 			texArrow = GetAsset<Texture>("Arrow");
 
-			rb.position = new Vector2(Random.Float(1, Window.sceneSize.x - 1), 1);
+			rb.position = new Vector2(Random.Float(4, Window.sceneSize.x - 4), -1);
 
 			PlaySound("Spawn");
 		}
 
-		public override void FixedUpdate()
+		public override void Tick()
 		{
-			base.FixedUpdate();
+			base.Tick();
 
 			if (entity.layer.raycaster.IsSolid(rb.position + 0.5f))
 				Damage(5, Vector2.zero, null);
 
-			extraVelocity = Math.Clamp(extraVelocity, moveSpeed * 2);
+			extraVelocity = Math.Clamp(extraVelocity, -moveSpeed * 2, moveSpeed * 2);
 
-			extraVelocity *= (1 - (rb.grounded ? extraFrictionGround : extraFrictionAir)) * Time.fixedDeltaTime;
+			extraVelocity *= 1 - (rb.grounded ? extraFrictionGround : extraFrictionAir) * Time.fixedDeltaTime;
 
-			if (player.controls.move.Abs() > 0.1f)
-				rb.velocity.x = player.controls.move * (player.controls.crouch ? crouchingMoveSpeed : moveSpeed) * Time.fixedDeltaTime;
+			rb.velocity.x = player.controls.move * (player.controls.crouch ? crouchingMoveSpeed : moveSpeed) * Time.fixedDeltaTime;
 
 			rb.velocity.x += extraVelocity;
 
@@ -175,7 +174,7 @@ namespace GAME.Components
 							{
 								hitThing = true;
 
-								thingComp.Damage(punchDamage, punchKnockback * entity.scale, this);
+								thingComp.Damage(thing.GetComponent<CPlayer>()?.hitFlash > 0 ? 0 : punchDamage, punchKnockback * entity.scale, this);
 							}
 						}
 
@@ -192,45 +191,40 @@ namespace GAME.Components
 
 			if (inputDie)
 			{
-				for (int i = 0; i < 2; i++)
-					if (player.kills > 0)
-						player.kills--;
+				if (player.kills > 0)
+					player.kills--;
 
 				Damage(int.MinValue, Vector2.zero, null);
 			}
 			inputDie = false;
+
+			hitFlash -= Time.fixedDeltaTime;
 		}
 
 		public override void Update()
 		{
 			base.Update();
 
-			hitFlash -= Time.deltaTime;
 			lastHealthStayTime -= Time.deltaTime;
 
 			if (lastHealthStayTime < 0)
 				lastHealth = Math.MoveTowards(lastHealth, health, lastHealthMaxDelta * Time.deltaTime);
 
-			player.controls.Update();
-
 			if (player.controls.jump) inputJump = true;
 			if (player.controls.jumpRelease) inputJumpRelease = true;
 			if (player.controls.use) inputUse = true;
 			if (player.controls.die) inputDie = true;
-
-			if (player.controls.DEBUG_SPAWN_BOX)
-				Spawn(new MGE.ECS.Entity(new MGE.Components.CRigidbody(), new Items.CCrate()), Vector2.zero);
 		}
 
 		public override void Draw()
 		{
 			var offset = hitFlash > 0 ? Random.UnitVector() / 16 * flashIntensity : Vector2.zero;
 
-			Draw(player.controls.crouch ? texCrouching : texBody, new Vector2(1f / 16) + offset, new Color(0, 0.25f));
-			Draw(player.controls.crouch ? texCrouching : texBody, offset, !player.controls.isConnected ? Color.gray : hitFlash > 0 ? Color.red : Color.white);
+			Draw(player.controls.crouch ? texCrouching : texBody, new Vector2(GFX.currentUnitsPerPixel) + offset, new Color(0, 0.25f));
+			Draw(player.controls.crouch ? texCrouching : texBody, offset, !player.controls.isConnected ? new Color(0.25f) : hitFlash > 0 ? Color.red : Color.white);
 
 			if (nearestItem is object && heldItem is null)
-				GFX.Draw(texArrow, nearestItem.entity.position + new Vector2(0, -1.5f + Math.Sin(Time.time * 16) / 14));
+				GFX.Draw(texArrow, nearestItem.entity.position + new Vector2(0, -1.5f + (1 - Math.Clamp01(Math.Tan(Time.time * 8f))) / 8));
 
 			var healthBarPos = new Vector2(entity.position.x, entity.position.y - (player.controls.crouch ? -0.05f : 0.35f));
 
@@ -256,16 +250,10 @@ namespace GAME.Components
 			hitFlash = flashTime;
 			lastHealthStayTime = lastHealthMem;
 
-			if (health < 1)
-			{
-				if (source is object)
-				{
-					source.player.kills++;
-					source.health = Math.Clamp(source.health + healthOnKill, 100);
-				}
+			if (source is object) lastHitBy = source;
 
+			if (health < 1)
 				Death();
-			}
 
 			PlaySound("Damage");
 		}
@@ -276,6 +264,12 @@ namespace GAME.Components
 
 			hitFlash = -1;
 			player.deaths++;
+
+			if (lastHitBy is object)
+			{
+				lastHitBy.player.kills++;
+				lastHitBy.health = Math.Clamp(lastHitBy.health + lastHitBy.healthOnKill, lastHitBy.maxHealth);
+			}
 
 			Pickup(null);
 		}

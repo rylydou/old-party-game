@@ -13,7 +13,7 @@ namespace MGE.ECS
 		public SafeList<Layer> layers = new SafeList<Layer>();
 
 		public bool clearScreen = true;
-		public Color screenClearColor = Color.nullColor;
+		public Color screenClearColor = Color.black;
 
 		public Scene() { }
 
@@ -56,13 +56,13 @@ namespace MGE.ECS
 			}
 		}
 
-		public virtual void FixedUpdate()
+		public virtual void Tick()
 		{
 			foreach (var layer in layers)
 			{
 				if (!layer.enabled) continue;
 
-				layer.FixedUpdate();
+				layer.Tick();
 			}
 		}
 

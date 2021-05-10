@@ -171,13 +171,13 @@ namespace MGE.ECS
 			}
 		}
 
-		public void FixedUpdate()
+		public void Tick()
 		{
 			foreach (var entity in entities.ToArray())
 			{
 				if (!entity.enabled | entity.destroyed) continue;
 
-				entity.FixedUpdate();
+				entity.Tick();
 			}
 		}
 
