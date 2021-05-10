@@ -58,17 +58,17 @@ namespace GAME
 					{
 						isConnected = true;
 						move = (Input.GetButton(Inputs.GamepadRight, index) ? 1 : 0) - (Input.GetButton(Inputs.GamepadLeft, index) ? 1 : 0);
-						if (Input.GetLeftStick(index).x.Abs() > 0.33f)
-							move = Input.GetLeftStick(index).x.Sign();
-						crouch = Input.GetLeftStick(index).y < -0.5f || Input.GetButton(Inputs.GamepadDown, index);
+						if (Input.GamepadLeftStick(index).x.Abs() > 0.33f)
+							move = Input.GamepadLeftStick(index).x.Sign();
+						crouch = Input.GamepadLeftStick(index).y < -0.5f || Input.GetButton(Inputs.GamepadDown, index);
 						jump = Input.GetButtonPress(Inputs.GamepadA, index) | Input.GetButtonPress(Inputs.GamepadB, index);
 						jumpRelease = Input.GetButtonRelease(Inputs.GamepadA, index) | Input.GetButtonRelease(Inputs.GamepadB, index);
 						use = Input.GetButtonPress(Inputs.GamepadX, index) | Input.GetButtonPress(Inputs.GamepadY, index) | Input.GetButtonPress(Inputs.GamepadRT, index);
 						pause = Input.GetButtonPress(Inputs.GamepadStart, index);
 						die = Input.GetButtonPress(Inputs.GamepadSelect, index) | Input.GetButtonPress(Inputs.GamepadRS, index);
 
-						if (Input.GetLeftStick(index).sqrMagnitude > 0.25f * 0.25f)
-							cursorPos += Input.GetLeftStick(index).normalized * new Vector2(1, -1) * cursorSensitivity * Time.deltaTime;
+						if (Input.GamepadLeftStick(index).sqrMagnitude > 0.25f * 0.25f)
+							cursorPos += Input.GamepadLeftStick(index).normalized * new Vector2(1, -1) * cursorSensitivity * Time.deltaTime;
 					}
 					else
 						isConnected = false;

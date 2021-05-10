@@ -41,8 +41,7 @@ namespace GAME.Components.UI
 				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset, 42, 42), player.controls.isConnected ? Color.white : Color.gray);
 
 				var killsText = player.kills.ToString();
-				var killsTextSize = Config.font.Measure(killsText);
-				var killsTextOffset = (42 * 2 - killsTextSize.x) / 2 + padding.x;
+				var killsTextOffset = (42 * 2 - Config.font.Measure(killsText).x) / 2 + padding.x;
 
 				for (int y = -2; y <= 2; y++)
 					for (int x = -2; x <= 2; x++)

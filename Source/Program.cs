@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using MGE;
 
 namespace GAME
@@ -15,32 +12,26 @@ namespace GAME
 
 			using (Main game = new Main())
 			{
-				if (args == null || args.Length < 1 || args.Contains("--hide-exception"))
-					game.Run();
-				else
+				try
 				{
-					try
-					{
-						game.Run();
-					}
-					catch (Exception e)
-					{
-						try
+					game.Run();
+				}
+				catch (Exception e)
+				{
+					if (Engine.game is object) Engine.game.IsMouseVisible = true;
+
+					Logger.LogError("Crash!");
+					Logger.LogError(e);
+
+#if !INDEV
+						using (StreamWriter streamWriter = new StreamWriter($"{now} crash.log", true))
 						{
-							if (Engine.game != null) Engine.game.IsMouseVisible = true;
-							using (StreamWriter streamWriter = new StreamWriter("crash.log", true))
-							{
-								streamWriter.WriteLine((object)DateTime.Now);
-								streamWriter.WriteLine((object)e);
-								streamWriter.WriteLine("");
-							}
-							int num = (int)MessageBox.Show(e.ToString(), "Mangrove Game Engine: Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false);
+							streamWriter.WriteLine("--- Crash! ---");
+							streamWriter.WriteLine(e);
+							streamWriter.WriteLine("");
 						}
-						catch
-						{
-							Console.WriteLine("uhh oh...");
-						}
-					}
+						int num = (int)MessageBox.Show(e.ToString(), "Mangrove Game Engine - Crash", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false);
+#endif
 				}
 			}
 		}

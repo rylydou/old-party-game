@@ -24,11 +24,8 @@ namespace MGE.InputSystem
 
 		#region Keyboard
 		public static string keyboardString = string.Empty;
-
 		public static Keys keyboardKey = Keys.None;
-
 		public static Keys keyboardLastKey = Keys.None;
-
 		public static char keyboardLastChar = ' ';
 
 		static StringBuilder _keyboardBuffer = new StringBuilder();
@@ -252,32 +249,18 @@ namespace MGE.InputSystem
 			return false;
 		}
 
-		public static Vector2 GetLeftStick(int index = 0)
+		public static Vector2 GamepadLeftStick(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
 				return _gamepadState[index].ThumbSticks.Left;
 			return Vector2.zero;
 		}
 
-		public static Vector2 GetRightStick(int index = 0)
+		public static Vector2 GamepadRightStick(int index = 0)
 		{
 			if (!_gamepadCleared && index < _gamepadState.Length)
 				return _gamepadState[index].ThumbSticks.Right;
 			return Vector2.zero;
-		}
-
-		public static float GetLeftTrigger(int index = 0)
-		{
-			if (!_gamepadCleared && index < _gamepadState.Length)
-				return _gamepadState[index].Triggers.Left;
-			return 0;
-		}
-
-		public static float GetRightTrigger(int index = 0)
-		{
-			if (!_gamepadCleared && index < _gamepadState.Length)
-				return _gamepadState[index].Triggers.Right;
-			return 0;
 		}
 
 		public static void SetVibration3D(Vector3 position, float strength, int index = 0)

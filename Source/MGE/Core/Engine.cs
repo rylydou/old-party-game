@@ -24,7 +24,7 @@ namespace MGE
 		public Action onTick = () => { };
 
 		float timeSinceLastTick = 0.0f;
-		float statsUpdateCooldown = -1.0f;
+		float statsUpdateCooldown = -0.0f;
 
 		bool shouldScreenshot = false;
 
@@ -62,15 +62,15 @@ namespace MGE
 		{
 			using (Timmer.Start("Initialize"))
 			{
-				graphics.SynchronizeWithVerticalRetrace = false;
+				graphics.SynchronizeWithVerticalRetrace = true;
 				graphics.PreferMultiSampling = true;
-				graphics.GraphicsProfile = GraphicsProfile.HiDef;
+				graphics.GraphicsProfile = GraphicsProfile.Reach;
 				graphics.ApplyChanges();
 
-				MGE.Window.aspectRatioFrac = Config.aspectRatio;
-				MGE.Window.windowedSize = Config.defaultWindowSize;
-				MGE.Window.windowedPosition = (MGE.Window.monitorSize - Config.defaultWindowSize) / 2;
-				MGE.Window.Apply();
+				Window.aspectRatioFrac = Config.aspectRatio;
+				Window.windowedSize = Config.defaultWindowSize;
+				Window.windowedPosition = (Window.monitorSize - Config.defaultWindowSize) / 2;
+				Window.Apply();
 
 				OnResize();
 
@@ -96,7 +96,6 @@ namespace MGE
 				Assets.ReloadAssets();
 
 				Pointer.texture = Assets.GetAsset<Texture>("Sprites/Pointer");
-
 				Pointer.mouseCursor = MouseCursor.Arrow;
 			}
 		}
@@ -113,6 +112,14 @@ namespace MGE
 				shouldScreenshot = true;
 			}
 
+			if (Input.GetButtonPress(Inputs.F5))
+			{
+				using (Timmer.Start("Reload Assets"))
+				{
+					Assets.ReloadAssets();
+				}
+			}
+
 			if (Input.GetButtonPress(Inputs.F11))
 			{
 				switch (MGE.Window.windowMode)
@@ -127,10 +134,10 @@ namespace MGE
 				MGE.Window.Apply();
 			}
 
-			statsUpdateCooldown -= Time.deltaTime;
-			if (statsUpdateCooldown < 0.0f)
+			statsUpdateCooldown += Time.deltaTime;
+			if (statsUpdateCooldown > Config.timeBtwStatsUpdate)
 			{
-				statsUpdateCooldown = Config.timeBtwStatsUpdate;
+				statsUpdateCooldown = 0.0f;
 				Stats.Update();
 			}
 

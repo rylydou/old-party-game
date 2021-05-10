@@ -6,16 +6,17 @@ namespace GAME.Components
 {
 	public class CFog : Component
 	{
-		public int detail = 6;
+		public int detail = 4;
 
-		Texture dither;
 		Noise noise;
+
+		Texture texDither;
 
 		public override void Init()
 		{
 			base.Init();
 
-			dither = Assets.GetAsset<Texture>("Sprites/Fog");
+			texDither = Assets.GetAsset<Texture>("Sprites/Fog");
 
 			noise = new Noise();
 			noise.noiseType = Noise.NoiseType.OpenSimplex2;
@@ -31,7 +32,7 @@ namespace GAME.Components
 
 			for (int i = -detail * 2; i < Window.sceneSize.x * detail; i++)
 			{
-				GFX.Draw(dither, new Vector2((float)i / detail, Window.sceneSize.y - 0.75f - noise.GetNoise(Time.time * 6, (float)i / ((float)Window.sceneSize.x / 32)).Abs()), new Color(0.95f, 0.75f));
+				GFX.Draw(texDither, new Vector2((float)i / detail, Window.sceneSize.y - 0.75f - noise.GetNoise(Time.time * 6, (float)i / ((float)Window.sceneSize.x / 32)).Abs()), new Color(0.95f, 0.75f));
 			}
 		}
 	}

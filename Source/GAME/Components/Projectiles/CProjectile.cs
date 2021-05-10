@@ -6,9 +6,12 @@ namespace GAME.Components
 	{
 		protected DamageInfo info;
 
+		protected int damage;
+		protected float knockback;
 		protected float speed;
 		protected float lifetime;
 		protected int hits;
+		protected float radius;
 		protected bool enablePhysics;
 
 		public CProjectile(DamageInfo info, string basePath) : base(basePath)
@@ -24,8 +27,11 @@ namespace GAME.Components
 
 			enablePhysics = @params.GetBool("enablePhysics");
 
+			damage = @params.GetInt("damage");
+			knockback = @params.GetFloat("knockback");
 			lifetime = @params.GetFloat("lifetime");
 			hits = @params.GetInt("hits");
+			radius = @params.GetFloat("radius");
 
 			if (enablePhysics)
 				rb.velocity = @params.GetVector2("velocity") * entity.roationVector;
@@ -39,13 +45,13 @@ namespace GAME.Components
 		{
 			base.Tick();
 
-			var things = entity.layer.GetEntities(entity.position, @params.GetFloat("radius"), "Ranged Vulnerable");
+			var things = entity.layer.GetEntities(entity.position, radius, "Ranged Vulnerable");
 
 			foreach (var thing in things)
 			{
 				if (thing == entity || thing == info.doneBy.entity) continue;
 
-				thing.GetSimilarComponent<CObject>()?.Damage(@params.GetInt("damage"), -Vector2.GetDirection(info.origin, entity.position) * @params.GetFloat("knockback"), info.doneBy);
+				thing.GetSimilarComponent<CObject>()?.Damage(damage, -Vector2.GetDirection(info.origin, entity.position) * knockback, info.doneBy);
 
 				PlaySound("Hit");
 
@@ -53,7 +59,7 @@ namespace GAME.Components
 
 				if (hits < 1)
 				{
-					entity.Destroy();
+					Death();
 					return;
 				}
 			}
@@ -61,9 +67,8 @@ namespace GAME.Components
 			Move();
 
 			lifetime -= Time.fixedDeltaTime;
-
 			if (lifetime < 0 || entity.layer.raycaster.IsSolid(entity.position + 0.5f))
-				entity.Destroy();
+				Death();
 		}
 
 		public override void Draw()
