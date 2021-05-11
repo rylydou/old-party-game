@@ -38,7 +38,7 @@ namespace GAME.States
 		{
 			base.Update();
 
-			selectedTile = (byte)Math.Clamp(selectedTile - Input.scroll, 1, Stage.tilesets.Count - 1);
+			selectedTile = (byte)Math.Clamp(selectedTile - Input.scroll, 1, Stage.tilesets.Length - 1);
 
 			var shift = Input.GetButton(Inputs.LeftShift) | Input.GetButton(Inputs.RightShift);
 			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
@@ -88,10 +88,19 @@ namespace GAME.States
 				Config.font.DrawText(GameSettings.current.stage.name, layout.newElement, Color.white);
 				layout.AddElement();
 
-				var tilesetText = $"{selectedTile}. {Stage.tilesets[selectedTile].name}";
+				if (selectedTile - 1 < 0)
+					layout.AddElement();
+				else
+					Config.font.DrawText(Stage.tilesets[selectedTile - 1]?.name, layout.newElement + 2, Color.white);
 
+				var tilesetText = $"{selectedTile}. {Stage.tilesets[selectedTile].name}";
 				Config.font.DrawText(tilesetText, layout.newElement + 2, Stage.tilesets[selectedTile].color);
 				Config.font.DrawText(tilesetText, layout.currentElement, Stage.tilesets[selectedTile].color.inverted.readableColor);
+
+				if (selectedTile + 1 >= Stage.tilesets.Length)
+					layout.AddElement();
+				else
+					Config.font.DrawText(Stage.tilesets[selectedTile + 1].name, layout.newElement + 2, Color.white);
 			}
 		}
 	}

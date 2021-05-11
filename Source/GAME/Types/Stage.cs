@@ -7,13 +7,13 @@ namespace GAME
 	[System.Serializable]
 	public class Stage
 	{
-		static List<Tileset> _tilesets;
-		public static List<Tileset> tilesets
+		static Tileset[] _tilesets;
+		public static Tileset[] tilesets
 		{
 			get
 			{
 				if (_tilesets is null)
-					_tilesets = new List<Tileset>()
+					_tilesets = new Tileset[]
 					{
 						null,
 						Assets.GetAsset<Tileset>("Tilesets/Basic"),
