@@ -79,8 +79,8 @@ namespace GAME.States
 
 			if (showGrid)
 			{
-				GFX.DrawBox(new Rect(Input.windowMousePosition.x, 0, GFX.currentUnitsPerPixel, GameSettings.current.stage.tiles.height), lineColor);
-				GFX.DrawBox(new Rect(0, Input.windowMousePosition.y, GameSettings.current.stage.tiles.width, GFX.currentUnitsPerPixel), lineColor);
+				GFX.DrawBox(new Rect(Input.windowMousePosition.x, 0, GFX.currentUnitsPerPixel, Window.renderSize.y), lineColor);
+				GFX.DrawBox(new Rect(0, Input.windowMousePosition.y, Window.renderSize.x, GFX.currentUnitsPerPixel), lineColor);
 			}
 
 			using (var layout = new MGE.UI.Layouts.StackLayout(new Vector2(16), 24, false))
