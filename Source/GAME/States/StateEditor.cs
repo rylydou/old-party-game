@@ -12,7 +12,7 @@ namespace GAME.States
 
 		bool showGrid = false;
 
-		Color lineColor;
+		CFog fog;
 
 		public override void Init()
 		{
@@ -27,18 +27,22 @@ namespace GAME.States
 					new Layer(
 						false,
 						new Entity(new CStage())
+					),
+					new Layer(
+						false,
+						new Entity(new CFog())
 					)
 				)
 			);
 
-			lineColor = new Color("#FB3").ChangeAlpha(0.25f);
+			fog = SceneManager.activeScene.layers[2].GetEntityWithComponent<CFog>().GetComponent<CFog>();
 		}
 
 		public override void Update()
 		{
 			base.Update();
 
-			selectedTile = (byte)Math.Clamp(selectedTile - Input.scroll, 1, Stage.tilesets.Length - 1);
+			selectedTile = (byte)Math.Clamp(selectedTile + Input.scroll, 1, Stage.tilesets.Length - 1);
 
 			var shift = Input.GetButton(Inputs.LeftShift) | Input.GetButton(Inputs.RightShift);
 			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
@@ -46,6 +50,8 @@ namespace GAME.States
 
 			if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.G))
 				showGrid = !showGrid;
+			if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.F))
+				fog.visible = !fog.visible;
 			else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
 				GameSettings.current.stage.tiles.Set((Vector2Int)Input.cameraMousePosition, selectedTile);
 			else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
@@ -58,6 +64,8 @@ namespace GAME.States
 
 			if (showGrid)
 			{
+				var lineColor = new Color(1, 0.025f);
+
 				for (int x = 0; x < GameSettings.current.stage.tiles.width + 1; x++)
 				{
 					GFX.DrawBox(new Rect(x, 0, GFX.currentUnitsPerPixel, GameSettings.current.stage.tiles.height), lineColor);
@@ -68,8 +76,11 @@ namespace GAME.States
 					GFX.DrawBox(new Rect(0, y, GameSettings.current.stage.tiles.width, GFX.currentUnitsPerPixel), lineColor);
 				}
 
-				GFX.DrawBox(new Rect(40 / 2, 0, GFX.currentUnitsPerPixel * 2, GameSettings.current.stage.tiles.height), lineColor);
-				GFX.DrawBox(new Rect(0, (float)23 / 2, GameSettings.current.stage.tiles.width, GFX.currentUnitsPerPixel * 2), lineColor);
+				GFX.DrawBox(new Rect((float)GameSettings.current.stage.tiles.width / 2, 0, GFX.currentUnitsPerPixel, GameSettings.current.stage.tiles.height), new Color(1, 0.1f));
+				GFX.DrawBox(new Rect(0, (float)GameSettings.current.stage.tiles.height / 2, GameSettings.current.stage.tiles.width, GFX.currentUnitsPerPixel), new Color(1, 0.1f));
+
+				GFX.DrawBox(new Rect(Input.cameraMousePosition.x, 0, GFX.currentUnitsPerPixel, Window.renderSize.y), new Color(1, 0.1f));
+				GFX.DrawBox(new Rect(0, Input.cameraMousePosition.y, Window.renderSize.x, GFX.currentUnitsPerPixel), new Color(1, 0.1f));
 			}
 		}
 
@@ -79,8 +90,6 @@ namespace GAME.States
 
 			if (showGrid)
 			{
-				GFX.DrawBox(new Rect(Input.windowMousePosition.x, 0, GFX.currentUnitsPerPixel, Window.renderSize.y), lineColor);
-				GFX.DrawBox(new Rect(0, Input.windowMousePosition.y, Window.renderSize.x, GFX.currentUnitsPerPixel), lineColor);
 			}
 
 			using (var layout = new MGE.UI.Layouts.StackLayout(new Vector2(16), 24, false))
@@ -91,16 +100,16 @@ namespace GAME.States
 				if (selectedTile - 1 < 0)
 					layout.AddElement();
 				else
-					Config.font.DrawText(Stage.tilesets[selectedTile - 1]?.name, layout.newElement + 2, Color.white);
+					Config.font.DrawText("    " + Stage.tilesets[selectedTile - 1]?.name, layout.newElement, Color.white);
 
-				var tilesetText = $"{selectedTile}. {Stage.tilesets[selectedTile].name}";
+				var tilesetText = $"{selectedTile.ToString(@"D2")}. {Stage.tilesets[selectedTile].name}";
 				Config.font.DrawText(tilesetText, layout.newElement + 2, Stage.tilesets[selectedTile].color);
-				Config.font.DrawText(tilesetText, layout.currentElement, Stage.tilesets[selectedTile].color.inverted.readableColor);
+				Config.font.DrawText(tilesetText, layout.currentElement, Stage.tilesets[selectedTile].color.readableColor);
 
 				if (selectedTile + 1 >= Stage.tilesets.Length)
 					layout.AddElement();
 				else
-					Config.font.DrawText(Stage.tilesets[selectedTile + 1].name, layout.newElement + 2, Color.white);
+					Config.font.DrawText("    " + Stage.tilesets[selectedTile + 1].name, layout.newElement, Color.white);
 			}
 		}
 	}

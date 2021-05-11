@@ -21,6 +21,7 @@ namespace GAME
 						Assets.GetAsset<Tileset>("Tilesets/Stone"),
 						Assets.GetAsset<Tileset>("Tilesets/Lava"),
 						Assets.GetAsset<Tileset>("Tilesets/Sand"),
+						Assets.GetAsset<Tileset>("Tilesets/Semisolid"),
 					};
 
 				return _tilesets;
@@ -33,6 +34,8 @@ namespace GAME
 		public Grid<byte> tiles;
 
 		public List<Vector2Int> spawnPoints = new List<Vector2Int>();
+
+		public Color fogColor = Color.white;
 
 		public Stage(Vector2Int size)
 		{

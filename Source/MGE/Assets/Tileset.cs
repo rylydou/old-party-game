@@ -12,6 +12,7 @@ namespace MGE
 
 		[JsonProperty] public string name;
 		[JsonProperty] public Color color;
+		[JsonProperty] public bool semiSolid = false;
 		[JsonProperty] public Vector2Int tileSize;
 		[JsonProperty] public Vector2Int defualtTile;
 		[JsonProperty] public Dictionary<TileConnection, Vector2Int> tiles;

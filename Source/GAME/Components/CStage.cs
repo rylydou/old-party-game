@@ -29,7 +29,17 @@ namespace GAME.Components
 		{
 			origin = (origin - entity.position);
 
-			var hit = Physics.RayVsGrid(origin, direction, (x, y) => stage.tiles.Get(x, y) != 0, maxIterations);
+			var hit = Physics.RayVsGrid(origin, direction, (x, y) =>
+			{
+				var tile = stage.tiles.Get(x, y);
+
+				if (tile == 0) return false;
+
+				if (Stage.tilesets[tile].semiSolid)
+					return origin.y <= y && direction.y > 0;
+
+				return true;
+			}, maxIterations);
 
 			if (hit is object)
 			{
@@ -41,7 +51,8 @@ namespace GAME.Components
 
 		public bool IsSolid(Vector2 position)
 		{
-			return stage.tiles.Get(position) != 0;
+			var tile = stage.tiles.Get(position);
+			return tile != 0 && !Stage.tilesets[tile].semiSolid;
 		}
 	}
 }

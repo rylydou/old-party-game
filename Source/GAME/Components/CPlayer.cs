@@ -135,9 +135,25 @@ namespace GAME.Components
 			{
 				groundedMem = -1f;
 				jumpMem = -1f;
-				rb.velocity.y = player.controls.crouch ? -jumpMinVel : -jumpMaxVel;
 
-				PlaySound("Jump");
+				if (player.controls.crouch)
+				{
+					if (entity.layer.raycaster.IsSolid(entity.position + Vector2.up))
+					{
+						rb.velocity.y = -jumpMinVel;
+						PlaySound("Jump");
+					}
+					else
+					{
+						rb.position.y += GFX.currentUnitsPerPixel;
+						PlaySound("Fall Through");
+					}
+				}
+				else
+				{
+					rb.velocity.y = -jumpMaxVel;
+					PlaySound("Jump");
+				}
 			}
 
 			if (inputJumpRelease)

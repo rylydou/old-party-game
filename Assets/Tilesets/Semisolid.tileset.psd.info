@@ -1,0 +1,31 @@
+{
+	"name": "Semisolid",
+	"color": { "hex": "#AAA" },
+	"semiSolid": true,
+	"tileSize": {
+		"x": 16,
+		"y": 16
+	},
+	"defualtTile": {
+		"x": 16,
+		"y": 0
+	},
+	"tiles": {
+		"Right": {
+			"x": 0,
+			"y": 0
+		},
+		"Right, Left": {
+			"x": 16,
+			"y": 0
+		},
+		"Left": {
+			"x": 32,
+			"y": 0
+		},
+		"None": {
+			"x": 48,
+			"y": 0
+		}
+	}
+}
