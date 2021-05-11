@@ -6,6 +6,7 @@ namespace MGE.Physics
 	{
 		public static Vector2 gravity = new Vector2(0.0f, 0.75f);
 		public static float friction = 1.0f / 3.0f;
+		public static bool DEBUG = false;
 
 		/// <summary> Speed: Slow, 3 Sqrts </summary>
 		public static bool LineVsPoint(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer = 0.1f)
@@ -41,7 +42,7 @@ namespace MGE.Physics
 			return uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1;
 		}
 
-		/// <summary> Speed: Slow, 4 LineVsLine() </summary>
+		/// <summary> Speed: Medium, 4 LineVsLine() </summary>
 		public static bool LineVsRect(Vector2 lineStart, Vector2 lineEnd, Rect rect)
 		{
 			var left = LineVsLine(
@@ -70,22 +71,22 @@ namespace MGE.Physics
 			return left || right || top || bottom;
 		}
 
-		/// <summary> Speed: Slow, 2 Sqrts </summary>
+		/// <summary> Speed: Fast </summary>
 		public static bool LineVsCirc(Vector2 lineStart, Vector2 lineEnd, Vector2 circPos, float circRad)
 		{
 			if (CircVsPoint(circPos, circRad, lineStart) || CircVsPoint(circPos, circRad, lineEnd)) return true;
 
-			var length = Vector2.Distance(lineStart, lineEnd);
+			var length = Vector2.DistanceSqr(lineStart, lineEnd);
 
-			var dot = (((circPos.x - lineStart.x) * (lineEnd.x - lineStart.x)) + ((circPos.y - lineStart.y) * (lineEnd.y - lineStart.y))) / (length * length);
+			var dot = (((circPos.x - lineStart.x) * (lineEnd.x - lineStart.x)) + ((circPos.y - lineStart.y) * (lineEnd.y - lineStart.y))) / (length);
 
 			var closest = lineStart + (dot * (lineEnd - lineStart));
 
 			if (!LineVsPoint(lineStart, lineEnd, closest)) return false;
 
-			var distance = Vector2.Distance(closest, circPos);
+			var distance = Vector2.DistanceSqr(closest, circPos);
 
-			return distance < circRad;
+			return distance < circRad * circRad;
 		}
 
 		/// <summary> Speed: Super Fast </summary>
@@ -112,7 +113,7 @@ namespace MGE.Physics
 			return (circAPos - circBPos).sqrMagnitude < (circARadius * circARadius + circBRadius * circBRadius);
 		}
 
-		/// <summary> Speed: Medium, 1 Sqrt </summary>
+		/// <summary> Speed: Fast </summary>
 		public static bool CircVsRect(Vector2 circPos, float circRadius, Rect rect)
 		{
 			var test = Vector2.zero;
@@ -122,7 +123,7 @@ namespace MGE.Physics
 			if (circPos.y < rect.y) test.y = rect.y; // Top
 			else if (circPos.y > rect.y + rect.height) test.y = rect.y + rect.height; // Bottom
 
-			return Vector2.Distance(circPos, test) <= circRadius;
+			return Vector2.DistanceSqr(circPos, test) <= circRadius * circRadius;
 		}
 
 		/// <summary> Speed: Slowish, lots of looping, so turn down the maxIterations </summary>

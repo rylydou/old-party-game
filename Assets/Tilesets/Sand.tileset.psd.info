@@ -1,4 +1,6 @@
 {
+	"name": "Sand",
+	"color": { "hex": "#ED8" },
 	"tileSize": {
 		"x": 16,
 		"y": 16

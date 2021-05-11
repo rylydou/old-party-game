@@ -1,4 +1,6 @@
 {
+	"name": "Basic",
+	"color": { "hex": "#AAA" },
 	"tileSize": {
 		"x": 16,
 		"y": 16

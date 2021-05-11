@@ -15,6 +15,7 @@ namespace MGE.UI.Layouts
 
 		public float currentSize;
 		public Vector2 newElement { get => AddElement(); }
+		public Vector2 currentElement { get => _offset; }
 
 		public StackLayout(Vector2 position, float sizePerElement, bool isHorizontal = false)
 		{

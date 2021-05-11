@@ -1,4 +1,6 @@
 {
+	"name": "Grass",
+	"color": { "hex": "#4E4" },
 	"tileSize": {
 		"x": 16,
 		"y": 16

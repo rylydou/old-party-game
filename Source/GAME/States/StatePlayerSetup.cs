@@ -29,9 +29,9 @@ namespace GAME.States
 			base.Update();
 		}
 
-		public override void Draw()
+		public override void DrawUI()
 		{
-			base.Draw();
+			base.DrawUI();
 
 			GFX.DrawBox(new Rect(0, 0, Window.renderSize), new Color("#3D405B"));
 

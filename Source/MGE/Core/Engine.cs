@@ -7,6 +7,7 @@ using MGE.Graphics;
 using MGE.UI;
 using MGE.InputSystem;
 using MGE.ECS;
+using MGE.FileIO;
 
 namespace MGE
 {
@@ -39,8 +40,6 @@ namespace MGE
 				_game = game;
 
 				graphics = new GraphicsDeviceManager(game);
-
-				Logger.throwOnError = Args.HasFlag("--throw-on-error");
 
 				GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 
@@ -167,6 +166,10 @@ namespace MGE
 
 				SceneManager.Draw();
 
+				// TODO: Don't do this
+				using (new DrawBatch())
+					GAME.Main.current.state?.Draw();
+
 				game.GraphicsDevice.SetRenderTarget(null);
 
 				using (new DrawBatch(transform: null, effect: Camera.postEffect, blend: BlendState.Opaque))
@@ -176,11 +179,14 @@ namespace MGE
 
 				if (shouldScreenshot)
 				{
-					var path = $"Screenshots/{DateTime.Now.ToString(@"yyyy-mm-dd hh-mm-ss")}.png";
+					if (!IO.FolderExists("Screenshots"))
+						IO.FolderCreate("Screenshots");
+
+					var path = $"Screenshots/{DateTime.Now.ToString(@"yyyy-MM-dd hh-mm-ss")}.png";
 
 					try
 					{
-						using (var png = FileIO.IO.FileOpen(path))
+						using (var png = IO.FileOpen(path))
 						{
 							rt.SaveAsPng(png, rt.Width, rt.Height);
 						}
@@ -191,7 +197,7 @@ namespace MGE
 					{
 						try
 						{
-							Logger.LogWarning($"Could not save screenshot!\n{e}");
+							Logger.LogError($"Could not save screenshot!\n{e}");
 
 							FileIO.IO.FileDelete(path);
 						}

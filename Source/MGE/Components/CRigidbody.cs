@@ -135,39 +135,43 @@ namespace MGE.Components
 			entity.position = position;
 		}
 
-		// public override void Draw()
-		// {
-		// 	base.Draw();
+#if INDEV
+		public override void Draw()
+		{
+			base.Draw();
 
-		// 	Graphics.GFX.DrawRect(new Rect(effectivePosition, size), grounded ? Color.magenta : Color.green);
+			if (!Physics.Physics.DEBUG) return;
 
-		// 	var direction = velocity.sign;
+			Graphics.GFX.DrawRect(new Rect(effectivePosition, size), grounded ? Color.magenta : Color.green);
 
-		// 	for (int i = 0; i < raycastsCount.x; i++)
-		// 	{
-		// 		var offset = direction.y > 0.0f ? size.y : 0;
+			var direction = velocity.sign;
 
-		// 		var rayPos = effectivePosition + new Vector2(raySpacing.x * i, offset);
-		// 		var rayDir = velocity.isolateY.sign;
+			for (int i = 0; i < raycastsCount.x; i++)
+			{
+				var offset = direction.y > 0.0f ? size.y : 0;
 
-		// 		Graphics.GFX.DrawLine(rayPos, rayPos + rayDir / 2, new Color(1, 0, 0, 0.5f));
-		// 	}
+				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, offset);
+				var rayDir = velocity.isolateY.sign;
 
-		// 	for (int i = 0; i < raycastsCount.y; i++)
-		// 	{
-		// 		var offset = direction.x > 0.0f ? size.x : 0;
+				Graphics.GFX.DrawLine(rayPos, rayPos + rayDir / 2, new Color(1, 0, 0, 0.5f));
+			}
 
-		// 		var rayPos = effectivePosition + new Vector2(offset, raySpacing.y * i);
-		// 		var rayDir = velocity.isolateX.sign;
+			for (int i = 0; i < raycastsCount.y; i++)
+			{
+				var offset = direction.x > 0.0f ? size.x : 0;
 
-		// 		Graphics.GFX.DrawLine(rayPos, rayPos + rayDir / 2, new Color(1, 0, 0, 0.5f));
-		// 	}
+				var rayPos = effectivePosition + new Vector2(offset, raySpacing.y * i);
+				var rayDir = velocity.isolateX.sign;
 
-		// 	Graphics.GFX.DrawLine(rect.bottomLeft, rect.bottomLeft + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
-		// 	Graphics.GFX.DrawLine(rect.bottomRight, rect.bottomRight + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
+				Graphics.GFX.DrawLine(rayPos, rayPos + rayDir / 2, new Color(1, 0, 0, 0.5f));
+			}
 
-		// 	Graphics.GFX.DrawLine(position + Vector2.one / 2, position + Vector2.one / 2 + velocity * 8, Color.blue, 2);
-		// }
+			Graphics.GFX.DrawLine(rect.bottomLeft, rect.bottomLeft + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
+			Graphics.GFX.DrawLine(rect.bottomRight, rect.bottomRight + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
+
+			Graphics.GFX.DrawLine(position + Vector2.one / 2, position + Vector2.one / 2 + velocity * 8, Color.blue, 2);
+		}
+#endif
 
 		public void CalcRaySpacing()
 		{

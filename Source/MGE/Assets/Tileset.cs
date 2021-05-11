@@ -10,10 +10,10 @@ namespace MGE
 	{
 		public Texture texture;
 
+		[JsonProperty] public string name;
+		[JsonProperty] public Color color;
 		[JsonProperty] public Vector2Int tileSize;
-
 		[JsonProperty] public Vector2Int defualtTile;
-
 		[JsonProperty] public Dictionary<TileConnection, Vector2Int> tiles;
 
 		public Tileset() { }

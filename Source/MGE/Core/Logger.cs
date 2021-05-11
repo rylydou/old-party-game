@@ -8,6 +8,7 @@ namespace MGE
 	{
 		const string logPath = @"\Logs\";
 
+		public static bool collectErrors = false;
 		public static bool throwOnError = false;
 
 		static string _logFolderPath;
@@ -70,7 +71,7 @@ namespace MGE
 		{
 			Console.Clear();
 
-			WriteToLogRaw(string.Empty);
+			WriteToLogRaw("<---------------------------------------->");
 			WriteToLogRaw(string.Empty);
 		}
 
@@ -85,9 +86,8 @@ namespace MGE
 
 		public static void WriteToLogRaw(string text)
 		{
-#if !INDEV
-			log.WriteLine(text);
-#endif
+			if (collectErrors)
+				log.WriteLine(text);
 		}
 
 		public static DialogResult MSGBox(

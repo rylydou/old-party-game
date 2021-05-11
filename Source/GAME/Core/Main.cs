@@ -5,6 +5,7 @@ using MGE.FileIO;
 using XNA_Game = Microsoft.Xna.Framework.Game;
 using XNA_GameTime = Microsoft.Xna.Framework.GameTime;
 using MGE.InputSystem;
+using MGE.Physics;
 
 namespace GAME
 {
@@ -45,7 +46,7 @@ namespace GAME
 				GameSettings.current.stage = new Stage(new Vector2Int(40, 23));
 			}
 
-			Pointer.mode = PointerMode.System;
+			// Pointer.mode = PointerMode.System;
 
 			Microsoft.Xna.Framework.Audio.SoundEffect.MasterVolume = 0.33f;
 
@@ -73,11 +74,15 @@ namespace GAME
 		{
 			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Math.Round(Stats.memUsedAsMBs, 1)}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
 
-			if (Input.GetButtonPress(Inputs.Tilde))
+			var shift = Input.GetButton(Inputs.LeftShift) | Input.GetButton(Inputs.RightShift);
+			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
+			var alt = Input.GetButton(Inputs.LeftAlt) | Input.GetButton(Inputs.RightAlt);
+
+			if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Tilde))
 				ChangeState(null);
-			else if (Input.GetButton(Inputs.LeftControl) && Input.GetButtonPress(Inputs.S))
+			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.S))
 				GameSettings.current.stage.Save();
-			else if (Input.GetButton(Inputs.LeftControl) && Input.GetButtonPress(Inputs.L))
+			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.L))
 				GameSettings.current.stage = Stage.Load(GameSettings.current.stage.name);
 
 			if (state is object)
@@ -95,34 +100,47 @@ namespace GAME
 				{
 					foreach (var key in Input.keyboardString)
 					{
-						switch (key)
+						if ((int)key <= 32)
 						{
-							case (char)13:
-								changingStage = false;
-								break;
-							case '\n':
-								changingStage = false;
-								break;
-							case '\b':
-								if (GameSettings.current.stage.name.Length > 0)
-									GameSettings.current.stage.name = GameSettings.current.stage.name.Remove(GameSettings.current.stage.name.Length - 1, 1);
-								break;
-							default:
-								GameSettings.current.stage.name += key;
-								break;
+							switch (key)
+							{
+								case ' ':
+									GameSettings.current.stage.name += ' ';
+									break;
+								case (char)13:
+									changingStage = false;
+									break;
+								case '\n':
+									changingStage = false;
+									break;
+								case '\b':
+									if (GameSettings.current.stage.name.Length > 0)
+										GameSettings.current.stage.name = GameSettings.current.stage.name.Remove(GameSettings.current.stage.name.Length - 1, 1);
+									break;
+								default:
+									break;
+							}
+						}
+						else
+						{
+							GameSettings.current.stage.name += key;
 						}
 					}
 				}
 				else
 				{
-					if (Input.GetButtonPress(Inputs.D1))
+					if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D1))
 						ChangeState(new StatePlaying());
-					else if (Input.GetButtonPress(Inputs.D2))
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D2))
 						ChangeState(new StateEditor());
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.L))
+						Logger.collectErrors = !Logger.collectErrors;
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.P))
+						Physics.DEBUG = !Physics.DEBUG;
 				}
 
 				if (Input.GetButtonPress(Inputs.F2))
-					changingStage = true;
+					changingStage = !changingStage;
 			}
 
 			engine.Update(gameTime);
@@ -134,11 +152,16 @@ namespace GAME
 		{
 			engine.Draw(gameTime);
 
+			// using (new DrawBatch())
+			// {
+			// 	state?.Draw();
+			// }
+
 			using (new DrawBatch(transform: null))
 			{
 				if (state is object)
 				{
-					state.Draw();
+					state.DrawUI();
 				}
 				else
 				{
@@ -146,6 +169,9 @@ namespace GAME
 
 					using (var layout = new MGE.UI.Layouts.StackLayout(new Vector2(16), 24, false))
 					{
+						Config.font.DrawText("--- MGE PARTY GAME ---", layout.newElement, Color.white);
+						Config.font.DrawText($"Version: indev {System.DateTime.Now.ToString(@"yyyy-MM-dd")}", layout.newElement, Color.white);
+						layout.AddElement();
 						Config.font.DrawText($"Current Stage: {GameSettings.current.stage.name}" + (changingStage ? string.Empty : " (F2 to change stage)"), layout.newElement, changingStage ? new Color("#FB2") : Color.white);
 						layout.AddElement();
 						Config.font.DrawText("--- MODES ---", layout.newElement, Color.white);
@@ -155,7 +181,13 @@ namespace GAME
 						layout.AddElement();
 						Config.font.DrawText("~ - Enter This Menu", layout.newElement, Color.white);
 						layout.AddElement();
+						Config.font.DrawText("--- OPTIONS ---", layout.newElement, Color.white);
+						layout.AddElement();
+						Config.font.DrawText((Logger.collectErrors ? "[X]" : "[ ]") + " Collect Errors? (L)", layout.newElement, Color.white);
+						Config.font.DrawText((Physics.DEBUG ? "[X]" : "[ ]") + " Debug Physics? (P)", layout.newElement, Color.white);
+						layout.AddElement();
 						Config.font.DrawText("--- AVAILABLE STAGES ---", layout.newElement, Color.white);
+						layout.AddElement();
 						foreach (var file in IO.FolderGetFiles("Assets/Stages"))
 						{
 							Config.font.DrawText("- " + file.Replace("Assets/Stages/", string.Empty).Replace(".stage", string.Empty), layout.newElement, Color.white);

@@ -57,14 +57,43 @@ namespace GAME
 
 		public void Save()
 		{
-			Logger.Log("Saving...");
-			IO.Save($"Assets/Stages/{name}.stage", this, false);
+			try
+			{
+				using (Timmer.Start("Save Stage"))
+					IO.Save($"Assets/Stages/{name}.stage", this, false);
+			}
+			catch (System.Exception e)
+			{
+				Logger.LogError(e);
+			}
 		}
 
 		public static Stage Load(string name)
 		{
-			Logger.Log("Loading...");
-			return IO.Load<Stage>($"Assets/Stages/{name}.stage", false);
+			try
+			{
+				using (Timmer.Start("Load Stage"))
+				{
+					var stage = IO.Load<Stage>($"Assets/Stages/{name}.stage", false);
+					if (stage.tiles.size != new Vector2Int(40, 23))
+					{
+						Logger.Log("Updating Stage...");
+
+						var tiles = new Grid<byte>(40, 23);
+
+						stage.tiles.For((x, y, tile) => tiles.Set(x, y, tile));
+
+						stage.tiles = tiles;
+					}
+					return stage;
+				}
+			}
+			catch (System.Exception e)
+			{
+				Logger.LogError(e);
+			}
+
+			return null;
 		}
 	}
 }

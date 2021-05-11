@@ -1,4 +1,6 @@
 {
+	"name": "Lava",
+	"color": { "hex": "#E64" },
 	"tileSize": {
 		"x": 16,
 		"y": 16
