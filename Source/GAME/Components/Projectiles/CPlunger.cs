@@ -49,7 +49,7 @@ namespace GAME.Components.Projectiles
 		{
 			base.Draw();
 
-			GFX.DrawLine(entity.position + Vector2.one / 2, info.doneBy.entity.position + Vector2.one / 2, new Color(0.95f), 2);
+			GFX.DrawLine(entity.position + Vector2.one / 2, info.doneBy.entity.position + Vector2.one / 2, new Color(0.95f), 1);
 		}
 	}
 }

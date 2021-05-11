@@ -45,6 +45,8 @@ namespace GAME.Components
 		{
 			base.Tick();
 
+			entity.scale = entity.roationVector;
+
 			var things = entity.layer.GetEntities(entity.position, radius, "Ranged Vulnerable");
 
 			foreach (var thing in things)

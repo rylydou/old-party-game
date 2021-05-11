@@ -152,7 +152,8 @@ namespace GAME
 						layout.AddElement();
 						Config.font.DrawText("1 - Enter Play Mode", layout.newElement, Color.white);
 						Config.font.DrawText("2 - Enter Edit Mode", layout.newElement, Color.white);
-						Config.font.DrawText("~ - This Menu", layout.newElement, Color.white);
+						layout.AddElement();
+						Config.font.DrawText("~ - Enter This Menu", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText("--- AVAILABLE STAGES ---", layout.newElement, Color.white);
 						foreach (var file in IO.FolderGetFiles("Assets/Stages"))

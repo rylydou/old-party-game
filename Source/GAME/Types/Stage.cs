@@ -20,6 +20,7 @@ namespace GAME
 						Assets.GetAsset<Tileset>("Tilesets/Grass"),
 						Assets.GetAsset<Tileset>("Tilesets/Stone"),
 						Assets.GetAsset<Tileset>("Tilesets/Lava"),
+						Assets.GetAsset<Tileset>("Tilesets/Sand"),
 					};
 
 				return _tilesets;
