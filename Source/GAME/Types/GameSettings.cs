@@ -14,9 +14,9 @@ namespace GAME
 
 		public List<Player> players = new List<Player>
 		{
+			new Player(-2, "Amogus"),
 			new Player(-1, "Chicken"),
-			new Player(-2, "Goose"),
-			// new Player(-2, "Goose"),
+			new Player(0, "Goose"),
 			// new Player(1, "Robot"),
 		};
 

@@ -123,6 +123,20 @@ namespace MGE.FileIO
 			return CleanPath(new DirectoryInfo(path).Parent.FullName).Replace(basePath, string.Empty);
 		}
 
+		public static string[] FolderGetFiles(string path)
+		{
+			path = basePath + path;
+
+			var folders = Directory.GetFiles(path);
+
+			for (int i = 0; i < folders.Length; i++)
+			{
+				folders[i] = CleanPath(folders[i]).Replace(basePath, string.Empty);
+			}
+
+			return folders;
+		}
+
 		public static string[] FolderGetFolders(string path)
 		{
 			path = basePath + path;

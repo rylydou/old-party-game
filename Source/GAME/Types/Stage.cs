@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MGE;
+using MGE.FileIO;
 
 namespace GAME
 {
@@ -51,6 +52,18 @@ namespace GAME
 				tileset.GetTiles(ref rects, (x, y) => tiles.Get(x, y) == index);
 				tileset.DrawTiles(rects, position, color);
 			}
+		}
+
+		public void Save()
+		{
+			Logger.Log("Saving...");
+			IO.Save($"Assets/Stages/{name}.stage", this, false);
+		}
+
+		public static Stage Load(string name)
+		{
+			Logger.Log("Loading...");
+			return IO.Load<Stage>($"Assets/Stages/{name}.stage", false);
 		}
 	}
 }

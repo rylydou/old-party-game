@@ -23,8 +23,6 @@ namespace MGE.UI.Layouts
 			_sizePerElement = sizePerElement;
 			_isHorizontal = isHorizontal;
 			currentSize = sizePerElement;
-
-			GFX.sb.Begin(blendState: BlendState.NonPremultiplied, samplerState: SamplerState.LinearClamp);
 		}
 
 		public Vector2Int AddElement(float elementSize = -1)
@@ -61,7 +59,6 @@ namespace MGE.UI.Layouts
 
 		public void Dispose()
 		{
-			GFX.sb.End();
 		}
 	}
 }

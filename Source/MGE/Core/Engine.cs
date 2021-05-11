@@ -107,20 +107,18 @@ namespace MGE
 			Time.Update(gameTime);
 			Input.Update();
 
-			if (Input.GetButtonPress(Inputs.F2))
+			if (Input.GetButtonPress(Inputs.PrintScreen))
 			{
 				shouldScreenshot = true;
 			}
-
-			if (Input.GetButtonPress(Inputs.F5))
+			else if (Input.GetButton(Inputs.LeftControl) && Input.GetButtonPress(Inputs.F5))
 			{
 				using (Timmer.Start("Reload Assets"))
 				{
 					Assets.ReloadAssets();
 				}
 			}
-
-			if (Input.GetButtonPress(Inputs.F11))
+			else if (Input.GetButtonPress(Inputs.F11))
 			{
 				switch (MGE.Window.windowMode)
 				{

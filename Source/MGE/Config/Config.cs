@@ -17,7 +17,6 @@ namespace MGE
 
 		// # Graphics
 		public static readonly int pixelsPerUnit = 16;
-		public static readonly Vector2Int sceneSize = new Vector2Int(16 * 2, 8 * 2);
 		public static readonly Vector2Int gameRenderSize = new Vector2Int(320 * 2, 180 * 2);
 
 		// #> Windowing

@@ -9,9 +9,9 @@
 	"enablePhysics": false,
 	"damage": 0,
 	"knockback": 0.0,
-	"speed": 1.5,
+	"speed": 1.0,
 	"radius": 1.25,
-	"lifetime": 1.1,
+	"lifetime": 0.75,
 	"hits": 1,
-	"pullSpeed": -0.33
+	"pullSpeed": -0.75
 }
