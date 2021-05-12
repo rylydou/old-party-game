@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using MGE;
 
 namespace GAME.Components
 {
@@ -16,6 +17,17 @@ namespace GAME.Components
 		protected CChildObject(string basePathOfParent)
 		{
 			this.basePathOfParent = basePathOfParent;
+		}
+
+		public override T GetAsset<T>(string path) where T : class
+		{
+			var asset = Assets.GetAsset<T>($"{basePath}/{relitivePath}/{path}");
+			if (asset is null)
+				asset = Assets.GetAsset<T>($"Items/_Default/{path}");
+
+			if (asset is null) LogWarning("No asset found at " + $"{basePath}/{relitivePath}/{path}" + " | " + $"{basePath}/_Default/{path}");
+
+			return asset;
 		}
 	}
 }

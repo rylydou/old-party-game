@@ -16,6 +16,7 @@ namespace GAME.Components.Items
 			// typeof(CCursedPearl),
 			typeof(CFishingRod),
 			typeof(CPlungerGun),
+			typeof(CMinigun),
 		};
 
 		public CItem item;
