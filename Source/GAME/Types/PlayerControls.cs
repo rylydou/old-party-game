@@ -30,9 +30,9 @@ namespace GAME
 					isConnected = true;
 					move = (Input.GetButton(Inputs.D) ? 1 : 0) - (Input.GetButton(Inputs.A) ? 1 : 0);
 					crouch = Input.GetButton(Inputs.S);
-					jump = Input.GetButtonPress(Inputs.W);
-					jumpRelease = Input.GetButtonRelease(Inputs.W);
-					use = Input.GetButtonPress(Inputs.Space) | Input.GetButtonPress(Inputs.E);
+					jump = Input.GetButtonPress(Inputs.W) | Input.GetButtonPress(Inputs.Space);
+					jumpRelease = Input.GetButtonRelease(Inputs.W) | Input.GetButtonRelease(Inputs.Space);
+					use = Input.GetButtonPress(Inputs.LeftShift) | Input.GetButtonPress(Inputs.E);
 					pause = Input.GetButtonPress(Inputs.Escape);
 					die = Input.GetButtonPress(Inputs.G);
 

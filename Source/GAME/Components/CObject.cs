@@ -95,7 +95,7 @@ namespace GAME.Components
 			}
 		}
 
-		public T GetAsset<T>(string path) where T : class
+		public virtual T GetAsset<T>(string path) where T : class
 		{
 			var asset = Assets.GetAsset<T>($"{basePath}/{relitivePath}/{path}");
 			if (asset is null)
@@ -111,7 +111,10 @@ namespace GAME.Components
 			Sound sound;
 			if (!sounds.TryGetValue(name, out sound))
 				sound = GetAsset<Sound>(name);
-			sound?.Play(entity.position);
+			if (sound is object)
+				sound.Play(entity.position);
+			else
+				PlaySound("Error");
 		}
 	}
 }
