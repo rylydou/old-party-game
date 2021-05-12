@@ -28,7 +28,7 @@
 
 	"healthOnKill": 50,
 
-	"flashTime": 0.175,
+	"flashTime": 0.125,
 	"flashIntensity": 2,
 
 	"lastHealthMem": 0.3,

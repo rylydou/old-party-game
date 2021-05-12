@@ -17,6 +17,7 @@ namespace GAME.Components.Items
 			typeof(CFishingRod),
 			typeof(CPlungerGun),
 			typeof(CMinigun),
+			typeof(CRifle),
 		};
 
 		public CItem item;

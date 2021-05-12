@@ -1,5 +1,5 @@
 {
-	"health": 75,
+	"health": 200,
 	"meleeVulnerable": true,
 	"rangedVulnerable": false,
 	"mass": 1,
@@ -7,9 +7,8 @@
 	"frictionAir": 4,
 	"size": [0.8, 0.8],
 	"enablePhysics": false,
-	"uses": 40,
-	"attackCooldown": 0.1,
+	"uses": 100,
+	"attackCooldown": 0.075,
 	"projectiles": 1,
-	"spread": 0.2,
-	"attackTimePerClick": 0.5
+	"spread": 0.15
 }

@@ -1,31 +1,24 @@
-using MGE;
-
 namespace GAME.Components.Items
 {
 	public class CMinigun : CRangedWeapon
 	{
-		float attackTimePerClick;
-		float timeAttacking;
+		bool isAttacking;
 
 		public override void Init()
 		{
 			base.Init();
-
-			attackTimePerClick = @params.GetFloat("attackTimePerClick");
 		}
 
 		public override void Use()
 		{
-			timeAttacking = attackTimePerClick;
+			isAttacking = !isAttacking;
 		}
 
 		public override void Tick()
 		{
 			base.Tick();
 
-			timeAttacking -= Time.fixedDeltaTime;
-
-			if (timeAttacking > 0 && cooldown < 0)
+			if (isAttacking && cooldown < 0)
 			{
 				cooldown = attackCooldown;
 				uses--;
@@ -39,6 +32,13 @@ namespace GAME.Components.Items
 					return;
 				}
 			}
+		}
+
+		public override void Drop()
+		{
+			base.Drop();
+
+			isAttacking = false;
 		}
 	}
 }
