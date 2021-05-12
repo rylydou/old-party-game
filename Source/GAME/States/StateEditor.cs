@@ -8,6 +8,16 @@ namespace GAME.States
 {
 	public class StateEditor : GameState
 	{
+		public enum State
+		{
+			Ground,
+			Background,
+			PlayerSpawnPoints,
+			Params
+		}
+
+		public State state = State.Ground;
+
 		public byte selectedTile = 1;
 
 		bool showGrid = false;
