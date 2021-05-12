@@ -6,8 +6,6 @@ namespace GAME.Components
 {
 	public class CFog : Component
 	{
-		public int detail = 4;
-
 		Noise noise;
 
 		Texture texDither;
@@ -30,9 +28,14 @@ namespace GAME.Components
 		{
 			base.Draw();
 
-			for (int i = -detail * 2; i < Window.sceneSize.x * detail; i++)
+			for (int i = -GameSettings.current.stage.fogDetail * 2; i < Window.sceneSize.x * GameSettings.current.stage.fogDetail; i++)
 			{
-				GFX.Draw(texDither, new Vector2((float)i / detail, Window.sceneSize.y - 0.75f - noise.GetNoise(Time.time * 6, (float)i / ((float)Window.sceneSize.x / 32)).Abs()), new Color(0.95f, 0.75f));
+				GFX.Draw(texDither,
+				new Vector2(
+					(float)i / GameSettings.current.stage.fogDetail,
+					Window.sceneSize.y - GameSettings.current.stage.fogHeight -
+						noise.GetNoise(Time.time * GameSettings.current.stage.fogSpeed, (float)i / ((float)Window.sceneSize.x / GameSettings.current.stage.fogSize)).Abs()),
+					GameSettings.current.stage.fogColor);
 			}
 		}
 	}

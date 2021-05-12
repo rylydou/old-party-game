@@ -66,13 +66,13 @@ namespace MGE
 			return tileRects.ToArray();
 		}
 
-		public void GetTiles(ref Grid<RectInt> map, Func<int, int, bool> isSolid)
+		public void GetTiles(ref Grid<RectInt> map, Func<int, int, bool> isTile, Func<int, int, bool> isSolid)
 		{
 			for (int y = 0; y < map.size.y; y++)
 			{
 				for (int x = 0; x < map.size.x; x++)
 				{
-					if (isSolid.Invoke(x, y))
+					if (isTile.Invoke(x, y))
 					{
 						var connection = GetConnections(x, y, ref isSolid);
 						var tile = defualtTile;

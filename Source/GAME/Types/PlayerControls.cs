@@ -32,7 +32,7 @@ namespace GAME
 					crouch = Input.GetButton(Inputs.S);
 					jump = Input.GetButtonPress(Inputs.W) | Input.GetButtonPress(Inputs.Space);
 					jumpRelease = Input.GetButtonRelease(Inputs.W) | Input.GetButtonRelease(Inputs.Space);
-					use = Input.GetButtonPress(Inputs.LeftShift) | Input.GetButtonPress(Inputs.E);
+					use = Input.GetButtonPress(Inputs.LeftShift) | Input.GetButtonPress(Inputs.E) | Input.GetButtonPress(Inputs.Q) | Input.GetButtonPress(Inputs.F);
 					pause = Input.GetButtonPress(Inputs.Escape);
 					die = Input.GetButtonPress(Inputs.G);
 

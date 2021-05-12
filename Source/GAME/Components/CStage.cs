@@ -21,30 +21,20 @@ namespace GAME.Components
 
 		public override void Draw()
 		{
-			stage.Draw(new Vector2(GFX.currentUnitsPerPixel), new Color(0, 0.25f));
+			stage.Draw(new Vector2(GFX.currentUnitsPerPixel * 2), new Color(0, 0.25f));
 			stage.Draw(Vector2.zero, Color.white);
 		}
 
 		public RaycastHit Raycast(Vector2 origin, Vector2 direction, int maxIterations = -1)
 		{
-			origin = (origin - entity.position);
-
 			var hit = Physics.RayVsGrid(origin, direction, (x, y) =>
 			{
 				var tile = stage.tiles.Get(x, y);
 
 				if (tile == 0) return false;
 
-				if (Stage.tilesets[tile].semiSolid)
-					return origin.y <= y && direction.y > 0;
-
-				return true;
+				return Stage.tilesets[tile].Item1.IsSolid(new Vector2Int(x, y), origin, direction);
 			}, maxIterations);
-
-			if (hit is object)
-			{
-				hit.origin = origin + entity.position;
-			}
 
 			return hit;
 		}
@@ -52,7 +42,7 @@ namespace GAME.Components
 		public bool IsSolid(Vector2 position)
 		{
 			var tile = stage.tiles.Get(position);
-			return tile != 0 && !Stage.tilesets[tile].semiSolid;
+			return Stage.tilesets[tile].Item1.IsSolid(position, position, Vector2.zero);
 		}
 	}
 }
