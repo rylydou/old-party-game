@@ -12,7 +12,7 @@ namespace GAME.Tiles
 
 		public override void ObjectInside(CObject obj)
 		{
-			obj.Damage(-5, Vector2.zero, null);
+			obj.Damage(5, Vector2.zero, null);
 		}
 	}
 }
