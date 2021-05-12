@@ -7,9 +7,9 @@
 	"frictionAir": 4,
 	"size": [0.8, 0.8],
 	"enablePhysics": false,
-	"uses": 30,
+	"uses": 40,
 	"attackCooldown": 0.1,
 	"projectiles": 1,
 	"spread": 0.2,
-	"attackTimePerClick": 1.0
+	"attackTimePerClick": 0.5
 }

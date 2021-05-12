@@ -26,7 +26,19 @@ namespace GAME.Components.Items
 			timeAttacking -= Time.fixedDeltaTime;
 
 			if (timeAttacking > 0 && cooldown < 0)
+			{
+				cooldown = attackCooldown;
+				uses--;
+
 				Attack();
+
+				if (uses < 1)
+				{
+					player.Pickup(null);
+					Death();
+					return;
+				}
+			}
 		}
 	}
 }

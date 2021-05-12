@@ -35,14 +35,14 @@ namespace GAME.Components
 		{
 			base.Pickup(player);
 
-			cooldown = @params.GetFloat("attackCooldown");
+			cooldown = attackCooldown;
 		}
 
 		public override void Use()
 		{
 			if (cooldown > 0) return;
 
-			cooldown = @params.GetFloat("attackCooldown");
+			cooldown = attackCooldown;
 
 			uses--;
 
