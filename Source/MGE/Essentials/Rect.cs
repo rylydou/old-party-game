@@ -83,20 +83,28 @@ namespace MGE
 		#endregion
 
 		#region Contructors
-		public Rect(Vector2 size)
+		public Rect(float x, float y, float width, float height)
 		{
-			this._xMin = 0;
-			this._yMin = 0;
-			this._width = size.x;
-			this._height = size.y;
+			this._xMin = x;
+			this._yMin = y;
+			this._width = width;
+			this._height = height;
 		}
 
-		public Rect(Vector2 position, Vector2 size)
+		public Rect(float x, float y, float size)
+		{
+			this._xMin = x;
+			this._yMin = y;
+			this._width = size;
+			this._height = size;
+		}
+
+		public Rect(Vector2 position, float size)
 		{
 			this._xMin = position.x;
 			this._yMin = position.y;
-			this._width = size.x;
-			this._height = size.y;
+			this._width = size;
+			this._height = size;
 		}
 
 		public Rect(Vector2 position, float width, float height)
@@ -115,30 +123,20 @@ namespace MGE
 			this._height = size.y;
 		}
 
-		public Rect(float x, float y, float width, float height)
+		public Rect(Vector2 position, Vector2 size)
 		{
-			this._xMin = x;
-			this._yMin = y;
-			this._width = width;
-			this._height = height;
+			this._xMin = position.x;
+			this._yMin = position.y;
+			this._width = size.x;
+			this._height = size.y;
 		}
 		#endregion
 
 		#region Methods
-		public void Set(float x, float y, float width, float height)
-		{
-			_xMin = x;
-			_yMin = y;
-			_width = width;
-			_height = height;
-		}
-
 		public bool Contains(Vector2 point) => (point.x >= xMin) && (point.x < xMax) && (point.y >= yMin) && (point.y < yMax);
-
 		public bool Contains(Rect rect) => (rect.xMin >= xMin) && (rect.xMax < xMax) && (rect.yMin >= yMin) && (rect.yMax < yMax);
 
 		public bool Overlaps(Rect other) => other.xMax > xMin && other.xMin < xMax && other.yMax > yMin && other.yMin < yMax;
-
 		public bool Overlaps(Rect other, bool allowInverse)
 		{
 			Rect self = this;

@@ -101,7 +101,29 @@ namespace GAME.Components
 			texHand = GetAsset<Texture>("Hand");
 			texArrow = GetAsset<Texture>("Arrow");
 
-			rb.position = new Vector2(Random.Float(4, Window.sceneSize.x - 4), -1);
+			if (GameSettings.current.stage.playerSpawnPoints.Count < 1)
+			{
+				rb.position.x = Random.Float(5, Window.sceneSize.x - 6);
+				rb.position.y = -2;
+
+				PlaySound("Offscreen");
+			}
+			else
+			{
+				var spawnPos = GameSettings.current.stage.playerSpawnPoints.Random();
+
+				if (spawnPos.y > 0)
+				{
+					rb.position = spawnPos;
+				}
+				else
+				{
+					rb.position.x = spawnPos.x;
+					rb.position.y = -2;
+
+					PlaySound("Offscreen");
+				}
+			}
 
 			PlaySound("Spawn");
 		}

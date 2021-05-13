@@ -6,6 +6,7 @@ using XNA_Game = Microsoft.Xna.Framework.Game;
 using XNA_GameTime = Microsoft.Xna.Framework.GameTime;
 using MGE.InputSystem;
 using MGE.Physics;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GAME
 {
@@ -46,10 +47,6 @@ namespace GAME
 				GameSettings.current.stage = new Stage(new Vector2Int(40, 23));
 			}
 
-			// Pointer.mode = PointerMode.System;
-
-			Microsoft.Xna.Framework.Audio.SoundEffect.MasterVolume = 0.33f;
-
 			base.Initialize();
 		}
 
@@ -78,12 +75,16 @@ namespace GAME
 			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
 			var alt = Input.GetButton(Inputs.LeftAlt) | Input.GetButton(Inputs.RightAlt);
 
-			if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Tilde))
-				ChangeState(null);
-			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.S))
+			if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.S))
 				GameSettings.current.stage.Save();
 			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.L))
 				GameSettings.current.stage = Stage.Load(GameSettings.current.stage.name);
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Tilde))
+				ChangeState(null);
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Plus))
+				SoundEffect.MasterVolume = Math.Clamp01(SoundEffect.MasterVolume + 0.1f);
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Minus))
+				SoundEffect.MasterVolume = Math.Clamp01(SoundEffect.MasterVolume - 0.1f);
 
 			if (state is object)
 			{
@@ -182,6 +183,8 @@ namespace GAME
 						Config.font.DrawText("~ - Enter This Menu", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText("--- OPTIONS ---", layout.newElement, Color.white);
+						layout.AddElement();
+						Config.font.DrawText($"Volume {SoundEffect.MasterVolume} (- +)", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText((Logger.collectErrors ? "[X]" : "[ ]") + " Collect Errors? (L)", layout.newElement, Color.white);
 						Config.font.DrawText((Physics.DEBUG ? "[X]" : "[ ]") + " Debug Physics? (P)", layout.newElement, Color.white);

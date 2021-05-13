@@ -109,8 +109,6 @@ namespace GAME
 
 			if (playerSpawnPoints is null)
 				playerSpawnPoints = new List<Vector2Int>();
-
-			Logger.Log("Detail: " + fogDetail);
 		}
 
 		public void Save()
