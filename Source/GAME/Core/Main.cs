@@ -165,9 +165,9 @@ namespace GAME
 				}
 				else
 				{
-					GFX.DrawBox(new Rect(0, 0, MGE.Window.renderSize), new Color(0, 0.9f));
+					GFX.DrawBox(new Rect(8, 8, MGE.Window.renderSize.x / 2 - 16, MGE.Window.renderSize.y - 16), new Color(0, 0.75f));
 
-					using (var layout = new MGE.UI.Layouts.StackLayout(new Vector2(16), 24, false))
+					using (var layout = new MGE.UI.Layouts.StackLayout(new Vector2(24), 24, false))
 					{
 						Config.font.DrawText("--- MGE PARTY GAME ---", layout.newElement, Color.white);
 						Config.font.DrawText($"Version: indev {System.DateTime.Now.ToString(@"yyyy-MM-dd")}", layout.newElement, Color.white);

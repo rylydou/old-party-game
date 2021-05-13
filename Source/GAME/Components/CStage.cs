@@ -42,6 +42,7 @@ namespace GAME.Components
 		public bool IsSolid(Vector2 position)
 		{
 			var tile = stage.tiles.Get(position);
+			if (tile == 0) return false;
 			return Stage.tilesets[tile].Item1.IsSolid(position, position, Vector2.zero);
 		}
 	}
