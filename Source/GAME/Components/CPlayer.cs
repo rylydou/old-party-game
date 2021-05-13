@@ -106,7 +106,7 @@ namespace GAME.Components
 				rb.position.x = Random.Float(5, Window.sceneSize.x - 6);
 				rb.position.y = -2;
 
-				PlaySound("Offscreen");
+				PlaySound("Spawn Offscreen");
 			}
 			else
 			{
@@ -121,7 +121,7 @@ namespace GAME.Components
 					rb.position.x = spawnPos.x;
 					rb.position.y = -2;
 
-					PlaySound("Offscreen");
+					PlaySound("Spawn Offscreen");
 				}
 			}
 
