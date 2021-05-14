@@ -1,3 +1,4 @@
+using System.Linq;
 using GAME.Components;
 using GAME.Components.Items;
 using MGE;
@@ -42,6 +43,8 @@ namespace GAME.States
 
 				SpawnPlayer(player.player);
 			}
+
+			timeLeft = GameSettings.current.roundTime;
 		}
 
 		public override void Tick()
@@ -71,7 +74,15 @@ namespace GAME.States
 				}
 			}
 
-			timeLeft -= Time.fixedDeltaTime;
+			if (!Main.current.NO_TIMMER)
+			{
+				timeLeft -= Time.fixedDeltaTime;
+
+				if (timeLeft < -GameSettings.current.maxOvertime || GameSettings.current.players.All(x => x.player.health < 1))
+				{
+					Main.current.ChangeState(new StatePlayerSetup());
+				}
+			}
 		}
 
 		public override void DrawUI()
@@ -120,17 +131,20 @@ namespace GAME.States
 				index++;
 			}
 
-			var timeText =
-				(timeLeft < 0 ? "OVERTIME! " : "") +
-				System.TimeSpan.FromSeconds(timeLeft.Abs()).ToString(timeLeft.Abs() < 60 ? @"ss\.ff" : @"mm\:ss");
-			var timeTextSize = Config.font.Measure(timeText, 2);
-			var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
+			if (!Main.current.NO_TIMMER)
+			{
+				var timeText =
+					(timeLeft < 0 ? "OVERTIME! " : "") +
+					System.TimeSpan.FromSeconds(timeLeft.Abs()).ToString(timeLeft.Abs() < 60 ? @"ss\.ff" : @"mm\:ss");
+				var timeTextSize = Config.font.Measure(timeText, 2);
+				var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
 
-			for (int y = -4; y <= 4; y++)
-				for (int x = -4; x <= 4; x++)
-					Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.0125f), 2);
+				for (int y = -4; y <= 4; y++)
+					for (int x = -4; x <= 4; x++)
+						Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8 + x, 8 + y), new Color(0, 0.0125f), 2);
 
-			Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), timeLeft < 30 ? new Color(Math.Sin(Time.time * Math.pi).Abs() * 0.5f + 0.5f, 0, 0) : Color.white, 2);
+				Config.font.DrawText(timeText, new Vector2(timeTextOffset - 8, 8), timeLeft < 30 ? new Color(Math.Sin(Time.time * Math.pi).Abs() * 0.5f + 0.5f, 0, 0) : Color.white, 2);
+			}
 		}
 
 		public void SpawnPlayer(CPlayer player)

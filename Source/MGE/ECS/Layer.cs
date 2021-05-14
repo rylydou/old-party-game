@@ -31,9 +31,7 @@ namespace MGE.ECS
 		public Layer(string name, params Entity[] entities)
 		{
 			this.name = name;
-
-			if (name.StartsWith("UI"))
-				this.isUI = true;
+			this.isUI = name.StartsWith("UI");
 
 			if (entities != null)
 			{

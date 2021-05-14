@@ -54,7 +54,10 @@ namespace GAME
 		public Grid<byte> tiles;
 
 		public List<Vector2Int> playerSpawnPoints = new List<Vector2Int>();
-		public List<Vector2Int> crateSpawns = new List<Vector2Int>();
+		public List<Vector2Int> crateSpawnsPoints = new List<Vector2Int>();
+		// public List<(Vector2Int, byte)> crateSpawnsPoints = new List<(Vector2Int, byte)>();
+
+		// public List<List<(Type, int)>> crateLootTableOverrides;
 
 		public int fogDetail = 6;
 		public float fogSpeed = 6.0f;
@@ -111,8 +114,20 @@ namespace GAME
 			if (playerSpawnPoints is null)
 				playerSpawnPoints = new List<Vector2Int>();
 
-			if (crateSpawns is null)
-				crateSpawns = new List<Vector2Int>();
+			if (crateSpawnsPoints is null)
+				crateSpawnsPoints = new List<Vector2Int>();
+			// crateSpawnsPoints = new List<(Vector2Int, byte)>();
+
+			// if (crateLootTableOverrides is null)
+			// {
+			// 	crateLootTableOverrides = new List<List<(Type, int)>>();
+			// 	crateLootTableOverrides.Add(new List<(Type, int)>());
+			// 	crateLootTableOverrides.Add(new List<(Type, int)>()
+			// 	{
+			// 		(null, -1),
+			// 		(typeof(CMinigun), 1),
+			// 	});
+			// }
 		}
 
 		public void Save()

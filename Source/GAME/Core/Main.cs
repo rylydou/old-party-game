@@ -16,6 +16,8 @@ namespace GAME
 
 		public Engine engine;
 
+		public bool NO_TIMMER = true;
+
 		public GameState state;
 
 		public bool changingStage;
@@ -137,6 +139,10 @@ namespace GAME
 						ChangeState(new StatePlaying());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D2))
 						ChangeState(new StateEditor());
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D3))
+						ChangeState(new StatePlayerSetup());
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.T))
+						NO_TIMMER = !NO_TIMMER;
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.L))
 						Logger.collectErrors = !Logger.collectErrors;
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.P))
@@ -190,15 +196,17 @@ namespace GAME
 						layout.AddElement();
 						Config.font.DrawText("--- MODES ---", layout.newElement, Color.white);
 						layout.AddElement();
-						Config.font.DrawText("1 - Enter Play Mode", layout.newElement, Color.white);
-						Config.font.DrawText("2 - Enter Edit Mode", layout.newElement, Color.white);
+						Config.font.DrawText("1 - Play Mode", layout.newElement, Color.white);
+						Config.font.DrawText("2 - Edit Mode", layout.newElement, Color.white);
+						Config.font.DrawText("3 - Player Setup", layout.newElement, Color.white);
 						layout.AddElement();
-						Config.font.DrawText("~ - Enter This Menu", layout.newElement, Color.white);
+						Config.font.DrawText("~ - This Menu", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText("--- OPTIONS ---", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText($"Volume {SoundEffect.MasterVolume.ToString("P")} (- +)", layout.newElement, Color.white);
 						layout.AddElement();
+						Config.font.DrawText((NO_TIMMER ? "[X]" : "[ ]") + " No Timmer? (T)", layout.newElement, Color.white);
 						Config.font.DrawText((Logger.collectErrors ? "[X]" : "[ ]") + " Collect Errors? (L)", layout.newElement, Color.white);
 						Config.font.DrawText((Physics.DEBUG ? "[X]" : "[ ]") + " Debug Physics? (P)", layout.newElement, Color.white);
 					}

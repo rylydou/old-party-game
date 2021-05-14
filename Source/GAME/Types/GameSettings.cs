@@ -15,10 +15,7 @@ namespace GAME
 
 		public List<Player> players = new List<Player>
 		{
-			new Player(-2, "Amogus"),
-			new Player(-1, "Chicken"),
-			new Player(0, "_Default"),
-			// new Player(1, "Robot"),
+			new Player(-1, "_Default"),
 		};
 
 		public Dictionary<EController, PlayerControls> controllers = new Dictionary<EController, PlayerControls>()

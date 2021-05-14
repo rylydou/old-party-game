@@ -30,14 +30,14 @@ namespace GAME.Components.Items
 
 			item = (CItem)System.Activator.CreateInstance(itemType);
 
-			if (GameSettings.current.stage.crateSpawns.Count < 1)
+			if (GameSettings.current.stage.crateSpawnsPoints.Count < 1)
 			{
 				rb.position.x = Random.Float(Window.sceneSize.x - 1);
 				rb.position.y = -2;
 			}
 			else
 			{
-				var spawnPos = GameSettings.current.stage.crateSpawns.Random();
+				var spawnPos = GameSettings.current.stage.crateSpawnsPoints.Random();
 
 				if (spawnPos.y > 0)
 				{

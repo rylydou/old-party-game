@@ -125,11 +125,11 @@ namespace GAME.States
 
 					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
 					{
-						if (!stage.crateSpawns.Contains(cursorTilePos))
-							stage.crateSpawns.Add(cursorTilePos);
+						if (!stage.crateSpawnsPoints.Contains(cursorTilePos))
+							stage.crateSpawnsPoints.Add(cursorTilePos);
 					}
 					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
-						stage.crateSpawns.Remove(cursorTilePos);
+						stage.crateSpawnsPoints.Remove(cursorTilePos);
 
 					break;
 			}
@@ -141,7 +141,7 @@ namespace GAME.States
 
 			if (showCrateSpawnPoints)
 			{
-				foreach (var crateSpawnPoint in stage.crateSpawns)
+				foreach (var crateSpawnPoint in stage.crateSpawnsPoints)
 				{
 					GFX.DrawBox(new Rect((Vector2)crateSpawnPoint + GFX.currentUnitsPerPixel, 1.0f - GFX.currentUnitsPerPixel * 2), new Color("#3BF6"));
 				}
@@ -151,7 +151,7 @@ namespace GAME.States
 			{
 				foreach (var playerSpawnPoint in stage.playerSpawnPoints)
 				{
-					GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel * 4, 1.0f - GFX.currentUnitsPerPixel * 8), new Color("#FB3B"));
+					GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel * 6, 1.0f - GFX.currentUnitsPerPixel * 12), new Color("#FB3B"));
 				}
 			}
 

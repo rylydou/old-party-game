@@ -16,9 +16,10 @@ namespace GAME
 			new Color("#003D71"),
 		};
 
+
 		public sbyte index;
 		string _skin;
-		public string skin { get => _skin; set { _skin = value; _icon = null; } }
+		public string skin { get => _skin; set { _skin = value; _icon = null; _iconDead = null; } }
 		Color? _color;
 		public Color color
 		{
@@ -50,20 +51,30 @@ namespace GAME
 			}
 		}
 
+		public bool READY = false;
+
 		public int points = 0;
 		public byte wins = 0;
 		public ushort kills = 0;
 		public ushort deaths = 0;
 
 		public PlayerControls controls { get => GameSettings.current.controllers[(EController)index]; }
-		public CPlayer player;
+		public CPlayer player = null;
 
-		public float timeRespawing;
+		public float timeRespawing = 0.0f;
 
 		public Player(sbyte index, string skin = "_Default")
 		{
 			this.index = index;
 			this.skin = skin;
+		}
+
+		public void Reset()
+		{
+			READY = false;
+			points = 0;
+			kills = 0;
+			deaths 0;
 		}
 	}
 }
