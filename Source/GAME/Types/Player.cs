@@ -74,7 +74,7 @@ namespace GAME
 			READY = false;
 			points = 0;
 			kills = 0;
-			deaths 0;
+			deaths = 0;
 		}
 	}
 }
