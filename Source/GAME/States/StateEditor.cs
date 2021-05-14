@@ -43,24 +43,21 @@ namespace GAME.States
 			SceneManager.QueueScene(
 				new Scene(
 					new Layer(
-						false,
 						"Background",
 						new Entity(new CBackground())
 					),
 					new Layer(
-						false,
 						"Gameplay",
 						new Entity(new CStage())
 					),
 					new Layer(
-						false,
 						"Effects",
 						new Entity(new CFog())
 					)
 				)
 			);
 
-			fog = SceneManager.activeScene.layers[2].GetEntityWithComponent<CFog>().GetComponent<CFog>();
+			fog = SceneManager.activeScene.GetLayer("Effects").GetEntityWithComponent<CFog>().GetComponent<CFog>();
 		}
 
 		public override void Update()
@@ -142,19 +139,19 @@ namespace GAME.States
 		{
 			base.Draw();
 
-			if (showPlayerSpawnPoints)
-			{
-				foreach (var playerSpawnPoint in stage.playerSpawnPoints)
-				{
-					GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel * 2, 1.0f - GFX.currentUnitsPerPixel * 4), new Color("#FB3B"));
-				}
-			}
-
 			if (showCrateSpawnPoints)
 			{
 				foreach (var crateSpawnPoint in stage.crateSpawns)
 				{
 					GFX.DrawBox(new Rect((Vector2)crateSpawnPoint + GFX.currentUnitsPerPixel, 1.0f - GFX.currentUnitsPerPixel * 2), new Color("#3BF6"));
+				}
+			}
+
+			if (showPlayerSpawnPoints)
+			{
+				foreach (var playerSpawnPoint in stage.playerSpawnPoints)
+				{
+					GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel * 4, 1.0f - GFX.currentUnitsPerPixel * 8), new Color("#FB3B"));
 				}
 			}
 

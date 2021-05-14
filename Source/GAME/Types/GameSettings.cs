@@ -11,6 +11,7 @@ namespace GAME
 		public float roundTime = 60 * 5;
 		public float maxOvertime = 60 * 1;
 		public float timeBtwCrates = 4.5f;
+		public float timeBtwCrateLessPerPlayer = 0.5f;
 
 		public List<Player> players = new List<Player>
 		{

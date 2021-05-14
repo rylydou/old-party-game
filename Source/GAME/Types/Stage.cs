@@ -78,7 +78,7 @@ namespace GAME
 
 				var rects = new Grid<RectInt>(tiles.size);
 
-				tileset.Item2.GetTiles(ref rects, (x, y) => tiles.Get(x, y) == index, (x, y) => tiles.Get(x, y) != 0);
+				tileset.Item2.GetTiles(ref rects, (x, y) => tiles.Get(x, y) == index, (x, y) => tiles.IsInBounds(x, y) ? tiles[x, y] != 0 : true);
 				tileset.Item2.DrawTiles(rects, position, color);
 			}
 		}

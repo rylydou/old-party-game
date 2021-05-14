@@ -28,17 +28,18 @@ namespace MGE.ECS
 			this.isUI = isUI;
 		}
 
-		public Layer(bool isUI, string name, params Entity[] entities)
+		public Layer(string name, params Entity[] entities)
 		{
 			this.name = name;
+
+			if (name.StartsWith("UI"))
+				this.isUI = true;
 
 			if (entities != null)
 			{
 				foreach (var entity in entities)
 					AddEntityNoInit(entity);
 			}
-
-			this.isUI = isUI;
 		}
 
 		#region Entity Management

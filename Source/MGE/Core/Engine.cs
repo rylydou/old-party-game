@@ -23,6 +23,9 @@ namespace MGE
 		public SpriteBatch sb;
 
 		public Action onTick = () => { };
+		public Action onAfterRenderGame = () => { };
+		public Action onBeforeRenderUI = () => { };
+		public Action onAfterRenderUI = () => { };
 
 		float timeSinceLastTick = 0.0f;
 		float statsUpdateCooldown = -0.0f;
@@ -166,9 +169,7 @@ namespace MGE
 
 				SceneManager.Draw();
 
-				// TODO: Don't do this
-				using (new DrawBatch())
-					GAME.Main.current.state?.Draw();
+				onAfterRenderGame.Invoke();
 
 				game.GraphicsDevice.SetRenderTarget(null);
 
@@ -214,7 +215,11 @@ namespace MGE
 
 			SceneManager.DrawUI();
 
+			onBeforeRenderUI.Invoke();
+
 			GUI.gui.Draw();
+
+			onAfterRenderUI.Invoke();
 
 			Pointer.Draw();
 		}

@@ -32,6 +32,9 @@ namespace GAME
 			engine.Initialize();
 
 			engine.onTick += () => OnTick();
+			engine.onAfterRenderGame += () => OnAfterRenderGame();
+			engine.onBeforeRenderUI += () => OnBeforeRenderUI();
+			engine.onAfterRenderUI += () => OnAfterRenderUI();
 
 			engine.LoadContent();
 
@@ -153,11 +156,21 @@ namespace GAME
 		{
 			engine.Draw(gameTime);
 
-			// using (new DrawBatch())
-			// {
-			// 	state?.Draw();
-			// }
+			base.Draw(gameTime);
+		}
 
+		void OnAfterRenderGame()
+		{
+			using (new DrawBatch(transform: null))
+			{
+				state?.Draw();
+			}
+		}
+
+		void OnBeforeRenderUI() { }
+
+		void OnAfterRenderUI()
+		{
 			using (new DrawBatch(transform: null))
 			{
 				if (state is object)
@@ -184,12 +197,17 @@ namespace GAME
 						layout.AddElement();
 						Config.font.DrawText("--- OPTIONS ---", layout.newElement, Color.white);
 						layout.AddElement();
-						Config.font.DrawText($"Volume {Math.Round(SoundEffect.MasterVolume, 1)} (- +)", layout.newElement, Color.white);
+						Config.font.DrawText($"Volume {SoundEffect.MasterVolume.ToString("P")} (- +)", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText((Logger.collectErrors ? "[X]" : "[ ]") + " Collect Errors? (L)", layout.newElement, Color.white);
 						Config.font.DrawText((Physics.DEBUG ? "[X]" : "[ ]") + " Debug Physics? (P)", layout.newElement, Color.white);
-						layout.AddElement();
-						Config.font.DrawText("--- AVAILABLE STAGES ---", layout.newElement, Color.white);
+					}
+
+					GFX.DrawBox(new Rect(MGE.Window.renderSize.x / 2 + 8, 8, MGE.Window.renderSize.x / 2 - 16, MGE.Window.renderSize.y - 16), new Color(0, 0.75f));
+
+					using (var layout = new MGE.UI.Layouts.StackLayout(new Vector2(MGE.Window.renderSize.x / 2 + 24, 24), 24, false))
+					{
+						Config.font.DrawText("--- STAGES ---", layout.newElement, Color.white);
 						layout.AddElement();
 						foreach (var file in IO.FolderGetFiles("Assets/Stages"))
 						{
@@ -198,8 +216,6 @@ namespace GAME
 					}
 				}
 			}
-
-			base.Draw(gameTime);
 		}
 
 		public void ChangeState(GameState state)

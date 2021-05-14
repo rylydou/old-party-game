@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MGE.Graphics;
+using MGE.InputSystem;
 
 namespace MGE
 {
@@ -11,10 +12,9 @@ namespace MGE
 		Texture
 	}
 
-	public class Pointer
+	public static class Pointer
 	{
-		static PointerMode _mode = PointerMode.System;
-		public static PointerMode mode { get => _mode; set { _mode = value; Engine.game.IsMouseVisible = _mode == PointerMode.System; } }
+		public static PointerMode mode = PointerMode.System;
 		static MouseCursor _mouseCursor = MouseCursor.Arrow;
 		public static MouseCursor mouseCursor
 		{
@@ -26,6 +26,8 @@ namespace MGE
 				Mouse.SetCursor(_mouseCursor);
 			}
 		}
+		public static float hideAfter = 15.0f;
+		public static float minMoveToUnhide = 4.0f;
 
 		public static Texture texture;
 		public static Color color;
@@ -34,23 +36,48 @@ namespace MGE
 		public static Color shadowColor;
 		public static Vector2 shadowOffset;
 
+		static float timeNotMoving = 0.0f;
+		static Vector2 lastPos;
+
 		public static void Draw()
 		{
-			if (Pointer.mode == PointerMode.Texture)
-			{
-				using (new DrawBatch(transform: null))
-				{
-					GFX.Draw(
-						Pointer.texture,
-						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size),
-						Pointer.shadowColor);
+			if (
+				Vector2.DistanceGT(lastPos, Input.windowMousePosition, minMoveToUnhide) |
+				!Math.Approximately(Input.scroll, 0) |
+				Input.GetButton(Inputs.MouseLeft) |
+				Input.GetButton(Inputs.MouseMiddle) |
+				Input.GetButton(Inputs.MouseRight)
+			)
+				timeNotMoving = 0;
 
-					GFX.Draw(
-						Pointer.texture,
-						new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size),
-						Pointer.color);
+			timeNotMoving += Time.deltaTime;
+			if (timeNotMoving < hideAfter)
+			{
+				Engine.game.IsMouseVisible = mode == PointerMode.System;
+
+				if (Pointer.mode == PointerMode.Texture)
+				{
+					using (new DrawBatch(transform: null))
+					{
+						GFX.Draw(
+							Pointer.texture,
+							new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot + Pointer.shadowOffset, Pointer.size),
+							Pointer.shadowColor);
+
+						GFX.Draw(
+							Pointer.texture,
+							new Rect((Vector2)Mouse.GetState().Position - Pointer.size * Pointer.hotspot, Pointer.size),
+							Pointer.color);
+					}
 				}
+
 			}
+			else
+			{
+				Engine.game.IsMouseVisible = false;
+			}
+
+			lastPos = Input.windowMousePosition;
 		}
 	}
 }
