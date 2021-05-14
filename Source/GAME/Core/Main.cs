@@ -184,7 +184,7 @@ namespace GAME
 						layout.AddElement();
 						Config.font.DrawText("--- OPTIONS ---", layout.newElement, Color.white);
 						layout.AddElement();
-						Config.font.DrawText($"Volume {SoundEffect.MasterVolume} (- +)", layout.newElement, Color.white);
+						Config.font.DrawText($"Volume {Math.Round(SoundEffect.MasterVolume, 1)} (- +)", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText((Logger.collectErrors ? "[X]" : "[ ]") + " Collect Errors? (L)", layout.newElement, Color.white);
 						Config.font.DrawText((Physics.DEBUG ? "[X]" : "[ ]") + " Debug Physics? (P)", layout.newElement, Color.white);

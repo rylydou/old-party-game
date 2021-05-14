@@ -6,8 +6,5 @@
 	"frictionGround": 14,
 	"frictionAir": 4,
 	"size": [0.9, 0.9],
-	"uses": 1,
-	"attackCooldown": 0.35,
-	"spread": 0,
-	"projectiles": 1
+	"range": 100
 }

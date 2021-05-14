@@ -14,16 +14,19 @@ namespace GAME.States
 			Ground,
 			Background,
 			Foreground,
-			PlayerSpawn,
+			PlayerSpawns,
+			CrateSpawns,
 			Params
 		}
 
 		public Mode mode = Mode.Ground;
 
 		public byte selectedTile = 1;
+		public byte selectedCrateIndex = 1;
 
 		bool showGrid = false;
 		bool showPlayerSpawnPoints = true;
+		bool showCrateSpawnPoints = true;
 
 		Vector2 cursorPos;
 		Vector2Int cursorTilePos;
@@ -41,14 +44,17 @@ namespace GAME.States
 				new Scene(
 					new Layer(
 						false,
+						"Background",
 						new Entity(new CBackground())
 					),
 					new Layer(
 						false,
+						"Gameplay",
 						new Entity(new CStage())
 					),
 					new Layer(
 						false,
+						"Effects",
 						new Entity(new CFog())
 					)
 				)
@@ -74,6 +80,8 @@ namespace GAME.States
 				fog.visible = !fog.visible;
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.P))
 				showPlayerSpawnPoints = !showPlayerSpawnPoints;
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.C))
+				showCrateSpawnPoints = !showCrateSpawnPoints;
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D1))
 				mode = Mode.Ground;
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D2))
@@ -81,7 +89,9 @@ namespace GAME.States
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D3))
 				mode = Mode.Foreground;
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D4))
-				mode = Mode.PlayerSpawn;
+				mode = Mode.PlayerSpawns;
+			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D5))
+				mode = Mode.CrateSpawns;
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D0))
 				mode = Mode.Params;
 
@@ -103,7 +113,7 @@ namespace GAME.States
 						selectedTile = (byte)Math.Clamp(selectedTile + Input.scroll, 1, Stage.tilesets.Length - 1);
 
 					break;
-				case Mode.PlayerSpawn:
+				case Mode.PlayerSpawns:
 
 					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
 					{
@@ -112,6 +122,17 @@ namespace GAME.States
 					}
 					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
 						stage.playerSpawnPoints.Remove(cursorTilePos);
+
+					break;
+				case Mode.CrateSpawns:
+
+					if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
+					{
+						if (!stage.crateSpawns.Contains(cursorTilePos))
+							stage.crateSpawns.Add(cursorTilePos);
+					}
+					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
+						stage.crateSpawns.Remove(cursorTilePos);
 
 					break;
 			}
@@ -125,10 +146,15 @@ namespace GAME.States
 			{
 				foreach (var playerSpawnPoint in stage.playerSpawnPoints)
 				{
-					if (playerSpawnPoint.y == Stage.size.y - 1)
-						GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel, 1.0f - GFX.currentUnitsPerPixel * 2, 0.5f - GFX.currentUnitsPerPixel), new Color("#FB38"));
-					else
-						GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel, 1.0f - GFX.currentUnitsPerPixel * 2), new Color("#FB38"));
+					GFX.DrawBox(new Rect((Vector2)playerSpawnPoint + GFX.currentUnitsPerPixel * 2, 1.0f - GFX.currentUnitsPerPixel * 4), new Color("#FB3B"));
+				}
+			}
+
+			if (showCrateSpawnPoints)
+			{
+				foreach (var crateSpawnPoint in stage.crateSpawns)
+				{
+					GFX.DrawBox(new Rect((Vector2)crateSpawnPoint + GFX.currentUnitsPerPixel, 1.0f - GFX.currentUnitsPerPixel * 2), new Color("#3BF6"));
 				}
 			}
 

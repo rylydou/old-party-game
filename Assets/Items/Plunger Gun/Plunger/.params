@@ -1,17 +1,12 @@
 {
-	"health": 30,
+	"health": 1,
 	"meleeVulnerable": false,
 	"rangedVulnerable": false,
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
 	"size": [0.33, 0.33],
-	"enablePhysics": false,
-	"damage": 0,
-	"knockback": 0.0,
-	"speed": 1.0,
-	"radius": 1.25,
-	"lifetime": 0.75,
-	"hits": 1,
-	"pullSpeed": -0.75
+	"unstickRange": 1.5,
+	"pullSpeed": -0.75,
+	"timePulling": 0.75
 }

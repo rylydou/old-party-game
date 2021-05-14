@@ -23,10 +23,17 @@ namespace MGE.ECS
 			GFX.Draw(texture, entity.position + position, color, entity.scale.x < 0, entity.scale.y < 0);
 		}
 
-		public virtual void Spawn(Entity entity, Vector2 position, float angle = 0)
+		public virtual void Spawn(Entity entity, Vector2 position, float rotation = 0)
 		{
 			entity.position = position;
-			entity.roation = angle;
+			entity.roation = rotation;
+			this.entity.layer.AddEntity(entity);
+		}
+
+		public virtual void Spawn(Entity entity, Vector2 position, Vector2 scale)
+		{
+			entity.position = position;
+			entity.scale = scale;
 			this.entity.layer.AddEntity(entity);
 		}
 

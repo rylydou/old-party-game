@@ -54,6 +54,7 @@ namespace GAME
 		public Grid<byte> tiles;
 
 		public List<Vector2Int> playerSpawnPoints = new List<Vector2Int>();
+		public List<Vector2Int> crateSpawns = new List<Vector2Int>();
 
 		public int fogDetail = 6;
 		public float fogSpeed = 6.0f;
@@ -109,6 +110,9 @@ namespace GAME
 
 			if (playerSpawnPoints is null)
 				playerSpawnPoints = new List<Vector2Int>();
+
+			if (crateSpawns is null)
+				crateSpawns = new List<Vector2Int>();
 		}
 
 		public void Save()

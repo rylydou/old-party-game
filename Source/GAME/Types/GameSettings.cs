@@ -16,7 +16,7 @@ namespace GAME
 		{
 			new Player(-2, "Amogus"),
 			new Player(-1, "Chicken"),
-			new Player(0, "Goose"),
+			new Player(0, "_Default"),
 			// new Player(1, "Robot"),
 		};
 

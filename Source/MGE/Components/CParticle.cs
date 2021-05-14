@@ -7,11 +7,11 @@ namespace MGE.Components
 {
 	public class CParticle : Component
 	{
-		public struct Particle
+		public class Particle
 		{
 			public readonly ushort id;
 
-			public bool ALIVE { get; private set; }
+			public bool ALIVE { get; internal set; }
 
 			public Vector2 position;
 			public float rotation;
@@ -21,6 +21,7 @@ namespace MGE.Components
 
 			public Color color;
 			public byte frame;
+			public Vector2 drawOffset;
 
 			public float timeAlive;
 
@@ -40,6 +41,7 @@ namespace MGE.Components
 
 				this.color = Color.white;
 				this.frame = 0;
+				this.drawOffset = Vector2.zero;
 
 				this.timeAlive = 0;
 
@@ -48,7 +50,7 @@ namespace MGE.Components
 
 			public void Draw()
 			{
-				GFX.Draw(emitter.texture, new RectInt(frame * emitter.frameSize.x, 0, emitter.frameSize), position, color);
+				GFX.Draw(emitter.texture, new RectInt(frame * emitter.frameSize.x, 0, emitter.frameSize), new Rect(position + drawOffset, size), color, rotation, new Vector2(0.5f * GFX.pixelsPerUnit) * size);
 			}
 
 			public void Kill()
@@ -58,25 +60,30 @@ namespace MGE.Components
 			}
 		}
 
-		public int particlesCount { get => particles.Length; }
-		public Texture texture;
-		public Vector2Int frameSize;
+		public ushort particlesCount { get => (ushort)particles.Length; }
+		public readonly Texture texture;
+		public readonly Vector2Int frameSize;
 
-		public Action<Particle> updateParticle = (x) => { };
+		public Action<Particle> updateParticle = (particle) => { };
 
 		Particle[] particles;
 		Queue<ushort> deadParticles;
 
-		public override void Init()
+		public CParticle(ushort particlesCount, Texture texture, Action<Particle> updateParticle)
 		{
-			base.Init();
-
-			particles = new Particle[particlesCount];
+			this.particles = new Particle[particlesCount];
+			this.deadParticles = new Queue<ushort>();
 
 			for (ushort i = 0; i < particlesCount; i++)
 			{
-				particles[i] = new Particle(i, this);
+				this.particles[i] = new Particle(i, this);
+				this.deadParticles.Enqueue(i);
 			}
+
+			this.texture = texture;
+			this.frameSize = new Vector2Int(texture.height);
+
+			this.updateParticle = updateParticle;
 		}
 
 		public override void Update()
@@ -94,6 +101,9 @@ namespace MGE.Components
 
 				index++;
 			}
+
+			if (deadParticles.Count >= particlesCount)
+				entity.Destroy();
 		}
 
 		public override void Draw()
@@ -102,16 +112,30 @@ namespace MGE.Components
 
 			foreach (var particle in particles)
 			{
-				particle.Draw();
+				if (particle.ALIVE)
+					particle.Draw();
 			}
 		}
 
-		public virtual void SpawnParticle(Vector2 positio, float rotation, Vector2 size, Vector2 velocity, Color color, byte frame)
+		public virtual void SpawnParticle(Vector2 position, float rotation, Vector2 size, Vector2 velocity, Color color, byte frame, Vector2 drawOffset)
 		{
 			ushort particle = 0;
 
 			deadParticles.TryDequeue(out particle);
-			// TODO:
+
+			particles[particle].ALIVE = true;
+
+			particles[particle].position = position;
+			particles[particle].rotation = rotation;
+			particles[particle].size = size;
+
+			particles[particle].velocity = velocity;
+
+			particles[particle].color = color;
+			particles[particle].frame = frame;
+			particles[particle].drawOffset = drawOffset;
+
+			particles[particle].timeAlive = 0;
 		}
 	}
 }

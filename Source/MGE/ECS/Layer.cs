@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MGE.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE.ECS
 {
@@ -29,8 +28,10 @@ namespace MGE.ECS
 			this.isUI = isUI;
 		}
 
-		public Layer(bool isUI, params Entity[] entities)
+		public Layer(bool isUI, string name, params Entity[] entities)
 		{
+			this.name = name;
+
 			if (entities != null)
 			{
 				foreach (var entity in entities)

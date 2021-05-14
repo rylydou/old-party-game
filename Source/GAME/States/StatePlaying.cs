@@ -21,18 +21,22 @@ namespace GAME.States
 				new Scene(
 					new Layer(
 						false,
+						"Background",
 						new Entity(new CBackground())
 					),
 					new Layer(
 						false,
+						"Gameplay",
 						new Entity(new CStage())
 					),
 					new Layer(
 						false,
+						"Effects",
 						new Entity(new CFog())
 					),
 					new Layer(
 						true,
+						"UI",
 						new Entity(new CUI_InGameUI())
 					)
 				)

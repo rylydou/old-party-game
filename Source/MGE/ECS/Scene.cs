@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MGE.ECS
 {
@@ -10,7 +11,7 @@ namespace MGE.ECS
 		public bool doneCleaningUp { get; private set; } = false;
 		public Action onDoneCleaningUp = () => { };
 
-		public SafeList<Layer> layers = new SafeList<Layer>();
+		public List<Layer> layers = new List<Layer>();
 
 		public bool clearScreen = true;
 		public Color screenClearColor = Color.black;
@@ -43,6 +44,11 @@ namespace MGE.ECS
 		{
 			layer.scene = null;
 			layers.Remove(layer);
+		}
+
+		public Layer GetLayer(string name)
+		{
+			return layers.Find(layer => layer.name == name);
 		}
 
 		#region Updates
