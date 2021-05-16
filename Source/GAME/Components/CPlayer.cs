@@ -1,4 +1,5 @@
 using MGE;
+using MGE.Components;
 using MGE.Graphics;
 
 namespace GAME.Components
@@ -56,8 +57,10 @@ namespace GAME.Components
 		Texture texBody;
 		// TODO: Add Animations
 		Texture texCrouching;
-		Texture texHand;
 		Texture texArrow;
+		Texture texPunchSwing;
+		Texture texDamageEffect;
+		Texture texDeathEffect;
 
 		public CPlayer(Player player)
 		{
@@ -98,8 +101,10 @@ namespace GAME.Components
 
 			texBody = GetAsset<Texture>("Body");
 			texCrouching = GetAsset<Texture>("Crouching");
-			texHand = GetAsset<Texture>("Hand");
 			texArrow = GetAsset<Texture>("Arrow");
+			texPunchSwing = GetAsset<Texture>("Punch Swing");
+			texDamageEffect = GetAsset<Texture>("Damage Effect");
+			texDeathEffect = GetAsset<Texture>("Death Effect");
 
 			if (GameSettings.current.stage.playerSpawnPoints.Count < 1)
 			{
@@ -220,6 +225,12 @@ namespace GAME.Components
 
 						if (hitThing)
 							PlaySound("Punch Hit");
+
+						var para = new CParticle(1, texPunchSwing, (p) => { p.frame = (byte)(p.timeAlive * 60 - 1); if (p.frame > 2) p.Kill(); });
+
+						entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
+
+						para.SpawnParticle(entity.position + (entity.scale.x > 0 ? new Vector2(1.0f, 0.25f) : new Vector2(-0.8f, 0.25f)) * entity.scale, Random.Float(-0.1f, 0.1f), new Vector2(1.33f * entity.scale.x, 1.0f), Vector2.zero, Color.white, 0, Vector2.zero);
 					}
 					else
 						heldItem.Use();
@@ -294,6 +305,14 @@ namespace GAME.Components
 				Death();
 
 			PlaySound("Damage");
+
+			var para = new CParticle(3, texDamageEffect, (p) => { p.frame = (byte)(p.timeAlive * 50 - 1); if (p.frame > 7) p.Kill(); });
+
+			entity.layer.scene.GetLayer("Background").AddEntity(new MGE.ECS.Entity(para));
+
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(2.75f), Vector2.zero, Color.white, 0, Vector2.zero);
 		}
 
 		public override void Death()
@@ -308,6 +327,17 @@ namespace GAME.Components
 				lastHitBy.player.kills++;
 				lastHitBy.health = Math.Clamp(lastHitBy.health + lastHitBy.healthOnKill, lastHitBy.maxHealth);
 			}
+
+			var para = new CParticle(6, texDeathEffect, (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 6) / 8) * 45 - 1); if (p.frame > 7) p.Kill(); });
+
+			entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
+
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.75f), Vector2.zero, new Color(0, 0.67f), 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.5f), Vector2.zero, Color.violet, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.25f), Vector2.zero, Color.white, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, Color.yellow, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(2.75f), Vector2.zero, Color.red, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(2.5f), Vector2.zero, Color.white, 0, Vector2.zero);
 
 			Pickup(null);
 		}

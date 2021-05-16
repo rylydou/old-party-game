@@ -12,7 +12,7 @@ namespace GAME.States
 	{
 		public float timeLeft;
 
-		public float crateSpawnCooldown;
+		float crateSpawnCooldown;
 
 		public override void Init()
 		{
@@ -115,7 +115,9 @@ namespace GAME.States
 
 				var iconOffset = padding + (float)(42 * 2 - 42) / 2 + new Vector2(offset, 0) + (player.player.hitFlash > 0 ? Random.UnitVector() * 8 : Vector2.zero);
 
-				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + 2, 42, 42), new Color(0, 0.25f));
+				for (int y = -1; y <= 1; y++)
+					for (int x = -1; x <= 1; x++)
+						GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset + new Vector2(x, y), 42, 42), Color.black);
 
 				GFX.Draw(player.player.health < 1 ? player.iconDead : player.icon, new Rect(iconOffset, 42, 42), player.controls.isConnected ? Color.white : Color.gray);
 

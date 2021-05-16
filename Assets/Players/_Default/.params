@@ -20,7 +20,7 @@
 
 	"interactionRange": 1.25,
 
-	"punchOffset": [0.33, 0],
+	"punchOffset": [0.75, 0],
 	"punchRadius": 0.9,
 	"punchCooldown": 0.175,
 	"punchDamage": 10,

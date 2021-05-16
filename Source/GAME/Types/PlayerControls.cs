@@ -74,8 +74,8 @@ namespace GAME
 					{
 						isConnected = true;
 
-						select = Input.GetButtonPress(Inputs.GamepadA, index);
-						leave = Input.GetButtonPress(Inputs.GamepadRS, index);
+						select = Input.GetButtonPress(Inputs.GamepadB, index);
+						leave = Input.GetButtonPress(Inputs.GamepadA, index);
 
 						up = Input.GetButtonPress(Inputs.GamepadUp, index);
 						left = Input.GetButtonPress(Inputs.GamepadLeft, index);

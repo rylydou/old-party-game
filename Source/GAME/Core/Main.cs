@@ -7,6 +7,7 @@ using XNA_GameTime = Microsoft.Xna.Framework.GameTime;
 using MGE.InputSystem;
 using MGE.Physics;
 using Microsoft.Xna.Framework.Audio;
+using MGE.ECS;
 
 namespace GAME
 {
@@ -74,7 +75,7 @@ namespace GAME
 
 		protected override void Update(XNA_GameTime gameTime)
 		{
-			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Math.Round(Stats.memUsedAsMBs, 1)}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
+			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Stats.memUsedAsMBs.ToString("F1")}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
 
 			var shift = Input.GetButton(Inputs.LeftShift) | Input.GetButton(Inputs.RightShift);
 			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
@@ -235,6 +236,9 @@ namespace GAME
 
 			this.state = state;
 			this.state?.Init();
+
+			if (SceneManager.activeScene is object)
+				SceneManager.activeScene.clearScreen = false;
 		}
 	}
 }
