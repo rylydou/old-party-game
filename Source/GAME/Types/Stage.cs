@@ -55,9 +55,6 @@ namespace GAME
 
 		public List<Vector2Int> playerSpawnPoints = new List<Vector2Int>();
 		public List<Vector2Int> crateSpawnsPoints = new List<Vector2Int>();
-		// public List<(Vector2Int, byte)> crateSpawnsPoints = new List<(Vector2Int, byte)>();
-
-		// public List<List<(Type, int)>> crateLootTableOverrides;
 
 		public int fogDetail = 6;
 		public float fogSpeed = 6.0f;

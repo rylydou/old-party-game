@@ -54,6 +54,7 @@ namespace GAME.States
 					if (player.controls.leave)
 					{
 						player.READY = false;
+						PlaySound("UI/Sounds/Back");
 					}
 
 					readyPlayers++;
@@ -63,22 +64,30 @@ namespace GAME.States
 					if (player.controls.select)
 					{
 						player.READY = true;
+
+						PlaySound("UI/Sounds/Ready");
 					}
 					else if (player.controls.leave)
 					{
 						GameSettings.current.players.Remove(player);
+
+						PlaySound("UI/Sounds/Leave");
 					}
 					else if (player.controls.left)
 					{
 						var index = Setup.skins.FindIndex(x => x == player.skin) - 1;
 						if (index < 0) index = Setup.skins.Count - 1;
 						player.skin = Setup.skins[index];
+
+						PlaySound("UI/Sounds/Change");
 					}
 					else if (player.controls.right)
 					{
 						var index = Setup.skins.FindIndex(x => x == player.skin) + 1;
 						if (index >= Setup.skins.Count) index = 0;
 						player.skin = Setup.skins[index];
+
+						PlaySound("UI/Sounds/Change");
 					}
 				}
 			}
@@ -90,6 +99,8 @@ namespace GAME.States
 					if (!GameSettings.current.players.Any(x => (EController)x.index == controller.Key))
 					{
 						GameSettings.current.players.Add(new Player((sbyte)controller.Key, Setup.skins.Random()));
+
+						PlaySound("UI/Sounds/Join");
 					}
 				}
 			}

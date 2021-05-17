@@ -6,7 +6,7 @@ using MGE.Graphics;
 
 namespace MGE.InputSystem
 {
-	public class Input
+	public static class Input
 	{
 		#region Mouse
 		public static Vector2 windowMousePosition = Vector2.zero;
@@ -95,7 +95,7 @@ namespace MGE.InputSystem
 			scrollRaw = _mouseWheelAdditionPrev - mouseState.ScrollWheelValue;
 			_mouseWheelAdditionPrev = mouseState.ScrollWheelValue;
 
-			scroll = Math.Clamp11(scrollRaw);
+			scroll = scrollRaw.Sign();
 			#endregion
 
 			#region Keyboard

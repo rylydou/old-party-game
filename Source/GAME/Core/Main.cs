@@ -53,6 +53,8 @@ namespace GAME
 				GameSettings.current.stage = new Stage(new Vector2Int(40, 23));
 			}
 
+			SoundEffect.MasterVolume = 0.1f;
+
 			base.Initialize();
 		}
 
@@ -142,6 +144,8 @@ namespace GAME
 						ChangeState(new StateEditor());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D3))
 						ChangeState(new StatePlayerSetup());
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D4))
+						ChangeState(new StateTileEditor());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.T))
 						NO_TIMMER = !NO_TIMMER;
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.L))

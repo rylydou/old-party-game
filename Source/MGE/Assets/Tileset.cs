@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using MGE.Graphics;
 using Newtonsoft.Json;
 
@@ -48,7 +49,7 @@ namespace MGE
 				{
 					if (isSolid.Invoke(x, y))
 					{
-						var connection = GetConnections(x, y, ref isSolid);
+						var connection = GetConnections(x, y, isSolid);
 						var tile = defualtTile;
 
 						if (!tiles.TryGetValue(connection, out tile))
@@ -74,7 +75,7 @@ namespace MGE
 				{
 					if (isTile.Invoke(x, y))
 					{
-						var connection = GetConnections(x, y, ref isSolid);
+						var connection = GetConnections(x, y, isSolid);
 						var tile = defualtTile;
 
 						if (!tiles.TryGetValue(connection, out tile))
@@ -95,33 +96,45 @@ namespace MGE
 			GFX.Draw(texture, source, position, color);
 		}
 
-		public TileConnection GetConnections(int x, int y, ref Func<int, int, bool> isSolid)
+		public TileConnection GetConnections(int x, int y, Func<int, int, bool> isSolid)
 		{
 			var connection = TileConnection.None;
 
-			for (short checkY = -1; checkY <= 1; checkY++)
+			for (sbyte checkY = -1; checkY <= 1; checkY++)
 			{
-				for (short checkX = -1; checkX <= 1; checkX++)
+				for (sbyte checkX = -1; checkX <= 1; checkX++)
 				{
-					if (Math.Abs(checkX) + Math.Abs(checkY) > 1 || (checkX == 0 && checkY == 0)) continue;
+					if (checkX == 0 && checkY == 0) continue;
 
 					if (isSolid.Invoke(x + checkX, y + checkY))
 					{
-						// TODO: Make not jank
-						switch (checkX << 1 | checkY >> 1)
+						switch ($"{checkX},{checkY}")
 						{
-							case 0 << 1 | -1 >> 1:
+							case "0,-1":
 								connection |= TileConnection.Top;
 								break;
-							case 1 << 1 | 0 >> 1:
+							case "1,0":
 								connection |= TileConnection.Right;
 								break;
-							case 0 << 1 | 1 >> 1:
+							case "0,1":
 								connection |= TileConnection.Bottom;
 								break;
-							case -1 << 1 | 0 >> 1:
+							case "-1,0":
 								connection |= TileConnection.Left;
 								break;
+								// TODO: Make work
+								// case "-1,-1":
+								// 	connection |= TileConnection.Top_Left;
+								// 	break;
+								// case "1,-1":
+								// 	connection |= TileConnection.Top_Right;
+								// 	break;
+								// case "-1,1":
+								// 	connection |= TileConnection.Bottom_Left;
+								// 	break;
+								// case "1,1":
+								// 	connection |= TileConnection.Bottom_Right;
+								// 	break;
 						}
 					}
 				}

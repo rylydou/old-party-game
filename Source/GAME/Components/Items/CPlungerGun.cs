@@ -10,8 +10,11 @@ namespace GAME.Components.Items
 		{
 			var ray = entity.layer.raycaster.Raycast(entity.position + 0.5f, new Vector2(entity.scale.x, 0));
 
+			PlaySound("Shoot");
+
 			if (RaycastHit.WithinDistance(ray, @params.GetFloat("range")))
 			{
+				PlaySound("Pull");
 				Spawn(new MGE.ECS.Entity(new CPlunger(player, relitivePath)), ray.position, entity.scale);
 				Death();
 			}

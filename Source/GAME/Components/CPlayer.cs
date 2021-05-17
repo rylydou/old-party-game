@@ -111,7 +111,7 @@ namespace GAME.Components
 				rb.position.x = Random.Float(5, Window.sceneSize.x - 6);
 				rb.position.y = -2;
 
-				PlaySound("Spawn Offscreen");
+				PlaySound("Offscreen Spawn");
 			}
 			else
 			{
@@ -120,17 +120,17 @@ namespace GAME.Components
 				if (spawnPos.y > 0)
 				{
 					rb.position = spawnPos;
+
+					PlaySound("Spawn");
 				}
 				else
 				{
 					rb.position.x = spawnPos.x;
 					rb.position.y = -2;
 
-					PlaySound("Spawn Offscreen");
+					PlaySound("Offscreen Spawn");
 				}
 			}
-
-			PlaySound("Spawn");
 		}
 
 		public override void Tick()

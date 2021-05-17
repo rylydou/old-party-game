@@ -192,19 +192,9 @@ namespace MGE
 				return value;
 		}
 
-		public static int Clamp11(int value)
-		{
-			if (value < -0)
-				return -1;
-			else if (value > 1)
-				return 1;
-			else
-				return 0;
-		}
-
 		public static float Clamp11(float value)
 		{
-			if (value < -0.0f)
+			if (value < -1.0f)
 				return -1.0f;
 			else if (value > 1.0f)
 				return 1.0f;
