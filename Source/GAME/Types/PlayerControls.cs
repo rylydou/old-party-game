@@ -8,7 +8,7 @@ namespace GAME
 		public static float cursorSensitivity = 512;
 
 		public bool select = false;
-		public bool leave = false;
+		public bool back = false;
 
 		public bool up = false;
 		public bool left = false;
@@ -36,7 +36,7 @@ namespace GAME
 					isConnected = true;
 
 					select = Input.GetButtonPress(Inputs.Space);
-					leave = Input.GetButtonPress(Inputs.Escape);
+					back = Input.GetButtonPress(Inputs.Escape) | Input.GetButtonPress(Inputs.Q);
 
 					up = Input.GetButtonPress(Inputs.W);
 					left = Input.GetButtonPress(Inputs.A);
@@ -55,7 +55,7 @@ namespace GAME
 					isConnected = true;
 
 					select = Input.GetButtonPress(Inputs.Enter);
-					leave = Input.GetButtonPress(Inputs.Delete) | Input.GetButtonPress(Inputs.Back);
+					back = Input.GetButtonPress(Inputs.Delete) | Input.GetButtonPress(Inputs.Back);
 
 					up = Input.GetButtonPress(Inputs.Up);
 					left = Input.GetButtonPress(Inputs.Left);
@@ -75,7 +75,7 @@ namespace GAME
 						isConnected = true;
 
 						select = Input.GetButtonPress(Inputs.GamepadB, index);
-						leave = Input.GetButtonPress(Inputs.GamepadA, index);
+						back = Input.GetButtonPress(Inputs.GamepadA, index);
 
 						up = Input.GetButtonPress(Inputs.GamepadUp, index);
 						left = Input.GetButtonPress(Inputs.GamepadLeft, index);

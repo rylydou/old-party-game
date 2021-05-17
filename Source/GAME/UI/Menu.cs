@@ -8,71 +8,87 @@ namespace GAME.UI
 	{
 		public class Option
 		{
-			public bool enabled;
-
-			public string text;
-
+			public Func<string> text;
 			public Action onClick;
+
+			public Option(Func<string> text, Action onClick)
+			{
+				this.text = text;
+				this.onClick = onClick;
+			}
 		}
 
-		const float optionFontSize = 4;
-		const float optionSpaceBetween = 64;
-		const float optionSideMargin = 64;
-		static readonly Color optionColorNormal = new Color("#EEE");
-		static readonly Color optionColorDisabled = new Color("#555");
-		static readonly Color optionColorSelected = new Color("#FB3");
-		static Font font;
-		const float animDuration = 0.5f;
+		const float fontSize = 1.0f;
+		const float spaceBetweenOptions = 32;
+		const float leftMarginForOptions = 16;
+		static readonly Color normalColor = new Color("#EEE");
+		static readonly Color disabledColor = new Color("#555");
+		static readonly Color selectedColor = new Color("#FB3");
+		static Font font { get => Config.font; }
 
-		static EController mainPlayer = EController.WASD;
-
+		public string title = string.Empty;
 		public List<Option> options = new List<Option>();
-
-		public Vector2 position;
 
 		public int cursorPosition = 0;
 
-		float animTime;
+		public Menu(params (Func<string>, Action)[] options)
+		{
+			foreach (var option in options)
+				this.options.Add(new Option(option.Item1, option.Item2));
+		}
+
+		public Menu(string title, params (Func<string>, Action)[] options)
+		{
+			this.title = title;
+
+			foreach (var option in options)
+				this.options.Add(new Option(option.Item1, option.Item2));
+		}
 
 		public void Update()
 		{
-			if (font is null) font = Config.font;
-
-			var con = GameSettings.current.controllers[mainPlayer];
-
-			if (con.select)
+			if (GameSettings.current.mainController.back)
+				MenuManager.GoBack();
+			else if (GameSettings.current.mainController.select)
 			{
-				options[cursorPosition].onClick.Invoke();
+				var option = options[cursorPosition];
+				if (option.onClick is object)
+					options[cursorPosition].onClick.Invoke();
 			}
-			else if (con.up)
+			else if (GameSettings.current.mainController.up)
 			{
 				if (cursorPosition > 0)
-				{
 					cursorPosition--;
-					animTime = animDuration;
-				}
 			}
-			else if (con.up)
+			else if (GameSettings.current.mainController.down)
 			{
-				if (cursorPosition < options.Count)
-				{
+				if (cursorPosition < options.Count - 1)
 					cursorPosition++;
-					animTime = animDuration;
-				}
 			}
 		}
 
 		public void Draw()
 		{
-			var startPos = (Window.renderSize.y - options.Count * optionSpaceBetween) / 2 + position.y;
+			var startPos = (Window.renderSize.y - options.Count * spaceBetweenOptions) / 2;
 
 			var index = 0;
 			foreach (var option in options)
 			{
-				font.DrawText(option.text, new Vector2(position.x, startPos + index * optionSpaceBetween), index == cursorPosition ? optionColorSelected : optionColorNormal, optionFontSize)
+				var text = (index == cursorPosition ? "- " : "  ") + option.text?.Invoke();
+				var pos = new Vector2(leftMarginForOptions, startPos + index * spaceBetweenOptions);
+
+				if (index == cursorPosition)
+					font.DrawText(text, pos + 2, selectedColor, fontSize);
+				else
+					font.DrawText(text, pos + 2, new Color(0, 0.25f), fontSize);
+
+				font.DrawText(text, pos, option.onClick is object ? normalColor : disabledColor, fontSize);
 
 				index++;
 			}
+
+			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions) + 2, normalColor, fontSize);
+			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions), selectedColor, fontSize);
 		}
 	}
 }

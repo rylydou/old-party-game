@@ -18,6 +18,8 @@ namespace GAME
 			new Player(-1, "_Default"),
 		};
 
+		public PlayerControls mainController = null;
+
 		public Dictionary<EController, PlayerControls> controllers = new Dictionary<EController, PlayerControls>()
 		{
 			{ EController.ArrowKeys, new PlayerControls(-2) },

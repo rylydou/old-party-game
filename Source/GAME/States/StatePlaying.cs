@@ -74,7 +74,7 @@ namespace GAME.States
 				}
 			}
 
-			if (!Main.current.NO_TIMMER)
+			if (!Main.current.infiniteTime)
 			{
 				timeLeft -= Time.fixedDeltaTime;
 
@@ -133,7 +133,7 @@ namespace GAME.States
 				index++;
 			}
 
-			if (!Main.current.NO_TIMMER)
+			if (!Main.current.infiniteTime)
 			{
 				var timeText =
 					(timeLeft < 0 ? "OVERTIME! " : "") +

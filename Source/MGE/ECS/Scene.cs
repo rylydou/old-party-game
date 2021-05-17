@@ -13,7 +13,7 @@ namespace MGE.ECS
 
 		public List<Layer> layers = new List<Layer>();
 
-		public bool clearScreen = true;
+		public bool clearScreen = false;
 		public Color screenClearColor = Color.black;
 
 		public Scene() { }

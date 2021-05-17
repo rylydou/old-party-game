@@ -51,7 +51,7 @@ namespace GAME.States
 			{
 				if (player.READY)
 				{
-					if (player.controls.leave)
+					if (player.controls.back)
 					{
 						player.READY = false;
 						PlaySound("UI/Sounds/Back");
@@ -67,7 +67,7 @@ namespace GAME.States
 
 						PlaySound("UI/Sounds/Ready");
 					}
-					else if (player.controls.leave)
+					else if (player.controls.back)
 					{
 						GameSettings.current.players.Remove(player);
 
