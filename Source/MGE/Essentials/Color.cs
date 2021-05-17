@@ -221,16 +221,16 @@ namespace MGE
 		#endregion
 
 		#region Implicit
-		public static Color operator +(Color left, Color right) => new Color(left.r + right.r, left.g + right.g, left.b + right.b, left.b + right.b);
-		public static Color operator -(Color left, Color right) => new Color(left.r - right.r, left.g - right.g, left.b - right.b, left.b - right.b);
-		public static Color operator *(Color left, Color right) => new Color(left.r * right.r, left.g * right.g, left.b * right.b, left.b * right.b);
-		public static Color operator /(Color left, Color right) => new Color(left.r / right.r, left.g / right.g, left.b / right.b, left.b / right.b);
+		public static Color operator +(Color left, Color right) => new Color(left.r + right.r, left.g + right.g, left.b + right.b);
+		public static Color operator -(Color left, Color right) => new Color(left.r - right.r, left.g - right.g, left.b - right.b);
+		public static Color operator *(Color left, Color right) => new Color(left.r * right.r, left.g * right.g, left.b * right.b);
+		public static Color operator /(Color left, Color right) => new Color(left.r / right.r, left.g / right.g, left.b / right.b);
 
-		public static Color operator -(Color color) => new Color(-color.r, -color.g, -color.b, -color.b);
+		public static Color operator -(Color color) => new Color(-color.r, -color.g, -color.b);
 
-		public static Color operator *(Color left, float right) => new Color(left.r * right, left.g * right, left.b * right, left.b * right);
-		public static Color operator *(float left, Color right) => new Color(right.r * left, right.g * left, right.b * left, right.b * left);
-		public static Color operator /(Color left, float right) => new Color(left.r / right, left.g / right, left.b / right, left.b / right);
+		public static Color operator *(Color left, float right) => new Color(left.r * right, left.g * right, left.b * right);
+		public static Color operator *(float left, Color right) => new Color(right.r * left, right.g * left, right.b * left);
+		public static Color operator /(Color left, float right) => new Color(left.r / right, left.g / right, left.b / right);
 
 		public static bool operator ==(Color left, Color right)
 		{

@@ -7,6 +7,7 @@ using XNA_GameTime = Microsoft.Xna.Framework.GameTime;
 using MGE.InputSystem;
 using MGE.Physics;
 using Microsoft.Xna.Framework.Audio;
+using MGE.ECS;
 
 namespace GAME
 {
@@ -52,6 +53,8 @@ namespace GAME
 				GameSettings.current.stage = new Stage(new Vector2Int(40, 23));
 			}
 
+			SoundEffect.MasterVolume = 0.1f;
+
 			base.Initialize();
 		}
 
@@ -74,7 +77,7 @@ namespace GAME
 
 		protected override void Update(XNA_GameTime gameTime)
 		{
-			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Math.Round(Stats.memUsedAsMBs, 1)}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
+			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Stats.memUsedAsMBs.ToString("F1")}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
 
 			var shift = Input.GetButton(Inputs.LeftShift) | Input.GetButton(Inputs.RightShift);
 			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
@@ -141,6 +144,8 @@ namespace GAME
 						ChangeState(new StateEditor());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D3))
 						ChangeState(new StatePlayerSetup());
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D4))
+						ChangeState(new StateTileEditor());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.T))
 						NO_TIMMER = !NO_TIMMER;
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.L))
@@ -235,6 +240,9 @@ namespace GAME
 
 			this.state = state;
 			this.state?.Init();
+
+			if (SceneManager.activeScene is object)
+				SceneManager.activeScene.clearScreen = false;
 		}
 	}
 }

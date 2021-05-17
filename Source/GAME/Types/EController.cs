@@ -6,7 +6,7 @@ namespace GAME
 		WASD = -1,
 		Gamepad0 = 0,
 		Gamepad1 = 1,
-		Gamepad2 = 3,
-		Gamepad3 = 4,
+		Gamepad2 = 2,
+		Gamepad3 = 3,
 	}
 }

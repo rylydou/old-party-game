@@ -5,15 +5,12 @@
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
-	"size": [
-		0.5,
-		0.5
-	],
+	"size": [0.5, 0.5],
 	"enablePhysics": false,
 	"damage": 15,
-	"knockback": 0.125,
-	"speed": 0.5,
+	"knockback": 0.175,
+	"speed": 0.75,
 	"radius": 0.5,
-	"lifetime": 0.25,
+	"lifetime": 0.175,
 	"hits": 1
 }

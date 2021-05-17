@@ -9,13 +9,12 @@ namespace GAME
 
 		public static Color[] colors = new Color[]
 		{
-			new Color("#FF6B12"),
-			new Color("#30ADF2"),
-			new Color("#34CD34"),
-			new Color("#FCBD03"),
-			new Color("#003D71"),
+			new Color("#FF595E"),
+			new Color("#269BE3"),
+			new Color("#8AC926"),
+			new Color("#FFCA3A"),
+			new Color("#7E5DAC"),
 		};
-
 
 		public sbyte index;
 		string _skin;
@@ -26,7 +25,7 @@ namespace GAME
 			get
 			{
 				if (!_color.HasValue)
-					_color = colors[Math.Clamp(GameSettings.current.players.FindIndex(x => x == this), colors.Length)];
+					_color = colors[Math.Clamp(GameSettings.current.players.FindIndex(x => x == this), colors.Length - 1)];
 				return _color.Value;
 			}
 		}

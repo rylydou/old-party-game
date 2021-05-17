@@ -40,11 +40,6 @@ namespace MGE
 		public static float Ceil(float value) => Mathf.Ceiling(value);
 		public static float Floor(float value) => Mathf.Floor(value);
 		public static float Round(float value) => Mathf.Round(value);
-		public static float Round(float value, int places)
-		{
-			var amount = (int)Math.Pow(10, places);
-			return Round(value * amount) / amount;
-		}
 		public static int CeilToInt(float value) => (int)Mathf.Ceiling(value);
 		public static int FloorToInt(float value) => (int)Mathf.Floor(value);
 		public static int RoundToInt(float value) => (int)Mathf.Round(value);
@@ -53,7 +48,7 @@ namespace MGE
 		#endregion
 
 		#region Min Maxes
-		public static float Min(float a, float b) { return a < b ? a : b; }
+		public static float Min(float a, float b) => a < b ? a : b;
 
 		public static float Min(params float[] values)
 		{
@@ -68,7 +63,7 @@ namespace MGE
 			}
 			return min;
 		}
-		public static int Min(int a, int b) { return a < b ? a : b; }
+		public static int Min(int a, int b) => a < b ? a : b;
 
 		public static int Min(params int[] values)
 		{
@@ -84,7 +79,7 @@ namespace MGE
 			return min;
 		}
 
-		public static float Max(float a, float b) { return a > b ? a : b; }
+		public static float Max(float a, float b) => a > b ? a : b;
 
 		public static float Max(params float[] values)
 		{
@@ -100,7 +95,7 @@ namespace MGE
 			return min;
 		}
 
-		public static int Max(int a, int b) { return a > b ? a : b; }
+		public static int Max(int a, int b) => a > b ? a : b;
 
 		public static int Max(params int[] values)
 		{
@@ -114,6 +109,26 @@ namespace MGE
 					min = values[i];
 			}
 			return min;
+		}
+
+		public static int Wrap(int value, int max) => Wrap(value, 0, max);
+
+		public static int Wrap(int value, int min, int max)
+		{
+			if (value < min)
+				return max - (min - value) % (max - min);
+			else
+				return min + (value - min) % (max - min);
+		}
+
+		public static float Wrap(float value, float max) => Wrap(value, 0, max);
+
+		public static float Wrap(float value, float min, float max)
+		{
+			if (value < min)
+				return max - (min - value) % (max - min);
+			else
+				return min + (value - min) % (max - min);
 		}
 		#endregion
 
@@ -177,19 +192,9 @@ namespace MGE
 				return value;
 		}
 
-		public static int Clamp11(int value)
-		{
-			if (value < -0)
-				return -1;
-			else if (value > 1)
-				return 1;
-			else
-				return 0;
-		}
-
 		public static float Clamp11(float value)
 		{
-			if (value < -0.0f)
+			if (value < -1.0f)
 				return -1.0f;
 			else if (value > 1.0f)
 				return 1.0f;

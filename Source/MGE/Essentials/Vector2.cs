@@ -193,6 +193,8 @@ namespace MGE
 		public Vector2Int floored { get => this; }
 		public Vector2Int rounded { get => new Vector2Int(Math.RoundToInt(x), Math.RoundToInt(y)); }
 		public Vector2Int ceiled { get => new Vector2Int(Math.CeilToInt(x), Math.CeilToInt(y)); }
+
+		public float angle { get => Math.Atan(y, x); }
 		#endregion
 
 		#region Constructors
@@ -275,12 +277,12 @@ namespace MGE
 		#region Inherited
 		public override string ToString() => ToString(2);
 
-		public string ToString(int amountOfRounding = -1)
+		public string ToString(int decimalPlaces)
 		{
-			if (amountOfRounding < 0)
+			if (decimalPlaces < 0)
 				return $"({x}, {y})";
 			else
-				return $"({Math.Round(x, amountOfRounding)}, {Math.Round(y, amountOfRounding)})";
+				return $"({x.ToString($"F{decimalPlaces}")}, {y.ToString($"F{decimalPlaces}")})";
 		}
 
 		public string ToString(string format) => string.Format(format, x, y);

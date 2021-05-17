@@ -11,6 +11,6 @@
 	"knockback": 0.33,
 	"speed": 0.8,
 	"radius": 0.9,
-	"lifetime": 0.35,
+	"lifetime": 0.5,
 	"hits": 1
 }

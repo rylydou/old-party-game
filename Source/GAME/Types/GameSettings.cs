@@ -8,8 +8,8 @@ namespace GAME
 
 		public Stage stage;
 
-		public float roundTime = 60 * 5;
-		public float maxOvertime = 60 * 1;
+		public float roundTime = 60 * 5.0f;
+		public float maxOvertime = 60 * 1.0f;
 		public float timeBtwCrates = 4.5f;
 		public float timeBtwCrateLessPerPlayer = 0.5f;
 
