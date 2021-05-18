@@ -111,9 +111,9 @@ namespace GAME.States
 
 				for (int y = -2; y <= 2; y++)
 					for (int x = -2; x <= 2; x++)
-						Config.font.DrawText(text, new Rect(x * 2, pos + y * 2, Window.renderSize.x, 64), new Color(0, 0.05f), 1, TextAlignment.Center);
+						Config.font.DrawText(text, new Rect(x, pos + y, Window.renderSize.x, 64), new Color(0, 0.025f), 1.5f, TextAlignment.Center);
 
-				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1, TextAlignment.Center);
+				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 			}
 			else
 			{

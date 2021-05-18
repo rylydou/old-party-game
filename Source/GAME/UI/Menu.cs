@@ -18,7 +18,7 @@ namespace GAME.UI
 			}
 		}
 
-		const float fontSize = 1.0f;
+		const float fontSize = 1.5f;
 		const float spaceBetweenOptions = 32;
 		const float leftMarginForOptions = 16;
 		static readonly Color normalColor = new Color("#EEE");

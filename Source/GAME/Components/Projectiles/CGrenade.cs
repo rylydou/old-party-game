@@ -8,21 +8,49 @@ namespace GAME.Components
 		public CGrenade(DamageInfo info, string basePath) : base(info, basePath) { }
 
 		int explosionDamage;
+		float explosionRadius;
 
 		public override void Init()
 		{
 			base.Init();
 
 			explosionDamage = @params.GetInt("explosionDamage");
+			explosionRadius = @params.GetInt("explosionRadius");
+		}
+
+		public override void Tick()
+		{
+			entity.scale = entity.roationVector;
+
+			foreach (var thing in entity.layer.GetEntities(entity.position, radius, "Ranged Vulnerable"))
+			{
+				if (thing == entity || thing == info.doneBy.entity) continue;
+
+				thing.GetSimilarComponent<CObject>()?.Damage(damage, -Vector2.GetDirection(info.origin, entity.position) * knockback, info.doneBy);
+
+				PlaySound("Hit");
+
+				hits--;
+
+				if (hits < 1)
+				{
+					Death();
+					return;
+				}
+			}
+
+			lifetime -= Time.fixedDeltaTime;
+			if (lifetime < 0)
+				Death();
 		}
 
 		public override void Death()
 		{
 			base.Death();
 
-			foreach (var thing in entity.layer.GetEntities(entity.position, radius, "Melee Vulnerable"))
+			foreach (var thing in entity.layer.GetEntities(entity.position, explosionRadius, "Melee Vulnerable"))
 			{
-				thing.GetComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * knockback, info.doneBy);
+				thing.GetSimilarComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * knockback, info.doneBy);
 			}
 
 			var para = new CParticle(5, GetAsset<Texture>("Explosion"), (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 5) / 8) * 50 - 1); if (p.frame > 7) p.Kill(); });
