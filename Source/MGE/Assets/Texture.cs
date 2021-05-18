@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,11 +24,9 @@ namespace MGE
 		#endregion
 
 		#region Object
-		// [NonSerialized] Just for now...
-		public readonly int id;
 		public string sourcePath { get; internal set; } = string.Empty;
 
-		public Texture2D texture { get => textures[id]; }
+		public Texture2D texture;
 
 		public int width { get => texture.Width; }
 		public int height { get => texture.Height; }
@@ -38,15 +35,7 @@ namespace MGE
 
 		public Texture(Texture2D texture)
 		{
-			var id = textures.FindIndex((x) => x == texture);
-
-			if (id < 0)
-			{
-				this.id = textures.Count;
-				textures.Add(texture);
-			}
-			else
-				this.id = id;
+			this.texture = texture;
 		}
 
 		public Color GetPixel(Vector2Int position) => GetPixel(position.x, position.y);

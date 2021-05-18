@@ -8,18 +8,16 @@ namespace GAME.States
 {
 	public class StateMainMenu : GameState
 	{
+		const float backgroundLifetime = 6.0f;
+		const float backgroundTimeLeftToStartFading = 2.0f;
+
 		static string[] _backgrounds;
 		public static string[] backgrounds
 		{
 			get
 			{
 				if (_backgrounds is null)
-				{
-					_backgrounds = Assets.GetUnloadedAssets("@ Menu Backgrounds");
-
-					foreach (var background in _backgrounds)
-						Logger.Log(background);
-				}
+					_backgrounds = Assets.GetUnloadedAssets<Texture>("@ Menu Backgrounds");
 				return _backgrounds;
 			}
 		}
@@ -52,14 +50,10 @@ namespace GAME.States
 			(() => "Apply Changes", () => GFX.graphics.ApplyChanges())
 		);
 
+		float backgroundTimeLeft = backgroundLifetime;
+
+		Texture prevBackground;
 		Texture background;
-
-		public override void Init()
-		{
-			base.Init();
-
-			background = Assets.LoadAsset<Texture>(backgrounds.Random());
-		}
 
 		public override void Update()
 		{
@@ -85,21 +79,41 @@ namespace GAME.States
 					GameSettings.mainController = null;
 				}
 			}
+
+			backgroundTimeLeft += Time.deltaTime;
+
+			if (backgroundTimeLeft > backgroundLifetime)
+			{
+				prevBackground?.texture?.Dispose();
+				prevBackground = background;
+				background = Assets.LoadAsset<Texture>(backgrounds.Random());
+				backgroundTimeLeft = 0;
+			}
 		}
 
 		public override void DrawUI()
 		{
 			base.DrawUI();
 
+			if (prevBackground is object)
+				GFX.Draw(prevBackground, new Rect(0, 0, Window.renderSize));
+
+			var opacity = Math.Clamp(backgroundTimeLeft, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading;
+
 			if (background is object)
-				GFX.Draw(background, new Rect(0, 0, Window.renderSize));
+				GFX.Draw(background, new Rect(0, 0, Window.renderSize), new Color(1, Math.Clamp01(opacity)));
 
 			if (GameSettings.mainController is null)
 			{
-				var pos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi) * 4;
+				var pos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
 
-				Config.font.DrawText("Press [Select] To Start", new Rect(0, pos + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1, TextAlignment.Center);
-				Config.font.DrawText("Press [Select] To Start", new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1, TextAlignment.Center);
+				const string text = "Press [Select] To Start";
+
+				for (int y = -2; y <= 2; y++)
+					for (int x = -2; x <= 2; x++)
+						Config.font.DrawText(text, new Rect(x * 2, pos + y * 2, Window.renderSize.x, 64), new Color(0, 0.05f), 1, TextAlignment.Center);
+
+				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1, TextAlignment.Center);
 			}
 			else
 			{

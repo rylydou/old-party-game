@@ -151,9 +151,15 @@ namespace MGE
 				if (relitivePath.Contains('@'))
 				{
 					if (unloadedAssets.ContainsKey(relitivePath))
+					{
+						Logger.Log($"@: {relitivePath}");
 						unloadedAssets[relitivePath] = IO.CleanPath(file);
+					}
 					else
+					{
+						Logger.Log($"@+ {relitivePath}");
 						unloadedAssets.Add(IO.CleanPath(relitivePath), IO.CleanPath(file));
+					}
 				}
 				else
 				{
@@ -194,19 +200,22 @@ namespace MGE
 
 		public static T LoadAsset<T>(string path) where T : class
 		{
+			if (!path.Contains('.')) path += Config.typeToExtention[typeof(T)];
+
 			if (unloadedAssets.ContainsKey(path))
 				return LoadAsset(unloadedAssets[path], path) as T;
 			return null;
 		}
 
-		public static string[] GetUnloadedAssets(string path)
+		public static string[] GetUnloadedAssets<T>(string path) where T : class
 		{
 			var assets = new List<string>();
+			var ext = Config.typeToExtention[typeof(T)];
 
 			foreach (var asset in unloadedAssets)
 			{
-				if (asset.Key.StartsWith(path))
-					assets.Add(asset.Value.Remove(asset.Value.First((c) => c == '.')));
+				if (asset.Key.StartsWith(path) && asset.Key.EndsWith(ext))
+					assets.Add(asset.Key.Replace(ext, string.Empty));
 			}
 
 			return assets.ToArray();

@@ -15,6 +15,7 @@ namespace GAME
 			typeof(CCursedPearl),
 			typeof(CPearl),
 			typeof(CFishingRod),
+			typeof(CGrenadeLauncher),
 			typeof(CHamburger),
 			typeof(CMinigun),
 			typeof(CPlungerGun),
@@ -27,6 +28,7 @@ namespace GAME
 		{
 			typeof(CBananaGun),
 			typeof(CFishingRod),
+			typeof(CGrenadeLauncher),
 			typeof(CHamburger),
 			typeof(CPlungerGun),
 			typeof(CRifle),

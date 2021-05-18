@@ -1,6 +1,3 @@
-using MGE;
-using MGE.Graphics;
-
 namespace GAME.Components
 {
 	public class CBobber : CProjectile

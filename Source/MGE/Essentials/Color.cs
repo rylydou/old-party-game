@@ -9,31 +9,20 @@ namespace MGE
 		#region Static
 
 		#region Constants
-		static readonly Color _nullColor = new Color(1.0f, 0.0f, 1.0f);
-		public static Color nullColor { get => _nullColor; }
+		public static readonly Color nullColor = new Color(1.0f, 0.0f, 1.0f);
 
-		static readonly Color _white = new Color(1.0f);
-		public static Color white { get => _white; }
-		static readonly Color _gray = new Color(0.5f);
-		public static Color gray { get => _gray; }
-		static readonly Color _black = new Color(0.0f);
-		public static Color black { get => _black; }
-		static readonly Color _red = new Color(1.0f, 0.0f, 0.0f);
-		public static Color red { get => _red; }
-		static readonly Color _yellow = new Color(1.0f, 1.0f, 0.0f);
-		public static Color yellow { get => _yellow; }
-		static readonly Color _green = new Color(0.0f, 1.0f, 0.0f);
-		public static Color cyan { get => _cyan; }
-		static readonly Color _cyan = new Color(0.0f, 1.0f, 1.0f);
-		public static Color green { get => _green; }
-		static readonly Color _blue = new Color(0.0f, 0.0f, 1.0f);
-		public static Color blue { get => _blue; }
-		static readonly Color _magenta = new Color(1.0f, 0.0f, 1.0f);
-		public static Color magenta { get => _magenta; }
-		static readonly Color _violet = new Color(0.5f, 0.0f, 1.0f);
-		public static Color violet { get => _violet; }
-		static readonly Color _clear = new Color(0.0f, 0.0f);
-		public static Color clear { get => _clear; }
+		public static readonly Color white = new Color(1.0f);
+		public static readonly Color gray = new Color(0.5f);
+		public static readonly Color black = new Color(0.0f);
+		public static readonly Color red = new Color(1.0f, 0.0f, 0.0f);
+		public static readonly Color yellow = new Color(1.0f, 1.0f, 0.0f);
+		public static readonly Color green = new Color(0.0f, 1.0f, 0.0f);
+		public static readonly Color cyan = new Color(0.0f, 1.0f, 1.0f);
+		public static readonly Color blue = new Color(0.0f, 0.0f, 1.0f);
+		public static readonly Color magenta = new Color(1.0f, 0.0f, 1.0f);
+		public static readonly Color violet = new Color(0.5f, 0.0f, 1.0f);
+		public static readonly Color orange = new Color(1.0f, 0.5f, 0.0f);
+		public static readonly Color clear = new Color(0.0f, 0.0f);
 
 		public const float epsilon = Single.Epsilon;
 		#endregion

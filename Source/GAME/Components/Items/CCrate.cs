@@ -6,29 +6,13 @@ namespace GAME.Components.Items
 {
 	public class CCrate : CItem
 	{
-		public static System.Type[] lootTable = new System.Type[]
-		{
-			typeof(CShotgun),
-			typeof(CBananaGun),
-			typeof(CRock),
-			typeof(CHamburger),
-			// typeof(CPearl),
-			// typeof(CCursedPearl),
-			typeof(CFishingRod),
-			typeof(CPlungerGun),
-			typeof(CMinigun),
-			typeof(CRifle),
-		};
-
 		public CItem item;
 
 		public override void Init()
 		{
 			base.Init();
 
-			var itemType = lootTable.Random();
-
-			item = (CItem)System.Activator.CreateInstance(itemType);
+			item = (CItem)System.Activator.CreateInstance(Setup.baseCrateLootTable.Random());
 
 			if (GameSettings.current.stage.crateSpawnsPoints.Count < 1)
 			{

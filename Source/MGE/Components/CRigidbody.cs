@@ -10,6 +10,8 @@ namespace MGE.Components
 
 		public ICanRaycast raycaster;
 
+		public Vector2 bounceyness = Vector2.zero;
+
 		Vector2 _size = new Vector2(0.8f, 0.8f);
 		public Vector2 size
 		{
@@ -47,17 +49,9 @@ namespace MGE.Components
 
 		public Vector2 raySpacing { get; private set; } = Vector2.zero;
 
-		public CRigidbody() { }
-
-		public CRigidbody(Vector2 size)
+		public CRigidbody(Vector2 bounceyness = default)
 		{
-			this.size = size;
-		}
-
-		public CRigidbody(Vector2 position, Vector2 size)
-		{
-			this.position = position;
-			this.size = size;
+			this.bounceyness = bounceyness;
 		}
 
 		public override void Init()
@@ -97,7 +91,7 @@ namespace MGE.Components
 				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.y)))
 				{
 					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0f ? size.y : 0));
-					velocity.y = 0.0f;
+					velocity.y = bounceyness.y * -velocity.y;
 				}
 			}
 
@@ -113,7 +107,7 @@ namespace MGE.Components
 				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.x)))
 				{
 					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0f ? size.x : 0), effectivePosition.y);
-					velocity.x = 0.0f;
+					velocity.x = bounceyness.x * -velocity.x;
 				}
 			}
 
