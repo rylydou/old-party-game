@@ -92,6 +92,7 @@ namespace MGE.Components
 				{
 					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0f ? size.y : 0));
 					velocity.y = bounceyness.y * -velocity.y;
+					position.y += velocity.y * 2;
 				}
 			}
 
@@ -108,6 +109,7 @@ namespace MGE.Components
 				{
 					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0f ? size.x : 0), effectivePosition.y);
 					velocity.x = bounceyness.x * -velocity.x;
+					position.x += velocity.x * 2;
 				}
 			}
 
