@@ -7,8 +7,8 @@
 	"frictionAir": 4,
 	"size": [0.9, 0.9],
 	"enablePhysics": false,
-	"uses": 4,
-	"attackCooldown": 0.5,
+	"uses": 5,
+	"attackCooldown": 0.65,
 	"projectiles": 1,
-	"spread": 0.0
+	"spread": 0.033
 }

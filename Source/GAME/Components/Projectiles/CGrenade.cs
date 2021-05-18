@@ -53,7 +53,7 @@ namespace GAME.Components
 				thing.GetSimilarComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * knockback, info.doneBy);
 			}
 
-			var para = new CParticle(5, GetAsset<Texture>("Explosion"), (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 5) / 8) * 50 - 1); if (p.frame > 7) p.Kill(); });
+			var para = new CParticle(5, GetAsset<Texture>("Explosion"), (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 5) / 4) * 40 - 1); if (p.frame > 7) p.Kill(); });
 
 			entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
 
