@@ -104,6 +104,7 @@ namespace GAME
 			new Palette("#264653", "#2a9d8f"),
 			new Palette("#fb8500", "#ffb703"),
 			new Palette("#065a60", "#006466"),
+			new Palette("#aaaaaa", "#bbbbbb"),
 		};
 	}
 }
