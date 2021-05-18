@@ -8,6 +8,22 @@ namespace GAME.States
 {
 	public class StateMainMenu : GameState
 	{
+		static string[] _backgrounds;
+		public static string[] backgrounds
+		{
+			get
+			{
+				if (_backgrounds is null)
+				{
+					_backgrounds = Assets.GetUnloadedAssets("@ Menu Backgrounds");
+
+					foreach (var background in _backgrounds)
+						Logger.Log(background);
+				}
+				return _backgrounds;
+			}
+		}
+
 		public static Menu mainMenu = new Menu(
 			"Main Menu",
 			(() => "Play", () => Main.current.ChangeState(new StatePlayerSetup())),
@@ -36,22 +52,26 @@ namespace GAME.States
 			(() => "Apply Changes", () => GFX.graphics.ApplyChanges())
 		);
 
+		Texture background;
+
 		public override void Init()
 		{
 			base.Init();
+
+			background = Assets.LoadAsset<Texture>(backgrounds.Random());
 		}
 
 		public override void Update()
 		{
 			base.Update();
 
-			if (GameSettings.current.mainController is null)
+			if (GameSettings.mainController is null)
 			{
-				foreach (var controller in GameSettings.current.controllers)
+				foreach (var controller in GameSettings.controllers)
 				{
-					if (controller.Value.select)
+					if (controller.select)
 					{
-						GameSettings.current.mainController = controller.Value;
+						GameSettings.mainController = controller;
 						MenuManager.menus = new List<Menu>() { mainMenu };
 					}
 				}
@@ -62,7 +82,7 @@ namespace GAME.States
 
 				if (MenuManager.menus.Count <= 0)
 				{
-					GameSettings.current.mainController = null;
+					GameSettings.mainController = null;
 				}
 			}
 		}
@@ -71,11 +91,14 @@ namespace GAME.States
 		{
 			base.DrawUI();
 
-			if (GameSettings.current.mainController is null)
+			if (background is object)
+				GFX.Draw(background, new Rect(0, 0, Window.renderSize));
+
+			if (GameSettings.mainController is null)
 			{
 				var pos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi) * 4;
 
-				Config.font.DrawText("Press [Select] To Start", new Rect(0, pos + 2, Window.renderSize.x, 64), new Color("#FB3"), 1, TextAlignment.Center);
+				Config.font.DrawText("Press [Select] To Start", new Rect(0, pos + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1, TextAlignment.Center);
 				Config.font.DrawText("Press [Select] To Start", new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1, TextAlignment.Center);
 			}
 			else

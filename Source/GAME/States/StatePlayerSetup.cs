@@ -36,7 +36,7 @@ namespace GAME.States
 
 			palette = Setup.palettes.Random();
 
-			foreach (var player in GameSettings.current.players)
+			foreach (var player in GameSettings.players)
 			{
 				player.Reset();
 			}
@@ -47,7 +47,7 @@ namespace GAME.States
 			base.Update();
 
 			var readyPlayers = 0;
-			foreach (var player in GameSettings.current.players.ToArray())
+			foreach (var player in GameSettings.players.ToArray())
 			{
 				if (player.READY)
 				{
@@ -69,7 +69,12 @@ namespace GAME.States
 					}
 					else if (player.controls.back)
 					{
-						GameSettings.current.players.Remove(player);
+						GameSettings.players.Remove(player);
+
+						foreach (var playerToUpdate in GameSettings.players)
+						{
+							playerToUpdate._color = null;
+						}
 
 						PlaySound("UI/Sounds/Leave");
 					}
@@ -92,20 +97,20 @@ namespace GAME.States
 				}
 			}
 
-			foreach (var controller in GameSettings.current.controllers)
+			foreach (var controller in GameSettings.controllers)
 			{
-				if (controller.Value.select)
+				if (controller.select)
 				{
-					if (!GameSettings.current.players.Any(x => (EController)x.index == controller.Key))
+					if (!GameSettings.players.Any(x => x.controls.id == controller.id))
 					{
-						GameSettings.current.players.Add(new Player((sbyte)controller.Key, Setup.skins.Random()));
+						GameSettings.players.Add(new Player(controller.id, Setup.skins.Random()));
 
 						PlaySound("UI/Sounds/Join");
 					}
 				}
 			}
 
-			if (GameSettings.current.players.Count > 0 && readyPlayers >= GameSettings.current.players.Count)
+			if (GameSettings.players.Count > 0 && readyPlayers >= GameSettings.players.Count)
 			{
 				timeAllReady += Time.deltaTime;
 			}
@@ -151,7 +156,7 @@ namespace GAME.States
 
 			using (var layout = new StackLayout(new Vector2(32), 256, true))
 			{
-				foreach (var player in GameSettings.current.players)
+				foreach (var player in GameSettings.players)
 				{
 					if (player is null) continue;
 
@@ -171,7 +176,7 @@ namespace GAME.States
 					GFX.Draw(player.icon, new Rect(layout.currentElement + 32, layout.currentSize - 64), Color.white);
 
 					if (!player.READY)
-						GFX.Draw(controllerToTex[(EController)player.index], new Rect(layout.currentElement + 16, 64), player.color);
+						GFX.Draw(controllerToTex[player.controls.id], new Rect(layout.currentElement + 16, 64), player.color);
 
 					layout.AddElement(64);
 				}

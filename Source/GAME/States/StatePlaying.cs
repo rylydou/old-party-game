@@ -35,7 +35,7 @@ namespace GAME.States
 				)
 			);
 
-			foreach (var player in GameSettings.current.players)
+			foreach (var player in GameSettings.players)
 			{
 				if (player is null) continue;
 
@@ -58,7 +58,7 @@ namespace GAME.States
 				SpawnCrate();
 			}
 
-			foreach (var player in GameSettings.current.players)
+			foreach (var player in GameSettings.players)
 			{
 				if (player.player.health < 1)
 				{
@@ -78,7 +78,7 @@ namespace GAME.States
 			{
 				timeLeft -= Time.fixedDeltaTime;
 
-				if (timeLeft < -GameSettings.current.maxOvertime || GameSettings.current.players.All(x => x.player.health < 1))
+				if (timeLeft < -GameSettings.current.maxOvertime || GameSettings.players.All(x => x.player.health < 1))
 				{
 					Main.current.ChangeState(new StatePlayerSetup());
 				}
@@ -91,7 +91,7 @@ namespace GAME.States
 
 			var index = 0;
 
-			foreach (var player in GameSettings.current.players)
+			foreach (var player in GameSettings.players)
 			{
 				if (player is null) continue;
 

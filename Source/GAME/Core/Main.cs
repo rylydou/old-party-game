@@ -96,10 +96,8 @@ namespace GAME
 
 			if (state is object)
 			{
-				foreach (var controller in GameSettings.current.controllers.Values)
-				{
+				foreach (var controller in GameSettings.controllers)
 					controller.Update();
-				}
 
 				state.Update();
 			}

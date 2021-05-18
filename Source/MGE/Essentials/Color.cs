@@ -245,11 +245,7 @@ namespace MGE
 		public static bool operator !=(Color left, Color right) => !(left == right);
 
 		public static implicit operator Microsoft.Xna.Framework.Color(Color color) => new Microsoft.Xna.Framework.Color(color.r, color.g, color.b, color.a);
-		public static implicit operator Color(Microsoft.Xna.Framework.Color color) => new Color((float)color.R, (float)color.G, (float)color.B, (float)color.A);
-		public static implicit operator Microsoft.Xna.Framework.Vector3(Color color) => new Microsoft.Xna.Framework.Vector3(color.r, color.g, color.b);
-		public static implicit operator Color(Microsoft.Xna.Framework.Vector3 vector) => new Microsoft.Xna.Framework.Vector3(vector.X, vector.Y, vector.Z);
-		public static implicit operator Microsoft.Xna.Framework.Vector4(Color color) => new Microsoft.Xna.Framework.Vector4(color.r, color.g, color.b, color.a);
-		public static implicit operator Color(Microsoft.Xna.Framework.Vector4 vector) => new Microsoft.Xna.Framework.Vector4(vector.X, vector.Y, vector.Z, vector.W);
+		public static implicit operator Color(Microsoft.Xna.Framework.Color color) => new Color((float)color.R / 255, (float)color.G / 255, (float)color.B / 255, (float)color.A / 255);
 
 		public static implicit operator System.Drawing.Color(Color color) =>
 			System.Drawing.Color.FromArgb((int)(Math.Clamp01(color.a) * 255), (int)(Math.Clamp01(color.r) * 255), (int)(Math.Clamp01(color.g) * 255), (int)(Math.Clamp01(color.b) * 255));

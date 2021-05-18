@@ -1,0 +1,14 @@
+{
+	"health": 125,
+	"meleeVulnerable": true,
+	"rangedVulnerable": false,
+	"mass": 1,
+	"frictionGround": 14,
+	"frictionAir": 4,
+	"size": [0.9, 0.9],
+	"enablePhysics": false,
+	"uses": 6,
+	"attackCooldown": 0.5,
+	"projectiles": 1,
+	"spread": 0.0
+}

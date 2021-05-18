@@ -16,16 +16,16 @@ namespace GAME
 			new Color("#7E5DAC"),
 		};
 
-		public sbyte index;
+		public PlayerControls controls;
 		string _skin;
 		public string skin { get => _skin; set { _skin = value; _icon = null; _iconDead = null; } }
-		Color? _color;
+		public Color? _color;
 		public Color color
 		{
 			get
 			{
 				if (!_color.HasValue)
-					_color = colors[Math.Clamp(GameSettings.current.players.FindIndex(x => x == this), colors.Length - 1)];
+					_color = colors[Math.Clamp(GameSettings.players.FindIndex(x => x == this), colors.Length - 1)];
 				return _color.Value;
 			}
 		}
@@ -57,14 +57,16 @@ namespace GAME
 		public ushort kills = 0;
 		public ushort deaths = 0;
 
-		public PlayerControls controls { get => GameSettings.current.controllers[(EController)index]; }
 		public CPlayer player = null;
 
 		public float timeRespawing = 0.0f;
 
-		public Player(sbyte index, string skin = "_Default")
+		public Player(EController controlsIndex, string skin = null)
 		{
-			this.index = index;
+			if (string.IsNullOrEmpty(skin))
+				skin = Setup.skins.Random();
+
+			controls = GameSettings.GetControls(controlsIndex);
 			this.skin = skin;
 		}
 

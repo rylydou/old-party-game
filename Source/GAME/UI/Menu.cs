@@ -22,8 +22,9 @@ namespace GAME.UI
 		const float spaceBetweenOptions = 32;
 		const float leftMarginForOptions = 16;
 		static readonly Color normalColor = new Color("#EEE");
-		static readonly Color disabledColor = new Color("#555");
 		static readonly Color selectedColor = new Color("#FB3");
+		static readonly Color disabledColor = new Color("#444");
+		static readonly Color disabledSelectedColor = new Color("#888");
 		static Font font { get => Config.font; }
 
 		public string title = string.Empty;
@@ -47,20 +48,20 @@ namespace GAME.UI
 
 		public void Update()
 		{
-			if (GameSettings.current.mainController.back)
+			if (GameSettings.mainController.back)
 				MenuManager.GoBack();
-			else if (GameSettings.current.mainController.select)
+			else if (GameSettings.mainController.select)
 			{
 				var option = options[cursorPosition];
 				if (option.onClick is object)
 					options[cursorPosition].onClick.Invoke();
 			}
-			else if (GameSettings.current.mainController.up)
+			else if (GameSettings.mainController.up)
 			{
 				if (cursorPosition > 0)
 					cursorPosition--;
 			}
-			else if (GameSettings.current.mainController.down)
+			else if (GameSettings.mainController.down)
 			{
 				if (cursorPosition < options.Count - 1)
 					cursorPosition++;
@@ -77,17 +78,30 @@ namespace GAME.UI
 				var text = (index == cursorPosition ? "- " : "  ") + option.text?.Invoke();
 				var pos = new Vector2(leftMarginForOptions, startPos + index * spaceBetweenOptions);
 
-				if (index == cursorPosition)
-					font.DrawText(text, pos + 2, selectedColor, fontSize);
-				else
-					font.DrawText(text, pos + 2, new Color(0, 0.25f), fontSize);
+				var color = Color.red;
 
-				font.DrawText(text, pos, option.onClick is object ? normalColor : disabledColor, fontSize);
+				if (index == cursorPosition)
+				{
+					if (option.onClick is object)
+						color = selectedColor;
+					else
+						color = disabledSelectedColor;
+				}
+				else
+				{
+					if (option.onClick is object)
+						color = normalColor;
+					else
+						color = disabledColor;
+				}
+
+				font.DrawText(text, pos + 2, new Color(0, 0.25f), fontSize);
+				font.DrawText(text, pos, color, fontSize);
 
 				index++;
 			}
 
-			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions) + 2, normalColor, fontSize);
+			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions) + 2, new Color(0, 0.25f), fontSize);
 			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions), selectedColor, fontSize);
 		}
 	}

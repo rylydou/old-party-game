@@ -5,7 +5,8 @@ namespace GAME
 {
 	public class PlayerControls : Controls
 	{
-		public static float cursorSensitivity = 512;
+		public EController id;
+		public sbyte index { get => (sbyte)id; }
 
 		public bool select = false;
 		public bool back = false;
@@ -23,16 +24,16 @@ namespace GAME
 		public bool pause = false;
 		public bool die = false;
 
-		public PlayerControls(sbyte index)
+		public PlayerControls(EController id)
 		{
-			this.index = index;
+			this.id = id;
 		}
 
 		public override void Update()
 		{
-			switch (index)
+			switch (id)
 			{
-				case -1:
+				case EController.WASD:
 					isConnected = true;
 
 					select = Input.GetButtonPress(Inputs.Space);
@@ -51,7 +52,7 @@ namespace GAME
 					pause = Input.GetButtonPress(Inputs.Escape);
 					die = Input.GetButtonPress(Inputs.G);
 					break;
-				case -2:
+				case EController.ArrowKeys:
 					isConnected = true;
 
 					select = Input.GetButtonPress(Inputs.Enter);

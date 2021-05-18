@@ -13,21 +13,20 @@ namespace GAME
 		public float timeBtwCrates = 4.5f;
 		public float timeBtwCrateLessPerPlayer = 0.5f;
 
-		public List<Player> players = new List<Player>
+		public static List<Player> players = new List<Player>();
+
+		public static PlayerControls mainController = null;
+
+		public static List<PlayerControls> controllers = new List<PlayerControls>()
 		{
-			new Player(-1, "_Default"),
+			new PlayerControls(EController.ArrowKeys),
+			new PlayerControls(EController.WASD),
+			new PlayerControls(EController.Gamepad0),
+			new PlayerControls(EController.Gamepad1),
+			new PlayerControls(EController.Gamepad2),
+			new PlayerControls(EController.Gamepad3),
 		};
 
-		public PlayerControls mainController = null;
-
-		public Dictionary<EController, PlayerControls> controllers = new Dictionary<EController, PlayerControls>()
-		{
-			{ EController.ArrowKeys, new PlayerControls(-2) },
-			{ EController.WASD, new PlayerControls(-1) },
-			{ EController.Gamepad0, new PlayerControls(0) },
-			{ EController.Gamepad1, new PlayerControls(1) },
-			{ EController.Gamepad2, new PlayerControls(2) },
-			{ EController.Gamepad3, new PlayerControls(3) },
-		};
+		public static PlayerControls GetControls(EController controller) => controllers[(sbyte)controller + 2];
 	}
 }

@@ -189,6 +189,16 @@ namespace MGE
 					{
 						using (var png = IO.FileOpen(path))
 						{
+							// TODO: Don't do this
+							var colors = new Microsoft.Xna.Framework.Color[rt.Width * rt.Height];
+
+							rt.GetData(colors);
+
+							for (int i = 0; i < colors.Length; i++)
+								colors[i].A = byte.MaxValue;
+
+							rt.SetData(colors);
+
 							rt.SaveAsPng(png, rt.Width, rt.Height);
 						}
 

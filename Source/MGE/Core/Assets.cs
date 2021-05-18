@@ -151,9 +151,9 @@ namespace MGE
 				if (relitivePath.Contains('@'))
 				{
 					if (unloadedAssets.ContainsKey(relitivePath))
-						unloadedAssets[relitivePath] = file;
+						unloadedAssets[relitivePath] = IO.CleanPath(file);
 					else
-						unloadedAssets.Add(relitivePath, file);
+						unloadedAssets.Add(IO.CleanPath(relitivePath), IO.CleanPath(file));
 				}
 				else
 				{
@@ -197,6 +197,19 @@ namespace MGE
 			if (unloadedAssets.ContainsKey(path))
 				return LoadAsset(unloadedAssets[path], path) as T;
 			return null;
+		}
+
+		public static string[] GetUnloadedAssets(string path)
+		{
+			var assets = new List<string>();
+
+			foreach (var asset in unloadedAssets)
+			{
+				if (asset.Key.StartsWith(path))
+					assets.Add(asset.Value.Remove(asset.Value.First((c) => c == '.')));
+			}
+
+			return assets.ToArray();
 		}
 		#endregion
 	}
