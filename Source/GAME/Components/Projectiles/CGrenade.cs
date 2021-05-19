@@ -53,15 +53,15 @@ namespace GAME.Components
 				thing.GetSimilarComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * knockback, info.doneBy);
 			}
 
-			var para = new CParticle(5, GetAsset<Texture>("Explosion"), (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 5) / 4) * 40 - 1); if (p.frame > 7) p.Kill(); });
+			var para = new CParticle(5, GetAsset<Texture>("Explosion"), (p) => { p.frame = (byte)(p.timeAlive * 50 - 1); if (p.frame > 11) p.Kill(); });
 
 			entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
 
-			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(radius * 2 + 0.5f), Vector2.zero, new Color(0.5f), 0, Vector2.zero);
-			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(radius * 2 + 0.25f), Vector2.zero, Color.red, 0, Vector2.zero);
-			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(radius * 2), Vector2.zero, Color.orange, 0, Vector2.zero);
-			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(radius * 2 - 0.25f), Vector2.zero, Color.yellow, 0, Vector2.zero);
-			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(radius * 2 - 0.5f), Vector2.zero, Color.white, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(explosionRadius * 2 + 0.5f), Vector2.zero, new Color(0.5f), 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(explosionRadius * 2 + 0.25f), Vector2.zero, Color.red, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(explosionRadius * 2), Vector2.zero, Color.orange, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(explosionRadius * 2 - 0.25f), Vector2.zero, Color.yellow, 0, Vector2.zero);
+			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(explosionRadius * 2 - 0.5f), Vector2.zero, Color.white, 0, Vector2.zero);
 		}
 	}
 }

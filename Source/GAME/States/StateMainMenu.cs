@@ -54,6 +54,14 @@ namespace GAME.States
 
 		Texture prevBackground;
 		Texture background;
+		Texture gradHor;
+
+		public override void Init()
+		{
+			base.Init();
+
+			gradHor = Assets.GetAsset<Texture>("UI/Gradient Horizontal");
+		}
 
 		public override void Update()
 		{
@@ -105,6 +113,8 @@ namespace GAME.States
 
 			if (GameSettings.mainController is null)
 			{
+				GFX.Draw(gradHor, new Rect(0, 0, Window.renderSize.x / 2, Window.renderSize.y), new Color(0, 0.5f));
+
 				var pos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
 
 				const string text = "Press [Select] To Start";
