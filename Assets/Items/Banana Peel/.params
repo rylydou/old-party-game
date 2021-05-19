@@ -8,5 +8,5 @@
 	"size": [0.6, 0.4],
 	"radius": 1.25,
 	"damage": 5,
-	"slipAmount": 4
+	"slipAmount": 2
 }
