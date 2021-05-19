@@ -5,8 +5,6 @@ namespace GAME.Components.Items
 {
 	public class CCursedPearl : CItem
 	{
-		public CPlayer owner;
-
 		float range;
 		Vector2 offset;
 
@@ -49,13 +47,6 @@ namespace GAME.Components.Items
 					PlaySound("TP");
 				}
 			}
-		}
-
-		public override void Pickup(CPlayer player)
-		{
-			base.Pickup(player);
-
-			owner = player;
 		}
 	}
 }

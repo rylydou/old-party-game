@@ -127,7 +127,7 @@ namespace GAME.States
 
 			GFX.DrawBox(new Rect(0, 0, Window.renderSize), palette.backgroundA);
 
-			const int res = 2;
+			const int res = 4;
 
 			var lastPos = Vector2.zero;
 			for (int x = -32; x < Window.renderSize.x + 32; x += res)

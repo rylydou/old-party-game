@@ -8,12 +8,11 @@
 	"size": [0.5, 0.5],
 	"enablePhysics": true,
 	"velocity": [0.35, -0.035],
-	"damage": 25,
-	"explosionDamage": 20,
+	"damage": 30,
+	"explosionDamage": 30,
 	"knockback": 0.45,
 	"radius": 1.25,
-	"explosionRadius": 2.25,
+	"explosionRadius": 2.5,
 	"lifetime": 0.8,
-	"hits": 1,
-	"bounces": 2
+	"hits": 1
 }

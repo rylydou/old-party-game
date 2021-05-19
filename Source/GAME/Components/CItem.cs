@@ -25,6 +25,7 @@ namespace GAME.Components
 		}
 
 		protected CPlayer player;
+		protected CPlayer owner;
 		protected ItemState state = ItemState.Dropped;
 		protected Texture currentSprite;
 		protected float timeAlive;
@@ -81,6 +82,7 @@ namespace GAME.Components
 		public virtual void Pickup(CPlayer player)
 		{
 			this.player = player;
+			owner = player;
 
 			SetVulnerable(false);
 			state = ItemState.Held;
@@ -125,6 +127,14 @@ namespace GAME.Components
 			{
 				entity.RemoveTag("Pickupable");
 			}
+		}
+
+		public override void Damage(int damage, Vector2 knockback, CPlayer source)
+		{
+			base.Damage(damage, knockback, source);
+
+			if (source is object)
+				owner = source;
 		}
 
 		public override void Death()

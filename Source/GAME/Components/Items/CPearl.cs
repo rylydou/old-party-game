@@ -4,8 +4,6 @@ namespace GAME.Components.Items
 {
 	public class CPearl : CItem
 	{
-		public CPlayer owner;
-
 		public override void Tick()
 		{
 			if (rb.grounded && state == ItemState.Thrown && owner is object)
@@ -32,13 +30,6 @@ namespace GAME.Components.Items
 
 				owner.Damage(@params.GetInt("userDamage"), @params.GetVector2("userVelocity"), null);
 			}
-		}
-
-		public override void Pickup(CPlayer player)
-		{
-			base.Pickup(player);
-
-			owner = player;
 		}
 	}
 }

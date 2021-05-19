@@ -50,7 +50,7 @@ namespace GAME.Components
 
 			foreach (var thing in entity.layer.GetEntities(entity.position, explosionRadius, "Melee Vulnerable"))
 			{
-				thing.GetSimilarComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * knockback, info.doneBy);
+				thing.GetSimilarComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * -knockback, info.doneBy);
 			}
 
 			var para = new CParticle(5, GetAsset<Texture>("Explosion"), (p) => { p.frame = (byte)(p.timeAlive * 50 - 1); if (p.frame > 11) p.Kill(); });

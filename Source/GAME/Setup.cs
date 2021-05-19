@@ -11,6 +11,8 @@ namespace GAME
 		public static Type[] items = new Type[]
 		{
 			typeof(CBananaGun),
+			typeof(CBananaPeel),
+			typeof(CBoomerang),
 			typeof(CCrate),
 			typeof(CCursedPearl),
 			typeof(CPearl),

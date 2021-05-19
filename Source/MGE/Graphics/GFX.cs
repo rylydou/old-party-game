@@ -183,7 +183,7 @@ namespace MGE.Graphics
 		public static void DrawLine(Vector2 position, float length, Color color, float angle = 0.0f, float thickness = 1.0f)
 		{
 			thickness = currentUnitsPerPixel * thickness;
-			sb.Draw(pixel, position * currentPixelsPerUnit, null, color, angle, Vector2.zero, new Vector2(length, thickness) * currentPixelsPerUnit, SpriteEffects.None, 0);
+			sb.Draw(pixel, position * currentPixelsPerUnit /* - Vector2.FromAngle(angle) * thickness / 2 */, null, color, angle, Vector2.zero, new Vector2(length, thickness) * currentPixelsPerUnit, SpriteEffects.None, 0);
 		}
 
 		public static void DrawPoints(Vector2 position, List<Vector2> points, Color? color = null, float thickness = 1.0f)
