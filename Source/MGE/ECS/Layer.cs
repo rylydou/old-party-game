@@ -21,6 +21,8 @@ namespace MGE.ECS
 
 		public Scene scene;
 
+		public List<(Vector2, Vector2)> debugPhysics = new List<(Vector2, Vector2)>();
+
 		public Layer() { }
 
 		public Layer(bool isUI = false)
@@ -173,6 +175,9 @@ namespace MGE.ECS
 
 		public void Tick()
 		{
+			if (Physics.Physics.DEBUG)
+				debugPhysics.Clear();
+
 			foreach (var entity in entities.ToArray())
 			{
 				if (!entity.enabled | entity.destroyed) continue;
@@ -202,6 +207,17 @@ namespace MGE.ECS
 					if (!entity.visible | entity.destroyed) continue;
 
 					entity.Draw();
+				}
+
+				if (Physics.Physics.DEBUG)
+				{
+					foreach (var call in debugPhysics)
+					{
+						if (Math.Approximately(call.Item2.y, 0))
+							GFX.DrawCircle(call.Item1, call.Item2.x, Color.red);
+						else
+							GFX.DrawRect(new Rect(call.Item1, call.Item2), Color.red);
+					}
 				}
 			}
 		}
@@ -245,6 +261,9 @@ namespace MGE.ECS
 				}
 			}
 
+			if (Physics.Physics.DEBUG)
+				debugPhysics.Add((position, new Vector2(0.1f, 0.1f)));
+
 			return nearestEntity;
 		}
 
@@ -267,6 +286,9 @@ namespace MGE.ECS
 				}
 			}
 
+			if (Physics.Physics.DEBUG)
+				debugPhysics.Add((position, new Vector2(radius, 0)));
+
 			return nearestEntity;
 		}
 
@@ -280,6 +302,9 @@ namespace MGE.ECS
 				if (rect.Contains(entity.position))
 					foundEntities.Add(entity);
 			}
+
+			if (Physics.Physics.DEBUG)
+				debugPhysics.Add((rect.position, rect.size));
 
 			return foundEntities.ToArray();
 		}
@@ -298,6 +323,9 @@ namespace MGE.ECS
 				if (distSqr < radius)
 					foundEntities.Add(entity);
 			}
+
+			if (Physics.Physics.DEBUG)
+				debugPhysics.Add((position, new Vector2(radius, 0)));
 
 			return foundEntities.ToArray();
 		}

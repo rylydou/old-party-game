@@ -5,7 +5,7 @@
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
-	"size": [0.6, 0.6],
+	"size": [0.6, 0.4],
 	"radius": 1.0,
-	"slipAmount": 0.5
+	"slipAmount": 1.75
 }

@@ -29,6 +29,7 @@ namespace GAME
 		public static Type[] baseCrateLootTable = new Type[]
 		{
 			typeof(CBananaGun),
+			typeof(CBoomerang),
 			typeof(CFishingRod),
 			typeof(CGrenadeLauncher),
 			typeof(CHamburger),
