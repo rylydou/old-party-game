@@ -3,6 +3,7 @@ namespace GAME.Components.Items
 	public class CBananaPeel : CItem
 	{
 		float radius;
+		int damage;
 		float slipAmount;
 
 		public override void Init()
@@ -10,6 +11,7 @@ namespace GAME.Components.Items
 			base.Init();
 
 			radius = @params.GetFloat("radius");
+			damage = @params.GetInt("damage");
 			slipAmount = @params.GetFloat("slipAmount");
 		}
 
@@ -19,12 +21,12 @@ namespace GAME.Components.Items
 
 			if (state == ItemState.Dropped)
 			{
-				foreach (var thing in entity.layer.GetEntities(entity.position + 0.5f, radius, "Melee Vulnerable"))
+				foreach (var thing in entity.layer.GetEntities(entity.position + 0.5f, radius, "Ranged Vulnerable"))
 				{
 					var obj = thing.GetSimilarComponent<CObject>();
 					if (obj is object && obj != this && obj != owner)
 					{
-						obj.Damage(0, obj.rb.velocity * slipAmount, owner);
+						obj.Damage(damage, obj.rb.velocity.sign * slipAmount, owner);
 
 						PlaySound("Trip");
 

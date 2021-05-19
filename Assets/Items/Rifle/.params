@@ -8,7 +8,7 @@
 	"size": [0.8, 0.8],
 	"enablePhysics": false,
 	"uses": 6,
-	"attackCooldown": 0.275,
+	"attackCooldown": 0.375,
 	"projectiles": 1,
 	"spread": 0
 }
