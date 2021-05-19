@@ -54,7 +54,7 @@ namespace GAME.Components.Items
 				if (velocity < 0 && wasMovingFowards)
 					thingsHit.Clear();
 				rb.position += velocity * entity.scale * Time.fixedDeltaTime;
-				rb.velocity.x = velocity * entity.scale
+				rb.velocity.x = velocity * entity.scale.x;
 				rb.velocity.y = 0;
 
 				if (entity.layer.raycaster.IsSolid(rb.position + 0.5f))
