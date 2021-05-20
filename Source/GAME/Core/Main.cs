@@ -141,8 +141,6 @@ namespace GAME
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D2))
 						ChangeState(new StateEditor());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D3))
-						ChangeState(new StatePlayerSetup());
-					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D4))
 						ChangeState(new StateMainMenu());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.T))
 						infiniteTime = !infiniteTime;
@@ -201,8 +199,7 @@ namespace GAME
 						layout.AddElement();
 						Config.font.DrawText("1 - Play Mode", layout.newElement, Color.white);
 						Config.font.DrawText("2 - Edit Mode", layout.newElement, Color.white);
-						Config.font.DrawText("3 - Player Setup", layout.newElement, Color.white);
-						Config.font.DrawText("4 - Main Menu", layout.newElement, Color.white);
+						Config.font.DrawText("3 - Main Menu", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText("~ - This Menu", layout.newElement, Color.white);
 						layout.AddElement();

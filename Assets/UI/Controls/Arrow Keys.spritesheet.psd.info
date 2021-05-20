@@ -1,0 +1,70 @@
+{
+	"regions": {
+		"Up": {
+			"x": 0,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Right": {
+			"x": 16,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Down": {
+			"x": 32,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Left": {
+			"x": 48,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Move": {
+			"x": 64,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Jump": {
+			"x": 80,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Use": {
+			"x": 96,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Die": {
+			"x": 112,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Select": {
+			"x": 128,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Back": {
+			"x": 144,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Pause": {
+			"x": 160,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		}
+	}
+}

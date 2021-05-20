@@ -127,7 +127,7 @@ namespace GAME.States
 
 			GFX.DrawBox(new Rect(0, 0, Window.renderSize), palette.backgroundA);
 
-			const int res = 4;
+			const int res = 64;
 
 			var lastPos = Vector2.zero;
 			for (int x = -32; x < Window.renderSize.x + 32; x += res)
@@ -152,7 +152,9 @@ namespace GAME.States
 					GFX.DrawBox(new Rect(i * barSize + Math.Wrap(Time.time * 32, -barSize * 1.5f, barSize * 1.5f), -barSize / 4, barSize, Window.renderSize.y + barSize / 2), palette.backgroundB, Math.pi / 16);
 			}
 
-			GFX.DrawBox(new Rect(0, 0, Window.renderSize.x, Window.renderSize.y * (timeAllReady / timeAllReadyToContinue)), palette.backgroundA);
+			GFX.DrawBox(new Rect(0, 0, Window.renderSize.x * (timeAllReady / timeAllReadyToContinue), Window.renderSize.y), palette.backgroundA);
+
+			Config.font.DrawText("Press [Select] To Join!", new Rect(0, Window.renderSize.y - 256, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 
 			using (var layout = new StackLayout(new Vector2(32), 256, true))
 			{

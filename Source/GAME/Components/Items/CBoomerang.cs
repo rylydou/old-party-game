@@ -11,6 +11,7 @@ namespace GAME.Components.Items
 		float radius;
 		int damage;
 		float knockback;
+		int damageOnHit;
 		float throwVelocity;
 		float goBackSpeed;
 		float followSpeed;
@@ -27,6 +28,7 @@ namespace GAME.Components.Items
 			radius = @params.GetFloat("radius");
 			damage = @params.GetInt("damage");
 			knockback = @params.GetFloat("knockback");
+			damageOnHit = @params.GetInt("damageOnHit");
 			throwVelocity = @params.GetFloat("throwVelocity");
 			goBackSpeed = @params.GetFloat("goBackSpeed");
 			followSpeed = @params.GetFloat("followSpeed");
@@ -61,7 +63,7 @@ namespace GAME.Components.Items
 				rb.velocity.x = velocity * entity.scale.x;
 				rb.velocity.y = 0;
 
-				if (entity.layer.raycaster.IsSolid(rb.position + 0.5f))
+				if (entity.layer.raycaster.IsSolid(rb.position + 0.5f) | entity.layer.raycaster.IsSolid(rb.position + new Vector2(0.5f, 0.75f)) | entity.layer.raycaster.IsSolid(rb.position + new Vector2(0.5f, 0.25f)))
 				{
 					if (velocity > 0)
 						velocity = -velocity;
@@ -98,9 +100,11 @@ namespace GAME.Components.Items
 					{
 						if (!thingsHit.Contains(obj))
 						{
-							obj.Damage(damage, new Vector2(velocity, -0.125f), owner);
+							obj.Damage(damage, new Vector2(velocity.Sign() * knockback, -0.125f), owner);
 
 							thingsHit.Add(obj);
+
+							Damage(damageOnHit, Vector2.zero, null);
 						}
 					}
 				}

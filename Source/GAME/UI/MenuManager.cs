@@ -13,7 +13,7 @@ namespace GAME.UI
 		public static Action<Menu.Option> onOptionChange = (o) => { };
 		public static Action<Menu.Option> onOptionError = (o) => { };
 		public static Action<Menu> onMenuOpen = (m) => { };
-		public static Action onMenuClose = () => { };
+		public static Action<Menu> onMenuClose = (m) => { };
 
 		static bool inited = false;
 
@@ -36,21 +36,24 @@ namespace GAME.UI
 
 			onOptionSelect += (o) => menuSelect?.Play();
 			onOptionChange += (o) => menuChange?.Play();
-			onOptionSelect += (o) => menuSelect?.Play();
-			onOptionSelect += (o) => menuSelect?.Play();
-			onOptionSelect += (o) => menuSelect?.Play();
-			onOptionSelect += (o) => menuSelect?.Play();
+			onOptionError += (o) => menuError?.Play();
+			onMenuOpen += (m) => menuOpen?.Play();
+			onMenuClose += (m) => menuClose?.Play();
 		}
 
 		public static void OpenMenu(Menu menu)
 		{
 			menus.Add(menu);
+			onMenuOpen.Invoke(menu);
 		}
 
 		public static void GoBack()
 		{
 			if (menus.Count > 0)
+			{
+				onMenuClose.Invoke(menus.Last());
 				menus.RemoveAt(menus.Count - 1);
+			}
 		}
 
 		public static void Update()

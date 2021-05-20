@@ -45,9 +45,10 @@ namespace GAME.States
 
 		public static Menu graphicsSettingsMenu = new Menu(
 			"Graphics Settings",
-			(() => (GFX.graphics.SynchronizeWithVerticalRetrace ? "[X]" : "[ ]") + " V-Sync", () => GFX.graphics.SynchronizeWithVerticalRetrace = !GFX.graphics.SynchronizeWithVerticalRetrace),
-			(() => (GFX.graphics.HardwareModeSwitch ? "[X]" : "[ ]") + " Hardware Fullscreen", () => GFX.graphics.HardwareModeSwitch = !GFX.graphics.HardwareModeSwitch),
-			(() => "Apply Changes", () => GFX.graphics.ApplyChanges())
+			(() => (Settings.Get<bool>("V-Sync", true) ? "[X]" : "[ ]") + " V-Sync", () => Settings.Toggle("V-Sync", true)),
+			(() => (Settings.Get<bool>("Hardware Fullscreen", false) ? "[X]" : "[ ]") + " Hardware Fullscreen", () => Settings.Toggle("Hardware Fullscreen", false)),
+			(() => (Settings.Get<bool>("SMAA", true) ? "[X]" : "[ ]") + " SMAA", () => Settings.Toggle("SMAA", true)),
+			(() => "Apply", () => GFX.Apply())
 		);
 
 		float backgroundTimeLeft = backgroundLifetime;
@@ -117,8 +118,8 @@ namespace GAME.States
 
 				const string text = "Press [Select] To Start";
 
-				for (int y = -2; y <= 2; y++)
-					for (int x = -2; x <= 2; x++)
+				for (int y = -4; y <= 4; y++)
+					for (int x = -4; x <= 4; x++)
 						Config.font.DrawText(text, new Rect(x, pos + y, Window.renderSize.x, 64), new Color(0, 0.025f), 1.5f, TextAlignment.Center);
 
 				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);

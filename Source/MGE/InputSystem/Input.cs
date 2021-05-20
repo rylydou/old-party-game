@@ -77,8 +77,8 @@ namespace MGE.InputSystem
 			cameraMousePosition = Camera.WinToCam(mouseState.Position);
 
 			mouseIsInWindow =
-			windowMousePosition.x >= 0 && windowMousePosition.x < Window.windowedSize.x &&
-			windowMousePosition.y >= 0 && windowMousePosition.y < Window.windowedSize.y;
+			windowMousePosition.x >= 0 && windowMousePosition.x < Window.renderSize.x &&
+			windowMousePosition.y >= 0 && windowMousePosition.y < Window.renderSize.y;
 
 			_oldMouseButtons = _mouseButtons;
 			_mouseButtons = new List<Inputs>();

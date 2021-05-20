@@ -42,6 +42,8 @@ namespace MGE
 				_current = this;
 				_game = game;
 
+				Settings.Load();
+
 				graphics = new GraphicsDeviceManager(game);
 
 				GCSettings.LatencyMode = GCLatencyMode.LowLatency;
@@ -52,8 +54,8 @@ namespace MGE
 				game.Window.AllowUserResizing = Config.allowWindowResizing;
 				game.Window.ClientSizeChanged += (sender, args) => OnResize();
 				game.Window.TextInput += (sender, args) => Input.TextInput(args);
-				game.Activated += (sender, args) => Window.isFocused = true;
-				game.Deactivated += (sender, args) => Window.isFocused = false;
+				game.Activated += (sender, args) => Window.foucused = true;
+				game.Deactivated += (sender, args) => Window.foucused = false;
 
 				Pointer.mode = PointerMode.System;
 				Pointer.mouseCursor = MouseCursor.Wait;
@@ -64,15 +66,7 @@ namespace MGE
 		{
 			using (Timmer.Start("Initialize"))
 			{
-				graphics.SynchronizeWithVerticalRetrace = true;
-				graphics.PreferMultiSampling = true;
-				graphics.GraphicsProfile = GraphicsProfile.Reach;
-				graphics.ApplyChanges();
-
-				Window.aspectRatioFrac = Config.aspectRatio;
-				Window.windowedSize = Config.defaultWindowSize;
-				Window.windowedPosition = (Window.monitorSize - Config.defaultWindowSize) / 2;
-				Window.Apply();
+				GFX.Apply();
 
 				OnResize();
 
@@ -122,16 +116,8 @@ namespace MGE
 			}
 			else if (Input.GetButtonPress(Inputs.F11))
 			{
-				switch (MGE.Window.windowMode)
-				{
-					case WindowMode.Windowed: MGE.Window.windowMode = WindowMode.BorderlessWindowed; break;
-					case WindowMode.BorderlessWindowed: MGE.Window.windowMode = WindowMode.Fullscreen; break;
-					case WindowMode.Fullscreen: MGE.Window.windowMode = WindowMode.Windowed; break;
-				}
-
-				// TODO: Don't be dumb
-				MGE.Window.Apply();
-				MGE.Window.Apply();
+				Settings.Set("Fullscreen", !Settings.Get<bool>("Fullscreen", true));
+				GFX.Apply();
 			}
 
 			statsUpdateCooldown += Time.deltaTime;
@@ -175,7 +161,7 @@ namespace MGE
 
 				using (new DrawBatch(transform: null, effect: Camera.postEffect, blend: BlendState.Opaque))
 				{
-					sb.Draw(rt, new Rect(0, 0, Window.windowedSize), Color.white);
+					sb.Draw(rt, new Rect(0, 0, Window.renderSize), Color.white);
 				}
 
 				if (shouldScreenshot)

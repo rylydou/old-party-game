@@ -182,7 +182,7 @@ namespace MGE.FileIO
 			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
 			{
 				var text = Serializer.SerializeJson(obj);
-				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length);
+				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length + 1);
 			}
 		}
 

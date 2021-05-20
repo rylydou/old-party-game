@@ -1,15 +1,16 @@
 {
-	"health": 75,
+	"health": 50,
 	"meleeVulnerable": true,
 	"rangedVulnerable": false,
 	"mass": 0.75,
 	"frictionGround": 14,
 	"frictionAir": 2,
 	"size": [0.8, 0.8],
-	"radius": 1.75,
+	"radius": 1.25,
 	"damage": 20,
 	"knockback": 0.35,
 	"throwVelocity": 0.67,
 	"goBackSpeed": 2.33,
-	"followSpeed": 0.075
+	"followSpeed": 0.075,
+	"damageOnHit": 10
 }

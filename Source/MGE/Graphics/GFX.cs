@@ -18,6 +18,29 @@ namespace MGE.Graphics
 
 		static readonly Dictionary<int, List<Vector2>> circleCache = new Dictionary<int, List<Vector2>>();
 
+		public static void Apply()
+		{
+			graphics.GraphicsProfile = GraphicsProfile.Reach;
+			graphics.SynchronizeWithVerticalRetrace = Settings.Get<bool>("V-Sync", true);
+			graphics.PreferMultiSampling = Settings.Get<bool>("SMAA", true);
+			graphics.HardwareModeSwitch = Settings.Get<bool>("Hardware Fullscreen", false);
+			graphics.IsFullScreen = Settings.Get<bool>("Fullscreen", true);
+			if (graphics.IsFullScreen)
+			{
+				graphics.PreferredBackBufferWidth = Window.monitorSize.x;
+				graphics.PreferredBackBufferHeight = Window.monitorSize.y;
+			}
+			else
+			{
+				graphics.PreferredBackBufferWidth = Config.defaultWindowSize.x;
+				graphics.PreferredBackBufferHeight = Config.defaultWindowSize.y;
+				Window.gameWindow.Position = (Window.monitorSize - Config.defaultWindowSize) / 2;
+			}
+			Window.gameWindow.IsBorderless = !graphics.IsFullScreen;
+			graphics.ApplyChanges();
+			graphics.ApplyChanges();
+		}
+
 		static Texture _pixel;
 		public static Texture pixel
 		{

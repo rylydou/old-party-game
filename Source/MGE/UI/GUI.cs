@@ -16,7 +16,7 @@ namespace MGE.UI
 			get
 			{
 				if (_gui == null)
-					_gui = new GUI(new Rect(Vector2.zero, Window.windowedSize), Input.mouseIsInWindow);
+					_gui = new GUI(new Rect(Vector2.zero, Window.renderSize), Input.mouseIsInWindow);
 				return _gui;
 			}
 		}

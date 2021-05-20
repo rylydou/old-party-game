@@ -7,6 +7,7 @@ namespace GAME.Components
 		protected float attackCooldown;
 
 		protected int uses;
+		protected int startingUses;
 		protected float cooldown;
 
 		public override void Init()
@@ -14,6 +15,7 @@ namespace GAME.Components
 			base.Init();
 
 			uses = @params.GetInt("uses");
+			startingUses = uses;
 			attackCooldown = @params.GetFloat("attackCooldown");
 		}
 
@@ -28,7 +30,7 @@ namespace GAME.Components
 		{
 			base.Draw();
 
-			Draw(currentSprite, Vector2.zero, Color.Lerp(Color.white, uses < 2 ? Color.red : Color.black, cooldown / attackCooldown));
+			Draw(currentSprite, Vector2.zero, Color.Lerp(Color.white, uses <= Math.Max((float)startingUses / 10, 1) ? Color.red : Color.black, cooldown / attackCooldown));
 		}
 
 		public override void Pickup(CPlayer player)
