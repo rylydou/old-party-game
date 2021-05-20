@@ -322,7 +322,7 @@ namespace GAME.Components
 			hitFlash = -1;
 			player.deaths++;
 
-			if (lastHitBy is object)
+			if (lastHitBy is object && lastHitBy != this)
 			{
 				lastHitBy.player.kills++;
 				lastHitBy.health = Math.Clamp(lastHitBy.health + lastHitBy.healthOnKill, lastHitBy.maxHealth);

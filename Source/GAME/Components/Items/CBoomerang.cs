@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MGE;
+using MGE.Graphics;
 
 namespace GAME.Components.Items
 {
@@ -16,6 +17,8 @@ namespace GAME.Components.Items
 
 		float velocity;
 		bool flying;
+
+		float lastPlayedSound;
 
 		public override void Init()
 		{
@@ -35,6 +38,7 @@ namespace GAME.Components.Items
 
 			velocity = throwVelocity;
 			flying = true;
+			thingsHit.Clear();
 		}
 
 		public override void Tick()
@@ -74,7 +78,7 @@ namespace GAME.Components.Items
 				{
 					rb.position.y = Math.MoveTowards(rb.position.y, owner.rb.position.y, followSpeed);
 
-					if (Vector2.DistanceLT(rb.position, owner.rb.position, 1.0f))
+					if (Vector2.DistanceLT(rb.position, owner.rb.position, 2.5f))
 					{
 						if (owner.heldItem is null)
 							owner.Pickup(this);
@@ -101,6 +105,23 @@ namespace GAME.Components.Items
 					}
 				}
 			}
+		}
+
+		public override void Update()
+		{
+			base.Update();
+
+			lastPlayedSound += Time.deltaTime;
+			if (flying && lastPlayedSound > 0.2f)
+			{
+				lastPlayedSound = 0;
+				PlaySound("Fly");
+			}
+		}
+
+		public override void Draw()
+		{
+			GFX.Draw(sprite, new Rect(entity.position + 0.5f, 1), Color.white, flying ? Time.time * Math.pi * 16 : 0, new Vector2(8));
 		}
 	}
 }

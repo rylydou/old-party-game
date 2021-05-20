@@ -24,7 +24,7 @@ namespace GAME.Components.Items
 				foreach (var thing in entity.layer.GetEntities(entity.position + 0.5f, radius, "Ranged Vulnerable"))
 				{
 					var obj = thing.GetSimilarComponent<CObject>();
-					if (obj is object && obj != this && obj != owner)
+					if (obj is object && obj is CPlayer && obj != this && obj != owner)
 					{
 						obj.Damage(damage, obj.rb.velocity.sign * slipAmount, owner);
 
