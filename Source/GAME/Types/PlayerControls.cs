@@ -36,7 +36,7 @@ namespace GAME
 				case EController.WASD:
 					isConnected = true;
 
-					select = Input.GetButtonPress(Inputs.Space);
+					select = Input.GetButtonPress(Inputs.Space) | Input.GetButtonPress(Inputs.E);
 					back = Input.GetButtonPress(Inputs.Escape) | Input.GetButtonPress(Inputs.Q);
 
 					up = Input.GetButtonPress(Inputs.W);
@@ -48,14 +48,14 @@ namespace GAME
 					crouch = Input.GetButton(Inputs.S);
 					jump = Input.GetButtonPress(Inputs.W);
 					jumpRelease = Input.GetButtonRelease(Inputs.W);
-					use = Input.GetButtonPress(Inputs.LeftShift) | Input.GetButtonPress(Inputs.E) | Input.GetButtonPress(Inputs.Q) | Input.GetButtonPress(Inputs.F) | Input.GetButtonPress(Inputs.Space); ;
+					use = Input.GetButtonPress(Inputs.LeftShift) | Input.GetButtonPress(Inputs.E) | Input.GetButtonPress(Inputs.Q) | Input.GetButtonPress(Inputs.F) | Input.GetButtonPress(Inputs.Space);
 					pause = Input.GetButtonPress(Inputs.Escape);
 					die = Input.GetButtonPress(Inputs.G);
 					break;
 				case EController.ArrowKeys:
 					isConnected = true;
 
-					select = Input.GetButtonPress(Inputs.Enter);
+					select = Input.GetButtonPress(Inputs.Enter) | Input.GetButtonPress(Inputs.RightControl) | Input.GetButtonPress(Inputs.RightAlt) | Input.GetButtonPress(Inputs.RightShift);
 					back = Input.GetButtonPress(Inputs.Delete) | Input.GetButtonPress(Inputs.Back);
 
 					up = Input.GetButtonPress(Inputs.Up);
@@ -67,8 +67,8 @@ namespace GAME
 					crouch = Input.GetButton(Inputs.Down);
 					jump = Input.GetButtonPress(Inputs.Up);
 					jumpRelease = Input.GetButtonRelease(Inputs.Up);
-					use = Input.GetButtonPress(Inputs.RightControl) | Input.GetButtonPress(Inputs.RightShift) | Input.GetButtonPress(Inputs.RightAlt);
-					die = Input.GetButtonPress(Inputs.Pipe);
+					use = Input.GetButtonPress(Inputs.Enter) | Input.GetButtonPress(Inputs.RightControl) | Input.GetButtonPress(Inputs.RightShift) | Input.GetButtonPress(Inputs.RightAlt);
+					die = Input.GetButtonPress(Inputs.Delete) | Input.GetButtonPress(Inputs.Back);
 					break;
 				default:
 					if (Input.GamepadConnected(index))

@@ -132,17 +132,17 @@ namespace GAME.States
 			var lastPos = Vector2.zero;
 			for (int x = -32; x < Window.renderSize.x + 32; x += res)
 			{
-				var pos = new Vector2(x, Math.Sin((float)x / Window.renderSize.x * 2 + Time.time * 0.5f) * Window.renderSize.y / 3 + Window.renderSize.y / 2);
-				GFX.DrawLine(lastPos, pos, palette.backgroundB, 64);
-				lastPos = pos;
+				var sineWavePos = new Vector2(x, Math.Sin((float)x / Window.renderSize.x * 2 + Time.time * 0.5f) * Window.renderSize.y / 3 + Window.renderSize.y / 2);
+				GFX.DrawLine(lastPos, sineWavePos, palette.backgroundB, 64);
+				lastPos = sineWavePos;
 			}
 
 			lastPos = Vector2.zero;
 			for (int x = -32; x < Window.renderSize.x + 32; x += res)
 			{
-				var pos = new Vector2(x, Math.Sin((float)x / Window.renderSize.x * 2 + Time.time * 0.5f + Math.pi) * Window.renderSize.y / 3 + Window.renderSize.y / 2);
-				GFX.DrawLine(lastPos, pos, palette.backgroundB, 64);
-				lastPos = pos;
+				var sineWavePos = new Vector2(x, Math.Sin((float)x / Window.renderSize.x * 2 + Time.time * 0.5f + Math.pi) * Window.renderSize.y / 3 + Window.renderSize.y / 2);
+				GFX.DrawLine(lastPos, sineWavePos, palette.backgroundB, 64);
+				lastPos = sineWavePos;
 			}
 
 			const int barSize = 64;
@@ -154,7 +154,15 @@ namespace GAME.States
 
 			GFX.DrawBox(new Rect(0, 0, Window.renderSize.x * (timeAllReady / timeAllReadyToContinue), Window.renderSize.y), palette.backgroundA);
 
-			Config.font.DrawText("Press [Select] To Join!", new Rect(0, Window.renderSize.y - 256, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
+			var textPos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
+
+			const string text = "Press [Select] To Join";
+
+			for (int y = -4; y <= 4; y++)
+				for (int x = -4; x <= 4; x++)
+					Config.font.DrawText(text, new Rect(x, textPos + y, Window.renderSize.x, 64), new Color(0, 0.033f), 1.5f, TextAlignment.Center);
+
+			Config.font.DrawText(text, new Rect(0, textPos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 
 			using (var layout = new StackLayout(new Vector2(32), 256, true))
 			{
