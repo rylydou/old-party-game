@@ -179,10 +179,10 @@ namespace MGE.FileIO
 
 		public static void SaveJson(string path, object obj)
 		{
-			using (var fs = File.Open(IO.ParsePath(path), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
+			using (var fs = File.Open(IO.ParsePath(path), FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
 			{
 				var text = Serializer.SerializeJson(obj);
-				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length + 1);
+				fs.Write(Encoding.ASCII.GetBytes(text), 0, text.Length);
 			}
 		}
 
