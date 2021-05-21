@@ -8,10 +8,14 @@ namespace GAME
 
 		public Stage stage;
 
+		public bool infiniteTime = false;
 		public float roundTime = 60 * 5.0f;
 		public float maxOvertime = 60 * 1.0f;
+
 		public float timeBtwCrates = 4.5f;
 		public float timeBtwCrateLessPerPlayer = 0.5f;
+
+		public float timeToRespawn = 0.67f;
 
 		public static List<Player> players = new List<Player>();
 

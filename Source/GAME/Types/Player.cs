@@ -5,8 +5,6 @@ namespace GAME
 {
 	public class Player
 	{
-		public static float timeToRespawn = 0.5f;
-
 		public static Color[] colors = new Color[]
 		{
 			new Color("#FF595E"),
@@ -58,8 +56,6 @@ namespace GAME
 		public ushort deaths = 0;
 
 		public CPlayer player = null;
-
-		public float timeRespawing = 0.0f;
 
 		public Player(EController controlsIndex, string skin = null)
 		{

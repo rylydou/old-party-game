@@ -41,7 +41,7 @@ namespace GAME.States
 
 				player.player = new CPlayer(player);
 
-				SpawnPlayer(player.player);
+				SceneManager.activeScene.GetLayer("Gameplay").AddEntity(new Entity(new CRigidbody(), player.player));
 
 				SpawnCrate();
 			}
@@ -62,17 +62,14 @@ namespace GAME.States
 
 			foreach (var player in GameSettings.players)
 			{
-				if (player.player.health < 1)
+				if (player.player.entity.enabled == false)
 				{
 					if (timeLeft > 0)
-						player.timeRespawing += Time.fixedDeltaTime;
+						player.player.timeRespawing += Time.fixedDeltaTime;
 
-					if (player.timeRespawing > Player.timeToRespawn)
+					if (player.player.timeRespawing > GameSettings.current.timeToRespawn)
 					{
-						player.timeRespawing = 0;
-						player.player = new CPlayer(player);
-
-						SpawnPlayer(player.player);
+						player.player.Start();
 					}
 				}
 			}
@@ -81,7 +78,10 @@ namespace GAME.States
 			{
 				timeLeft -= Time.fixedDeltaTime;
 
-				if (timeLeft < -GameSettings.current.maxOvertime || (timeLeft < 0 && GameSettings.players.All(x => x.player.health < 1)))
+				if (
+					timeLeft < -GameSettings.current.maxOvertime ||
+					(timeLeft < 0 && GameSettings.players.Count - GameSettings.players.Count(x => x.player.health < 1) <= 1)
+				)
 				{
 					Main.current.ChangeState(new StatePlayerSetup());
 				}
@@ -103,10 +103,10 @@ namespace GAME.States
 				var offset = index * 96;
 
 				var healthFill =
-					player.timeRespawing > 0 ? Math.RoundToInt(player.timeRespawing / Player.timeToRespawn * player.player.maxHealth) :
-					Math.RoundToInt(player.player.lastHealth);
+					player.player.timeRespawing > 0 ? player.player.timeRespawing / GameSettings.current.timeToRespawn * player.player.maxHealth :
+					player.player.lastHealth;
 
-				var healthChangeColorAt = player.timeRespawing > 0 ? player.player.maxHealth : player.player.health;
+				var healthChangeColorAt = player.player.timeRespawing > 0 ? player.player.maxHealth : player.player.health;
 
 				for (int i = 0; i < healthFill; i++)
 				{
@@ -154,12 +154,12 @@ namespace GAME.States
 
 		public void SpawnPlayer(CPlayer player)
 		{
-			SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), player));
+			SceneManager.activeScene.GetLayer("Gameplay").AddEntity(new Entity(new CRigidbody(), player));
 		}
 
 		public void SpawnCrate()
 		{
-			SceneManager.activeScene.layers[1].AddEntity(new Entity(new CRigidbody(), new CCrate()));
+			SceneManager.activeScene.GetLayer("Gameplay").AddEntity(new Entity(new CRigidbody(), new CCrate()));
 		}
 	}
 }

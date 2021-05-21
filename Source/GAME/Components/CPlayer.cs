@@ -39,15 +39,16 @@ namespace GAME.Components
 		float lastHealthMem;
 		float lastHealthMaxDelta;
 
-		public CItem heldItem;
-		CPlayer lastHitBy;
-		CItem nearestItem;
+		public CItem heldItem = null;
+		CPlayer lastHitBy = null;
+		CItem nearestItem = null;
 		float groundedMem = -1;
 		float jumpMem = -1;
 		public float hitFlash = -1;
-		float extraVelocity;
+		float extraVelocity = 0;
 		public float lastHealth = 100;
 		float lastHealthStayTime = -1;
+		public float timeRespawing = 0;
 
 		bool inputJump;
 		bool inputJumpRelease;
@@ -58,7 +59,8 @@ namespace GAME.Components
 		// TODO: Add Animations
 		Texture texCrouching;
 		Texture texArrow;
-		Texture texPunchSwing;
+
+		Texture texPunchSwingEffect;
 		Texture texDamageEffect;
 		Texture texDeathEffect;
 		Texture texSpawnEffect;
@@ -103,10 +105,32 @@ namespace GAME.Components
 			texBody = GetAsset<Texture>("Body");
 			texCrouching = GetAsset<Texture>("Crouching");
 			texArrow = GetAsset<Texture>("Arrow");
-			texPunchSwing = GetAsset<Texture>("Punch Swing");
+			texPunchSwingEffect = GetAsset<Texture>("Punch Swing");
 			texDamageEffect = GetAsset<Texture>("Damage Effect");
 			texDeathEffect = GetAsset<Texture>("Death Effect");
 			texSpawnEffect = GetAsset<Texture>("Spawn Effect");
+
+			Start();
+		}
+
+		public void Start()
+		{
+			entity.enabled = true;
+			entity.visible = true;
+
+			health = maxHealth;
+
+			heldItem = null;
+			lastHitBy = null;
+			nearestItem = null;
+			groundedMem = -1;
+			jumpMem = -1;
+			hitFlash = -1;
+			extraVelocity = 0;
+			lastHealth = maxHealth;
+			lastHealthStayTime = -1;
+			timeRespawing = 0;
+			rb.velocity = Vector2.zero;
 
 			if (GameSettings.current.stage.playerSpawnPoints.Count < 1)
 			{
@@ -125,13 +149,13 @@ namespace GAME.Components
 
 					PlaySound("Spawn");
 
-					var para = new CParticle(3, texSpawnEffect, (p) => { p.frame = (byte)(p.timeAlive * 35 - 1); if (p.frame > 7) p.Kill(); });
+					var para = new CParticle(3, texSpawnEffect, (p) => { p.frame = (byte)(p.timeAlive * 25 - 1); if (p.frame > 7) p.Kill(); });
 
 					entity.layer.scene.GetLayer("Background").AddEntity(new MGE.ECS.Entity(para));
 
-					para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, player.color, 0, Vector2.zero);
-					para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.5f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
-					para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, Color.white, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, player.color, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.5f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, Color.white, 0, Vector2.zero);
 				}
 				else
 				{
@@ -239,7 +263,7 @@ namespace GAME.Components
 						if (hitThing)
 							PlaySound("Punch Hit");
 
-						var para = new CParticle(1, texPunchSwing, (p) => { p.frame = (byte)(p.timeAlive * 60 - 1); if (p.frame > 2) p.Kill(); });
+						var para = new CParticle(1, texPunchSwingEffect, (p) => { p.frame = (byte)(p.timeAlive * 60 - 1); if (p.frame > 2) p.Kill(); });
 
 						entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
 
@@ -312,10 +336,7 @@ namespace GAME.Components
 			hitFlash = flashTime;
 			lastHealthStayTime = lastHealthMem;
 
-			if (source is object) lastHitBy = source;
-
-			if (health < 1)
-				Death();
+			if (source is object && source != this) lastHitBy = source;
 
 			PlaySound("Damage");
 
@@ -326,12 +347,13 @@ namespace GAME.Components
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color, 0, Vector2.zero);
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(2.75f), Vector2.zero, Color.white, 0, Vector2.zero);
+
+			if (health < 1)
+				Death();
 		}
 
 		public override void Death()
 		{
-			base.Death();
-
 			hitFlash = -1;
 			player.deaths++;
 
@@ -340,6 +362,8 @@ namespace GAME.Components
 				lastHitBy.player.kills++;
 				lastHitBy.health = Math.Clamp(lastHitBy.health + lastHitBy.healthOnKill, lastHitBy.maxHealth);
 			}
+
+			PlaySound("Death");
 
 			var para = new CParticle(6, texDeathEffect, (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 6) / 8) * 45 - 1); if (p.frame > 7) p.Kill(); });
 
@@ -353,6 +377,9 @@ namespace GAME.Components
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(2.5f), Vector2.zero, Color.white, 0, Vector2.zero);
 
 			Pickup(null);
+
+			entity.enabled = false;
+			entity.visible = false;
 		}
 	}
 }

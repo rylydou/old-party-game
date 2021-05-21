@@ -6,7 +6,7 @@
 			"width": 16,
 			"height": 16
 		},
-		"Right": {
+		"Left": {
 			"x": 16,
 			"y": 0,
 			"width": 16,
@@ -18,13 +18,19 @@
 			"width": 16,
 			"height": 16
 		},
-		"Left": {
+		"Right": {
 			"x": 48,
 			"y": 0,
 			"width": 16,
 			"height": 16
 		},
 		"Move": {
+			"x": 0,
+			"y": 0,
+			"width": 16,
+			"height": 16
+		},
+		"Use": {
 			"x": 64,
 			"y": 0,
 			"width": 16,
@@ -36,32 +42,26 @@
 			"width": 16,
 			"height": 16
 		},
-		"Use": {
+		"Die": {
 			"x": 96,
 			"y": 0,
 			"width": 16,
 			"height": 16
 		},
-		"Die": {
-			"x": 112,
-			"y": 0,
-			"width": 16,
-			"height": 16
-		},
 		"Select": {
-			"x": 128,
+			"x": 80,
 			"y": 0,
 			"width": 16,
 			"height": 16
 		},
 		"Back": {
-			"x": 144,
+			"x": 122,
 			"y": 0,
 			"width": 16,
 			"height": 16
 		},
 		"Pause": {
-			"x": 160,
+			"x": 112,
 			"y": 0,
 			"width": 16,
 			"height": 16
