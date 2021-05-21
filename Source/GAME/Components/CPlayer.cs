@@ -294,7 +294,7 @@ namespace GAME.Components
 			health -= damage;
 			extraVelocity += knockback.x;
 			rb.velocity.y = knockback.y;
-			groundedMem = -1;
+			groundedMem = flashTime;
 
 			hitFlash = flashTime;
 			lastHealthStayTime = lastHealthMem;

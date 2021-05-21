@@ -9,7 +9,7 @@ using MGE.Graphics;
 
 namespace MGE
 {
-	public class Assets
+	public static class Assets
 	{
 		public static string[] activeRP = new string[] { };
 

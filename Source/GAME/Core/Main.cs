@@ -156,6 +156,17 @@ namespace GAME
 
 			engine.Update(gameTime);
 
+			Discord.SetDetails($"Playing on {GameSettings.current.stage.name} with {GameSettings.players.Count} players");
+
+			if (state is StateMainMenu)
+				Discord.SetState("Main Menu");
+			else if (state is StatePlayerSetup)
+				Discord.SetState("Setup");
+			else if (state is StatePlaying)
+				Discord.SetState("Playing");
+			else if (state is StateEditor)
+				Discord.SetState("Stage Editor");
+
 			base.Update(gameTime);
 		}
 

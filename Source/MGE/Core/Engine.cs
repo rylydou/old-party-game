@@ -80,6 +80,8 @@ namespace MGE
 				Pointer.color = Colors.accent;
 				Pointer.shadowColor = new Color(0.0f, 0.1f);
 				Pointer.shadowOffset = new Vector2(2);
+
+				Discord.Init();
 			}
 		}
 
@@ -96,7 +98,11 @@ namespace MGE
 			}
 		}
 
-		public void UnloadContent() => Assets.UnloadAssets();
+		public void UnloadContent()
+		{
+			Assets.UnloadAssets();
+			Discord.DeInit();
+		}
 
 		public void Update(GameTime gameTime)
 		{
@@ -142,6 +148,8 @@ namespace MGE
 			SceneManager.Update();
 
 			GFX.SetupToDrawUI();
+
+			Discord.Update();
 		}
 
 		public void Draw(GameTime gameTime)
