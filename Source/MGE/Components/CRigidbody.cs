@@ -12,13 +12,15 @@ namespace MGE.Components
 
 		public Vector2 bounceyness = Vector2.zero;
 
+		public float skinWidth = 0.0f;
+
 		Vector2 _size = new Vector2(0.8f, 0.8f);
 		public Vector2 size
 		{
-			get => _size;
+			get => _size - skinWidth * 2;
 			set
 			{
-				_size = value;
+				_size = value + skinWidth * 2;
 				CalcRaySpacing();
 			}
 		}
@@ -26,8 +28,8 @@ namespace MGE.Components
 		public Vector2 position = Vector2.zero;
 		public Vector2 effectivePosition
 		{
-			get => position + ((Vector2.one - size) / 2);
-			set => position = value - ((Vector2.one - size) / 2);
+			get => position + ((Vector2.one - size) / 2) + skinWidth;
+			set => position = value - ((Vector2.one - size) / 2) - skinWidth;
 		}
 
 		public Rect rect { get => new Rect(effectivePosition, size); }
@@ -35,6 +37,13 @@ namespace MGE.Components
 		public Vector2 velocity = Vector2.zero;
 
 		public bool grounded = false;
+
+		public bool hitTop { get; private set; } = false;
+		public bool hitRight { get; private set; } = false;
+		public bool hitBottom { get; private set; } = false;
+		public bool hitLeft { get; private set; } = false;
+		public bool hitX { get; private set; } = false;
+		public bool hitY { get; private set; } = false;
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -71,9 +80,16 @@ namespace MGE.Components
 
 			if (raycaster is null)
 			{
-				Logger.LogWarning("Rigidbody has no raycaster!");
+				Logger.LogError("Rigidbody has no raycaster!");
 				return;
 			}
+
+			hitTop = false;
+			hitRight = false;
+			hitBottom = false;
+			hitLeft = false;
+			hitX = false;
+			hitY = false;
 
 			velocity += Physics.Physics.gravity * Time.fixedDeltaTime;
 
@@ -81,44 +97,54 @@ namespace MGE.Components
 
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var offset = direction.y > 0.0f ? size.y : 0;
-
-				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, offset);
+				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, direction.y > 0 ? size.y + skinWidth : -skinWidth);
 				var rayDir = velocity.isolateY.sign;
 
 				var hit = raycaster.Raycast(rayPos, rayDir);
 
 				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.y)))
 				{
-					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0.0f ? size.y : 0));
+					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0 ? size.y + skinWidth : -skinWidth));
 					velocity.y = bounceyness.y * -velocity.y;
 					position.y += velocity.y * 4;
+
+					if (direction.y > 0)
+						hitBottom = true;
+					else
+						hitTop = true;
+
+					hitY = true;
 				}
 			}
 
 			for (int i = 0; i < raycastsCount.y; i++)
 			{
-				var offset = direction.x > 0.0f ? size.x : 0;
-
-				var rayPos = effectivePosition + new Vector2(offset, raySpacing.y * i);
+				var rayPos = effectivePosition + new Vector2(direction.x > 0 ? size.x + skinWidth : -skinWidth, raySpacing.y * i);
 				var rayDir = velocity.isolateX.sign;
 
 				var hit = raycaster.Raycast(rayPos, rayDir);
 
 				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.x)))
 				{
-					effectivePosition = new Vector2(hit.position.x - (direction.x > 0.0f ? size.x : 0), effectivePosition.y);
+					effectivePosition = new Vector2(hit.position.x - (direction.x > 0 ? size.x + skinWidth : -skinWidth), effectivePosition.y);
 					velocity.x = bounceyness.x * -velocity.x;
 					position.x += velocity.x * 4;
+
+					if (direction.x > 0)
+						hitRight = true;
+					else
+						hitLeft = true;
+
+					hitX = true;
 				}
 			}
 
 			grounded = false;
 			if (!(velocity.y < 0))
 			{
-				grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomLeft, Vector2.up), GFX.currentUnitsPerPixel);
+				grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomLeft, Vector2.up), GFX.currentUnitsPerPixel + skinWidth);
 				if (!grounded)
-					grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomRight - new Vector2(GFX.currentUnitsPerPixel / 2, 0), Vector2.up), GFX.currentUnitsPerPixel);
+					grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomRight - new Vector2(GFX.currentUnitsPerPixel / 2, 0), Vector2.up), GFX.currentUnitsPerPixel + skinWidth);
 			}
 
 			position += velocity;
@@ -144,7 +170,7 @@ namespace MGE.Components
 
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var offset = direction.y > 0.0f ? size.y : 0;
+				var offset = direction.y > 0 ? size.y : 0;
 
 				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, offset);
 				var rayDir = velocity.isolateY.sign;
@@ -154,7 +180,7 @@ namespace MGE.Components
 
 			for (int i = 0; i < raycastsCount.y; i++)
 			{
-				var offset = direction.x > 0.0f ? size.x : 0;
+				var offset = direction.x > 0 ? size.x : 0;
 
 				var rayPos = effectivePosition + new Vector2(offset, raySpacing.y * i);
 				var rayDir = velocity.isolateX.sign;

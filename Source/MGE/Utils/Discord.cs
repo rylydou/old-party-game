@@ -1,6 +1,5 @@
 using System;
 using DiscordRPC;
-using DiscordRPC.Logging;
 
 namespace MGE
 {
@@ -14,26 +13,44 @@ namespace MGE
 		{
 			id = Environment.TickCount64.ToString();
 
-			client = new DiscordRpcClient("845088612718739457");
+			client = new DiscordRpcClient(Config.discordAppId);
 
-			client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+			// client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+
+			client.OnConnectionEstablished += (sender, e) =>
+			{
+				Logger.Log($"Discord RPC connected");
+			};
+
+			client.OnConnectionFailed += (sender, e) =>
+			{
+				Logger.Log("Discord RPC disconnected");
+				client.Dispose();
+			};
 
 			client.OnReady += (sender, e) =>
 			{
-				Logger.Log($"RPC connected under {e.User.Username}");
+				Logger.Log($"Discord RPC ready under {e.User.Username}");
+
+				client.SetPresence(new RichPresence()
+				{
+					Timestamps = new Timestamps(DateTime.UtcNow)
+				});
 			};
 
-			client.OnPresenceUpdate += (sender, e) =>
+			client.OnClose += (sender, e) =>
 			{
-				Logger.Log($"RPC presence updated to {e.Presence}");
+				Logger.Log($"Discord RPC closed {e.Code}\n{e.Reason}");
+				client.Dispose();
+			};
+
+			client.OnError += (sender, e) =>
+			{
+				Logger.LogError($"Discord RPC Error {e.Code}\n{e.Message}");
+				client.Dispose();
 			};
 
 			client.Initialize();
-
-			client.SetPresence(new RichPresence()
-			{
-				Timestamps = new Timestamps(DateTime.UtcNow)
-			});
 		}
 
 		public static void SetPresence(RichPresence presence)
@@ -41,14 +58,28 @@ namespace MGE
 			client.SetPresence(presence);
 		}
 
-		public static RichPresence SetDetails(string details) => client.UpdateDetails(details);
-		public static RichPresence SetState(string details) => client.UpdateState(details);
-		public static RichPresence SetSmallIcon(string key, string tooltip = null) => client.UpdateSmallAsset(key, tooltip);
-		public static RichPresence SetLargeIcon(string key, string tooltip = null) => client.UpdateLargeAsset(key, tooltip);
-
-		public static void Update()
+		public static RichPresence SetDetails(string details)
 		{
-			// client.Invoke();
+			if (client.IsInitialized) return client.UpdateDetails(details);
+			return null;
+		}
+
+		public static RichPresence SetState(string details)
+		{
+			if (client.IsInitialized) return client.UpdateState(details);
+			return null;
+		}
+
+		public static RichPresence SetSmallIcon(string key, string tooltip = null)
+		{
+			if (client.IsInitialized) return client.UpdateSmallAsset(key, tooltip);
+			return null;
+		}
+
+		public static RichPresence SetLargeIcon(string key, string tooltip = null)
+		{
+			if (client.IsInitialized) return client.UpdateLargeAsset(key, tooltip);
+			return null;
 		}
 
 		public static void DeInit()

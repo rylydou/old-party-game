@@ -1,7 +1,7 @@
 {
-	"health": 30,
+	"health": 20,
 	"meleeVulnerable": true,
-	"rangedVulnerable": true,
+	"rangedVulnerable": false,
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
@@ -10,7 +10,7 @@
 	"damage": 40,
 	"knockback": 1.1,
 	"speed": 0.6,
-	"radius": 0.85,
+	"radius": 0.95,
 	"lifetime": 0.35,
 	"hits": 1
 }

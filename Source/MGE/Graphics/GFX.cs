@@ -37,7 +37,21 @@ namespace MGE.Graphics
 				Window.gameWindow.Position = (Window.monitorSize - Config.defaultWindowSize) / 2;
 			}
 			Window.gameWindow.IsBorderless = !graphics.IsFullScreen;
+
 			graphics.ApplyChanges();
+
+			if (graphics.IsFullScreen)
+			{
+				graphics.PreferredBackBufferWidth = Window.monitorSize.x;
+				graphics.PreferredBackBufferHeight = Window.monitorSize.y;
+			}
+			else
+			{
+				graphics.PreferredBackBufferWidth = Config.defaultWindowSize.x;
+				graphics.PreferredBackBufferHeight = Config.defaultWindowSize.y;
+				Window.gameWindow.Position = (Window.monitorSize - Config.defaultWindowSize) / 2;
+			}
+
 			graphics.ApplyChanges();
 		}
 

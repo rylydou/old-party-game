@@ -12,6 +12,8 @@ namespace MGE
 		// C:/Users/{current-user}/AppData/Local/Company/Game/
 		public static string saveDataPath = @"%LocalAppData%/MGE/MGEGame/";
 
+		public static readonly string discordAppId = @"845088612718739457";
+
 		// # Game Loop
 		public static int tps = 60;
 

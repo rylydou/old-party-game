@@ -61,6 +61,7 @@ namespace GAME.Components
 		Texture texPunchSwing;
 		Texture texDamageEffect;
 		Texture texDeathEffect;
+		Texture texSpawnEffect;
 
 		public CPlayer(Player player)
 		{
@@ -105,6 +106,7 @@ namespace GAME.Components
 			texPunchSwing = GetAsset<Texture>("Punch Swing");
 			texDamageEffect = GetAsset<Texture>("Damage Effect");
 			texDeathEffect = GetAsset<Texture>("Death Effect");
+			texSpawnEffect = GetAsset<Texture>("Spawn Effect");
 
 			if (GameSettings.current.stage.playerSpawnPoints.Count < 1)
 			{
@@ -122,6 +124,14 @@ namespace GAME.Components
 					rb.position = spawnPos;
 
 					PlaySound("Spawn");
+
+					var para = new CParticle(3, texSpawnEffect, (p) => { p.frame = (byte)(p.timeAlive * 35 - 1); if (p.frame > 7) p.Kill(); });
+
+					entity.layer.scene.GetLayer("Background").AddEntity(new MGE.ECS.Entity(para));
+
+					para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, player.color, 0, Vector2.zero);
+					para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.5f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
+					para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, Color.white, 0, Vector2.zero);
 				}
 				else
 				{
@@ -143,6 +153,9 @@ namespace GAME.Components
 			extraVelocity = Math.Clamp(extraVelocity, -moveSpeed * 2, moveSpeed * 2);
 
 			extraVelocity *= 1 - (rb.grounded ? extraFrictionGround : extraFrictionAir) * Time.fixedDeltaTime;
+
+			if (extraVelocity > 0 && rb.hitRight | extraVelocity < 0 && rb.hitLeft)
+				extraVelocity = 0;
 
 			rb.velocity.x = player.controls.move * (player.controls.crouch ? crouchingMoveSpeed : moveSpeed) * Time.fixedDeltaTime;
 

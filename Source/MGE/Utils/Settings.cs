@@ -29,14 +29,8 @@ namespace MGE
 			{
 				data[name] = value;
 
-				// TEMP
-				Save();
-
 				return false;
 			}
-
-			// TEMP
-			Save();
 
 			return true;
 		}

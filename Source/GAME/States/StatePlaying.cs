@@ -42,6 +42,8 @@ namespace GAME.States
 				player.player = new CPlayer(player);
 
 				SpawnPlayer(player.player);
+
+				SpawnCrate();
 			}
 
 			timeLeft = GameSettings.current.roundTime;
@@ -62,7 +64,8 @@ namespace GAME.States
 			{
 				if (player.player.health < 1)
 				{
-					player.timeRespawing += Time.fixedDeltaTime;
+					if (timeLeft > 0)
+						player.timeRespawing += Time.fixedDeltaTime;
 
 					if (player.timeRespawing > Player.timeToRespawn)
 					{
@@ -78,7 +81,7 @@ namespace GAME.States
 			{
 				timeLeft -= Time.fixedDeltaTime;
 
-				if (timeLeft < -GameSettings.current.maxOvertime || GameSettings.players.All(x => x.player.health < 1))
+				if (timeLeft < -GameSettings.current.maxOvertime || (timeLeft < 0 && GameSettings.players.All(x => x.player.health < 1)))
 				{
 					Main.current.ChangeState(new StatePlayerSetup());
 				}

@@ -149,7 +149,8 @@ namespace MGE
 
 			GFX.SetupToDrawUI();
 
-			Discord.Update();
+			if ((Time.ticks + 1) % 10 == 0 && Settings.dirty)
+				Settings.Save();
 		}
 
 		public void Draw(GameTime gameTime)
