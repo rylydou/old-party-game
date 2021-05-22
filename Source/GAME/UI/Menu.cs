@@ -34,8 +34,8 @@ namespace GAME.UI
 		const float leftMarginForOptions = 24;
 		static readonly Color normalColor = new Color("#EEE");
 		static readonly Color selectedColor = new Color("#FB3");
-		static readonly Color disabledColor = new Color("#444");
-		static readonly Color disabledSelectedColor = new Color("#888");
+		static readonly Color disabledColor = new Color("#999");
+		static readonly Color disabledSelectedColor = new Color("#AAA");
 		static Font font { get => Config.font; }
 
 		public string title = string.Empty;

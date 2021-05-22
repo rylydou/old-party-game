@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GAME.UI;
 using MGE;
+using MGE.ECS;
 using MGE.Graphics;
 using MGE.Physics;
 
@@ -62,6 +63,10 @@ namespace GAME.States
 			base.Init();
 
 			gradHor = Assets.GetAsset<Texture>("UI/Gradient Horizontal");
+
+			SceneManager.QueueScene(new Scene());
+
+			MenuManager.Init();
 		}
 
 		public override void Update()
