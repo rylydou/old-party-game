@@ -1,6 +1,5 @@
 using System.IO;
 using System;
-using System.Windows.Forms;
 
 namespace MGE
 {
@@ -88,18 +87,6 @@ namespace MGE
 		{
 			if (collectErrors)
 				log.WriteLine(text);
-		}
-
-		public static DialogResult MSGBox(
-			string title,
-			string text,
-			MessageBoxIcon icon = MessageBoxIcon.None,
-			MessageBoxButtons buttons = MessageBoxButtons.OK,
-			MessageBoxDefaultButton buttonDefualt = MessageBoxDefaultButton.Button1,
-			bool showHelpButton = false
-		)
-		{
-			return MessageBox.Show(text, title, buttons, icon, buttonDefualt, MessageBoxOptions.DefaultDesktopOnly, showHelpButton);
 		}
 	}
 }

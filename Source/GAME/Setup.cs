@@ -33,7 +33,7 @@ namespace GAME
 			typeof(CFishingRod),
 			typeof(CGrenadeLauncher),
 			typeof(CHamburger),
-			typeof(CMinigun),
+			// typeof(CMinigun),
 			typeof(CPlungerGun),
 			typeof(CRifle),
 			typeof(CRock),

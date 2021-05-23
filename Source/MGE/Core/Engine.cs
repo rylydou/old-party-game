@@ -140,7 +140,7 @@ namespace MGE
 			timeSinceLastTick += Time.deltaTime;
 			while (timeSinceLastTick > Config.timeBtwTicks)
 			{
-				Time.ticks++;
+				Time.tick++;
 				timeSinceLastTick -= Config.timeBtwTicks;
 				SceneManager.Tick();
 				onTick.Invoke();
@@ -149,7 +149,7 @@ namespace MGE
 
 			GFX.SetupToDrawUI();
 
-			if ((Time.ticks + 1) % 10 == 0 && Settings.dirty)
+			if ((Time.tick + 1) % 10 == 0 && Settings.dirty)
 				Settings.Save();
 		}
 
@@ -233,14 +233,7 @@ namespace MGE
 		{
 			MGE.Window.FixWindow();
 
-			UpdateWindowSizes();
-
 			MGE.Window.onResize.Invoke();
-		}
-
-		public void UpdateWindowSizes()
-		{
-			MGE.Window.renderSize = new Vector2Int(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 		}
 	}
 }

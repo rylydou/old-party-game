@@ -156,7 +156,7 @@ namespace MGE.Components
 			{
 				grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomLeft + new Vector2(skinWidth, -skinWidth), Vector2.up), skinWidth * 2);
 				if (!grounded)
-					grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomRight + new Vector2(-skinWidth, -skinWidth), Vector2.up), skinWidth * 2);
+					grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomRight + new Vector2(-skinWidth * 2, -skinWidth), Vector2.up), skinWidth * 2);
 			}
 
 			position += velocity;

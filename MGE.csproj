@@ -1,7 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<UseWindowsForms>true</UseWindowsForms>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 
 		<NoLogo>true</NoLogo>
@@ -23,8 +22,20 @@
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
+    <None Remove="Icon.ico" />
+    <None Remove="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+		<EmbeddedResource Include="Icon.ico">
+			<LogicalName>Icon.ico</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Icon.bmp">
+			<LogicalName>Icon.bmp</LogicalName>
+		</EmbeddedResource>
+  </ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="DiscordRichPresence" Version="1.0.175" />
-		<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 		<PackageReference Include="BinarySerializer" Version="8.6.0" />
 	</ItemGroup>

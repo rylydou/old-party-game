@@ -5,7 +5,7 @@ FOR /R "%CD%\..\Assets\Shaders" %%a IN (*.mgfx) DO (
 )
 
 FOR /R "%CD%\..\Assets\Shaders" %%a IN (*.fx) DO (
-	mgfxc "%%a" "%%atmp" /Profile:DirectX_11
+	mgfxc "%%a" "%%atmp" /Profile:OpenGL
 
 	@REM IF %ERRORLEVEL% NEQ 0 (
 	@REM 	SET /P result = "Install Shader Compiler? y/n"
