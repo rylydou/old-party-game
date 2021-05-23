@@ -31,9 +31,6 @@ namespace GAME.Components.Items
 		{
 			base.Tick();
 
-			if (state == ItemState.Dropped && thingsHit.Count > 0)
-				thingsHit.Clear();
-
 			if (owner is null || player is object) return;
 
 			if (state == ItemState.Thrown)
@@ -62,6 +59,13 @@ namespace GAME.Components.Items
 					rb.velocity.y = bouncebackY;
 				}
 			}
+		}
+
+		public override void Pickup(CPlayer player)
+		{
+			base.Pickup(player);
+
+			thingsHit.Clear();
 		}
 	}
 }
