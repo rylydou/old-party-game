@@ -5,13 +5,6 @@ using System;
 
 namespace MGE
 {
-	public enum WindowMode
-	{
-		Windowed,
-		BorderlessWindowed,
-		Fullscreen
-	}
-
 	public static class Window
 	{
 		public static GameWindow gameWindow { get => Engine.game.Window; }
@@ -37,7 +30,7 @@ namespace MGE
 		public static Vector2 aspectRatioFrac { get => Config.aspectRatio; }
 		public static float aspectRatio { get => (float)(aspectRatioFrac.y / aspectRatioFrac.x); }
 
-		public static Vector2Int renderSize;
+		public static Vector2Int renderSize { get => new Vector2Int(GFX.graphics.PreferredBackBufferWidth, GFX.graphics.PreferredBackBufferHeight); }
 
 		public static Vector2Int sceneSize { get => Config.gameRenderSize / Config.pixelsPerUnit; }
 		public static Vector2Int gameRenderSize { get => Config.gameRenderSize; }
@@ -53,8 +46,6 @@ namespace MGE
 
 			GFX.graphics.PreferredBackBufferWidth = size.x;
 			GFX.graphics.PreferredBackBufferHeight = size.y;
-
-			GFX.graphics.ApplyChanges();
 		}
 	}
 }

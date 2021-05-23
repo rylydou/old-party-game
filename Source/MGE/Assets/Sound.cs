@@ -32,7 +32,7 @@ namespace MGE
 		{
 			var pan = (position - Camera.position - (Vector2)Window.sceneSize / 2) / (Vector2)Window.sceneSize;
 
-			sounds.Random().Play(Math.Clamp01(volume.random * (1.0f - pan.abs.sqrMagnitude / 1.5f)), Math.Clamp11(this.pitch.random - pan.y / 4), Math.Clamp01(pan.x / 2 + this.pan.random));
+			sounds.Random().Play(Math.Clamp01(volume.random * (1.0f - pan.abs.sqrMagnitude / 1.5f)), Math.Clamp11(this.pitch.random - pan.y / 4), Math.Clamp01(pan.x / 2 - 0.5f + this.pan.random));
 		}
 	}
 }

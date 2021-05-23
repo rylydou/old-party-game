@@ -148,12 +148,12 @@ namespace MGE.UI
 							for (int i = data.selectionStart; i < data.selectionEnd; i++)
 								sb.Append(data.textBuilder[i]);
 
-							System.Windows.Forms.Clipboard.SetText(sb.ToString(), System.Windows.Forms.TextDataFormat.Text);
+							// System.Windows.Forms.Clipboard.SetText(sb.ToString(), System.Windows.Forms.TextDataFormat.Text);
 							break;
 						case (char)13:
 							goto case '\n';
 						case (char)22:
-							text = System.Windows.Forms.Clipboard.GetText(System.Windows.Forms.TextDataFormat.Text);
+							// text = System.Windows.Forms.Clipboard.GetText(System.Windows.Forms.TextDataFormat.Text);
 							goto UpdateInput;
 						case (char)27:
 							goto case '\n';
