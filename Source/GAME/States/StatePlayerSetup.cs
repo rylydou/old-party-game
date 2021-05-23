@@ -160,7 +160,7 @@ namespace GAME.States
 
 			for (int y = -4; y <= 4; y++)
 				for (int x = -4; x <= 4; x++)
-					Config.font.DrawText(text, new Rect(x, textPos + y, Window.renderSize.x, 64), new Color(0, 0.033f), 1.5f, TextAlignment.Center);
+					Config.font.DrawText(text, new Rect(x, textPos + y, Window.renderSize.x, 64), new Color(0, 0.0125f), 1.5f, TextAlignment.Center);
 
 			Config.font.DrawText(text, new Rect(0, textPos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 

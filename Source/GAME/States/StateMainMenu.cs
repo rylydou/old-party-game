@@ -56,13 +56,10 @@ namespace GAME.States
 
 		Texture prevBackground;
 		Texture background;
-		Texture gradHor;
 
 		public override void Init()
 		{
 			base.Init();
-
-			gradHor = Assets.GetAsset<Texture>("UI/Gradient Horizontal");
 
 			SceneManager.QueueScene(new Scene());
 
@@ -125,14 +122,12 @@ namespace GAME.States
 
 				for (int y = -4; y <= 4; y++)
 					for (int x = -4; x <= 4; x++)
-						Config.font.DrawText(text, new Rect(x, pos + y, Window.renderSize.x, 64), new Color(0, 0.033f), 1.5f, TextAlignment.Center);
+						Config.font.DrawText(text, new Rect(x, pos + y, Window.renderSize.x, 64), new Color(0, 0.0125f), 1.5f, TextAlignment.Center);
 
 				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 			}
 			else
 			{
-				GFX.Draw(gradHor, new Rect(0, 0, Window.renderSize.x / 2, Window.renderSize.y), new Color(0, 0.5f));
-
 				MenuManager.Draw();
 			}
 		}

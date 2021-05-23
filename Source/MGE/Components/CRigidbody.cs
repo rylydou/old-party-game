@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MGE.ECS;
 using MGE.Graphics;
 using MGE.Physics;
@@ -12,7 +13,7 @@ namespace MGE.Components
 
 		public Vector2 bounceyness = Vector2.zero;
 
-		public float skinWidth = 0.0f;
+		public float skinWidth = 0.1f;
 
 		Vector2 _size = new Vector2(0.8f, 0.8f);
 		public Vector2 size
@@ -28,8 +29,8 @@ namespace MGE.Components
 		public Vector2 position = Vector2.zero;
 		public Vector2 effectivePosition
 		{
-			get => position + ((Vector2.one - size) / 2) + skinWidth;
-			set => position = value - ((Vector2.one - size) / 2) - skinWidth;
+			get => position + ((Vector2.one - size) / 2);
+			set => position = value - ((Vector2.one - size) / 2);
 		}
 
 		public Rect rect { get => new Rect(effectivePosition, size); }
@@ -44,6 +45,8 @@ namespace MGE.Components
 		public bool hitLeft { get; private set; } = false;
 		public bool hitX { get; private set; } = false;
 		public bool hitY { get; private set; } = false;
+
+		public Queue<(Vector2, Vector2)> rays = new Queue<(Vector2, Vector2)>();
 
 		Vector2Int _raycastsCount = new Vector2Int(4, 4);
 		public Vector2Int raycastsCount
@@ -78,6 +81,9 @@ namespace MGE.Components
 		{
 			base.Tick();
 
+			if (Physics.Physics.DEBUG)
+				rays.Clear();
+
 			if (raycaster is null)
 			{
 				Logger.LogError("Rigidbody has no raycaster!");
@@ -97,14 +103,17 @@ namespace MGE.Components
 
 			for (int i = 0; i < raycastsCount.x; i++)
 			{
-				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, direction.y > 0 ? size.y + skinWidth : -skinWidth);
+				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, direction.y > 0 ? size.y - skinWidth : 0);
 				var rayDir = velocity.isolateY.sign;
 
 				var hit = raycaster.Raycast(rayPos, rayDir);
 
+				if (Physics.Physics.DEBUG)
+					rays.Enqueue((rayPos, rayDir));
+
 				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.y)))
 				{
-					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0 ? size.y + skinWidth : -skinWidth));
+					effectivePosition = new Vector2(effectivePosition.x, hit.position.y - (direction.y > 0 ? size.y - skinWidth : 0));
 					velocity.y = bounceyness.y * -velocity.y;
 					position.y += velocity.y * 4;
 
@@ -119,14 +128,17 @@ namespace MGE.Components
 
 			for (int i = 0; i < raycastsCount.y; i++)
 			{
-				var rayPos = effectivePosition + new Vector2(direction.x > 0 ? size.x + skinWidth : -skinWidth, raySpacing.y * i);
+				var rayPos = effectivePosition + new Vector2(direction.x > 0 ? size.x - skinWidth : 0, raySpacing.y * i);
 				var rayDir = velocity.isolateX.sign;
 
 				var hit = raycaster.Raycast(rayPos, rayDir);
 
+				if (Physics.Physics.DEBUG)
+					rays.Enqueue((rayPos, rayDir));
+
 				if (RaycastHit.WithinDistance(hit, Math.Abs(velocity.x)))
 				{
-					effectivePosition = new Vector2(hit.position.x - (direction.x > 0 ? size.x + skinWidth : -skinWidth), effectivePosition.y);
+					effectivePosition = new Vector2(hit.position.x - (direction.x > 0 ? size.x - skinWidth : 0), effectivePosition.y);
 					velocity.x = bounceyness.x * -velocity.x;
 					position.x += velocity.x * 4;
 
@@ -142,9 +154,9 @@ namespace MGE.Components
 			grounded = false;
 			if (!(velocity.y < 0))
 			{
-				grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomLeft, Vector2.up), GFX.currentUnitsPerPixel + skinWidth);
+				grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomLeft + new Vector2(skinWidth, -skinWidth), Vector2.up), skinWidth * 2);
 				if (!grounded)
-					grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomRight - new Vector2(GFX.currentUnitsPerPixel / 2, 0), Vector2.up), GFX.currentUnitsPerPixel + skinWidth);
+					grounded = RaycastHit.WithinDistance(raycaster.Raycast(rect.bottomRight + new Vector2(-skinWidth, -skinWidth), Vector2.up), skinWidth * 2);
 			}
 
 			position += velocity;
@@ -157,48 +169,28 @@ namespace MGE.Components
 			entity.position = position;
 		}
 
-#if INDEV
 		public override void Draw()
 		{
 			base.Draw();
 
 			if (!Physics.Physics.DEBUG) return;
 
-			Graphics.GFX.DrawRect(new Rect(effectivePosition, size), grounded ? Color.magenta : Color.green);
+			GFX.DrawRect(new Rect(effectivePosition, size), grounded ? Color.magenta : Color.green);
 
-			var direction = velocity.sign;
-
-			for (int i = 0; i < raycastsCount.x; i++)
+			foreach (var ray in rays)
 			{
-				var offset = direction.y > 0 ? size.y : 0;
-
-				var rayPos = effectivePosition + new Vector2(raySpacing.x * i, offset);
-				var rayDir = velocity.isolateY.sign;
-
-				Graphics.GFX.DrawLine(rayPos, rayPos + rayDir / 2, new Color(1, 0, 0, 0.5f));
+				GFX.DrawLine(ray.Item1, ray.Item1 + ray.Item2, Color.red, 1);
 			}
 
-			for (int i = 0; i < raycastsCount.y; i++)
-			{
-				var offset = direction.x > 0 ? size.x : 0;
+			GFX.DrawLine(rect.bottomLeft, rect.bottomLeft + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
+			GFX.DrawLine(rect.bottomRight, rect.bottomRight + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
 
-				var rayPos = effectivePosition + new Vector2(offset, raySpacing.y * i);
-				var rayDir = velocity.isolateX.sign;
-
-				Graphics.GFX.DrawLine(rayPos, rayPos + rayDir / 2, new Color(1, 0, 0, 0.5f));
-			}
-
-			Graphics.GFX.DrawLine(rect.bottomLeft, rect.bottomLeft + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
-			Graphics.GFX.DrawLine(rect.bottomRight, rect.bottomRight + Vector2.up / 2, new Color(0, 0, 1, 0.5f));
-
-			Graphics.GFX.DrawLine(position + Vector2.one / 2, position + Vector2.one / 2 + velocity * 8, Color.blue, 2);
+			GFX.DrawLine(position + Vector2.one / 2, position + Vector2.one / 2 + velocity * 8, Color.blue, 2);
 		}
-#endif
 
 		public void CalcRaySpacing()
 		{
-			// FIXME: Make not jank
-			raySpacing = size / (Vector2)raycastsCount + new Vector2(1f / 16);
+			raySpacing = size / (Vector2)raycastsCount;
 		}
 	}
 }

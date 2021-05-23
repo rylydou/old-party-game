@@ -1,59 +1,67 @@
+using System.Collections.Generic;
 using MGE;
+using MGE.ECS;
 
 namespace GAME.Components.Items
 {
 	public class CRock : CItem
 	{
-		float cooldown;
-		CPlayer lastPlayer;
+		int damage;
+		float radius;
+		int selfDamageOnHit;
+		float knockback;
+		float bouncebackX;
+		float bouncebackY;
+
+		List<Entity> thingsHit = new List<Entity>();
+
+		public override void Init()
+		{
+			base.Init();
+
+			damage = @params.GetInt("damage");
+			radius = @params.GetFloat("radius");
+			selfDamageOnHit = @params.GetInt("selfDamageOnHit");
+			knockback = @params.GetFloat("knockback");
+			bouncebackX = @params.GetFloat("bouncebackX");
+			bouncebackY = @params.GetFloat("bouncebackY");
+		}
 
 		public override void Tick()
 		{
 			base.Tick();
 
-			cooldown -= Time.fixedDeltaTime;
+			if (state == ItemState.Dropped && thingsHit.Count > 0)
+				thingsHit.Clear();
 
-			if (lastPlayer is null || player is object || cooldown > 0) return;
+			if (owner is null || player is object) return;
 
-			if (rb.velocity.sqrMagnitude > 0.1f * Time.fixedDeltaTime)
+			if (state == ItemState.Thrown)
 			{
 				var hitThing = false;
 
-				var things = entity.layer.GetEntities(entity.position + new Vector2(0.25f), @params.GetFloat("range"), "Ranged Vulnerable");
+				var things = entity.layer.GetEntities(entity.position + new Vector2(0.25f), radius, "Ranged Vulnerable");
 
 				foreach (var thing in things)
 				{
-					if (this is null || thing == entity || lastPlayer is null || thing == lastPlayer.entity) continue;
+					if (this is null || thing == entity || thing == owner.entity || thingsHit.Contains(thing)) continue;
 					hitThing = true;
 
-					thing.GetSimilarComponent<CObject>()?.Damage(@params.GetInt("damage"), rb.velocity * @params.GetFloat("knockback"), lastPlayer);
+					thingsHit.Add(thing);
+
+					thing.GetSimilarComponent<CObject>()?.Damage(damage, rb.velocity * knockback, owner);
 					thing.GetComponent<CPlayer>()?.Pickup(null);
-					Damage(@params.GetInt("selfDamageOnHit"), rb.velocity, null);
+					Damage(selfDamageOnHit, rb.velocity, null);
 
 					PlaySound("Hit");
 				}
 
 				if (hitThing)
 				{
-					cooldown = @params.GetFloat("hitCooldown");
-					rb.velocity.x *= @params.GetFloat("bouncebackX");
-					rb.velocity.y = @params.GetFloat("bouncebackY");
+					rb.velocity.x *= bouncebackX;
+					rb.velocity.y = bouncebackY;
 				}
 			}
-		}
-
-		public override void Damage(int damage, Vector2 knockback, CPlayer source)
-		{
-			base.Damage(damage, knockback, source);
-
-			lastPlayer = source;
-		}
-
-		public override void Pickup(CPlayer player)
-		{
-			base.Pickup(player);
-
-			lastPlayer = player;
 		}
 	}
 }

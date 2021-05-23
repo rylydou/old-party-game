@@ -149,13 +149,16 @@ namespace GAME.Components
 
 					PlaySound("Spawn");
 
-					var para = new CParticle(3, texSpawnEffect, (p) => { p.frame = (byte)(p.timeAlive * 25 - 1); if (p.frame > 7) p.Kill(); });
+					var para = new CParticle(6, texSpawnEffect, (p) => { p.frame = (byte)(p.timeAlive * 40 - 1); if (p.frame > 7) p.Kill(); });
 
-					entity.layer.scene.GetLayer("Background").AddEntity(new MGE.ECS.Entity(para));
+					entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
 
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, player.color, 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.5f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, Color.white, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(5.0f), Vector2.zero, new Color(0.5f), 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.75f), Vector2.zero, new Color(0.6f), 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.5f), Vector2.zero, new Color(0.7f), 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.25f), Vector2.zero, new Color(0.8f), 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, new Color(0.9f), 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.75f), Vector2.zero, player.color, 0, Vector2.zero);
 				}
 				else
 				{
@@ -178,7 +181,7 @@ namespace GAME.Components
 
 			extraVelocity *= 1 - (rb.grounded ? extraFrictionGround : extraFrictionAir) * Time.fixedDeltaTime;
 
-			if (extraVelocity > 0 && rb.hitRight | extraVelocity < 0 && rb.hitLeft)
+			if (rb.hitX)
 				extraVelocity = 0;
 
 			rb.velocity.x = player.controls.move * (player.controls.crouch ? crouchingMoveSpeed : moveSpeed) * Time.fixedDeltaTime;

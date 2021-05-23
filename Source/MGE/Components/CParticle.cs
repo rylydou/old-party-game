@@ -50,7 +50,7 @@ namespace MGE.Components
 
 			public void Draw()
 			{
-				GFX.Draw(emitter.texture, new RectInt(frame * emitter.frameSize.x, 0, emitter.frameSize), new Rect(position + drawOffset, size), color, rotation, new Vector2(0.5f * GFX.pixelsPerUnit) * size);
+				GFX.Draw(emitter.texture, new RectInt(frame * emitter.frameSize.x, 0, emitter.frameSize), new Rect(position + drawOffset, size), color, rotation, 0.5f * size * GFX.pixelsPerUnit);
 			}
 
 			public void Kill()

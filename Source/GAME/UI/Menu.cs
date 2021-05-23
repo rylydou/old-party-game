@@ -40,6 +40,7 @@ namespace GAME.UI
 
 		public string title = string.Empty;
 		public Option[] options;
+		public Action<Menu> onClose = (m) => { };
 
 		public int cursorPosition = 0;
 
@@ -58,7 +59,10 @@ namespace GAME.UI
 		public void Update()
 		{
 			if (GameSettings.mainController.back)
+			{
+				onClose.Invoke(this);
 				MenuManager.GoBack();
+			}
 			else if (GameSettings.mainController.select)
 			{
 				var option = options[cursorPosition];

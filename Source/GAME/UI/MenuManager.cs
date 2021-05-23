@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MGE;
+using MGE.Graphics;
 
 namespace GAME.UI
 {
@@ -17,6 +18,7 @@ namespace GAME.UI
 
 		static bool inited = false;
 
+		static Texture gradHor;
 		static Sound menuSelect;
 		static Sound menuChange;
 		static Sound menuError;
@@ -28,6 +30,7 @@ namespace GAME.UI
 			if (inited) return;
 			inited = true;
 
+			gradHor = Assets.GetAsset<Texture>("UI/Gradient Horizontal");
 			menuSelect = Assets.GetAsset<Sound>("UI/Sounds/Menu Select");
 			menuChange = Assets.GetAsset<Sound>("UI/Sounds/Menu Change");
 			menuError = Assets.GetAsset<Sound>("UI/Sounds/Menu Error");
@@ -64,6 +67,8 @@ namespace GAME.UI
 
 		public static void Draw()
 		{
+			GFX.Draw(gradHor, new Rect(0, 0, Window.renderSize.x / 2, Window.renderSize.y), new Color(0, 0.25f));
+
 			if (menus.Count > 0)
 				menus.Last().Draw();
 		}

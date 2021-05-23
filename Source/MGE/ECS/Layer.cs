@@ -214,7 +214,7 @@ namespace MGE.ECS
 					foreach (var call in debugPhysics)
 					{
 						if (Math.Approximately(call.Item2.y, 0))
-							GFX.DrawCircle(call.Item1, call.Item2.x, Color.red);
+							GFX.DrawCircle(call.Item1 + 0.5f, call.Item2.x / 2, Color.red);
 						else
 							GFX.DrawRect(new Rect(call.Item1, call.Item2), Color.red);
 					}

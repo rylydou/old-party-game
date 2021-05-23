@@ -9,10 +9,10 @@
 	"enablePhysics": true,
 	"velocity": [0.35, -0.035],
 	"damage": 10,
-	"explosionDamage": 50,
+	"explosionDamage": 40,
 	"knockback": 0.45,
-	"radius": 1.25,
+	"radius": 0.67,
 	"explosionRadius": 2.5,
-	"lifetime": 0.8,
+	"lifetime": 0.67,
 	"hits": 1
 }

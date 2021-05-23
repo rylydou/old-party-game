@@ -19,7 +19,15 @@
 				"/property:GenerateFullPaths=true",
 				"/consoleloggerparameters:NoSummary"
 			],
-			"problemMatcher": "$msCompile"
+			"problemMatcher": "$msCompile",
+			"dependsOrder": "sequence",
+			"dependsOn": ["Compile Shaders"]
+		},
+		{
+			"label": "Compile Shaders",
+			"type": "shell",
+			"command": "cmd",
+			"args": ["/c", "${workspaceFolder}/Tasks/Compile Shaders.bat"]
 		},
 		{
 			"label": "publish",
