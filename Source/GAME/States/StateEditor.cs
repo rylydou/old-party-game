@@ -19,17 +19,28 @@ namespace GAME.States
 			Params
 		}
 
-		public Mode mode = Mode.Ground;
+		const int tileSize = 16;
 
-		public byte selectedTile = 1;
-		public byte selectedCrateIndex = 1;
+		public static Mode mode = Mode.Ground;
 
-		bool showGrid = false;
-		bool showPlayerSpawnPoints = true;
-		bool showCrateSpawnPoints = true;
+		public static byte selectedTile = 1;
+		public static byte selectedCrateIndex = 1;
+
+		public static (byte, byte) selectedBgTile = (1, 2);
+		public static bool showBgTilePicker;
+		public static Vector2 bgTilePickerPosition;
+		public static Vector2 bgTilePickerDragStartPosition;
+		public static Vector2 bgTilePickerMouseDragStartPosition;
+		public static bool closingOutOfBgTilePicker;
+
+		static bool showGrid = false;
+		static bool showPlayerSpawnPoints = true;
+		static bool showCrateSpawnPoints = true;
 
 		Vector2 cursorPos;
 		Vector2Int cursorTilePos;
+
+		Texture bgTileset;
 
 		CFog fog;
 		Stage stage;
@@ -47,17 +58,23 @@ namespace GAME.States
 						new Entity(new CBackground())
 					),
 					new Layer(
+						"Stage Background",
+						new Entity(new CStageBackground())
+					),
+					new Layer(
 						"Gameplay",
 						new Entity(new CStage())
 					),
 					new Layer(
-						"Effects",
+						"Foreground",
 						new Entity(new CFog())
 					)
 				)
 			);
 
-			fog = SceneManager.activeScene.GetLayer("Effects").GetEntityWithComponent<CFog>().GetComponent<CFog>();
+			fog = SceneManager.activeScene.GetLayer("Foreground").GetEntityWithComponent<CFog>().GetComponent<CFog>();
+
+			bgTileset = Assets.GetAsset<Texture>("Tilesets/_Background");
 		}
 
 		public override void Update()
@@ -132,6 +149,39 @@ namespace GAME.States
 						stage.crateSpawnsPoints.Remove(cursorTilePos);
 
 					break;
+				case Mode.Background:
+
+					if (closingOutOfBgTilePicker && !Input.GetButton(Inputs.MouseLeft))
+						closingOutOfBgTilePicker = false;
+
+					if (!shift && !ctrl && !alt && showBgTilePicker && Input.GetButtonPress(Inputs.MouseRight))
+					{
+						bgTilePickerDragStartPosition = bgTilePickerPosition;
+						bgTilePickerMouseDragStartPosition = cursorPos;
+					}
+					else if (!shift && !ctrl && !alt && showBgTilePicker && Input.GetButton(Inputs.MouseRight))
+						bgTilePickerPosition = bgTilePickerDragStartPosition + cursorPos - bgTilePickerMouseDragStartPosition;
+					else if (!shift && !ctrl && !alt && showBgTilePicker && Input.GetButtonPress(Inputs.MouseLeft))
+					{
+						var pos = ((byte)(cursorPos.x - bgTilePickerPosition.x), (byte)(cursorPos.y - bgTilePickerPosition.y));
+						if (pos.Item1 < 0 || pos.Item2 < 0 || pos.Item1 >= byte.MaxValue || pos.Item2 >= byte.MaxValue) return;
+						selectedBgTile = pos;
+						showBgTilePicker = false;
+						closingOutOfBgTilePicker = true;
+					}
+					else if (!shift && ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
+						selectedBgTile = stage.tilesBackground.Get(cursorTilePos);
+					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseLeft))
+					{
+						if (!closingOutOfBgTilePicker)
+							stage.tilesBackground.Set(cursorTilePos, selectedBgTile);
+					}
+					else if (!shift && !ctrl && !alt && Input.GetButton(Inputs.MouseRight))
+						stage.tilesBackground.Set(cursorTilePos, (0, 0));
+					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Space))
+						showBgTilePicker = !showBgTilePicker;
+
+					break;
 			}
 		}
 
@@ -175,6 +225,19 @@ namespace GAME.States
 				GFX.DrawBox(new Rect(Input.cameraMousePosition.x, 0, GFX.currentUnitsPerPixel, Window.renderSize.y), new Color(1, 0.1f));
 				GFX.DrawBox(new Rect(0, Input.cameraMousePosition.y, Window.renderSize.x, GFX.currentUnitsPerPixel), new Color(1, 0.1f));
 			}
+
+			if (showBgTilePicker)
+			{
+				if (mode != Mode.Background)
+					showBgTilePicker = false;
+				else
+				{
+					GFX.DrawBox(new Rect(0, 0, Window.sceneSize), new Color(0, 0.1f));
+					GFX.DrawBox(new Rect(bgTilePickerPosition, byte.MaxValue), new Color(0, 0.5f));
+					GFX.Draw(bgTileset, bgTilePickerPosition, Color.white);
+					GFX.DrawBox(new Rect((Vector2)bgTilePickerPosition + new Vector2(selectedBgTile.Item1, selectedBgTile.Item2), 1), new Color("#FB32"));
+				}
+			}
 		}
 
 		public override void DrawUI()
@@ -211,6 +274,13 @@ namespace GAME.States
 						else
 							Config.font.DrawText("     " + Stage.tilesets[selectedTile + 1].Item2.name, layout.newElement, Color.white);
 
+						break;
+					case Mode.Background:
+						if (!showBgTilePicker)
+						{
+							GFX.Draw(bgTileset, new RectInt(new Vector2Int(selectedBgTile.Item1, selectedBgTile.Item2) * tileSize, tileSize), new Rect(layout.newElement + 4, 42), new Color(0, 0.25f));
+							GFX.Draw(bgTileset, new RectInt(new Vector2Int(selectedBgTile.Item1, selectedBgTile.Item2) * tileSize, tileSize), new Rect(layout.currentElement, 42));
+						}
 						break;
 				}
 			}

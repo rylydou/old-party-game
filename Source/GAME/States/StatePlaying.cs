@@ -38,15 +38,29 @@ namespace GAME.States
 						new Entity(new CBackground())
 					),
 					new Layer(
+						"Stage Background",
+						new Entity(new CStageBackground())
+					),
+					new Layer("Background Effects"),
+					new Layer(
 						"Gameplay",
 						new Entity(new CStage())
 					),
 					new Layer(
-						"Effects",
+						"Foreground",
+						new Entity(new CFog())
+					),
+					new Layer(
+						"Foreground Effects",
 						new Entity(new CFog())
 					)
 				)
 			);
+
+			if (GameSettings.players.Count < 1)
+			{
+				GameSettings.players.Add(new Player(EController.WASD));
+			}
 
 			foreach (var player in GameSettings.players)
 			{

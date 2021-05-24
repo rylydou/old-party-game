@@ -49,7 +49,7 @@ namespace GAME.Components.Items
 
 			if (flying)
 			{
-				if (owner is null)
+				if (owner is null || owner.enabled == false)
 				{
 					flying = false;
 					return;

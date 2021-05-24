@@ -55,7 +55,7 @@ namespace MGE.Graphics
 			}
 		}
 
-		public static void Draw(Texture texture, Rect source, Vector2 position, Color? color = null)
+		public static void Draw(Texture texture, RectInt source, Vector2 position, Color? color = null)
 		{
 			if (!color.HasValue) color = Color.white;
 

@@ -151,7 +151,7 @@ namespace GAME.Components
 
 					var para = new CParticle(6, texSpawnEffect, (p) => { p.frame = (byte)(p.timeAlive * 40 - 1); if (p.frame > 7) p.Kill(); });
 
-					entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
+					entity.layer.scene.GetLayer("Foreground Effects").AddEntity(new MGE.ECS.Entity(para));
 
 					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(5.0f), Vector2.zero, new Color(0.5f), 0, Vector2.zero);
 					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.75f), Vector2.zero, new Color(0.6f), 0, Vector2.zero);
@@ -268,7 +268,7 @@ namespace GAME.Components
 
 						var para = new CParticle(1, texPunchSwingEffect, (p) => { p.frame = (byte)(p.timeAlive * 60 - 1); if (p.frame > 2) p.Kill(); });
 
-						entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
+						entity.layer.scene.GetLayer("Foreground Effects").AddEntity(new MGE.ECS.Entity(para));
 
 						para.SpawnParticle(entity.position + (entity.scale.x > 0 ? new Vector2(1.0f, 0.25f) : new Vector2(-0.8f, 0.25f)) * entity.scale, Random.Float(-0.1f, 0.1f), new Vector2(1.33f * entity.scale.x, 1.0f), Vector2.zero, Color.white, 0, Vector2.zero);
 					}
@@ -345,7 +345,7 @@ namespace GAME.Components
 
 			var para = new CParticle(3, texDamageEffect, (p) => { p.frame = (byte)(p.timeAlive * 50 - 1); if (p.frame > 7) p.Kill(); });
 
-			entity.layer.scene.GetLayer("Background").AddEntity(new MGE.ECS.Entity(para));
+			entity.layer.scene.GetLayer("Background Effects").AddEntity(new MGE.ECS.Entity(para));
 
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color, 0, Vector2.zero);
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
@@ -370,7 +370,7 @@ namespace GAME.Components
 
 			var para = new CParticle(6, texDeathEffect, (p) => { p.frame = (byte)((p.timeAlive + (1 - p.id / 6) / 8) * 45 - 1); if (p.frame > 7) p.Kill(); });
 
-			entity.layer.scene.GetLayer("Effects").AddEntity(new MGE.ECS.Entity(para));
+			entity.layer.scene.GetLayer("Foreground Effects").AddEntity(new MGE.ECS.Entity(para));
 
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.75f), Vector2.zero, new Color(0, 0.67f), 0, Vector2.zero);
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.5f), Vector2.zero, Color.violet, 0, Vector2.zero);

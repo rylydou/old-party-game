@@ -50,7 +50,7 @@ namespace GAME
 		public string name = "Untitled Stage";
 		public string description = "( No Description )";
 
-		public Grid<byte> backgroundTiles;
+		public Grid<(byte, byte)> tilesBackground;
 		public Grid<byte> tiles;
 
 		public List<Vector2Int> playerSpawnPoints = new List<Vector2Int>();
@@ -86,18 +86,7 @@ namespace GAME
 		[OnDeserialized]
 		public void OnDeserialized(StreamingContext context)
 		{
-			if (tiles.size != size)
-			{
-				Logger.Log("Updating Stage...");
-
-				var tiles = new Grid<byte>(size);
-
-				tiles.For((x, y, tile) => tiles.Set(x, y, tile));
-
-				this.tiles = tiles;
-			}
-
-			if (backgroundTiles is null) backgroundTiles = new Grid<byte>(size);
+			if (tilesBackground is null) tilesBackground = new Grid<(byte, byte)>(size);
 
 			if (fogDetail < 1)
 			{

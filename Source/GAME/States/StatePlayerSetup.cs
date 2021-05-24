@@ -54,7 +54,7 @@ namespace GAME.States
 					if (player.controls.back)
 					{
 						player.READY = false;
-						PlaySound("UI/Sounds/Back");
+						PlaySound("UI/Sounds/Unready");
 					}
 
 					readyPlayers++;

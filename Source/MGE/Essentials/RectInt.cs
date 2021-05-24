@@ -89,6 +89,14 @@ namespace MGE
 			this._height = size.y;
 		}
 
+		public RectInt(Vector2Int position, int size)
+		{
+			this._xMin = position.x;
+			this._yMin = position.y;
+			this._width = size;
+			this._height = size;
+		}
+
 		public RectInt(Vector2Int position, int width, int height)
 		{
 			this._xMin = position.x;
