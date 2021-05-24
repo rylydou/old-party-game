@@ -16,7 +16,7 @@ namespace GAME.Components
 		{
 			base.Init();
 
-			stage = GameSettings.current.stage;
+			stage = GameSettings.stage;
 
 			tileset = Assets.GetAsset<Texture>("Tilesets/_Background");
 		}

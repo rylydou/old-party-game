@@ -45,12 +45,12 @@ namespace GAME
 
 			try
 			{
-				GameSettings.current.stage = Stage.Load("Test");
+				GameSettings.stage = Stage.Load("Test");
 			}
 			catch (System.Exception e)
 			{
 				Logger.Log(e);
-				GameSettings.current.stage = new Stage(new Vector2Int(40, 23));
+				GameSettings.stage = new Stage(new Vector2Int(40, 23));
 			}
 
 			SoundEffect.MasterVolume = 0.1f;
@@ -84,9 +84,9 @@ namespace GAME
 			var alt = Input.GetButton(Inputs.LeftAlt) | Input.GetButton(Inputs.RightAlt);
 
 			if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.S))
-				GameSettings.current.stage.Save();
+				GameSettings.stage.Save();
 			else if (!shift && ctrl && !alt && Input.GetButtonPress(Inputs.L))
-				GameSettings.current.stage = Stage.Load(GameSettings.current.stage.name);
+				GameSettings.stage = Stage.Load(GameSettings.stage.name);
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Tilde))
 				ChangeState(null);
 			else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.Plus))
@@ -112,7 +112,7 @@ namespace GAME
 							switch (key)
 							{
 								case ' ':
-									GameSettings.current.stage.name += ' ';
+									GameSettings.stage.name += ' ';
 									break;
 								case (char)13:
 									changingStage = false;
@@ -121,8 +121,8 @@ namespace GAME
 									changingStage = false;
 									break;
 								case '\b':
-									if (GameSettings.current.stage.name.Length > 0)
-										GameSettings.current.stage.name = GameSettings.current.stage.name.Remove(GameSettings.current.stage.name.Length - 1, 1);
+									if (GameSettings.stage.name.Length > 0)
+										GameSettings.stage.name = GameSettings.stage.name.Remove(GameSettings.stage.name.Length - 1, 1);
 									break;
 								default:
 									break;
@@ -130,7 +130,7 @@ namespace GAME
 						}
 						else
 						{
-							GameSettings.current.stage.name += key;
+							GameSettings.stage.name += key;
 						}
 					}
 				}
@@ -156,7 +156,7 @@ namespace GAME
 
 			engine.Update(gameTime);
 
-			Discord.SetDetails($"Playing on {GameSettings.current.stage.name} with {GameSettings.players.Count} players");
+			Discord.SetDetails($"Playing on {GameSettings.stage.name} with {GameSettings.players.Count} players");
 
 			if (state is StateMainMenu)
 				Discord.SetState("Main Menu");
@@ -204,7 +204,7 @@ namespace GAME
 						Config.font.DrawText("--- MGE PARTY GAME ---", layout.newElement, Color.white);
 						Config.font.DrawText($"Version: indev {System.DateTime.Now.ToString(@"yyyy-MM-dd")}", layout.newElement, Color.white);
 						layout.AddElement();
-						Config.font.DrawText($"Current Stage: {GameSettings.current.stage.name}" + (changingStage ? string.Empty : " (F2 to change stage)"), layout.newElement, changingStage ? new Color("#FB2") : Color.white);
+						Config.font.DrawText($"Current Stage: {GameSettings.stage.name}" + (changingStage ? string.Empty : " (F2 to change stage)"), layout.newElement, changingStage ? new Color("#FB2") : Color.white);
 						layout.AddElement();
 						Config.font.DrawText("--- MODES ---", layout.newElement, Color.white);
 						layout.AddElement();
