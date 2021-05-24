@@ -6,16 +6,7 @@ namespace GAME
 	{
 		public static GameSettings current;
 
-		public Stage stage;
-
-		public bool infiniteTime = false;
-		public float roundTime = 60 * 5.0f;
-		public float maxOvertime = 60 * 1.0f;
-
-		public float timeBtwCrates = 4.5f;
-		public float timeBtwCrateLessPerPlayer = 0.5f;
-
-		public float timeToRespawn = 0.67f;
+		public static Stage stage;
 
 		public static List<Player> players = new List<Player>();
 
@@ -32,5 +23,14 @@ namespace GAME
 		};
 
 		public static PlayerControls GetControls(EController controller) => controllers[(sbyte)controller + 2];
+
+		public bool infiniteTime = false;
+		public float roundTime = 60 * 5.0f;
+		public float maxOvertime = 60 * 1.0f;
+
+		public float timeBtwCrates = 4.5f;
+		public float timeBtwCrateLessPerPlayer = 0.5f;
+
+		public float timeToRespawn = 0.67f;
 	}
 }

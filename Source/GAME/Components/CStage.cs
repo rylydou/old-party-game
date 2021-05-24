@@ -17,7 +17,7 @@ namespace GAME.Components
 			current = this;
 			entity.layer.raycaster = this;
 
-			stage = GameSettings.current.stage;
+			stage = GameSettings.stage;
 		}
 
 		public override void Draw()

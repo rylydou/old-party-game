@@ -132,7 +132,7 @@ namespace GAME.Components
 			timeRespawing = 0;
 			rb.velocity = Vector2.zero;
 
-			if (GameSettings.current.stage.playerSpawnPoints.Count < 1)
+			if (GameSettings.stage.playerSpawnPoints.Count < 1)
 			{
 				rb.position.x = Random.Float(5, Window.sceneSize.x - 6);
 				rb.position.y = -2;
@@ -141,11 +141,30 @@ namespace GAME.Components
 			}
 			else
 			{
-				var spawnPos = GameSettings.current.stage.playerSpawnPoints.Random();
+				var bestSpawn = GameSettings.stage.playerSpawnPoints.Random();
+				var bestSpawnScore = float.NegativeInfinity;
 
-				if (spawnPos.y > 0)
+				foreach (var spawn in GameSettings.stage.playerSpawnPoints)
 				{
-					rb.position = spawnPos;
+					var spawnScore = 0.0f;
+
+					foreach (var player in GameSettings.players)
+					{
+						if (player == this.player || player.player is null) continue;
+
+						spawnScore += Vector2.DistanceSqr(spawn, player.player.entity.position);
+					}
+
+					if (spawnScore > bestSpawnScore)
+					{
+						bestSpawn = spawn;
+						bestSpawnScore = spawnScore;
+					}
+				}
+
+				if (bestSpawn.y > 0)
+				{
+					rb.position = bestSpawn;
 
 					PlaySound("Spawn");
 
@@ -162,7 +181,7 @@ namespace GAME.Components
 				}
 				else
 				{
-					rb.position.x = spawnPos.x;
+					rb.position.x = bestSpawn.x;
 					rb.position.y = -2;
 
 					PlaySound("Offscreen Spawn");

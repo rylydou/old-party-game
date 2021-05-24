@@ -49,7 +49,7 @@ namespace GAME.States
 		{
 			base.Init();
 
-			stage = GameSettings.current.stage;
+			stage = GameSettings.stage;
 
 			SceneManager.QueueScene(
 				new Scene(

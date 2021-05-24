@@ -46,7 +46,7 @@ namespace GAME.Components
 
 			if (rb is object) rb.velocity.x *= rb.grounded ? (1 - @params.GetFloat("frictionGround") * Time.fixedDeltaTime) : (1 - @params.GetFloat("frictionAir") * Time.fixedDeltaTime);
 
-			Stage.tilesets[GameSettings.current.stage.tiles.Get(entity.position + 0.5f)].Item1.ObjectInside(this);
+			Stage.tilesets[GameSettings.stage.tiles.Get(entity.position + 0.5f)].Item1.ObjectInside(this);
 
 			if (entity.position.y > Window.sceneSize.y + 1)
 			{
