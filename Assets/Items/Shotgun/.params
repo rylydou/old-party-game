@@ -10,7 +10,7 @@
 		0.6
 	],
 	"enablePhysics": false,
-	"uses": 4,
+	"uses": 5,
 	"attackCooldown": 0.4,
 	"projectiles": 3,
 	"spread": 0.1
