@@ -4,6 +4,8 @@ using MGE;
 using MGE.ECS;
 using MGE.Graphics;
 using MGE.Physics;
+using MGE.FileIO;
+using MGE.InputSystem;
 
 namespace GAME.States
 {
@@ -26,9 +28,24 @@ namespace GAME.States
 		public static Menu mainMenu = new Menu(
 			"Main Menu",
 			(() => "Play", () => Main.current.ChangeState(new StatePlayerSetup())),
-			(() => "Editor", () => Main.current.ChangeState(new StateEditor())),
+			(() => "Editor", () => MenuManager.OpenMenu(editorMenu)),
 			(() => "Settings", () => MenuManager.OpenMenu(settingsMenu)),
 			(() => "Quit", () => Main.current.Exit())
+		);
+
+		public static Menu editorMenu = new Menu(
+			"Main Menu",
+			(() => "Edit", () => Main.current.ChangeState(new StateEditor())),
+			(() => "Save", () => GameSettings.stage.Save()),
+			(() => "Load", () => GameSettings.stage = Stage.Load(GameSettings.stage.name)),
+			(() => "Rename", () => isChangingStage = true),
+			(() => "Delete", () => MenuManager.OpenMenu(editorDelectAskMenu))
+		);
+
+		public static Menu editorDelectAskMenu = new Menu(
+			"Delete?",
+			(() => "No", () => MenuManager.GoBack()),
+			(() => "Yes", () => IO.FileDelete($"Assets/Stages/{GameSettings.stage.name}"))
 		);
 
 		public static Menu settingsMenu = new Menu(
@@ -51,6 +68,8 @@ namespace GAME.States
 			(() => (Settings.Get<bool>("SMAA", true) ? "[X]" : "[ ]") + " SMAA", () => Settings.Toggle("SMAA", true)),
 			(() => "Apply", () => GFX.Apply())
 		);
+
+		static bool isChangingStage = false;
 
 		float backgroundTimeLeft = backgroundLifetime;
 
@@ -83,11 +102,43 @@ namespace GAME.States
 			}
 			else
 			{
-				MenuManager.Update();
-
-				if (MenuManager.menus.Count <= 0)
+				if (isChangingStage)
 				{
-					GameSettings.mainController = null;
+					foreach (var key in Input.keyboardString)
+					{
+						if ((int)key <= 32)
+						{
+							switch (key)
+							{
+								case ' ':
+									GameSettings.stage.name += ' ';
+									break;
+								case (char)13:
+									isChangingStage = false;
+									break;
+								case '\n':
+									isChangingStage = false;
+									break;
+								case '\b':
+									if (GameSettings.stage.name.Length > 0)
+										GameSettings.stage.name = GameSettings.stage.name.Remove(GameSettings.stage.name.Length - 1, 1);
+									break;
+							}
+						}
+						else
+						{
+							GameSettings.stage.name += key;
+						}
+					}
+				}
+				else
+				{
+					MenuManager.Update();
+
+					if (MenuManager.menus.Count <= 0)
+					{
+						GameSettings.mainController = null;
+					}
 				}
 			}
 
@@ -128,7 +179,14 @@ namespace GAME.States
 			}
 			else
 			{
-				MenuManager.Draw();
+				if (isChangingStage)
+				{
+					Config.font.DrawText(GameSettings.stage.name, new Rect(0, Window.renderSize.y - 256, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
+				}
+				else
+				{
+					MenuManager.Draw();
+				}
 			}
 		}
 	}

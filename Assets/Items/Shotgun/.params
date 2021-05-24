@@ -1,17 +1,14 @@
 {
-	"health": 75,
+	"health": 100,
 	"meleeVulnerable": true,
 	"rangedVulnerable": false,
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
-	"size": [
-		0.6,
-		0.6
-	],
+	"size": [0.6, 0.6],
 	"enablePhysics": false,
 	"uses": 4,
-	"attackCooldown": 0.4,
+	"attackCooldown": 0.35,
 	"projectiles": 3,
-	"spread": 0.1
+	"spread": 0.1125
 }

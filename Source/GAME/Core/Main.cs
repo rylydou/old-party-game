@@ -55,17 +55,14 @@ namespace GAME
 
 			SoundEffect.MasterVolume = 0.1f;
 
+			ChangeState(new StateMainMenu());
+
 			base.Initialize();
 		}
 
 		protected override void LoadContent()
 		{
 			base.LoadContent();
-
-			GameSettings.players.Add(new Player(EController.Gamepad0));
-			GameSettings.players.Add(new Player(EController.Gamepad1));
-			GameSettings.players.Add(new Player(EController.Gamepad2));
-			GameSettings.players.Add(new Player(EController.Gamepad3));
 		}
 
 		protected override void UnloadContent()
@@ -129,8 +126,6 @@ namespace GAME
 									if (GameSettings.stage.name.Length > 0)
 										GameSettings.stage.name = GameSettings.stage.name.Remove(GameSettings.stage.name.Length - 1, 1);
 									break;
-								default:
-									break;
 							}
 						}
 						else
@@ -147,12 +142,6 @@ namespace GAME
 						ChangeState(new StateEditor());
 					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.D3))
 						ChangeState(new StateMainMenu());
-					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.T))
-						infiniteTime = !infiniteTime;
-					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.L))
-						Logger.collectErrors = !Logger.collectErrors;
-					else if (!shift && !ctrl && !alt && Input.GetButtonPress(Inputs.P))
-						Physics.DEBUG = !Physics.DEBUG;
 				}
 
 				if (Input.GetButtonPress(Inputs.F2))
@@ -222,10 +211,6 @@ namespace GAME
 						Config.font.DrawText("--- OPTIONS ---", layout.newElement, Color.white);
 						layout.AddElement();
 						Config.font.DrawText($"Volume {SoundEffect.MasterVolume.ToString("P")} (- +)", layout.newElement, Color.white);
-						layout.AddElement();
-						Config.font.DrawText((infiniteTime ? "[X]" : "[ ]") + " No Timmer? (T)", layout.newElement, Color.white);
-						Config.font.DrawText((Logger.collectErrors ? "[X]" : "[ ]") + " Collect Errors? (L)", layout.newElement, Color.white);
-						Config.font.DrawText((Physics.DEBUG ? "[X]" : "[ ]") + " Debug Physics? (P)", layout.newElement, Color.white);
 					}
 
 					GFX.DrawBox(new Rect(MGE.Window.renderSize.x / 2 + 8, 8, MGE.Window.renderSize.x / 2 - 16, MGE.Window.renderSize.y - 16), new Color(0, 0.75f));
@@ -247,6 +232,8 @@ namespace GAME
 		{
 			this.state?.Exit();
 			this.state = null;
+
+			Time.timeScale = 1.0f;
 
 			System.GC.Collect();
 

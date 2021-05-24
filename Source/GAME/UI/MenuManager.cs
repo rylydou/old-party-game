@@ -46,6 +46,7 @@ namespace GAME.UI
 
 		public static void OpenMenu(Menu menu)
 		{
+			menu.cursorPosition = 0;
 			menus.Add(menu);
 			onMenuOpen.Invoke(menu);
 		}
