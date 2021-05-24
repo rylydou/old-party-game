@@ -40,6 +40,16 @@ namespace GAME
 			typeof(CShotgun),
 		};
 
+		public static Color[] playerColors = new Color[]
+		{
+			new Color("#FF595E"),
+			new Color("#269BE3"),
+			new Color("#8AC926"),
+			new Color("#FFCA3A"),
+			new Color("#7E5DAC"),
+			new Color("#404a5a"),
+		};
+
 		public static List<string> skins = new List<string>
 		{
 			"_Default",
@@ -48,21 +58,6 @@ namespace GAME
 			"Goose",
 			"Robot",
 		};
-
-		static Tileset[] _backgroundTilesets;
-		public static Tileset[] backgroundTilesets
-		{
-			get
-			{
-				if (_backgroundTilesets is null)
-					_backgroundTilesets = new Tileset[]
-					{
-						null,
-					};
-
-				return _backgroundTilesets;
-			}
-		}
 
 		static (Tile, Tileset)[] _tilesets;
 		public static (Tile, Tileset)[] tilesets
@@ -109,6 +104,7 @@ namespace GAME
 			new Palette("#fb8500", "#ffb703"),
 			new Palette("#065a60", "#006466"),
 			new Palette("#aaaaaa", "#bbbbbb"),
+			new Palette("#0a0a0a", "#111111"),
 		};
 	}
 }

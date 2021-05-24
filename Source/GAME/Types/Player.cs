@@ -5,15 +5,6 @@ namespace GAME
 {
 	public class Player
 	{
-		public static Color[] colors = new Color[]
-		{
-			new Color("#FF595E"),
-			new Color("#269BE3"),
-			new Color("#8AC926"),
-			new Color("#FFCA3A"),
-			new Color("#7E5DAC"),
-		};
-
 		public PlayerControls controls;
 		string _skin;
 		public string skin { get => _skin; set { _skin = value; _icon = null; _iconDead = null; } }
@@ -23,7 +14,7 @@ namespace GAME
 			get
 			{
 				if (!_color.HasValue)
-					_color = colors[Math.Clamp(GameSettings.players.FindIndex(x => x == this), colors.Length - 1)];
+					_color = Setup.playerColors[Math.Clamp(GameSettings.players.FindIndex(x => x == this), Setup.playerColors.Length - 1)];
 				return _color.Value;
 			}
 		}

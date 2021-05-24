@@ -61,6 +61,11 @@ namespace GAME
 		protected override void LoadContent()
 		{
 			base.LoadContent();
+
+			GameSettings.players.Add(new Player(EController.Gamepad0));
+			GameSettings.players.Add(new Player(EController.Gamepad1));
+			GameSettings.players.Add(new Player(EController.Gamepad2));
+			GameSettings.players.Add(new Player(EController.Gamepad3));
 		}
 
 		protected override void UnloadContent()

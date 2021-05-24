@@ -142,23 +142,16 @@ namespace GAME.Components
 			else
 			{
 				var bestSpawn = GameSettings.stage.playerSpawnPoints.Random();
-				var bestSpawnScore = float.NegativeInfinity;
+				var bestSpawnScore = GetSpawnScore(bestSpawn);
 
 				foreach (var spawn in GameSettings.stage.playerSpawnPoints)
 				{
-					var spawnScore = 0.0f;
+					var score = GetSpawnScore(spawn);
 
-					foreach (var player in GameSettings.players)
-					{
-						if (player == this.player || player.player is null) continue;
-
-						spawnScore += Vector2.DistanceSqr(spawn, player.player.entity.position);
-					}
-
-					if (spawnScore > bestSpawnScore)
+					if (score > bestSpawnScore)
 					{
 						bestSpawn = spawn;
-						bestSpawnScore = spawnScore;
+						bestSpawnScore = score;
 					}
 				}
 
@@ -172,12 +165,13 @@ namespace GAME.Components
 
 					entity.layer.scene.GetLayer("Foreground Effects").AddEntity(new MGE.ECS.Entity(para));
 
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(5.0f), Vector2.zero, new Color(0.5f), 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.75f), Vector2.zero, new Color(0.6f), 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.5f), Vector2.zero, new Color(0.7f), 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.25f), Vector2.zero, new Color(0.8f), 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, new Color(0.9f), 0, Vector2.zero);
-					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.75f), Vector2.zero, player.color, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(5.25f), Vector2.zero, Color.white, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(5.0f), Vector2.zero, player.color, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.75f), Vector2.zero, Color.white, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.5f), Vector2.zero, player.color, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.25f), Vector2.zero, Color.white, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(4.0f), Vector2.zero, player.color, 0, Vector2.zero);
+					para.SpawnParticle(rb.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.75f), Vector2.zero, Color.white, 0, Vector2.zero);
 				}
 				else
 				{
@@ -187,6 +181,31 @@ namespace GAME.Components
 					PlaySound("Offscreen Spawn");
 				}
 			}
+		}
+
+		public float GetSpawnScore(Vector2 spawn, bool trueScore = false)
+		{
+			var score = 0.0f;
+
+			foreach (var player in GameSettings.players)
+			{
+				if (player == this.player || player.player is null) continue;
+
+				var dist = Vector2.DistanceSqr(spawn, player.player.entity.position);
+				const float noSpawnDist = 2.5f;
+
+				if (dist < noSpawnDist * noSpawnDist)
+				{
+					score = float.NegativeInfinity;
+				}
+				else
+				{
+					score += dist;
+					score -= player.kills * 2;
+				}
+			}
+
+			return score + (trueScore ? 0 : Random.Float(-7.5f, 7.5f));
 		}
 
 		public override void Tick()
