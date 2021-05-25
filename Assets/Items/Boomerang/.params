@@ -7,10 +7,10 @@
 	"frictionAir": 2,
 	"size": [0.8, 0.8],
 	"radius": 1.1,
-	"damage": 17,
+	"damage": 15,
 	"knockback": 0.35,
 	"throwVelocity": 0.67,
 	"goBackSpeed": 2.33,
-	"followSpeed": 0.075,
+	"followSpeed": 0.1,
 	"damageOnHit": 10
 }

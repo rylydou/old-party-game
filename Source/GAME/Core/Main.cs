@@ -225,6 +225,9 @@ namespace GAME
 						}
 					}
 				}
+#if !INDEV
+				Config.font.DrawText($"Version {System.Environment.Version} {System.DateTime.Now.ToString("yyyy-MM-dd")}", new Rect(16, MGE.Window.renderSize.y - 38, MGE.Window.renderSize.x, 32), new Color(1, 0.5f));
+#endif
 			}
 		}
 

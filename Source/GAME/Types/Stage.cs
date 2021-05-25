@@ -102,18 +102,6 @@ namespace GAME
 
 			if (crateSpawnsPoints is null)
 				crateSpawnsPoints = new List<Vector2Int>();
-			// crateSpawnsPoints = new List<(Vector2Int, byte)>();
-
-			// if (crateLootTableOverrides is null)
-			// {
-			// 	crateLootTableOverrides = new List<List<(Type, int)>>();
-			// 	crateLootTableOverrides.Add(new List<(Type, int)>());
-			// 	crateLootTableOverrides.Add(new List<(Type, int)>()
-			// 	{
-			// 		(null, -1),
-			// 		(typeof(CMinigun), 1),
-			// 	});
-			// }
 		}
 
 		public void Save()

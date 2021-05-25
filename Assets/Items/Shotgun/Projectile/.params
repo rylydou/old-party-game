@@ -7,10 +7,10 @@
 	"frictionAir": 4,
 	"size": [0.5, 0.5],
 	"enablePhysics": false,
-	"damage": 17,
+	"damage": 15,
 	"knockback": 0.25,
-	"speed": 0.825,
+	"speed": 0.9,
 	"radius": 1.33,
-	"lifetime": 0.175,
+	"lifetime": 0.167,
 	"hits": 1
 }

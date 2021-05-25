@@ -304,7 +304,7 @@ namespace GAME.Components
 						if (hitThing)
 							PlaySound("Punch Hit");
 
-						var para = new CParticle(1, texPunchSwingEffect, (p) => { p.frame = (byte)(p.timeAlive * 60 - 1); if (p.frame > 2) p.Kill(); });
+						var para = new CParticle(1, texPunchSwingEffect, (p) => { p.frame = (byte)(p.timeAlive * 120 - 1); if (p.frame > 5) p.Kill(); });
 
 						entity.layer.scene.GetLayer("Foreground Effects").AddEntity(new MGE.ECS.Entity(para));
 
