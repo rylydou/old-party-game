@@ -160,10 +160,8 @@ namespace GAME.States
 			if (prevBackground is object)
 				GFX.Draw(prevBackground, new Rect(0, 0, Window.renderSize));
 
-			var opacity = Math.Clamp(backgroundTimeLeft, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading;
-
 			if (background is object)
-				GFX.Draw(background, new Rect(0, 0, Window.renderSize), new Color(1, Math.Clamp01(opacity)));
+				GFX.Draw(background, new Rect(0, 0, Window.renderSize), new Color(1, Math.Clamp01(Math.Clamp(backgroundTimeLeft, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading)));
 
 			if (GameSettings.mainController is null)
 			{
@@ -181,7 +179,10 @@ namespace GAME.States
 			{
 				if (isChangingStage)
 				{
-					Config.font.DrawText(GameSettings.stage.name, new Rect(0, Window.renderSize.y - 256, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
+					var text = $"> {GameSettings.stage.name} <";
+
+					Config.font.DrawText(text, new Rect(4, Window.renderSize.y / 2 - 32 + 4, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
+					Config.font.DrawText(text, new Rect(0, Window.renderSize.y / 2 - 32, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 				}
 				else
 				{
