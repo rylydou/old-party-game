@@ -92,6 +92,11 @@ namespace GAME.States
 			SceneManager.QueueScene(new Scene());
 
 			MenuManager.Init();
+
+			if (GameSettings.mainController is object)
+			{
+				MenuManager.menus = new List<Menu>() { mainMenu };
+			}
 		}
 
 		public override void Update()

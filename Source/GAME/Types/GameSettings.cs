@@ -26,7 +26,7 @@ namespace GAME
 
 		public bool infiniteTime = false;
 		public float roundTime = 60 * 5.0f;
-		public float maxOvertime = 60 * 1.0f;
+		public float maxOvertime = 60 * 0.5f;
 
 		public float timeToRespawn = 0.67f;
 		public bool smartPlayerSpawns = true;
