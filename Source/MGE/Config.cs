@@ -37,6 +37,8 @@ namespace MGE
 			{typeof(Font), ".font.psd"},
 			{typeof(Params), ".params"},
 			{typeof(Effect), ".mgfx"},
+
+			{typeof(GAME.Stage), ".stage"},
 		};
 		public static readonly string infoFileExt = ".info";
 

@@ -109,29 +109,12 @@ namespace GAME
 			try
 			{
 				using (Timmer.Start("Save Stage"))
-					IO.Save($"Assets/Stages/{name}.stage", this, false);
+					IO.Save($"Assets/@ Stages/{name}.stage", this, false);
 			}
 			catch (System.Exception e)
 			{
 				Logger.LogError(e);
 			}
-		}
-
-		public static Stage Load(string name)
-		{
-			try
-			{
-				using (Timmer.Start("Load Stage"))
-				{
-					return IO.Load<Stage>($"Assets/Stages/{name}.stage", false);
-				}
-			}
-			catch (System.Exception e)
-			{
-				Logger.LogError(e);
-			}
-
-			return null;
 		}
 	}
 }

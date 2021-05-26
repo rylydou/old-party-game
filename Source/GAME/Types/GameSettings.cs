@@ -28,9 +28,11 @@ namespace GAME
 		public float roundTime = 60 * 5.0f;
 		public float maxOvertime = 60 * 1.0f;
 
+		public float timeToRespawn = 0.67f;
+		public bool smartPlayerSpawns = true;
+
 		public float timeBtwCrates = 4.5f;
 		public float timeBtwCrateLessPerPlayer = 0.5f;
-
-		public float timeToRespawn = 0.67f;
+		public bool smartCrateSpawns = true;
 	}
 }

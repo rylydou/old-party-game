@@ -6,6 +6,8 @@ using MGE.Graphics;
 using MGE.Physics;
 using MGE.FileIO;
 using MGE.InputSystem;
+using System;
+using Math = MGE.Math;
 
 namespace GAME.States
 {
@@ -26,7 +28,7 @@ namespace GAME.States
 		}
 
 		public static Menu mainMenu = new Menu(
-			"Main Menu",
+			string.Empty,
 			(() => "Play", () => Main.current.ChangeState(new StatePlayerSetup())),
 			(() => "Editor", () => MenuManager.OpenMenu(editorMenu)),
 			(() => "Settings", () => MenuManager.OpenMenu(settingsMenu)),
@@ -34,18 +36,11 @@ namespace GAME.States
 		);
 
 		public static Menu editorMenu = new Menu(
-			"Main Menu",
+			"Editor",
 			(() => "Edit", () => Main.current.ChangeState(new StateEditor())),
 			(() => "Save", () => GameSettings.stage.Save()),
-			(() => "Load", () => GameSettings.stage = Stage.Load(GameSettings.stage.name)),
-			(() => "Rename", () => isChangingStage = true),
-			(() => "Delete", () => MenuManager.OpenMenu(editorDelectAskMenu))
-		);
-
-		public static Menu editorDelectAskMenu = new Menu(
-			"Delete?",
-			(() => "No", () => MenuManager.GoBack()),
-			(() => "Yes", () => IO.FileDelete($"Assets/Stages/{GameSettings.stage.name}"))
+			(() => "Load", () => MenuManager.OpenMenu(MakeMenuOnStages(x => GameSettings.stage = Assets.LoadAsset<Stage>(x)))),
+			(() => "Rename", () => isEnteringInput = true)
 		);
 
 		public static Menu settingsMenu = new Menu(
@@ -58,7 +53,7 @@ namespace GAME.States
 
 		public static Menu gameSettingsMenu = new Menu(
 		"Game Settings",
-		(() => (Main.current.infiniteTime ? "[X]" : "[ ]") + " Infinite Time", () => Main.current.infiniteTime = !Main.current.infiniteTime)
+		(() => (GameSettings.current.infiniteTime ? "[X]" : "[ ]") + " Infinite Time", () => GameSettings.current.infiniteTime = !GameSettings.current.infiniteTime)
 	);
 
 		public static Menu graphicsSettingsMenu = new Menu(
@@ -69,12 +64,26 @@ namespace GAME.States
 			(() => "Apply", () => GFX.Apply())
 		);
 
-		static bool isChangingStage = false;
+		static bool isEnteringInput = false;
 
 		float backgroundTimeLeft = backgroundLifetime;
 
 		Texture prevBackground;
 		Texture background;
+
+		public static Menu MakeMenuOnStages(Action<string> onStageSelected)
+		{
+			var items = new List<(Func<string>, Action)>();
+
+			foreach (var item in Assets.GetUnloadedAssets<Stage>("@ Stages"))
+			{
+				var text = item.Replace("@ Stages/", string.Empty);
+				var path = item;
+				items.Add((() => text, () => { onStageSelected.Invoke(path); MenuManager.GoBack(); }));
+			}
+
+			return new Menu("Select A Stage", items.ToArray());
+		}
 
 		public override void Init()
 		{
@@ -102,7 +111,7 @@ namespace GAME.States
 			}
 			else
 			{
-				if (isChangingStage)
+				if (isEnteringInput)
 				{
 					foreach (var key in Input.keyboardString)
 					{
@@ -114,10 +123,10 @@ namespace GAME.States
 									GameSettings.stage.name += ' ';
 									break;
 								case (char)13:
-									isChangingStage = false;
+									isEnteringInput = false;
 									break;
 								case '\n':
-									isChangingStage = false;
+									isEnteringInput = false;
 									break;
 								case '\b':
 									if (GameSettings.stage.name.Length > 0)
@@ -177,7 +186,7 @@ namespace GAME.States
 			}
 			else
 			{
-				if (isChangingStage)
+				if (isEnteringInput)
 				{
 					var text = $"> {GameSettings.stage.name} <";
 

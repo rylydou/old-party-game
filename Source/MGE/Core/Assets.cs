@@ -131,6 +131,10 @@ namespace MGE
 				case ".mgfx":
 					asset = new Effect(GFX.graphicsDevice, File.ReadAllBytes(path));
 					break;
+				// TEMP
+				case ".stage":
+					asset = IO.Load<GAME.Stage>(path, true);
+					break;
 				default:
 					Logger.LogWarning($"Cannot read file {path}");
 					break;
