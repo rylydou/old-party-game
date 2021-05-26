@@ -128,8 +128,12 @@ namespace GAME.UI
 				index++;
 			}
 
-			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions) + 2, new Color(0, 0.25f), fontSize);
-			font.DrawText($"[ {title} ]", new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions), selectedColor, fontSize);
+			if (string.IsNullOrEmpty(title)) return;
+
+			var titleText = $"  [ {title} ]";
+
+			font.DrawText(titleText, new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions) + 2, new Color(0, 0.25f), fontSize);
+			font.DrawText(titleText, new Vector2(leftMarginForOptions, startPos - spaceBetweenOptions), selectedColor, fontSize);
 		}
 	}
 }

@@ -200,18 +200,11 @@ namespace GAME.States
 					var timeTextSize = Config.font.Measure(timeText, 2);
 					var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
 
-					for (int y = -4; y <= 4; y++)
-						for (int x = -4; x <= 4; x++)
-							Config.font.DrawText(timeText, new Vector2(timeTextOffset + x, 8 + y), new Color(0, 0.0125f), 2);
+					Config.font.DrawText(timeText, new Vector2(timeTextOffset + 3, 8 + 3), new Color(0, 0.25f), 2);
 
 					Config.font.DrawText(timeText, new Vector2(timeTextOffset, 8), timeLeft < 30 ? new Color(Math.Sin(Time.time * Math.pi).Abs() * 0.5f + 0.5f, 0, 0) : Color.white, 2);
 				}
 			}
-		}
-
-		public void SpawnPlayer(CPlayer player)
-		{
-			SceneManager.activeScene.GetLayer("Gameplay").AddEntity(new Entity(new CRigidbody(), player));
 		}
 
 		public void SpawnCrate()

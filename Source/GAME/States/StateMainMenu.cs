@@ -66,7 +66,7 @@ namespace GAME.States
 
 		static bool isEnteringInput = false;
 
-		float backgroundTimeLeft = backgroundLifetime;
+		float backgroundShowen = backgroundLifetime;
 
 		Texture prevBackground;
 		Texture background;
@@ -156,14 +156,14 @@ namespace GAME.States
 				}
 			}
 
-			backgroundTimeLeft += Time.deltaTime;
+			backgroundShowen += Time.deltaTime;
 
-			if (backgroundTimeLeft > backgroundLifetime)
+			if (backgroundShowen > backgroundLifetime)
 			{
 				prevBackground?.texture?.Dispose();
 				prevBackground = background;
 				background = Assets.LoadAsset<Texture>(backgrounds.Random());
-				backgroundTimeLeft = 0;
+				backgroundShowen = 0.0f;
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace GAME.States
 				GFX.Draw(prevBackground, new Rect(0, 0, Window.renderSize));
 
 			if (background is object)
-				GFX.Draw(background, new Rect(0, 0, Window.renderSize), new Color(1, Math.Clamp01(Math.Clamp(backgroundTimeLeft, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading)));
+				GFX.Draw(background, new Rect(0, 0, Window.renderSize), new Color(1, Math.Clamp01(Math.Clamp(backgroundShowen, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading)));
 
 			if (GameSettings.mainController is null)
 			{
@@ -183,10 +183,7 @@ namespace GAME.States
 
 				const string text = "Press [Select] To Start";
 
-				for (int y = -4; y <= 4; y++)
-					for (int x = -4; x <= 4; x++)
-						Config.font.DrawText(text, new Rect(x, pos + y, Window.renderSize.x, 64), new Color(0, 0.0125f), 1.5f, TextAlignment.Center);
-
+				Config.font.DrawText(text, new Rect(2, pos + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
 				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 			}
 			else
@@ -195,7 +192,7 @@ namespace GAME.States
 				{
 					var text = $"> {GameSettings.stage.name} <";
 
-					Config.font.DrawText(text, new Rect(4, Window.renderSize.y / 2 - 32 + 4, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
+					Config.font.DrawText(text, new Rect(2, Window.renderSize.y / 2 - 32 + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
 					Config.font.DrawText(text, new Rect(0, Window.renderSize.y / 2 - 32, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 				}
 				else

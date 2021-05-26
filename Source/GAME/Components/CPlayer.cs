@@ -141,17 +141,20 @@ namespace GAME.Components
 			}
 			else
 			{
-				var bestSpawn = Vector2.zero;
+				var bestSpawn = GameSettings.stage.playerSpawnPoints.Random();
 				var bestSpawnScore = float.NegativeInfinity;
 
-				foreach (var spawn in GameSettings.stage.playerSpawnPoints)
+				if (GameSettings.current.smartPlayerSpawns)
 				{
-					var score = GetSpawnScore(spawn);
-
-					if (score > bestSpawnScore)
+					foreach (var spawn in GameSettings.stage.playerSpawnPoints)
 					{
-						bestSpawn = spawn;
-						bestSpawnScore = score;
+						var score = GetSpawnScore(spawn);
+
+						if (score > bestSpawnScore)
+						{
+							bestSpawn = spawn;
+							bestSpawnScore = score;
+						}
 					}
 				}
 
