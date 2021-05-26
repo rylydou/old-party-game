@@ -141,8 +141,8 @@ namespace GAME.Components
 			}
 			else
 			{
-				var bestSpawn = GameSettings.stage.playerSpawnPoints.Random();
-				var bestSpawnScore = GetSpawnScore(bestSpawn);
+				var bestSpawn = Vector2.zero;
+				var bestSpawnScore = float.NegativeInfinity;
 
 				foreach (var spawn in GameSettings.stage.playerSpawnPoints)
 				{
@@ -189,23 +189,23 @@ namespace GAME.Components
 
 			foreach (var player in GameSettings.players)
 			{
-				if (player == this.player || player.player is null) continue;
+				if (player.player is null || player == this.player) continue;
 
 				var dist = Vector2.DistanceSqr(spawn, player.player.entity.position);
-				const float noSpawnDist = 2.5f;
+				const float noSpawnDist = 3f;
 
 				if (dist < noSpawnDist * noSpawnDist)
 				{
-					score = float.NegativeInfinity;
+					score -= 10000;
 				}
 				else
 				{
 					score += dist;
-					score -= player.kills * 2;
+					// score -= player.kills * 2;
 				}
 			}
 
-			return score + (trueScore ? 0 : Random.Float(-7.5f, 7.5f));
+			return score;
 		}
 
 		public override void Tick()

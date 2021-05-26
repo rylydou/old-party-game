@@ -47,14 +47,15 @@ namespace GAME.Components.Items
 		{
 			base.Tick();
 
+			if (owner is object && owner.health < 1)
+			{
+				flying = false;
+				Drop();
+				return;
+			}
+
 			if (flying)
 			{
-				if (owner is null || owner.enabled == false)
-				{
-					flying = false;
-					return;
-				}
-
 				var wasMovingFowards = velocity > 0;
 				velocity -= goBackSpeed * Time.fixedDeltaTime;
 				if (velocity < 0 && wasMovingFowards)

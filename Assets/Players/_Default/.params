@@ -7,7 +7,7 @@
 	"frictionAir": 4,
 	"extraFrictionGround": 12,
 	"extraFrictionAir": 4,
-	"size": [0.9, 0.9],
+	"size": [1.0, 1.0],
 
 	"moveSpeed": 7,
 	"crouchingMoveSpeed": 2.67,

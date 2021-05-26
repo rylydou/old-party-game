@@ -5,5 +5,5 @@
 	"mass": 1,
 	"frictionGround": 14,
 	"frictionAir": 4,
-	"size": [0.95, 0.95]
+	"size": [1.0, 1.0]
 }
