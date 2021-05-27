@@ -8,6 +8,7 @@ using MGE.FileIO;
 using MGE.InputSystem;
 using System;
 using Math = MGE.Math;
+using MGE.UI;
 
 namespace GAME.States
 {
@@ -172,19 +173,19 @@ namespace GAME.States
 			base.DrawUI();
 
 			if (prevBackground is object)
-				GFX.Draw(prevBackground, new Rect(0, 0, Window.renderSize));
+				GFX.Draw(prevBackground, new Rect(0, 0, GUI.canvasSize));
 
 			if (background is object)
-				GFX.Draw(background, new Rect(0, 0, Window.renderSize), new Color(1, Math.Clamp01(Math.Clamp(backgroundShowen, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading)));
+				GFX.Draw(background, new Rect(0, 0, GUI.canvasSize), new Color(1, Math.Clamp01(Math.Clamp(backgroundShowen, 0, backgroundTimeLeftToStartFading) / backgroundTimeLeftToStartFading)));
 
 			if (GameSettings.mainController is null)
 			{
-				var pos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
+				var pos = GUI.canvasSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
 
 				const string text = "Press [Select] To Start";
 
-				Config.font.DrawText(text, new Rect(2, pos + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
-				Config.font.DrawText(text, new Rect(0, pos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
+				Config.font.DrawText(text, new Rect(2, pos + 2, GUI.canvasSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
+				Config.font.DrawText(text, new Rect(0, pos, GUI.canvasSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 			}
 			else
 			{
@@ -192,8 +193,8 @@ namespace GAME.States
 				{
 					var text = $"> {GameSettings.stage.name} <";
 
-					Config.font.DrawText(text, new Rect(2, Window.renderSize.y / 2 - 32 + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
-					Config.font.DrawText(text, new Rect(0, Window.renderSize.y / 2 - 32, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
+					Config.font.DrawText(text, new Rect(2, GUI.canvasSize.y / 2 - 32 + 2, GUI.canvasSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
+					Config.font.DrawText(text, new Rect(0, GUI.canvasSize.y / 2 - 32, GUI.canvasSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 				}
 				else
 				{

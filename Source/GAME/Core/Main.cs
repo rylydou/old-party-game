@@ -122,7 +122,7 @@ namespace GAME
 
 		void OnAfterRenderGame()
 		{
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch(true))
 			{
 				state?.Draw();
 			}
@@ -132,12 +132,12 @@ namespace GAME
 
 		void OnAfterRenderUI()
 		{
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch(true))
 			{
 				state?.DrawUI();
 
 #if !INDEV
-				Config.font.DrawText($"v{version} {System.DateTime.Now.ToString("yyyy-MM-dd")}", new Rect(16, MGE.Window.renderSize.y - 38, MGE.Window.renderSize.x, 32), new Color(1, 0.33f));
+				Config.font.DrawText($"v{version} {System.DateTime.Now.ToString("yyyy-MM-dd")}", new Rect(16, MGE.GUI.canvasSize.y - 38, MGE.GUI.canvasSize.x, 32), new Color(1, 0.33f));
 #endif
 			}
 		}

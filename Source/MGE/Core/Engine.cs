@@ -74,6 +74,8 @@ namespace MGE
 
 				Input.GamepadInit();
 
+				GUI.Init();
+
 				Pointer.mode = PointerMode.Texture;
 				Pointer.hotspot = new Vector2(0);
 				Pointer.size = new Vector2(16);
@@ -221,8 +223,6 @@ namespace MGE
 			SceneManager.DrawUI();
 
 			onBeforeRenderUI.Invoke();
-
-			GUI.gui.Draw();
 
 			onAfterRenderUI.Invoke();
 

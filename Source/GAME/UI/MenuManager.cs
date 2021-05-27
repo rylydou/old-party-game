@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MGE;
 using MGE.Graphics;
+using MGE.UI;
 
 namespace GAME.UI
 {
@@ -68,7 +69,7 @@ namespace GAME.UI
 
 		public static void Draw()
 		{
-			GFX.Draw(gradHor, new Rect(0, 0, Window.renderSize.x / 2, Window.renderSize.y), new Color(0, 0.25f));
+			GFX.Draw(gradHor, new Rect(0, 0, GUI.canvasSize.x / 2, GUI.canvasSize.y), new Color(0, 0.25f));
 
 			if (menus.Count > 0)
 				menus.Last().Draw();

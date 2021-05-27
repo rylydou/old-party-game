@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MGE;
+using MGE.UI;
 
 namespace GAME.UI
 {
@@ -97,7 +98,7 @@ namespace GAME.UI
 
 		public void Draw()
 		{
-			var startPos = (Window.renderSize.y - options.Length * spaceBetweenOptions) / 2;
+			var startPos = (GUI.canvasSize.y - options.Length * spaceBetweenOptions) / 2;
 
 			var index = 0;
 			foreach (var option in options)

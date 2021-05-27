@@ -39,7 +39,7 @@ namespace MGE
 		static float timeNotMoving = 0.0f;
 		static Vector2 lastPos;
 
-		public static void Draw()
+		internal static void Draw()
 		{
 			if (
 				Vector2.DistanceGT(lastPos, Input.windowMousePosition, minMoveToUnhide) |

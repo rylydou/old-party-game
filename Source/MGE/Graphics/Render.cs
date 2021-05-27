@@ -28,7 +28,7 @@ namespace MGE.Graphics
 		{
 			Engine.game.GraphicsDevice.SetRenderTarget(null);
 
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch(true))
 				GFX.sb.Draw(render, rect, Color.white);
 		}
 
@@ -36,7 +36,7 @@ namespace MGE.Graphics
 		{
 			Done();
 
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch(true))
 				GFX.sb.Draw(render, new Rect(0, 0, Window.renderSize.x, Window.renderSize.y), Color.white);
 
 			render.Dispose();

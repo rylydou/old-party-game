@@ -7,6 +7,7 @@ using MGE;
 using MGE.Components;
 using MGE.ECS;
 using MGE.Graphics;
+using MGE.UI;
 
 namespace GAME.States
 {
@@ -198,7 +199,7 @@ namespace GAME.States
 						(timeLeft < 0 ? "OVERTIME! " : "") +
 						System.TimeSpan.FromSeconds(timeLeft.Abs()).ToString(timeLeft.Abs() < 60 ? @"ss\.ff" : @"mm\:ss");
 					var timeTextSize = Config.font.Measure(timeText, 2);
-					var timeTextOffset = (Window.renderSize.x - timeTextSize.x) / 2;
+					var timeTextOffset = (GUI.canvasSize.x - timeTextSize.x) / 2;
 
 					Config.font.DrawText(timeText, new Vector2(timeTextOffset + 3, 8 + 3), new Color(0, 0.25f), 2);
 

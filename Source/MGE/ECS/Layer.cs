@@ -200,7 +200,7 @@ namespace MGE.ECS
 
 		public void Draw()
 		{
-			using (new DrawBatch())
+			using (new DrawBatch(false))
 			{
 				foreach (var entity in entities.ToArray())
 				{
@@ -224,7 +224,7 @@ namespace MGE.ECS
 
 		public void DrawUI()
 		{
-			using (new DrawBatch(transform: null))
+			using (new DrawBatch(true))
 			{
 				foreach (var entity in entities.ToArray())
 				{

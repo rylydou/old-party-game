@@ -4,6 +4,7 @@ using MGE;
 using MGE.ECS;
 using MGE.Graphics;
 using MGE.InputSystem;
+using MGE.UI;
 
 namespace GAME.States
 {
@@ -222,8 +223,8 @@ namespace GAME.States
 				GFX.DrawBox(new Rect((float)stage.tiles.width / 2, 0, GFX.currentUnitsPerPixel, stage.tiles.height), new Color(1, 0.1f));
 				GFX.DrawBox(new Rect(0, (float)stage.tiles.height / 2, stage.tiles.width, GFX.currentUnitsPerPixel), new Color(1, 0.1f));
 
-				GFX.DrawBox(new Rect(Input.cameraMousePosition.x, 0, GFX.currentUnitsPerPixel, Window.renderSize.y), new Color(1, 0.1f));
-				GFX.DrawBox(new Rect(0, Input.cameraMousePosition.y, Window.renderSize.x, GFX.currentUnitsPerPixel), new Color(1, 0.1f));
+				GFX.DrawBox(new Rect(Input.cameraMousePosition.x, 0, GFX.currentUnitsPerPixel, GUI.canvasSize.y), new Color(1, 0.1f));
+				GFX.DrawBox(new Rect(0, Input.cameraMousePosition.y, GUI.canvasSize.x, GFX.currentUnitsPerPixel), new Color(1, 0.1f));
 			}
 
 			if (showBgTilePicker)

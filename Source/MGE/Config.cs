@@ -25,6 +25,7 @@ namespace MGE
 		public static readonly bool allowWindowResizing = true;
 		public static readonly Vector2 aspectRatio = new Vector2(16.0f, 9.0f);
 		public static readonly Vector2Int defaultWindowSize = new Vector2Int(1280, 720);
+		public static readonly Vector2Int canvasSize = new Vector2Int(1920, 1080);
 
 		// # Asset Management
 		public static readonly Dictionary<Type, string> typeToExtention = new Dictionary<Type, string>()

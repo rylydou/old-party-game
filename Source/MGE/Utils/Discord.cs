@@ -9,7 +9,7 @@ namespace MGE
 
 		static string id;
 
-		public static void Init()
+		internal static void Init()
 		{
 			id = Environment.TickCount64.ToString();
 

@@ -3,6 +3,7 @@ using System.Linq;
 using MGE;
 using MGE.ECS;
 using MGE.Graphics;
+using MGE.UI;
 using MGE.UI.Layouts;
 
 namespace GAME.States
@@ -125,41 +126,41 @@ namespace GAME.States
 		{
 			base.DrawUI();
 
-			GFX.DrawBox(new Rect(0, 0, Window.renderSize), palette.backgroundA);
+			GFX.DrawBox(new Rect(0, 0, GUI.canvasSize), palette.backgroundA);
 
 			const int res = 64;
 
 			var lastPos = Vector2.zero;
-			for (int x = -32; x < Window.renderSize.x + 32; x += res)
+			for (int x = -32; x < GUI.canvasSize.x + 32; x += res)
 			{
-				var sineWavePos = new Vector2(x, Math.Sin((float)x / Window.renderSize.x * 2 + Time.time * 0.5f) * Window.renderSize.y / 3 + Window.renderSize.y / 2);
+				var sineWavePos = new Vector2(x, Math.Sin((float)x / GUI.canvasSize.x * 2 + Time.time * 0.5f) * GUI.canvasSize.y / 3 + GUI.canvasSize.y / 2);
 				GFX.DrawLine(lastPos, sineWavePos, palette.backgroundB, 64);
 				lastPos = sineWavePos;
 			}
 
 			lastPos = Vector2.zero;
-			for (int x = -32; x < Window.renderSize.x + 32; x += res)
+			for (int x = -32; x < GUI.canvasSize.x + 32; x += res)
 			{
-				var sineWavePos = new Vector2(x, Math.Sin((float)x / Window.renderSize.x * 2 + Time.time * 0.5f + Math.pi) * Window.renderSize.y / 3 + Window.renderSize.y / 2);
+				var sineWavePos = new Vector2(x, Math.Sin((float)x / GUI.canvasSize.x * 2 + Time.time * 0.5f + Math.pi) * GUI.canvasSize.y / 3 + GUI.canvasSize.y / 2);
 				GFX.DrawLine(lastPos, sineWavePos, palette.backgroundB, 64);
 				lastPos = sineWavePos;
 			}
 
 			const int barSize = 64;
-			for (int i = -1; i < Window.renderSize.x / barSize + 4; i++)
+			for (int i = -1; i < GUI.canvasSize.x / barSize + 4; i++)
 			{
 				if ((i + 1) % 3 == 0)
-					GFX.DrawBox(new Rect(i * barSize + Math.Wrap(Time.time * 32, -barSize * 1.5f, barSize * 1.5f), -barSize / 4, barSize, Window.renderSize.y + barSize / 2), palette.backgroundB, Math.pi / 16);
+					GFX.DrawBox(new Rect(i * barSize + Math.Wrap(Time.time * 32, -barSize * 1.5f, barSize * 1.5f), -barSize / 4, barSize, GUI.canvasSize.y + barSize / 2), palette.backgroundB, Math.pi / 16);
 			}
 
-			GFX.DrawBox(new Rect(0, 0, Window.renderSize.x * (timeAllReady / timeAllReadyToContinue), Window.renderSize.y), palette.backgroundA);
+			GFX.DrawBox(new Rect(0, 0, GUI.canvasSize.x * (timeAllReady / timeAllReadyToContinue), GUI.canvasSize.y), palette.backgroundA);
 
-			var textPos = Window.renderSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
+			var textPos = GUI.canvasSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
 
 			const string text = "Press [Select] To Join";
 
-			Config.font.DrawText(text, new Rect(2, textPos + 2, Window.renderSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
-			Config.font.DrawText(text, new Rect(0, textPos, Window.renderSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
+			Config.font.DrawText(text, new Rect(2, textPos + 2, GUI.canvasSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
+			Config.font.DrawText(text, new Rect(0, textPos, GUI.canvasSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
 
 			using (var layout = new StackLayout(new Vector2(32), 256, true))
 			{
