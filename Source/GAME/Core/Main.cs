@@ -122,7 +122,7 @@ namespace GAME
 
 		void OnAfterRenderGame()
 		{
-			using (new DrawBatch(true))
+			using (new DrawBatch(false))
 			{
 				state?.Draw();
 			}

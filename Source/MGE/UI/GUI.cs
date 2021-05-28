@@ -43,5 +43,9 @@ namespace MGE.UI
 		{
 			root.Draw();
 		}
+
+		public static Vector2 WindowToCanvas(Vector2 position) => position * scaleUpFactor;
+
+		public static Vector2 CanvasToWindow(Vector2 position) => position * scaleDownFactor;
 	}
 }

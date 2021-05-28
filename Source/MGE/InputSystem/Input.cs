@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MGE.Graphics;
+using MGE.UI;
 
 namespace MGE.InputSystem
 {
@@ -73,7 +74,7 @@ namespace MGE.InputSystem
 			#region Mouse
 			var mouseState = Mouse.GetState();
 
-			windowMousePosition = mouseState.Position;
+			windowMousePosition = GUI.CanvasToWindow(mouseState.Position);
 			cameraMousePosition = Camera.WinToCam(mouseState.Position);
 
 			mouseIsInWindow =
