@@ -48,6 +48,8 @@ namespace GAME.Components
 		{
 			base.Death();
 
+			Main.current.ShakeCamera(0.2f);
+
 			foreach (var thing in entity.layer.GetEntities(entity.position, explosionRadius, "Melee Vulnerable"))
 			{
 				thing.GetSimilarComponent<CObject>()?.Damage(explosionDamage, Vector2.GetDirection(entity.position + 0.5f, thing.position + 0.5f) * -knockback, info.doneBy);

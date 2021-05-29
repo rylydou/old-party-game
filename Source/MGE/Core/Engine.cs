@@ -28,7 +28,7 @@ namespace MGE
 		public Action onAfterRenderUI = () => { };
 
 		float timeSinceLastTick = 0.0f;
-		float statsUpdateCooldown = -0.0f;
+		float statsUpdateCooldown = 0.0f;
 
 		bool shouldScreenshot = false;
 

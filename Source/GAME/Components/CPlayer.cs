@@ -392,6 +392,8 @@ namespace GAME.Components
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(3.0f), Vector2.zero, player.color.inverted, 0, Vector2.zero);
 			para.SpawnParticle(entity.position + 0.5f, Random.Float(0, Math.pi4), new Vector2(2.75f), Vector2.zero, Color.white, 0, Vector2.zero);
 
+			Main.current.ShakeCamera((float)damage / 100 * 0.6f);
+
 			if (health < 1)
 				Death();
 		}

@@ -10,13 +10,15 @@ namespace GAME.States
 {
 	public class StatePlayerSetup : GameState
 	{
-		Palette palette;
-
-		Dictionary<EController, Texture> controllerToTex;
+		static readonly Color noPlayerA = new Color("#111");
+		static readonly Color noPlayerB = new Color("#1A1A1A");
 
 		float timeAllReadyToContinue = 1.0f;
 
 		float timeAllReady;
+
+		Texture playerShadow;
+		Dictionary<EController, Texture> controllerToTex;
 
 		public override void Init()
 		{
@@ -35,7 +37,7 @@ namespace GAME.States
 			controllerToTex.Add(EController.Gamepad2, Assets.GetAsset<Texture>("UI/Controllers/Gamepad 2"));
 			controllerToTex.Add(EController.Gamepad3, Assets.GetAsset<Texture>("UI/Controllers/Gamepad 3"));
 
-			palette = Setup.palettes.Random();
+			playerShadow = Assets.GetAsset<Texture>("UI/Player Shadow");
 
 			foreach (var player in GameSettings.players)
 			{
@@ -126,67 +128,35 @@ namespace GAME.States
 		{
 			base.DrawUI();
 
-			GFX.DrawBox(new Rect(0, 0, GUI.canvasSize), palette.backgroundA);
+			var index = 0;
 
-			const int res = 64;
-
-			var lastPos = Vector2.zero;
-			for (int x = -32; x < GUI.canvasSize.x + 32; x += res)
+			using (var layout = new StackLayout(Vector2.zero, GUI.canvasSize.x / 4, true))
 			{
-				var sineWavePos = new Vector2(x, Math.Sin((float)x / GUI.canvasSize.x * 2 + Time.time * 0.5f) * GUI.canvasSize.y / 3 + GUI.canvasSize.y / 2);
-				GFX.DrawLine(lastPos, sineWavePos, palette.backgroundB, 64);
-				lastPos = sineWavePos;
-			}
-
-			lastPos = Vector2.zero;
-			for (int x = -32; x < GUI.canvasSize.x + 32; x += res)
-			{
-				var sineWavePos = new Vector2(x, Math.Sin((float)x / GUI.canvasSize.x * 2 + Time.time * 0.5f + Math.pi) * GUI.canvasSize.y / 3 + GUI.canvasSize.y / 2);
-				GFX.DrawLine(lastPos, sineWavePos, palette.backgroundB, 64);
-				lastPos = sineWavePos;
-			}
-
-			const int barSize = 64;
-			for (int i = -1; i < GUI.canvasSize.x / barSize + 4; i++)
-			{
-				if ((i + 1) % 3 == 0)
-					GFX.DrawBox(new Rect(i * barSize + Math.Wrap(Time.time * 32, -barSize * 1.5f, barSize * 1.5f), -barSize / 4, barSize, GUI.canvasSize.y + barSize / 2), palette.backgroundB, Math.pi / 16);
-			}
-
-			GFX.DrawBox(new Rect(0, 0, GUI.canvasSize.x * (timeAllReady / timeAllReadyToContinue), GUI.canvasSize.y), palette.backgroundA);
-
-			var textPos = GUI.canvasSize.y - 256 + Math.Sin(Time.time * Math.pi2) * 4;
-
-			const string text = "Press [Select] To Join";
-
-			Config.font.DrawText(text, new Rect(2, textPos + 2, GUI.canvasSize.x, 64), new Color(0, 0.25f), 1.5f, TextAlignment.Center);
-			Config.font.DrawText(text, new Rect(0, textPos, GUI.canvasSize.x, 64), Color.white, 1.5f, TextAlignment.Center);
-
-			using (var layout = new StackLayout(new Vector2(32), 256, true))
-			{
-				foreach (var player in GameSettings.players)
+				for (int i = 0; i < 4; i++)
 				{
-					if (player is null) continue;
+					index++;
 
 					layout.AddElement();
 
-					GFX.DrawBox(new Rect(layout.currentElement + 4, layout.currentSize + 32), new Color(0, 0.25f));
+					GFX.DrawBox(new Rect(layout.currentElement, layout.currentSize, GUI.canvasSize.y), index % 2 == 0 ? noPlayerA : noPlayerB);
+				}
+			}
 
-					GFX.DrawBox(new Rect(layout.currentElement - 16, layout.currentSize + 32), player.color);
+			using (var layout = new StackLayout(Vector2.zero, GUI.canvasSize.x / 4, true))
+			{
+				foreach (var player in GameSettings.players)
+				{
+					layout.AddElement();
+
+					GFX.DrawBox(new Rect(layout.currentElement, layout.currentSize, GUI.canvasSize.y), player.color);
+					if (!player.READY)
+						GFX.DrawBox(new Rect(layout.currentElement + 16, layout.currentSize - 32, GUI.canvasSize.y - 32), new Color(0, 0.5f));
+
+					GFX.Draw(playerShadow, new Rect(layout.currentElement + 128 + new Vector2(0, 128), layout.currentSize - 256), new Color(0, 0.25f));
+					GFX.Draw(player.icon, new Rect(layout.currentElement + 128, layout.currentSize - 256), Color.white);
 
 					if (!player.READY)
-						GFX.DrawBox(new Rect(layout.currentElement, layout.currentSize), new Color(0, 0.75f));
-
-					for (int y = -8; y <= 8; y++)
-						for (int x = -8; x <= 8; x++)
-							GFX.Draw(player.icon, new Rect(layout.currentElement + 32 + new Vector2(x, y), layout.currentSize - 64), Color.black);
-
-					GFX.Draw(player.icon, new Rect(layout.currentElement + 32, layout.currentSize - 64), Color.white);
-
-					if (!player.READY)
-						GFX.Draw(controllerToTex[player.controls.id], new Rect(layout.currentElement + 16, 64), player.color);
-
-					layout.AddElement(64);
+						GFX.Draw(controllerToTex[player.controls.id], new Rect(layout.currentElement + 32, 128), player.color);
 				}
 			}
 		}

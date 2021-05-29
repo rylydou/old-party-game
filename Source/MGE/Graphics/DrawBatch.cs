@@ -19,7 +19,7 @@ namespace MGE.Graphics
 
 		public DrawBatch(bool ui = false)
 		{
-			GFX.sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, ui ? GUI.transform : Camera.Transformation());
+			GFX.sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, ui ? GUI.transform : Camera.transform);
 		}
 
 		public DrawBatch(SamplerState sampler = null, Effect effect = null, SpriteSortMode sort = SpriteSortMode.Deferred, BlendState blend = null, Matrix? transform = null)

@@ -32,7 +32,7 @@ namespace MGE
 
 		public static Vector2Int renderSize { get => new Vector2Int(GFX.graphics.PreferredBackBufferWidth, GFX.graphics.PreferredBackBufferHeight); }
 
-		public static Vector2Int sceneSize { get => Config.gameRenderSize / Config.pixelsPerUnit; }
+		public static Vector2 sceneSize { get => (Vector2)Config.gameRenderSize / Config.pixelsPerUnit; }
 		public static Vector2Int gameRenderSize { get => Config.gameRenderSize; }
 
 		public static Action onResize = () => { };

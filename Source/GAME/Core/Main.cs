@@ -79,6 +79,8 @@ namespace GAME
 		{
 			Window.Title = $"MGE Party Game | {Math.Round(Stats.fps)}fps {Math.Round(Stats.averageFps)}avg {Math.Round(Stats.minFps)}min | {Stats.memUsedAsMBs.ToString("F1")}MB / {Math.Round(Stats.memAllocatedAsMBs)}MB";
 
+			Camera.position = Vector2.MoveTowards(Camera.position, Vector2.zero, Time.deltaTime * 64);
+
 			var shift = Input.GetButton(Inputs.LeftShift) | Input.GetButton(Inputs.RightShift);
 			var ctrl = Input.GetButton(Inputs.LeftControl) | Input.GetButton(Inputs.RightControl);
 			var alt = Input.GetButton(Inputs.LeftAlt) | Input.GetButton(Inputs.RightAlt);
@@ -156,6 +158,11 @@ namespace GAME
 
 			if (SceneManager.activeScene is object)
 				SceneManager.activeScene.clearScreen = false;
+		}
+
+		public void ShakeCamera(float mag)
+		{
+			Camera.position += Random.UnitVector() * mag;
 		}
 	}
 }
