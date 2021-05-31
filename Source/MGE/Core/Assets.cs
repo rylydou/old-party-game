@@ -6,15 +6,26 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
 using MGE.FileIO;
 using MGE.Graphics;
+using System;
 
 namespace MGE
 {
 	public static class Assets
 	{
-		public static string[] activeRP = new string[] { };
+		public static List<string> resourcePackStack = new List<string> { };
 
-		public static Dictionary<string, object> preloadedAssets = new Dictionary<string, object>();
+		public static Dictionary<string, Asset> preloadedAssets = new Dictionary<string, Asset>();
 		public static Dictionary<string, string> unloadedAssets = new Dictionary<string, string>();
+
+		public static Dictionary<string, Type> assetExt2Type = new Dictionary<string, Type>();
+		public static Dictionary<Type, string> assetType2Ext = new Dictionary<Type, string>();
+
+		public static void RegisterAsset(Asset asset)
+		{
+			var type = asset.GetType();
+			assetExt2Type.Add(asset.extension, type);
+			assetType2Ext.Add(type, asset.extension);
+		}
 
 		public static void ReloadAssets()
 		{
@@ -24,7 +35,7 @@ namespace MGE
 
 			ScanAssetsInRP(new Folder(IO.ParsePath("//", true)), ref index);
 
-			foreach (var rp in activeRP)
+			foreach (var rp in resourcePackStack)
 				ScanAssetsInRP(new Folder(IO.ParsePath($"/Resource Packs/{rp}/Assets", true)), ref index);
 
 			LoadAssetsFromIndex(in index);
@@ -36,7 +47,7 @@ namespace MGE
 				if (asset.Value is System.IDisposable disposable)
 					disposable.Dispose();
 
-			preloadedAssets = new Dictionary<string, object>();
+			preloadedAssets = new Dictionary<string, Asset>();
 			unloadedAssets = new Dictionary<string, string>();
 		}
 
@@ -49,9 +60,9 @@ namespace MGE
 		{
 			foreach (var file in index)
 			{
-				if (Config.typeToExtention.ContainsValue(IO.GetFullExt(file.Value)))
+				if (assetExt2Type.ContainsKey(IO.GetFullExt(file.Value)))
 				{
-					object asset = LoadAsset(file.Value, file.Key);
+					var asset = LoadAsset(file.Value, file.Key);
 
 					if (asset == null)
 						Logger.LogError($"Asset {file.Key} is null!");
@@ -72,73 +83,15 @@ namespace MGE
 			}
 		}
 
-		static object LoadAsset(string path, string relitivePath)
+		static Asset LoadAsset(string path, string localPath = null)
 		{
-			object asset = null;
+			Asset asset = null;
 
-			switch (IO.GetFullExt(path))
-			{
-				// # Texture
-				case ".psd":
-					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-					{
-						asset = Texture.FromStream(fs);
-					}
-					break;
-				case ".spritesheet.psd":
-					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-					{
-						var tex = Texture.FromStream(fs);
-						var info = IO.LoadJson<SpriteSheet>(path + ".info");
-						info.texture = tex;
-						asset = info;
-					}
-					break;
-				case ".tileset.psd":
-					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-					{
-						var tex = Texture.FromStream(fs);
-						var info = IO.LoadJson<Tileset>(path + ".info");
-						info.texture = tex;
-						asset = info;
-					}
-					break;
-				// # Audio
-				case ".wav":
-					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-					{
-						asset = SoundEffect.FromStream(fs);
-					}
-					break;
-				case ".sound":
-					var sound = IO.LoadJson<Sound>(path);
-					sound.path = relitivePath.Replace(".sound", string.Empty);
-					asset = sound;
-					break;
-				// # Mics
-				case ".font.psd":
-					using (var fs = File.Open(path, FileMode.Open, FileAccess.Read))
-					{
-						var tex = Texture.FromStream(fs);
-						var info = IO.LoadJson<Font>(path + ".info");
-						info.texture = tex;
-						asset = info;
-					}
-					break;
-				case ".params":
-					asset = new Params(IO.LoadJson<Dictionary<string, object>>(path));
-					break;
-				case ".mgfx":
-					asset = new Effect(GFX.graphicsDevice, File.ReadAllBytes(path));
-					break;
-				// TEMP
-				case ".stage":
-					asset = IO.Load<GAME.Stage>(path, true);
-					break;
-				default:
-					Logger.LogWarning($"Cannot read file {path}");
-					break;
-			}
+			var ext = IO.GetFullExt(path);
+
+			asset = (Asset)Activator.CreateInstance(assetExt2Type[ext]);
+
+			asset.Load(path, localPath);
 
 			return asset;
 		}
@@ -148,7 +101,7 @@ namespace MGE
 		{
 			foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
 			{
-				if (!Config.typeToExtention.ContainsValue(IO.GetFullExt(file))) continue;
+				if (!assetExt2Type.ContainsKey(IO.GetFullExt(file))) continue;
 
 				string relitivePath = folder.GetRelitivePath(file);
 
@@ -179,7 +132,7 @@ namespace MGE
 		#region Asset Getting
 		public static T GetAsset<T>(string path) where T : class
 		{
-			if (!path.Contains('.')) path += Config.typeToExtention[typeof(T)];
+			if (!path.Contains('.')) path += assetType2Ext[typeof(T)];
 
 			if (preloadedAssets.ContainsKey(path))
 				return preloadedAssets[path] as T;
@@ -204,7 +157,7 @@ namespace MGE
 
 		public static T LoadAsset<T>(string path) where T : class
 		{
-			if (!path.Contains('.')) path += Config.typeToExtention[typeof(T)];
+			if (!path.Contains('.')) path += assetType2Ext[typeof(T)];
 
 			if (unloadedAssets.ContainsKey(path))
 				return LoadAsset(unloadedAssets[path], path) as T;
@@ -214,7 +167,7 @@ namespace MGE
 		public static string[] GetUnloadedAssets<T>(string path) where T : class
 		{
 			var assets = new List<string>();
-			var ext = Config.typeToExtention[typeof(T)];
+			var ext = assetType2Ext[typeof(T)];
 
 			foreach (var asset in unloadedAssets)
 			{

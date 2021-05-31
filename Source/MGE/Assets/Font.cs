@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Text;
+using MGE.FileIO;
 using MGE.Graphics;
 using Newtonsoft.Json;
 
 namespace MGE
 {
 	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
-	public class Font
+	public class Font : Asset
 	{
+		public override string extension => ".font.psd";
+
 		public Texture texture;
 
 		[JsonProperty] public int offset;
@@ -18,6 +21,20 @@ namespace MGE
 		[JsonProperty] public List<string> spChars;
 
 		public Font() { }
+
+		public override void Load(string fullPath, string localPath = null)
+		{
+			texture = new Texture();
+			texture.Load(fullPath);
+
+			var f = IO.LoadJson<Font>(fullPath + ".info");
+			offset = f.offset;
+			defualtChar = f.defualtChar;
+			spIndicator = f.spIndicator;
+			charSize = f.charSize;
+			charPaddingSize = f.charPaddingSize;
+			spChars = f.spChars;
+		}
 
 		public void DrawText(string text, Vector2 position, Color color, float scale = 1.0f)
 		{

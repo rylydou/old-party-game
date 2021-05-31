@@ -30,6 +30,15 @@ namespace GAME
 
 		protected override void Initialize()
 		{
+			Assets.RegisterAsset(new Texture());
+			Assets.RegisterAsset(new Sound());
+			Assets.RegisterAsset(new SFX());
+			Assets.RegisterAsset(new SpriteSheet());
+			Assets.RegisterAsset(new Tileset());
+			Assets.RegisterAsset(new Params());
+			Assets.RegisterAsset(new Font());
+			Assets.RegisterAsset(new Stage());
+
 			engine.Initialize();
 
 			engine.onTick += () => OnTick();

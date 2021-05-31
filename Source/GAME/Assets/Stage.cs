@@ -7,8 +7,10 @@ using MGE.FileIO;
 namespace GAME
 {
 	[System.Serializable]
-	public class Stage
+	public class Stage : Asset
 	{
+		public override string extension => ".stage";
+
 		static Tileset[] _backgroundTilesets;
 		public static Tileset[] backgroundTilesets
 		{
@@ -48,7 +50,6 @@ namespace GAME
 		public static readonly Vector2Int size = new Vector2Int(40, 23);
 
 		public string name = "Untitled Stage";
-		public string description = "( No Description )";
 
 		public Grid<(byte, byte)> tilesBackground;
 		public Grid<byte> tiles;
@@ -61,6 +62,8 @@ namespace GAME
 		public float fogHeight = 0.75f;
 		public float fogSize = 32.0f;
 		public Color fogColor = new Color(0.95f, 0.75f);
+
+		public Stage() { }
 
 		public Stage(Vector2Int size)
 		{
@@ -83,6 +86,32 @@ namespace GAME
 			}
 		}
 
+		public override void Load(string fullPath, string localPath = null)
+		{
+			base.Load(fullPath, localPath);
+
+			var s = IO.Load<Stage>(fullPath);
+
+			name = s.name;
+			tilesBackground = s.tilesBackground;
+			tiles = s.tiles;
+			playerSpawnPoints = s.playerSpawnPoints;
+			crateSpawnsPoints = s.crateSpawnsPoints;
+
+			fogDetail = s.fogDetail;
+			fogSpeed = s.fogSpeed;
+			fogHeight = s.fogHeight;
+			fogSize = s.fogSize;
+			fogColor = s.fogColor;
+		}
+
+		public override void Save(string fullPath)
+		{
+			base.Save(fullPath);
+
+			IO.Save(fullPath, this, false);
+		}
+
 		[OnDeserialized]
 		public void OnDeserialized(StreamingContext context)
 		{
@@ -102,19 +131,6 @@ namespace GAME
 
 			if (crateSpawnsPoints is null)
 				crateSpawnsPoints = new List<Vector2Int>();
-		}
-
-		public void Save()
-		{
-			try
-			{
-				using (Timmer.Start("Save Stage"))
-					IO.Save($"Assets/@ Stages/{name}.stage", this, false);
-			}
-			catch (System.Exception e)
-			{
-				Logger.LogError(e);
-			}
 		}
 	}
 }

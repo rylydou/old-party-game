@@ -1,12 +1,25 @@
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MGE
 {
 	static class StringExtensions
 	{
-		public static int WordCount(this string str) =>
-			str.Split("`~!@#$%^&*()=+[{]}\\|;:'\",.<>/? _".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+		public static int WordCount(this string str)
+		{
+			return str.Split("`~!@#$%^&*()=+[{]}\\|;:'\",.<>/? _".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+		}
+
+		public static string ScentenceToCamel(this string str)
+		{
+			return str.Replace(" ", string.Empty);
+		}
+
+		public static string CamelToScentence(this string str)
+		{
+			return Regex.Replace(str, @"\p{Lu}", c => " " + c.Value.ToUpperInvariant());
+		}
 
 		public static StringBuilder GetBuilder(this string str) =>
 			new StringBuilder(str);

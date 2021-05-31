@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using MGE.FileIO;
 using MGE.Graphics;
 using Newtonsoft.Json;
 
 namespace MGE
 {
 	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
-	public class Tileset
+	public class Tileset : Asset
 	{
+		public override string extension => ".tileset.psd";
+
 		public Texture texture;
 
 		[JsonProperty] public string name;
@@ -19,6 +22,23 @@ namespace MGE
 		[JsonProperty] public Dictionary<TileConnection, Vector2Int> tiles;
 
 		public Tileset() { }
+
+		public override void Load(string fullPath, string localPath = null)
+		{
+			base.Load(fullPath, localPath);
+
+			var ts = IO.LoadJson<Tileset>(fullPath + ".info");
+
+			name = ts.name;
+			color = ts.color;
+			semiSolid = ts.semiSolid;
+			tileSize = ts.tileSize;
+			defualtTile = ts.defualtTile;
+			tiles = ts.tiles;
+
+			texture = new Texture();
+			texture.Load(fullPath, localPath);
+		}
 
 		public void DrawTiles(in Grid<RectInt> map, Vector2 position, Color color)
 		{

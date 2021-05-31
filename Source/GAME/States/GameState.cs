@@ -5,7 +5,7 @@ namespace GAME.States
 {
 	public abstract class GameState
 	{
-		public Dictionary<string, Sound> sounds = new Dictionary<string, Sound>();
+		public Dictionary<string, SFX> sounds = new Dictionary<string, SFX>();
 
 		public virtual void Init() { }
 
@@ -18,10 +18,10 @@ namespace GAME.States
 
 		public virtual void PlaySound(string path)
 		{
-			Sound sound = null;
+			SFX sound = null;
 			if (!sounds.TryGetValue(path, out sound))
 			{
-				sound = Assets.GetAsset<Sound>(path);
+				sound = Assets.GetAsset<SFX>(path);
 				sounds.Add(path, sound);
 			}
 			sound?.Play();

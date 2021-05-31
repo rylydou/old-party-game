@@ -1,30 +1,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MGE.FileIO;
 using MGE.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MGE
 {
-	[System.Serializable]
-	public class Texture
+	public class Texture : Asset
 	{
-		#region Static
-		public static List<Texture2D> textures = new List<Texture2D>();
-
-		public static Texture FromFile(string path)
-		{
-			if (File.Exists(path))
-				return new Texture(Texture2D.FromFile(GFX.graphicsDevice, path)) { sourcePath = path };
-			else return null;
-		}
-
-		public static Texture FromStream(Stream stream) =>
-			new Texture(Texture2D.FromStream(GFX.graphicsDevice, stream));
-		#endregion
-
-		#region Object
-		public string sourcePath { get; internal set; } = string.Empty;
+		public override string extension => ".psd";
 
 		public Texture2D texture;
 
@@ -33,9 +18,31 @@ namespace MGE
 
 		public Vector2Int size { get => new Vector2Int(texture.Width, texture.Height); }
 
+		public Texture() { }
+
 		public Texture(Texture2D texture)
 		{
 			this.texture = texture;
+		}
+
+		public override void Save(string fullPath)
+		{
+			base.Save(fullPath);
+
+			using (var stream = IO.FileOpenWrite(fullPath))
+			{
+				SaveAsPNG(stream, width, height);
+			}
+		}
+
+		public void SaveAsPNG(Stream stream, int width, int height) => texture.SaveAsPng(stream, width, height);
+		public void SaveAsJPEG(Stream stream, int width, int height) => texture.SaveAsJpeg(stream, width, height);
+
+		public override void Load(string fullPath, string localPath = null)
+		{
+			base.Load(fullPath, localPath);
+
+			texture = Texture2D.FromFile(GFX.graphicsDevice, fullPath);
 		}
 
 		public Color GetPixel(Vector2Int position) => GetPixel(position.x, position.y);
@@ -83,11 +90,7 @@ namespace MGE
 			texture.SetData(0, 0, rect, colors.Select((x) => (Microsoft.Xna.Framework.Color)x).ToArray(), 0, amount);
 		}
 
-		public void SaveAsPNG(Stream stream, int width, int height) => texture.SaveAsPng(stream, width, height);
-		public void SaveAsJPEG(Stream stream, int width, int height) => texture.SaveAsJpeg(stream, width, height);
-
 		public static implicit operator Texture(Texture2D texture) => new Texture(texture);
 		public static implicit operator Texture2D(Texture texture) => texture.texture;
-		#endregion
 	}
 }

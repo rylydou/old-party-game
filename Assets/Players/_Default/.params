@@ -15,7 +15,7 @@
 	"jumpMinVelocity": 0.2125,
 	"jumpMaxVelocity": 0.267,
 
-	"groundedRem": 0.2,
+	"groundedRem": 0.1,
 	"jumpRem": 0.15,
 
 	"interactionRange": 1.25,

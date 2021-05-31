@@ -27,20 +27,6 @@ namespace MGE
 		public static readonly Vector2Int defaultWindowSize = new Vector2Int(1280, 720);
 		public static readonly Vector2Int canvasSize = new Vector2Int(1920, 1080);
 
-		// # Asset Management
-		public static readonly Dictionary<Type, string> typeToExtention = new Dictionary<Type, string>()
-		{
-			{typeof(Texture), ".psd"},
-			{typeof(SpriteSheet), ".spritesheet.psd"},
-			{typeof(Tileset), ".tileset.psd"},
-			{typeof(Microsoft.Xna.Framework.Audio.SoundEffect), ".wav"},
-			{typeof(Sound), ".sound"},
-			{typeof(Font), ".font.psd"},
-			{typeof(Params), ".params"},
-			{typeof(Effect), ".mgfx"},
-
-			{typeof(GAME.Stage), ".stage"},
-		};
 		public static readonly string infoFileExt = ".info";
 
 		// # Debuging

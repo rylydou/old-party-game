@@ -324,7 +324,9 @@ namespace GAME.Components
 				if (player.kills > 0)
 					player.kills--;
 
-				Damage(int.MinValue, Vector2.zero, null);
+				health = int.MinValue;
+
+				Death();
 			}
 			inputDie = false;
 

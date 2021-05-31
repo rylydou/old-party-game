@@ -39,7 +39,7 @@ namespace GAME.States
 		public static Menu editorMenu = new Menu(
 			"Editor",
 			(() => "Edit", () => Main.current.ChangeState(new StateEditor())),
-			(() => "Save", () => GameSettings.stage.Save()),
+			(() => "Save", () => GameSettings.stage.Save(IO.basePath + $"Assets/@ Stages/{GameSettings.stage.name}.stage")),
 			(() => "Load", () => MenuManager.OpenMenu(MakeMenuOnStages(x => GameSettings.stage = Assets.LoadAsset<Stage>(x)))),
 			(() => "Rename", () => isEnteringInput = true)
 		);

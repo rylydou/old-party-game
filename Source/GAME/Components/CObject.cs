@@ -19,7 +19,7 @@ namespace GAME.Components
 
 		public CRigidbody rb;
 
-		protected Dictionary<string, Sound> sounds = new Dictionary<string, Sound>();
+		protected Dictionary<string, SFX> sounds = new Dictionary<string, SFX>();
 
 		public override void Init()
 		{
@@ -110,9 +110,9 @@ namespace GAME.Components
 
 		protected void PlaySound(string name)
 		{
-			Sound sound;
+			SFX sound;
 			if (!sounds.TryGetValue(name, out sound))
-				sound = GetAsset<Sound>(name);
+				sound = GetAsset<SFX>(name);
 			if (sound is object)
 				sound.Play(entity.position);
 			else

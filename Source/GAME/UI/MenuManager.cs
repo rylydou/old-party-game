@@ -20,11 +20,11 @@ namespace GAME.UI
 		static bool inited = false;
 
 		static Texture gradHor;
-		static Sound menuSelect;
-		static Sound menuChange;
-		static Sound menuError;
-		static Sound menuOpen;
-		static Sound menuClose;
+		static SFX menuSelect;
+		static SFX menuChange;
+		static SFX menuError;
+		static SFX menuOpen;
+		static SFX menuClose;
 
 		public static void Init()
 		{
@@ -32,11 +32,11 @@ namespace GAME.UI
 			inited = true;
 
 			gradHor = Assets.GetAsset<Texture>("UI/Gradient Horizontal");
-			menuSelect = Assets.GetAsset<Sound>("UI/Sounds/Menu Select");
-			menuChange = Assets.GetAsset<Sound>("UI/Sounds/Menu Change");
-			menuError = Assets.GetAsset<Sound>("UI/Sounds/Menu Error");
-			menuOpen = Assets.GetAsset<Sound>("UI/Sounds/Menu Open");
-			menuClose = Assets.GetAsset<Sound>("UI/Sounds/Menu Close");
+			menuSelect = Assets.GetAsset<SFX>("UI/Sounds/Menu Select");
+			menuChange = Assets.GetAsset<SFX>("UI/Sounds/Menu Change");
+			menuError = Assets.GetAsset<SFX>("UI/Sounds/Menu Error");
+			menuOpen = Assets.GetAsset<SFX>("UI/Sounds/Menu Open");
+			menuClose = Assets.GetAsset<SFX>("UI/Sounds/Menu Close");
 
 			onOptionSelect += (o) => menuSelect?.Play();
 			onOptionChange += (o) => menuChange?.Play();

@@ -1,18 +1,29 @@
 using System.Collections.Generic;
-using System.Linq;
+using MGE.FileIO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MGE
 {
 	[System.Serializable, JsonObject(MemberSerialization.OptIn)]
-	public class Params
+	public class Params : Asset
 	{
+		public override string extension => ".params";
+
 		[JsonProperty] public Dictionary<string, object> feilds;
+
+		public Params() { }
 
 		public Params(Dictionary<string, object> feilds)
 		{
 			this.feilds = feilds;
+		}
+
+		public override void Load(string fullPath, string localPath = null)
+		{
+			base.Load(fullPath, localPath);
+
+			feilds = IO.LoadJson<Dictionary<string, object>>(fullPath);
 		}
 
 		public bool GetBool(string key)

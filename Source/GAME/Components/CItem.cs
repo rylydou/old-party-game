@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Text.RegularExpressions;
 using MGE;
 using MGE.Graphics;
 
@@ -21,7 +20,7 @@ namespace GAME.Components
 		protected override string basePath { get => "Items"; }
 		protected override string relitivePath
 		{
-			get => Regex.Replace(GetType().ToString().Split('.').Last().Remove(0, 1), @"\p{Lu}", c => " " + c.Value.ToUpperInvariant()).Remove(0, 1);
+			get => GetType().ToString().Split('.').Last().Remove(0, 1).CamelToScentence().Remove(0, 1);
 		}
 
 		protected CPlayer player;
